@@ -1,0 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
+.card {
+    /* height: 300px; */
+    /* width: 300px; */
+    /* background: blue; */
+    /* background: rgb(88,84,84,0.26); */
+    z-index: 1;
+}
