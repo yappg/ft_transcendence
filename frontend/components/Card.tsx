@@ -1,23 +1,20 @@
 import './components.css';
+import Racket from '@/public/racket.svg';
 
-function Card() {
+const Card = () => {
   return (
-    <div
-      style={{
-        background: 'rgba(88, 88, 84, 0.5)',
-        height: '300px',
-        minWidth: '500px',
-        color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        width: '50%',
-        zIndex: 2,
-      }}
-    >
-      <h2>Start your own halucinating ping pong journey</h2>
-      <p>welcome to PiPo lorem ipsum ipsum lorem hehe makayn maytgal </p>
+    <div className="card">
+      <div className="left">
+        <div className="lang">O</div>
+        <h2>Start your own halucinating ping pong journey</h2>
+        <p>welcome to PiPo lorem ipsum ipsum lorem hehe makayn maytgal </p>
+        <button className="explore">explore</button>
+      </div>
+      <div className="right">
+        <Racket />
+      </div>
     </div>
   );
-}
+};
 
 export default Card;

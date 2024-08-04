@@ -3,9 +3,60 @@
 }
 
 .card {
-    /* height: 300px; */
-    /* width: 300px; */
-    /* background: blue; */
-    /* background: rgb(88,84,84,0.26); */
-    z-index: 1;
+    display: flex;
+    background: rgba(88, 88, 84, 0.5);
+    height: 80%;
+    width: 90%;
+    max-width: 1515;
+    color: white;
+    border-radius: 50px;
+    z-index: 2;
+}
+
+.left {
+    float: left;
+    width: 60%;
+    padding-top: 10%;
+    padding-left: 10%;
+    /* background-color: rosybrown; */
+}
+
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 40;
+    padding-right: 25px;
+    height: 100%;
+}
+
+.left > h2 {
+    font-size: 60px;
+    padding-top: 5%;
+}
+
+.left > p {
+    font-size: 35px;
+    padding-top: 5%;
+    padding-bottom: 15%;
+}
+
+.left > .lang {
+    all: unset;
+    height: 90px;
+    height: 90px;
+    padding: 15px;
+    background-color: rgb(0, 0, 0, 0.5);
+}
+
+.left > .explore {
+    font-size: 36px;
+    padding: 15px;
+    background-color: rgb(193, 56, 44);
+    border-radius: 10px;
+    padding: 15px 20px;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
