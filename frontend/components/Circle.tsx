@@ -4,6 +4,8 @@ const Circle = ({
   title,
   top,
   left,
+  etop,
+  eleft,
   transform,
   w,
   h,
@@ -12,6 +14,8 @@ const Circle = ({
   h: string;
   top: string;
   left: string;
+  etop: string;
+  eleft: string;
   transform: number;
   title: string;
 }) => {
@@ -40,8 +44,8 @@ const Circle = ({
               top: ${top};
             }
             100% {
-              left: calc(100% - ${w});
-              top: calc(100% - ${h});
+              left: ${eleft};
+              top: ${etop};
               transform: translateX(${transform}%);
             }
           }
