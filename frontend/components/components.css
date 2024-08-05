@@ -1,114 +1,154 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .box > .all {
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    height: 100%;
-    width: 100%;
-    z-index: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  height: 100%;
+  width: 100%;
+  z-index: inherit;
 }
 
 .box > .all > .card {
-    display: flex;
-    background: rgba(88, 88, 84, 0.5);
-    height: 90%;
-    width: 90%;
-    max-width: 1515px;
-    max-height: 900px;
-    color: white;
-    border-radius: 50px;
-    z-index: 2;
+  display: flex;
+  background: rgba(88, 88, 84, 0.5);
+  height: 90%;
+  width: 90%;
+  max-width: 1515px;
+  max-height: 900px;
+  color: white;
+  border-radius: 50px;
+  z-index: 2;
 }
 
 .left {
-    display: flex;
-    flex-direction: column;
-    float: left;
-    width: 60%;
-    padding-top: 5%;
-    padding-left: 10%;
-    /* background-color: rosybrown; */
+  display: flex;
+  flex-direction: column;
+  float: left;
+  width: 60%;
+  padding-top: 5%;
+  padding-left: 85px;
 }
 
 .right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    float: left;
-    width: 40%;
-    padding-right: 25px;
-    height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+  width: 40%;
+  padding-right: 25px;
+  height: 100%;
 }
 
 .left > .title {
-    width: 100%;
-    font-family: Coustard;
-    font-weight: black;
-    text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
-    font-size: 50px;
-    padding-bottom: 50px;
+  width: 100%;
+  font-family: Coustard;
+  font-weight: black;
+  text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+  font-size: 50px;
+  padding-bottom: 50px;
 }
 
 .left > .paragraph {
-    width: 80%;
-    font-family: Coustard;
-    font-size: 30px;
-    padding-bottom: 70px;
-    padding-right: 20px;
+  width: 80%;
+  font-family: Coustard;
+  font-size: 30px;
+  padding-bottom: 70px;
+  padding-right: 20px;
 }
 
 .left > .lang-box {
-    display: flex;
-    justify-content: left;
-    align-items: top;
-    width: 100%;
-    height: 150px;
-    padding: 10px 0px;
+  display: flex;
+  justify-content: left;
+  align-items: top;
+  width: 100%;
+  height: 150px;
+  padding: 10px 0px;
 }
 
 .left > .lang-box > .lang {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 60px;
-    width: 90px;
-    height: 90px;
-    border-radius: 14px;
-    background-color: rgb(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  width: 90px;
+  height: 90px;
+  border-radius: 14px;
+  background-color: rgb(0, 0, 0, 0.5);
 }
 
 .left > .explore {
-    font-size: 40px;
-    font-family: coustard;
-    font-weight: bold;
-    max-height: 88px;
-    max-width: 300px;
-    padding: 15px;
-    background-color: rgb(193, 56, 44);
-    border-radius: 10px;
-    padding: 15px 51px;
-    color: white;
-    border: none;
-    cursor: pointer;
+  font-size: 40px;
+  font-family: coustard;
+  font-weight: bold;
+  max-height: 88px;
+  max-width: 300px;
+  padding: 15px;
+  background-color: rgb(193, 56, 44);
+  border-radius: 10px;
+  padding: 15px 51px;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .box {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    background-color: #13191D;
-    border-radius: 50px;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+  min-width: 1600px;
+  min-height: 1100px;
+  background-color: #13191d;
+  /* background-color: aqua; */
 }
 
 .box > .logo {
-    display: flex;
-    justify-content: center;
-    align-items: bottom;
-    height: 150px;
-    width: 100%;
-    z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: bottom;
+  height: 150px;
+  width: 100%;
+  z-index: 3;
+}
+
+@media screen and (max-width: 1499px) {
+    .box {
+        width: 95%;
+        height: 100%;
+        padding: 2%;
+    }
+    .box > .all > .card > .right {
+      display: none;
+    }
+    .box > .all > .card > .left {
+        padding: 90px;
+        width: 100%;
+    }
+    .box > .all > .card {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        max-width: 95%;
+        max-height: 90%;
+    }
+    .box > .all > .card > .left > .lang-box {
+        padding-bottom: 10%;
+    }
+    .box > .all > .card > .left > .title {
+        font-size: 70px;
+        width: 100%;
+    }
+    .box > .all > .card > .left > .paragraph {
+        font-size: 40px;
+        width: 80%;
+        max-width: 80%;
+        padding-bottom: 10%;
+    }
+    .box {
+        min-width: 1400px;
+        min-height: 1000px;
+    }
 }
