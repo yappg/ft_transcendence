@@ -2,10 +2,19 @@
     box-sizing: border-box;
 }
 
-.card {
+.box > .all {
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    height: 100%;
+    width: 100%;
+    z-index: inherit;
+}
+
+.box > .all > .card {
     display: flex;
     background: rgba(88, 88, 84, 0.5);
-    height: 80%;
+    height: 90%;
     width: 90%;
     max-width: 1515px;
     max-height: 900px;
@@ -73,6 +82,8 @@
 
 .left > .explore {
     font-size: 40px;
+    font-family: coustard;
+    font-weight: bold;
     max-height: 88px;
     max-width: 300px;
     padding: 15px;
@@ -88,7 +99,16 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    background-color: #13191D;
     border-radius: 50px;
+}
+
+.box > .logo {
+    display: flex;
+    justify-content: center;
+    align-items: bottom;
+    height: 150px;
+    width: 100%;
+    z-index: 3;
 }
