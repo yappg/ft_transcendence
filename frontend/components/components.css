@@ -1,5 +1,24 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #13191d;
+}
+
+.box > .logo {
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  height: 150px;
+  width: 100%;
+  z-index: 3;
 }
 
 .box > .all {
@@ -13,13 +32,16 @@
 
 .box > .all > .card {
   display: flex;
-  background: rgba(88, 88, 84, 0.5);
-  height: 90%;
-  width: 90%;
+  background: rgba(88, 88, 84, 0.8);
+  height: 95%;
+  width: 95%;
   max-width: 1515px;
   max-height: 900px;
   color: white;
   border-radius: 50px;
+  box-shadow: -15px 3px 59px 15px rgba(0,0,0,0.57);
+  -webkit-box-shadow: -15px 3px 59px 15px rgba(0,0,0,0.57);
+  -moz-box-shadow: -15px 3px 59px 15px rgba(0,0,0,0.57);
   z-index: 2;
 }
 
@@ -28,7 +50,8 @@
   flex-direction: column;
   float: left;
   width: 60%;
-  padding-top: 5%;
+  height: 100%;
+  padding-top: 40px;
   padding-left: 85px;
 }
 
@@ -37,7 +60,7 @@
   justify-content: center;
   align-items: center;
   float: left;
-  width: 40%;
+  width: 41%;
   padding-right: 25px;
   height: 100%;
 }
@@ -65,7 +88,7 @@
   align-items: top;
   width: 100%;
   height: 150px;
-  padding: 10px 0px;
+  padding-bottom: 150px;
 }
 
 .left > .lang-box > .lang {
@@ -94,32 +117,54 @@
   cursor: pointer;
 }
 
-.box {
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  height: 90%;
-  min-width: 1600px;
-  min-height: 1100px;
-  background-color: #13191d;
-  /* background-color: aqua; */
+@media screen and (max-width: 1490px) {
+  .box {
+      width: 95%;
+      height: 100%;
+      padding: 20px 6%;
+  }
+  .box > .logo {
+    height: 150px;
+  } 
+  .box > .all > .card > .right {
+    display: none;
+  }
+  .box > .all > .card > .left {
+      padding: 10px;
+      width: 100%;
+  }
+  .box > .all > .card {
+      width: 100%;
+      height: auto;
+      padding: 20px;
+      min-width: 500px;
+      max-height: 1000px;
+  }
+  .box > .all > .card > .left > .lang-box {
+      padding-bottom: 10%;
+  }
+  .box > .all > .card > .left > .title {
+      font-size: 50px;
+      padding: 0 0 50px 50px;
+      width: 90%;
+  }
+  .box > .all > .card > .left > .paragraph {
+      font-size: 40px;
+      width: 100%;
+      padding: 0 0 80px 50px;
+  }
 }
 
-.box > .logo {
-  display: flex;
-  justify-content: center;
-  align-items: bottom;
-  height: 150px;
-  width: 100%;
-  z-index: 3;
-}
-
-@media screen and (max-width: 1499px) {
+/* 
+@media screen and (max-width: 1490px) {
     .box {
         width: 95%;
         height: 100%;
-        padding: 2%;
+        padding: 20px 6%;
     }
+    .box > .logo {
+      height: 15%;
+    } 
     .box > .all > .card > .right {
       display: none;
     }
@@ -129,26 +174,25 @@
     }
     .box > .all > .card {
         width: 100%;
-        height: 100%;
+        height: auto;
         padding: 20px;
-        max-width: 95%;
-        max-height: 90%;
+        min-width: 500px;
     }
     .box > .all > .card > .left > .lang-box {
         padding-bottom: 10%;
     }
     .box > .all > .card > .left > .title {
-        font-size: 70px;
-        width: 100%;
+        font-size: 60px;
+        padding-bottom: 20px;
+        width: 90%;
     }
     .box > .all > .card > .left > .paragraph {
         font-size: 40px;
-        width: 80%;
-        max-width: 80%;
-        padding-bottom: 10%;
+        width: 100%;
+        padding-bottom: 80px;
     }
     .box {
         min-width: 1400px;
         min-height: 1000px;
     }
-}
+} */
