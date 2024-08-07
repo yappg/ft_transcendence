@@ -26,7 +26,7 @@ const Card = () => {
               </p>
             </div>
             <button className="explore">
-              <a href="/home">Explore</a>
+              <a href="/login">Explore</a>
             </button>
           </div>
           <div className="right">
