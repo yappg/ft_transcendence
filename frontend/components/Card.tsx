@@ -25,9 +25,11 @@ const Card = () => {
                 welcome to PiPo lorem ipsum ipsum lorem hehe makayn maytgal{' '}
               </p>
             </div>
-            <button className="explore">
-              <a href="/login">Explore</a>
-            </button>
+            <div className="explore">
+              <button className="btn">
+                <a href="/login">Explore</a>
+              </button>
+            </div>
           </div>
           <div className="right">
             <Racket />
