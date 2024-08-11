@@ -1,6 +1,8 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    user_nmae=models.CharField(max_length=50)
-    email=models.EmailField(max_length=254)
+class User(AbstractUser):
+    pass
+    # friends=models.ManyToManyField()
+    # is_online=models.BooleanField(default=False)
