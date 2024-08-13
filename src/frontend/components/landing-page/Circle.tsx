@@ -21,17 +21,12 @@ const Circle = ({
 }) => {
   return (
     <div
-      className="circle"
+      className="absolute bg-[#c1382c] rounded-full shadow-[0_0_30px_20px_#c1382c]"
       style={{
-        zIndex: 1,
         width: w,
         height: h,
-        backgroundColor: '#c1382c',
-        borderRadius: '50%',
-        position: 'absolute',
         left: left,
         top: top,
-        boxShadow: '0 0 30px 20px #c1382c',
         animation: `${title} 6s linear infinite`,
         animationDuration: `${transform / 6}s`,
       }}
