@@ -4,7 +4,7 @@ import Card from './Card';
 
 const Background = () => {
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden">
       {circleData.map((circle, index) => (
         <Circle
           key={index}
@@ -18,7 +18,7 @@ const Background = () => {
           title={circle.title}
         />
       ))}
-      <div className="h-screen w-full flex justify-center items-center z-[2]">
+      <div className="z-[2] flex h-screen w-full items-center justify-center">
         <Card />
       </div>
     </div>

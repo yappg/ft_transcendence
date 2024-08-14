@@ -21,7 +21,7 @@ const Circle = ({
 }) => {
   return (
     <div
-      className="absolute bg-[#c1382c] rounded-full shadow-[0_0_30px_20px_#c1382c]"
+      className="absolute rounded-full bg-[#c1382c] shadow-[0_0_30px_20px_#c1382c]"
       style={{
         width: w,
         height: h,
