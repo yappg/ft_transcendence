@@ -9,8 +9,11 @@ export default function Button({
 }) {
   return (
     <button
-      className={`bg-[rgb(193,56,44)] text-white font-bold py-2 px-4 rounded-lg drop-shadow-custom`}
-      style={{ width, height }}
+      className={`rounded-lg bg-[rgb(193,56,44)] px-11 py-2 font-bold text-white`}
+      style={{
+        width,
+        height,
+      }}
     >
       {children}
     </button>
