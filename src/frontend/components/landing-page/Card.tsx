@@ -3,31 +3,31 @@ import Button from '../Button';
 
 const Card = () => {
   return (
-    <div className="w-full h-full rounded-lg shadow-lg z-[2] flex flex-col justify-center items-center md:bg-white">
-      <div className="w-[45%] h-[20vh] mb-[-20%] z-[3]">
+    <div className="z-[2] flex size-full flex-col items-center justify-center rounded-lg shadow-lg lg:bg-slate-600">
+      <div className="z-[3] mb-[-20%] h-1/4 w-[45%] md:mb-[-25%] lg:mb-0">
         <Logo />
       </div>
-      <div className="w-full h-full">
-        <div className="w-full h-full bg-[rgb(88,88,84,0.6)] rounded-tl-[40px] rounded-tr-[40px] flex flex-col drop-shadow-custom">
-          <div className="w-full h-[100%] flex flex-col gap-4">
-            <div className="w-full h-[13%] flex">
-              <div className="bg-[rgb(0,0,0,0.5)] h-[6vh] w-[6vh] rounded-lg absolute top-2 left-2"></div>
+      <div className="flex size-full items-center justify-center">
+        <div className="flex size-full flex-col rounded-t-[40px] bg-[rgb(88,88,84,0.6)] md:size-5/6 md:rounded-[40px]">
+          <div className="flex size-full flex-col gap-4">
+            <div className="flex h-[13%] w-full md:h-1/5 lg:h-[1%]">
+              <div className="absolute left-2 top-2 size-[6vh] rounded-lg bg-[rgb(0,0,0,0.5)] drop-shadow-custom md:relative md:left-6 md:top-4 md:size-[75px]"></div>
             </div>
-            <div className="w-full h-[35%] px-12">
-              <h1 className="text-[10vw] font-extrabold">
+            <div className="h-[35%] w-full px-12">
+              <h1 className="text-[9vw] font-extrabold drop-shadow-custom md:text-[7.5vw]">
                 Start your own hallucinating ping pong journey
               </h1>
             </div>
-            <div className="w-full h-[25%] px-12">
-              <p className="text-[6vw]">
+            <div className="h-1/4 w-full px-12">
+              <p className="text-[6vw] drop-shadow-custom md:text-[4vw]">
                 welcome to PiPo lorem ipsum ipsum lorem hehe makayn maytgal
               </p>
             </div>
-            <div className="w-full flex-grow flex justify-center items-end py-9 text-[30px]">
+            <div className="flex w-full grow items-end justify-center py-9 text-[25px] md:text-[40px]">
               <Button>Explore</Button>
             </div>
           </div>
-          <div className="w-[50%] hidden"></div>
+          <div className="hidden w-1/2 lg:block"></div>
         </div>
       </div>
     </div>
