@@ -10,15 +10,10 @@ const config: Config = {
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      theme: {
-        extend: {
-          dropShadow: {
-            custom: '0 -2px 50px rgba(0, 0, 0, 1)',
-          },
-        },
+      dropShadow: {
+        custom: '5px 5px 50px rgba(0, 0, 0, 1)',
       },
     },
   },
