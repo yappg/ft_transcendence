@@ -1,5 +1,7 @@
 asgiref==3.8.1
+dj-rest-auth==6.0.0
 Django==4.2.14
+django-allauth==64.0.0
 djangorestframework==3.15.2
 sqlparse==0.5.1
 typing-extensions==4.12.2
