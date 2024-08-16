@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    #swagger api documentation
+    'drf_yasg',
     #local apps
     'accounts',
     'game',
