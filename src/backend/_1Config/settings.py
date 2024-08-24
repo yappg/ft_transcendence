@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.oauth2',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'oauth2_provider',
@@ -70,13 +71,30 @@ REST_FRAMEWORK = {
     ]
 }
 
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {
         'read': 'Read scope',
-    }
+        'write': 'Write scope',
+    },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
+    'AUTHORIZATION_CODE_EXPIRE_SECONDS': 600,
+
 }
 
+OAUTH2_PROVIDER_42 = {
+    'CLIENT_ID': 'u-s4t2ud-b7109bb1f5663d94cefef102cf5931f3ab0f04d3f3a3d501495c071e35e9fe19',
+    'CLIENT_SECRET': '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',
+    'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
+    'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
+    'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
+    'SCOPE': 'public',
+}
 
 ROOT_URLCONF = '_1Config.urls'
 
@@ -162,3 +180,5 @@ ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
+
+# LOGIN_REDIRECT_URL = 'players/'

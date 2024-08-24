@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
-from oauth2_provider import urls as oauth_urls
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('o/', include('accounts.urls')),
+    path('players/', include('accounts.urls')),
+]
 # from rest_framework import permissions
 # from drf_yasg.views import get_schema_view
 # from drf_yasg import openapi
@@ -15,10 +22,5 @@ from oauth2_provider import urls as oauth_urls
 # )
 
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('oauth/', include(oauth_urls)),
+    # path('oauth/', include('allauth.urls')),
     # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
-]
