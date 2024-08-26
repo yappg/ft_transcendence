@@ -8,6 +8,11 @@ urlpatterns = [
     path('o/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
 ]
+
+handler404 = '_1Config.views.handler404'
+handler500 = '_1Config.views.handler500'
+handler403 = '_1Config.views.handler403'
+handler400 = '_1Config.views.handler400'
 # from rest_framework import permissions
 # from drf_yasg.views import get_schema_view
 # from drf_yasg import openapi
