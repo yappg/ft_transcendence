@@ -6,7 +6,7 @@ urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
     path('o/', include('accounts.urls')),
-    path('players/', include('accounts.urls')),
+    path('AccountUser/', include('accounts.urls')),
 ]
 
 handler404 = '_1Config.views.handler404'

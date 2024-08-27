@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Player
+from .models import AccountUser, AccountUser
 # Register your models here.
 
 
@@ -10,4 +10,5 @@ from .models import Player
 #         (None, {'fields': ('avatar', 'tournament_display_name', 'is_online', 'wins', 'losses')}),
 #     )
 
-admin.site.register(Player)
+# admin.site.register(AccountUser)
+admin.site.register(AccountUser)

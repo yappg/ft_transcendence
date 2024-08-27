@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Player
+from .models import AccountUser
 from .serializers import PlayerSerializer
 
 #____________________________________________
@@ -9,7 +9,7 @@ from .serializers import PlayerSerializer
 # Create your views here.
 class PlayersViewSet(viewsets.ModelViewSet):
     permission_classes=(IsAuthenticated,)
-    queryset=Player.objects.all
+    queryset=AccountUser.objects.all
     serializer_class=PlayerSerializer
 
 import requests
@@ -58,7 +58,7 @@ class OAuth42CallbackView(View):
         user_data = response.json()
 
         # Create or get user
-        user, created = Player.objects.get_or_create(username=user_data['login'],
+        user, created = AccountUser.objects.get_or_create(username=user_data['login'],
                 email=user_data['email'],
                 first_name=user_data['first_name'],
                 last_name=user_data['last_name'])

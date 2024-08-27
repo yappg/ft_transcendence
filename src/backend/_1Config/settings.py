@@ -175,7 +175,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL='accounts.Player' #CostumUserModel
+AUTH_USER_MODEL='accounts.AccountUser' #CostumUserModel
 
 SITE_ID = 1
 
