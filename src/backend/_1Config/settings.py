@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,10 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*bok4t@yesu4==8yn!+4juc1skc$$ys#x=agk2il9xh7u4z_l!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*'
-    ]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     'drf_yasg',
     #local apps
     'accounts',
-    'game',
-    'tournament',
-    'chat',
-    'api',
+    # 'game',
+    # 'tournament',
+    # 'chat',
+    # 'api',
 ]
 
 MIDDLEWARE = [
@@ -123,10 +123,15 @@ WSGI_APPLICATION = '_1Config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': 5432,
     }
 }
+
 
 
 # Password validation
@@ -181,5 +186,6 @@ ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
+
 
 # LOGIN_REDIRECT_URL = 'players/'

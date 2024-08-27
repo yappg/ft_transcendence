@@ -4,10 +4,10 @@ from .models import Player
 # Register your models here.
 
 
-class GameAdmin(UserAdmin):
-    model = Player
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('avatar', 'tournament_display_name', 'is_online', 'wins', 'losses')}),
-    )
+# class GameAdmin(UserAdmin):
+#     model = Player
+#     fieldsets = UserAdmin.fieldsets + (
+#         (None, {'fields': ('avatar', 'tournament_display_name', 'is_online', 'wins', 'losses')}),
+#     )
 
-admin.site.register(Player, GameAdmin)
+admin.site.register(Player)

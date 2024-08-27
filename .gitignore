@@ -1,3 +1,4 @@
 **/venvdir/
 **/db.sqlite3
 **/*.json
+*.env
