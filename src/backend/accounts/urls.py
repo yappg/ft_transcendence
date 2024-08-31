@@ -3,8 +3,8 @@ from .views import OAuth42LoginView, OAuth42CallbackView
 from . import views
 
 urlpatterns = [
-    path('42/login', OAuth42LoginView.as_view(), name='oauth_login'),
-    path('42/callback/', OAuth42CallbackView.as_view(), name='oauth_callback'),
+    path('login/<slug:slug>/', OAuth42LoginView.as_view(), name='oauth_login'),
+    path('callback/<slug:slug>/', OAuth42CallbackView.as_view(), name='oauth_callback'),
 
     path('', views.PlayersViewSet.as_view({'get': 'list'})),
 ]

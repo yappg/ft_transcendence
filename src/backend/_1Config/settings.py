@@ -93,7 +93,18 @@ OAUTH2_PROVIDER_42 = {
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/o/42/callback/',
     'SCOPE': 'public',
+}
+
+OAUTH2_PROVIDER_GOOGLE = {
+    'CLIENT_ID': '182265720847-7srl3417qptmehcj09gv0s9ukkne96t4.apps.googleusercontent.com',
+    'CLIENT_SECRET': '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',
+    'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
+    'TOKEN_URL': 'https://oauth2.googleapis.com/token',
+    'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/o/42/callback/',
+    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile',
 }
 
 ROOT_URLCONF = '_1Config.urls'

@@ -21,61 +21,56 @@ from django.views import View
 from django.http import JsonResponse
 from oauth2_provider.models import Application
 import json
+from .utils import APIdata, fetch_user_data
+
 
 
 class OAuth42LoginView(View):
-    def get(self, request):
-        client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
-        Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
-        authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fo%2F42%2Fcallback%2F&response_type=code"
-        redirected_url = redirect(authorization_url)
-        return redirected_url
+    def get(self, request, slug):
+        if slug == '42':
+            Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
+            client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
+            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fo%2F42%2Fcallback%2F&response_type=code"
+        elif slug == 'google':
+            Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL'] #'https://accounts.google.com/o/oauth2/auth'
+            client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']#'182265720847-7srl3417qptmehcj09gv0s9ukkne96t4.apps.googleusercontent.com'
+            redirect_uri = settings.OAUTH2_PROVIDER_42['CALLBACK_URL']#'http://127.0.0.1:8000/o/42/callback/'
+            scope = settings.OAUTH2_PROVIDER_42['SCOPE'] #'https://www.googleapis.com/auth/userinfo.profile'
+            authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
+        else:
+            return JsonResponse({'error': 'Invalid platform'}, status=400)
+        return redirect(authorization_url)
 
 class OAuth42CallbackView(View):
     def get(self, request):
         code = request.GET.get('code')
+
         if not code:
             return JsonResponse({'error': 'No code provided'}, status=400)
 
-        # Exchange code for access token
-        token_url = settings.OAUTH2_PROVIDER_42['TOKEN_URL']
-        data = {
-            'grant_type': 'authorization_code',
-            'client_id': settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
-            'client_secret': settings.OAUTH2_PROVIDER_42['CLIENT_SECRET'],
-            'code': code,
-            'redirect_uri': settings.OAUTH2_PROVIDER_42['CALLBACK_URL'],
-        }
+        token_url, data = APIdata(code)
         response = requests.post(token_url, data=data)
         token_data = response.json()
+
         if 'access_token' not in token_data:
             return JsonResponse({'error': 'Failed to obtain access token'}, status=400)
 
-        # Get user info
-        userdata_url = settings.OAUTH2_PROVIDER_42['USERDATA_URL']
-        headers = {'Authorization': f"Bearer {token_data['access_token']}"}
-        response = requests.get(userdata_url, headers=headers)
-        user_data = response.json()
+        user_data = fetch_user_data(token_data['access_token'])
 
-        # Create or get user
         user, created = Player.objects.get_or_create(username=user_data['login'],
-                email=user_data['email'],
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'])
-            # defaults={
-                # 'username' : user_data['login'],
-                # 'email' : user_data['email'],
-                # 'first_name' : user_data['first_name'],
-                # 'last_name' : user_data['last_name'],
+            defaults={
+                'username' : user_data['login'],
+                'email' : user_data['email'],
+                'first_name' : user_data['first_name'],
+                'last_name' : user_data['last_name'],
                 # :user_data['image']['link']
-            # }
-        # )
-        print(user.id)
-
-        # if not created:
-        #     user.email = user_data['email']
-        #     user.avatar_url = user_data['image_url']
-        #     user.save()
+            }
+        )
+        # print(user.id)
+        if not created:
+            user.email = user_data['email']
+            # user.avatar_url = user_data['image']['link']
+            user.save()
 
         # Log the user in
         # login(request, user)
@@ -88,7 +83,7 @@ class OAuth42CallbackView(View):
         #     name=f'42 OAuth App for {user.username}'
         # )
 
-        # # # Generate access token for the user
+        # # # # Generate access token for the user
         # token_url = reverse('oauth2_provider:token')
         # data = {
         #     'grant_type': 'client_credentials',
@@ -97,6 +92,7 @@ class OAuth42CallbackView(View):
         # }
         # response = requests.post(request.build_absolute_uri(token_url), data=data)
         # token_data = response.json()
+        # print('\n\n-----------' + str(token_data) + '----------\n\n')
 
         return JsonResponse({
             'access_token': token_data['access_token'],
