@@ -5,7 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('o/', include('accounts.urls')),
+    path('oauth/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
 ]
 # from rest_framework import permissions

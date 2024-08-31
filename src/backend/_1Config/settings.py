@@ -88,12 +88,12 @@ OAUTH2_PROVIDER = {
 }
 
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': 'u-s4t2ud-b7109bb1f5663d94cefef102cf5931f3ab0f04d3f3a3d501495c071e35e9fe19',
-    'CLIENT_SECRET': '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',
+    'CLIENT_ID': 'u-s4t2ud-3029a7101dfe59b4b0241c30869ea8b1eac488292da336c2cb49bca3631be37e',
+    'CLIENT_SECRET': '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',
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/o/42/callback/',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/42',
     'SCOPE': 'public',
 }
 
@@ -103,7 +103,7 @@ OAUTH2_PROVIDER_GOOGLE = {
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/o/42/callback/',
+    'CALLBACK_URL': 'http://localhost:8000/o/callback/google',
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile',
 }
 
