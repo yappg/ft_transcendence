@@ -44,7 +44,7 @@ class OAuth42LoginView(View):
 class OAuth42CallbackView(View):
     def get(self, request, provider):
 
-        if (provider != '42' or provider != 'google'):
+        if (provider != '42' and provider != 'google'):
             return JsonResponse({'error': 'Invalid platform'}, status=400)
 
         code = request.GET.get('code')
@@ -67,18 +67,19 @@ class OAuth42CallbackView(View):
             # user.avatar_url = user_data['image']['link']
             user.save()
 
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
         # Log the user in
-        # login(request, user)
+        login(request, user)
 
         # Create OAuth2 application for the user if it doesn't exist
-        # app, _ = Application.objects.get_or_create(
-        #     user=user,
-        #     client_type=Application.CLIENT_CONFIDENTIAL,
-        #     authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE,
-        #     name=f'42 OAuth App for {user.username}'
-        # )
+        app, _ = Application.objects.get_or_create(
+            user=user,
+            client_type=Application.CLIENT_CONFIDENTIAL,
+            authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE,
+            name=f'42 OAuth App for {user.username}'
+        )
 
-        # # # # Generate access token for the user
+        # # # Generate access token for the user
         # token_url = reverse('oauth2_provider:token')
         # data = {
         #     'grant_type': 'client_credentials',

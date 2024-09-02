@@ -24,8 +24,6 @@ def APIdata(code, provider):
     return (token_url, data)
 
 def fetch_user_data(access_token, provider):
-    param = ''
-    userdata_url = ''
     if provider == '42':
         userdata_url = settings.OAUTH2_PROVIDER_42['USERDATA_URL']
     elif provider == 'google':
@@ -46,11 +44,16 @@ def store_user_data(user_data, provider):
             }
         )
     elif provider == 'google':
+        if 'email' in user_data:
+            email = user_data['email']
+        else :
+            email = None
         Gusername = str(user_data['given_name']) + str(user_data['family_name'])
         user, created = Player.objects.get_or_create(username=Gusername,
             defaults={
-                'username' : Gusername,
+                'email' : email,
                 'email' : user_data['email'],
+                'username' : Gusername,
                 'first_name' : user_data['given_name'],
                 'last_name' : user_data['family_name'],
                 # :user_data['image']['link']

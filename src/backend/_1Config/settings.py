@@ -76,17 +76,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope',
-    },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
-    'AUTHORIZATION_CODE_EXPIRE_SECONDS': 600,
-
-}
-
 OAUTH2_PROVIDER_42 = {
     'CLIENT_ID': 'u-s4t2ud-3029a7101dfe59b4b0241c30869ea8b1eac488292da336c2cb49bca3631be37e',
     'CLIENT_SECRET': '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',
@@ -98,13 +87,13 @@ OAUTH2_PROVIDER_42 = {
 }
 
 OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': '182265720847-7srl3417qptmehcj09gv0s9ukkne96t4.apps.googleusercontent.com',
-    'CLIENT_SECRET': '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',
+    'CLIENT_ID': '182265720847-k8uvnm7i3oeh35t05aalu6lrj0blejh8.apps.googleusercontent.com',
+    'CLIENT_SECRET': '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',
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://localhost:8000/o/callback/google',
-    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/google',
+    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
 
 ROOT_URLCONF = '_1Config.urls'
