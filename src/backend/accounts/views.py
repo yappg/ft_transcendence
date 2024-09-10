@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from django.shortcuts import logout
+from django.contrib.auth import logout
 from .models import Player
 from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer
 
@@ -12,23 +12,42 @@ class PlayersViewSet(viewsets.ModelViewSet):
     queryset=Player.objects.all
     serializer_class=PlayerSerializer
 
-#=======================================================
 
 class SignUpView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = SignUpSerializer
+
+    def get(self, request):
+        return Response({'message': 'Signup page'}, status=200)
+
     def post(self, request):
-        serializer = SignUpSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            pass
+            user = serializer.save()
+            if user:
+                return Response({'message': f'User created {user.username} '}, status=201)
+        return Response(serializer.errors, status=400)
+            
 
 class SignInView(APIView):
-    permission_classes = (AllowAny)
+    permission_classes = [AllowAny]
+    Serializer_class = SignInSerializer
+
+    def get(self, request):
+        return Response({'message': 'SignIn page'}, status=200)
 
     def post(self, request):
-        Serializer = SignInSerializer(data=request.data)
+        Serializer = self.Serializer_class(data=request.data)
+        # print('\n----------------\n\n')
+        # print (request.data)
+        # print (Serializer.is_valid())
+        # if Serializer.is_valid():
+        #     print(Serializer.validated_data)
+        # print('\n----------------\n\n')
         if Serializer.is_valid() :
-            username_ = Serializer.validated_data['username']
-            password_ = Serializer.validated_data['password']
-            user = authenticate(username=username_, password=password_)
+            usernm = Serializer.validated_data['username']
+            passwd = Serializer.validated_data['password']
+            user = authenticate(username=usernm, password=passwd)
             if user is not None:
                 login(request, user)
                 return Response ({'message': 'logged In succesfuly'}, status=200)
@@ -130,3 +149,5 @@ class OAuth42CallbackView(View):
             'expires_in': token_data['expires_in'],
             # 'username': user.username,
         })
+
+
