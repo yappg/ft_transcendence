@@ -1,16 +1,50 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from django.contrib.auth import authenticate
+from django.shortcuts import logout
 from .models import Player
-from .serializers import PlayerSerializer
+from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer
 
-#____________________________________________
-
-# Create your views here.
 class PlayersViewSet(viewsets.ModelViewSet):
     permission_classes=(IsAuthenticated,)
     queryset=Player.objects.all
     serializer_class=PlayerSerializer
+
+#=======================================================
+
+class SignUpView(APIView):
+    def post(self, request):
+        serializer = SignUpSerializer(data=request.data)
+        if serializer.is_valid():
+            pass
+
+class SignInView(APIView):
+    permission_classes = (AllowAny)
+
+    def post(self, request):
+        Serializer = SignInSerializer(data=request.data)
+        if Serializer.is_valid() :
+            username_ = Serializer.validated_data['username']
+            password_ = Serializer.validated_data['password']
+            user = authenticate(username=username_, password=password_)
+            if user is not None:
+                login(request, user)
+                return Response ({'message': 'logged In succesfuly'}, status=200)
+            else :
+                return Response({'error': 'Invalid Credentials'}, status=400)
+        else :
+            return Response(Serializer.errors, status=400)
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        logout(request)
+        return Response({'message': 'loggedOut Successfuly'}, status=200)
+
+
+# Create your views here.
 
 import requests
 from django.conf import settings
