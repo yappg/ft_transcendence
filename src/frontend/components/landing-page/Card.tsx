@@ -1,37 +1,50 @@
-import Logo from '@/public/landing-page-logo.svg';
+/* eslint-disable @next/next/no-img-element */
+import exp from 'constants';
+import { MdLanguage } from 'react-icons/md';
 import Button from '../Button';
 
-const Card = () => {
+const Karta = () => {
   return (
-    <div className="z-[2] flex size-full flex-col items-center justify-center rounded-lg shadow-lg lg:bg-slate-600">
-      <div className="z-[3] mb-[-20%] h-1/4 w-[45%] md:mb-[-25%] lg:mb-0">
-        <Logo />
+    <div className="z-[2] flex  size-full flex-col justify-end">
+      <div className="z-[3] mb-[-100px] flex h-[280px] w-full items-end justify-center md:mb-[-120px]">
+        <img
+          src="/landing-page-logo.svg"
+          alt="logo"
+          className="size-[200px] md:size-[235px] lg:size-[250px]"
+        />
       </div>
-      <div className="flex size-full items-center justify-center">
-        <div className="flex size-full flex-col rounded-t-[40px] bg-[rgb(88,88,84,0.6)] md:size-5/6 md:rounded-[40px]">
-          <div className="flex size-full flex-col gap-4">
-            <div className="flex h-[13%] w-full md:h-1/5 lg:h-[1%]">
-              <div className="absolute left-2 top-2 size-[6vh] rounded-lg bg-[rgb(0,0,0,0.5)] drop-shadow-custom md:relative md:left-6 md:top-4 md:size-[75px]"></div>
+      <div className="flex h-5/6 w-full items-start justify-center">
+        <div className="flex size-full min-h-[650px] min-w-[400px] rounded-t-[30px] bg-[rgb(88,88,84,0.5)] md:size-[90%] md:max-h-[700px] md:max-w-[1200px] md:rounded-b-[30px]">
+          {/* left side */}
+          <div className="flex size-full flex-col justify-center px-6 pt-12 lg:w-3/4 lg:px-12 lg:pr-0">
+            <div className="absolute left-4 top-4 w-full md:relative md:left-0 md:top-0 md:flex md:items-end md:p-0">
+              <div className="flex size-[50px] items-center justify-center rounded-md bg-[rgb(0,0,0,0.5)] md:size-[65px]">
+                <MdLanguage className="size-[35px] md:size-[45px]" />
+              </div>
             </div>
-            <div className="h-[35%] w-full px-12">
-              <h1 className="text-[9vw] font-extrabold drop-shadow-custom md:text-[7.5vw]">
+            <div className="flex h-3/6 w-full items-center">
+              <h1 className="text-[45px] font-bold md:text-[55px]">
                 Start your own hallucinating ping pong journey
               </h1>
             </div>
-            <div className="h-1/4 w-full px-12">
-              <p className="text-[6vw] drop-shadow-custom md:text-[4vw]">
+            <div className="flex h-1/6 w-full items-start">
+              <p className="text-[25px] md:text-[30px]">
                 welcome to PiPo lorem ipsum ipsum lorem hehe makayn maytgal
               </p>
             </div>
-            <div className="flex w-full grow items-end justify-center py-9 text-[25px] md:text-[40px]">
-              <Button>Explore</Button>
+            <div className="flex h-2/6 w-full items-center justify-center md:h-1/6 md:items-center md:justify-start">
+              {/* to replace with button */}
+              <div className="h-[70px] w-[200px] rounded-[20px] bg-red-500"></div>
             </div>
           </div>
-          <div className="hidden w-1/2 lg:block"></div>
+          {/* right side */}
+          <div className="hidden w-2/4 lg:flex ">
+            <img src="/racket.svg" alt="racket" className="w-[90%]" />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Card;
+export default Karta;
