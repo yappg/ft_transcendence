@@ -1,16 +1,31 @@
 from rest_framework import serializers
 from .models import Player
+from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
 class PlayerSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model=Player
         fields = ('id', 'username','email', 'wins', 'losses',)
 
-class SignInSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
-        fields = ('username', 'password')
+class SignInSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    extra_kwargs = {
+        'password':{'write_only':True}
+    }
+
+    def validate(self, attrs):
+        usernm = attrs.get('username')
+        passwd = attrs.get('password')
+        if usernm and passwd:
+            user = authenticate(username=usernm, password=passwd)
+            if not user:
+                raise serializers.ValidationError("Invalid Credentials")
+        else :
+            serializers.ValidationError("Both Username and password required")
+        attrs['user'] = user
+        return attrs
 
 class SignUpSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)

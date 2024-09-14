@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -7,10 +7,10 @@ from django.contrib.auth import logout
 from .models import Player
 from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer
 
-class PlayersViewSet(viewsets.ModelViewSet):
-    permission_classes=(IsAuthenticated,)
-    queryset=Player.objects.all
+class PlayersViewList(ListAPIView):
+    model = Player
     serializer_class=PlayerSerializer
+    queryset=Player.objects.all()
 
 
 class SignUpView(APIView):
@@ -21,38 +21,31 @@ class SignUpView(APIView):
         return Response({'message': 'Signup page'}, status=200)
 
     def post(self, request):
+        #implement a rate limit 
+
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             if user:
                 return Response({'message': f'User created {user.username} '}, status=201)
         return Response(serializer.errors, status=400)
-            
+
+#----------------------------------------------
 
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
 
     def get(self, request):
-        return Response({'message': 'SignIn page'}, status=200)
+        return Response({'page to Serve': 'SignIn page'}, status=200)
 
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
-        # print('\n----------------\n\n')
-        # print (request.data)
-        # print (Serializer.is_valid())
-        # if Serializer.is_valid():
-        #     print(Serializer.validated_data)
-        # print('\n----------------\n\n')
+
         if Serializer.is_valid() :
-            usernm = Serializer.validated_data['username']
-            passwd = Serializer.validated_data['password']
-            user = authenticate(username=usernm, password=passwd)
-            if user is not None:
-                login(request, user)
-                return Response ({'message': 'logged In succesfuly'}, status=200)
-            else :
-                return Response({'error': 'Invalid Credentials'}, status=400)
+            user = Serializer.validated_data['user']
+            login(request, user)
+            return Response ({'message': 'logged In succesfuly'}, status=200)
         else :
             return Response(Serializer.errors, status=400)
 
@@ -91,25 +84,25 @@ class OAuth42LoginView(View):
             scope = settings.OAUTH2_PROVIDER_GOOGLE['SCOPE']
             authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
         else:
-            return JsonResponse({'error': 'Invalid platform'}, status=400)
+            return Response({'error': 'Invalid platform'}, status=400)
         return redirect(authorization_url)
 
 class OAuth42CallbackView(View):
     def get(self, request, provider):
 
         if (provider != '42' and provider != 'google'):
-            return JsonResponse({'error': 'Invalid platform'}, status=400)
+            return Response({'error': 'Invalid platform'}, status=400)
 
         code = request.GET.get('code')
         if not code:
-            return JsonResponse({'error': 'No code provided'}, status=400)
+            return Response({'error': 'No code provided'}, status=400)
 
         token_url, data = APIdata(code, provider)
         response = requests.post(token_url, data=data)
         token_data = response.json()
 
         if 'access_token' not in token_data:
-            return JsonResponse({'error': 'Failed to obtain access token'}, status=400)
+            return Response({'error': 'Failed to obtain access token'}, status=400)
 
         user_data = fetch_user_data(token_data['access_token'], provider)
 
@@ -125,12 +118,12 @@ class OAuth42CallbackView(View):
         login(request, user)
 
         # Create OAuth2 application for the user if it doesn't exist
-        app, _ = Application.objects.get_or_create(
-            user=user,
-            client_type=Application.CLIENT_CONFIDENTIAL,
-            authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE,
-            name=f'42 OAuth App for {user.username}'
-        )
+        # app, _ = Application.objects.get_or_create(
+        #     user=user,
+        #     client_type=Application.CLIENT_CONFIDENTIAL,
+        #     authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE,
+        #     name=f'42 OAuth App for {user.username}'
+        # )
 
         # # # Generate access token for the user
         # token_url = reverse('oauth2_provider:token')
@@ -143,7 +136,7 @@ class OAuth42CallbackView(View):
         # token_data = response.json()
         # print('\n\n-----------' + str(token_data) + '----------\n\n')
 
-        return JsonResponse({
+        return Response({
             'access_token': token_data['access_token'],
             'token_type': token_data['token_type'],
             'expires_in': token_data['expires_in'],
@@ -151,3 +144,5 @@ class OAuth42CallbackView(View):
         })
 
 
+# {"username":"kadigh1", "password":"kadigh123"}
+# {"username": "abdo", "password": "kadigh123"}

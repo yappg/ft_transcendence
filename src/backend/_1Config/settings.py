@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     #django-rest-framework
     'rest_framework',
+    'rest_framework_simplejwt'
     #generate tokens for an authenticated player
     'rest_framework.authtoken',
     # 3rd party libs
@@ -67,7 +68,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 

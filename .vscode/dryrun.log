@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/aaoutem-/Desktop/ft_transcendence'
+python3 main.py
+make: Leaving directory '/home/aaoutem-/Desktop/ft_transcendence'
+ 
