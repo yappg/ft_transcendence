@@ -1,3 +1,4 @@
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 from .models import Player
 import requests
@@ -60,3 +61,8 @@ def store_user_data(user_data, provider):
             }
         )
     return (user, created)
+
+def generate_tokens(user):
+        refresh_token = RefreshToken.for_user(user)
+        tokens = {'access':str(refresh_token.access_token), 'refresh':str(refresh_token)}
+        return tokens

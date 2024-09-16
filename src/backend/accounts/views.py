@@ -2,12 +2,15 @@ from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from .models import Player
 from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer
+from .utils import APIdata, fetch_user_data, store_user_data, generate_tokens
 
 class PlayersViewList(ListAPIView):
+    permission_classes = [IsAuthenticated]
     model = Player
     serializer_class=PlayerSerializer
     queryset=Player.objects.all()
@@ -27,7 +30,8 @@ class SignUpView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             if user:
-                return Response({'message': f'User created {user.username} '}, status=201)
+                tokens = generate_tokens(user)
+                return Response({'tokens': tokens}, status=201)
         return Response(serializer.errors, status=400)
 
 #----------------------------------------------
@@ -45,14 +49,23 @@ class SignInView(APIView):
         if Serializer.is_valid() :
             user = Serializer.validated_data['user']
             login(request, user)
-            return Response ({'message': 'logged In succesfuly'}, status=200)
+            tokens = generate_tokens(user)
+            return Response({'tokens': tokens}, status=200)
         else :
             return Response(Serializer.errors, status=400)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        logout(request)
+        try:
+            # must the user send the tokens in header
+            # refresh_token = request.data["refresh_token"]
+            # tokens = RefreshToken(refresh_token)
+            # tokens.backlist()
+            # Refresh_token = request.data['']
+            logout(request)
+        except Exception as e:
+            return Response({'error': str(e)}, status=400)
         return Response({'message': 'loggedOut Successfuly'}, status=200)
 
 
@@ -66,8 +79,6 @@ from django.urls import reverse
 from django.views import View
 from django.http import JsonResponse
 from oauth2_provider.models import Application
-import json
-from .utils import APIdata, fetch_user_data, store_user_data
 
 
 

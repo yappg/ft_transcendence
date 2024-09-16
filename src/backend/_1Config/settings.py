@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     #django-rest-framework
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
     #generate tokens for an authenticated player
     'rest_framework.authtoken',
     # 3rd party libs
@@ -68,15 +69,22 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 
 AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
 )
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=120),
+
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=2),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+
+    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+}
 
 OAUTH2_PROVIDER_42 = {
     'CLIENT_ID': 'u-s4t2ud-3029a7101dfe59b4b0241c30869ea8b1eac488292da336c2cb49bca3631be37e',

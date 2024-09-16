@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Sep 13 16:34:49 2024
+# Make data base, printed on Mon Sep 16 14:06:28 2024
 
 # Variables
 
@@ -63,13 +65,15 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
 MEMORY_PRESSURE_WATCH = /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@x11.service/memory.pressure
 # environment
-GNOME_TERMINAL_SERVICE = :1.233
+GNOME_TERMINAL_SERVICE = :1.118
 # makefile
 MAKEFLAGS = pqrR
 # makefile
 CURDIR := /home/aaoutem-/Desktop/ft_transcendence
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+VSCODE_L10N_BUNDLE_LOCATION = 
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
@@ -89,13 +93,13 @@ MAKEFILE_LIST := Makefile
 # environment
 ZSH = /home/aaoutem-/.oh-my-zsh
 # environment
-VSCODE_PID = 10996
+VSCODE_PID = 5107
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/ghost:@/tmp/.ICE-unix/2011,unix/ghost:/tmp/.ICE-unix/2011
+SESSION_MANAGER = local/ghost:@/tmp/.ICE-unix/2065,unix/ghost:/tmp/.ICE-unix/2065
 # automatic
 *F = $(notdir $*)
 # environment
@@ -121,7 +125,7 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 1
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/ad2127a6_502f_4651_9e4d_08ffde1f1f4b
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/bbdf2ac7_d120_41fb_8036_09feb12fe4a9
 # environment
 MAKELEVEL := 0
 # default
@@ -157,7 +161,7 @@ LOGNAME = aaoutem-
 # makefile
 .DEFAULT_GOAL := build
 # environment
-SYSTEMD_EXEC_PID = 2068
+SYSTEMD_EXEC_PID = 2121
 # environment
 DISPLAY = :1
 # environment
@@ -167,7 +171,7 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-SSH_AGENT_PID = 1955
+SSH_AGENT_PID = 2009
 # environment
 PAGER = less
 # environment
@@ -221,7 +225,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 GDMSESSION = gnome
 # variable set hash-table stats:
-# Load=105/1024=10%, Rehash=0, Collisions=14/135=10%
+# Load=106/1024=10%, Rehash=0, Collisions=15/136=11%
 
 # Pattern-specific Variable Values
 
@@ -278,10 +282,9 @@ build:
 # current buf: size = 8162 B / used = 140 B / count = 16 / avg = 8 B
 
 # strcache performance: lookups = 21 / hit rate = 23%
+ 
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=0/21=0%
-# Finished Make data base on Fri Sep 13 16:34:49 2024
+# Finished Make data base on Mon Sep 16 14:06:28 2024
 
  
-make: *** No rule to make target 'all'.  Stop.
-
