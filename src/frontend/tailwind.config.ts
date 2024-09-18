@@ -9,14 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-radial':
+          'linear-gradient(125deg, rgba(34,33,33,0.2) 0%, rgba(127,166,192,0.2) 37%, rgba(193,56,44,0.2) 70%, rgba(136,132,132,0.2) 100%)',
       },
-      dropShadow: {
-        custom: '5px 5px 50px rgba(0, 0, 0, 1)',
+      colors: {
+        'my-red': 'var(--myred)',
+      },
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        coustard: ['Coustard', 'serif'],
       },
     },
   },
+  variants: {},
   plugins: [],
 };
 export default config;
