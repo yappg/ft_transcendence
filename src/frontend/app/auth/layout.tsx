@@ -38,7 +38,7 @@ export default function RootLayout({
             </div>
             <div className="flex size-full items-start justify-center lg:items-center">
               {/* the max/min with/height of the div under must be defined in the input and text bars of the form so this dive resizes itself based on the children  */}
-              <div className="flex size-full md:size-[85%] md:max-h-[850px] md:min-h-[500px] md:max-w-[1517px]">
+              <div className="flex size-full min-w-[390px] md:size-[85%] md:max-h-[850px] md:min-h-[500px] md:max-w-[1517px]">
                 {children}
                 <div className="z-[1] order-2 hidden h-full w-[500px] items-center lg:flex">
                   <img src="/logo.svg" alt="logo" />
