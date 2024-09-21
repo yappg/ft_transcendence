@@ -1,0 +1,23 @@
+import React from 'react';
+
+interface InputBarProps {
+  Icon: React.ElementType;
+  placeholder: string;
+}
+
+function InputBar({ Icon, placeholder }: InputBarProps) {
+  return (
+    // <div className="flex h-auto w-[95%] flex-col items-start justify-center gap-5  p-20">
+    <div className="flex size-full items-center gap-4 rounded-full border border-[rgb(255,255,255,0.6)] bg-[rgb(0,0,0,0.2)] px-6 py-3 focus-within:border-none focus-within:bg-[rgb(0,0,0,0.6)]">
+      <Icon className="size-[30px] min-w-[30px] opacity-60" />
+      <input
+        type="text"
+        placeholder={placeholder}
+        className="w-full appearance-none bg-transparent text-lg text-white opacity-60 focus:outline-none"
+      />
+    </div>
+    // </div>
+  );
+}
+
+export default InputBar;
