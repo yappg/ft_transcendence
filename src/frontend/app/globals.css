@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --myred: #E99C3C;
+  --myred: #e99c3c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,7 +14,7 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-    --myred: #C1382C;
+    --myred: #c1382c;
   }
 }
 
@@ -28,4 +28,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.costum-shadow {
+  -webkit-box-shadow: -4px 4px 50px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -4px 4px 50px 0px rgba(0, 0, 0, 1);
+  box-shadow: -4px 4px 50px 0px rgba(0, 0, 0, 1);
 }
