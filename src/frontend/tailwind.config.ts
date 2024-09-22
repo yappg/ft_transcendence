@@ -14,6 +14,7 @@ const config: Config = {
       },
       colors: {
         'my-red': 'var(--myred)',
+        'my-red-90': 'rgb(193,56,44,0.9)',
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
