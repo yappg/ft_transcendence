@@ -22,13 +22,18 @@ const MyLink = ({ text, href }: MyLinkProps) => {
   );
 };
 
-const Form = () => {
+interface FormProps {
+  fields: { Icon: React.ElementType; placeholder: string }[];
+}
+
+const Form = ({ fields }: FormProps) => {
   return (
-    <div className="flex w-full items-center justify-center px-6 py-12 sm:px-12 md:p-16 lg:px-5">
+    <div className="flex w-full items-center justify-center px-6 py-12 sm:px-12 md:p-16 lg:px-5 lg:py-2">
       <form className="flex size-full flex-col items-start gap-8">
         <div className="flex w-full flex-col gap-5">
-          <InputBar Icon={FaRegUser} placeholder="username" />
-          <InputBar Icon={MdOutlineLock} placeholder="password" />
+          {fields.map((field, index) => (
+            <InputBar key={index} Icon={field.Icon} placeholder={field.placeholder} />
+          ))}
         </div>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
           <Button variant={'default'} size={'lg'}>
