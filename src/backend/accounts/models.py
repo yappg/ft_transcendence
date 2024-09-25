@@ -10,3 +10,6 @@ class Player(AbstractUser):
     # friends=models.ManyToManyField()
     wins=models.IntegerField(default=0)
     losses=models.IntegerField(default=0)
+    enabled_2fa=models.BooleanField(default=False)
+    otp_secret_key=models.CharField(max_length=16, default=None)
+    verified_otp=models.BooleanField(default=False)

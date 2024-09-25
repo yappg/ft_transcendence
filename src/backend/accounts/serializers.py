@@ -60,3 +60,9 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         return user
 
+class GenerateOTPSerializer(serializers.Serializer):
+        username = serializers.CharField()
+
+class VerifyOTPSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    otp_token = serializers.CharField(max_length=6)

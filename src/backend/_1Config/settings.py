@@ -87,8 +87,8 @@ SIMPLE_JWT = {
 }
 
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': 'u-s4t2ud-3029a7101dfe59b4b0241c30869ea8b1eac488292da336c2cb49bca3631be37e',
-    'CLIENT_SECRET': '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',
+    'CLIENT_ID': 'u-s4t2ud-4aae62bd87a3daa2bf54d50bbccb9a771a1cfde5353d8a10bd6ed5d8fe263033',
+    'CLIENT_SECRET': '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',
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
