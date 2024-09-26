@@ -116,24 +116,34 @@ class VerifyOTP(APIView):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
         #     return Response(serializer.errors, status=400)
-
         username = request.data['username']
         otp_token = request.data['otp_token']
-        print('-------------------\n\n')
-        print(otp_token)
         user = Player.objects.get(username=username)
         if user == None:
             return Response({'error': 'user Not found'}, status=404)
         totp = pyotp.TOTP(user.otp_secret_key)
-        print(totp.now())
         bol = totp.verify(otp_token)
-        print(bol)
-        print('-------------------\n\n')
         if not bol:
             return Response({'error': 'invalid token'}, status=400)
         user.verified_otp = True
         user.save()
         return Response({'message': '2fa Verified'}, status=200)
+
+class DisableOTP(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        username = request.data['username']
+        user = Player.objects.get(username=username)
+        if user is None:
+            return Response({'error' : 'invalid user'})
+        # if user.enabled_2fa is True:
+        #     return Response({'message':'2fa Already Disabled'})
+        user.enabled_2fa = False
+        user.verified_otp = False
+        user.otp_secret_key = ''
+        user.save()
+        return Response({'message':'2fa Disabled'})
 
 #---------------------------------- OAuth2.0 ----------------------------------
 
