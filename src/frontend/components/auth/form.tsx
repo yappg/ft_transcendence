@@ -11,10 +11,10 @@ interface MyLinkProps {
 
 const MyLink = ({ text, href }: MyLinkProps) => {
   return (
-    <div className="flex h-16 w-full justify-center">
+    <div className="flex h-16 w-full items-center justify-center">
       <p className="text-[rgb(255,255,255,0.6)]">
         {text}
-        <a href="/auth/signup" className="text-red-500">
+        <a href={'/auth/' + href} className="text-red-500">
           {href}
         </a>
       </p>
@@ -24,11 +24,12 @@ const MyLink = ({ text, href }: MyLinkProps) => {
 
 interface FormProps {
   fields: { Icon: React.ElementType; placeholder: string }[];
+  buttonlabel: string;
 }
 
-const Form = ({ fields }: FormProps) => {
+const Form = ({ fields, buttonlabel }: FormProps) => {
   return (
-    <div className="flex w-full items-center justify-center px-6 py-12 sm:px-12 md:p-16 lg:px-5 lg:py-2">
+    <div className="flex w-full items-center justify-center px-6 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
       <form className="flex size-full flex-col items-start gap-8">
         <div className="flex w-full flex-col gap-5">
           {fields.map((field, index) => (
@@ -37,7 +38,7 @@ const Form = ({ fields }: FormProps) => {
         </div>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
           <Button variant={'default'} size={'lg'}>
-            Login
+            {buttonlabel}
           </Button>
         </div>
       </form>
