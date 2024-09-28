@@ -23,22 +23,36 @@ const MyLink = ({ text, href }: MyLinkProps) => {
 };
 
 interface FormProps {
-  fields: { Icon: React.ElementType; placeholder: string }[];
-  buttonlabel: string;
+  fields: {
+    Icon: React.ElementType;
+    placeholder: string;
+    value: string;
+    setValue: (value: string) => void;
+  }[];
+  buttonprops: {
+    text: string;
+    onClick: () => void;
+  };
 }
 
-const Form = ({ fields, buttonlabel }: FormProps) => {
+const Form = ({ fields, buttonprops }: FormProps) => {
   return (
-    <div className="flex w-full items-center justify-center px-6 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
+    <div className="flex w-full items-center justify-center px-4 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
       <form className="flex size-full flex-col items-start gap-8">
         <div className="flex w-full flex-col gap-5">
           {fields.map((field, index) => (
-            <InputBar key={index} Icon={field.Icon} placeholder={field.placeholder} />
+            <InputBar
+              key={index}
+              Icon={field.Icon}
+              placeholder={field.placeholder}
+              value={field.value}
+              setValue={field.setValue}
+            />
           ))}
         </div>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
-          <Button variant={'default'} size={'lg'}>
-            {buttonlabel}
+          <Button variant={'default'} size={'lg'} ref={null} onClick={buttonprops.onClick}>
+            {buttonprops.text}
           </Button>
         </div>
       </form>
