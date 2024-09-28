@@ -15,7 +15,7 @@ const Karta = () => {
         />
       </div>
       <div className="flex h-5/6 w-full items-start justify-center">
-        <div className="flex size-full min-h-[650px] min-w-[400px] rounded-t-[30px] bg-[rgb(88,88,84,0.5)] md:size-[90%] md:max-h-[700px] md:max-w-[1200px] md:rounded-b-[30px]">
+        <div className="costum-shadow flex size-full min-h-[650px] min-w-[400px] rounded-t-[30px] bg-[rgb(88,88,84,0.5)] md:size-[90%] md:max-h-[700px] md:max-w-[1200px] md:rounded-b-[30px]">
           {/* left side */}
           <div className="flex size-full flex-col justify-center px-6 pt-12 lg:w-3/4 lg:pl-12 lg:pr-0 lg:pt-8">
             <div className="absolute left-4 top-4 w-full md:relative md:left-0 md:top-0 md:flex md:items-end md:p-0">
