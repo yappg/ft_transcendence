@@ -7,7 +7,7 @@ export const Card = ({
 }) => {
   return (
     <div
-      className={` ${style} xl:w-[1095px] xl:h-[998px] flex flex-col items-center justify-center lg:w-[950px] lg:h-[850px] w-full h-full tfa-card-bg lg:rounded-[50px] transition-all duration-300 backdrop-blur-xlg gap-10`}
+      className={` ${style} size-full lg:h-full lg:w-full xl:h-[90%] xl:w-[90%] 2xl:w-[80%] 2xl:max-w-[1200px] tfa-card-bg xl:rounded-[50px] shadow-2xl`}
     >
       {children}
     </div>
