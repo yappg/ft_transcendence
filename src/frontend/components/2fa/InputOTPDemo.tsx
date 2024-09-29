@@ -5,37 +5,25 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
-export function InputOTPDemo() {
+export function InputOTPDemo({
+  value,
+  setValue,
+}: {
+  value: string;
+  setValue: (value: string) => void;
+}) {
   return (
-    <InputOTP maxLength={6}>
-      <InputOTPGroup>
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={0}
-        />
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={1}
-        />
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={2}
-        />
+    <InputOTP maxLength={6} value={value} onChange={(value) => setValue(value)}>
+      <InputOTPGroup className="w-1/2 h-[200px] text-white justify-end">
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
       </InputOTPGroup>
-      <h1 className="text-white text-[30px] mb-4">.</h1>
-      <InputOTPGroup>
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={3}
-        />
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={4}
-        />
-        <InputOTPSlot
-          className="md:w-[60px] md:h-[60px] w-[50px] h-[50px]"
-          index={5}
-        />
+      <InputOTPSeparator className="text-white" />
+      <InputOTPGroup className="w-1/2 h-[200px] text-white justify-end">
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
       </InputOTPGroup>
     </InputOTP>
   );

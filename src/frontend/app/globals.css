@@ -168,21 +168,40 @@ a {
   }
 }
 
+/* .tfa-card-bg {
+  background: rgb(34, 33, 33);
+  background: linear-gradient(
+    150deg,
+    rgba(34, 33, 33, 0.3) 4%,
+    rgba(127, 166, 192, 0.3) 29%,
+    rgba(193, 56, 44, 0.3) 70%,
+    rgba(136, 132, 132, 0.3) 100%
+  );
+} */
 .tfa-card-bg {
   background: rgb(34, 33, 33);
   background: linear-gradient(
     150deg,
-    rgba(34, 33, 33, 0.4) 4%,
-    rgba(127, 166, 192, 0.4) 29%,
-    rgba(193, 56, 44, 0.4) 70%,
-    rgba(136, 132, 132, 0.4) 100%
+    rgba(34, 33, 33, 0.2) 22%,
+    rgba(127, 166, 192, 0.2) 38%,
+    rgba(198, 57, 45, 0.2) 70%,
+    rgba(136, 132, 132, 0.2) 93%
   );
 }
-
 .font-coustard {
   font-family: 'Coustard', serif;
 }
 
 .font-days-one {
   font-family: 'Days One', sans-serif;
+}
+.shadow-2xl {
+  -webkit-box-shadow: 4px 0px 50px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 4px 0px 50px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 4px 0px 50px 0px rgba(0, 0, 0, 0.75);
+}
+.backdrop-blur-xlg {
+  -webkit-box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
 }
