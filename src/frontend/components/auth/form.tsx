@@ -27,6 +27,7 @@ interface FormProps {
     Icon: React.ElementType;
     placeholder: string;
     value: string;
+    type?: string;
     setValue: (value: string) => void;
   }[];
   buttonprops: {
@@ -46,12 +47,13 @@ const Form = ({ fields, buttonprops }: FormProps) => {
               Icon={field.Icon}
               placeholder={field.placeholder}
               value={field.value}
+              type={field.type}
               setValue={field.setValue}
             />
           ))}
         </div>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
-          <Button variant={'default'} size={'lg'} ref={null} onClick={buttonprops.onClick}>
+          <Button ref={null} onClick={buttonprops.onClick}>
             {buttonprops.text}
           </Button>
         </div>

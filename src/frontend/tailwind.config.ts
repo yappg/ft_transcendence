@@ -24,4 +24,5 @@ const config: Config = {
   variants: {},
   plugins: [],
 };
+
 export default config;
