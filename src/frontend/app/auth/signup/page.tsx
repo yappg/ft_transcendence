@@ -19,13 +19,26 @@ function Signup() {
     alert(result);
   };
   const fields = [
-    { Icon: MdOutlineMail, placeholder: 'email', value: email, setValue: setEmail },
-    { Icon: FaRegUser, placeholder: 'username', value: username, setValue: setUsername },
-    { Icon: RiLock2Line, placeholder: 'password', value: password, setValue: setPassword },
+    { Icon: MdOutlineMail, placeholder: 'email', value: email, type: 'input', setValue: setEmail },
+    {
+      Icon: FaRegUser,
+      placeholder: 'username',
+      value: username,
+      type: 'input',
+      setValue: setUsername,
+    },
+    {
+      Icon: RiLock2Line,
+      placeholder: 'password',
+      value: password,
+      type: 'password',
+      setValue: setPassword,
+    },
     {
       Icon: RiLock2Line,
       placeholder: 'verify password',
       value: verifyPassword,
+      type: 'password',
       setValue: setVerifyPassword,
     },
   ];

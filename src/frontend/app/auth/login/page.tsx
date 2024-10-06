@@ -16,8 +16,20 @@ function Login() {
     alert(result);
   };
   const fields = [
-    { Icon: FaRegUser, placeholder: 'username', value: username, setValue: setUsername },
-    { Icon: RiLock2Line, placeholder: 'password', value: password, setValue: setPassword },
+    {
+      Icon: FaRegUser,
+      placeholder: 'username',
+      value: username,
+      type: 'input',
+      setValue: setUsername,
+    },
+    {
+      Icon: RiLock2Line,
+      placeholder: 'password',
+      value: password,
+      type: 'password',
+      setValue: setPassword,
+    },
   ];
   const buttonProps = { text: 'signup', onClick: buttonAction };
   return (
