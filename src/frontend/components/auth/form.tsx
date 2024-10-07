@@ -12,9 +12,9 @@ interface MyLinkProps {
 const MyLink = ({ text, href }: MyLinkProps) => {
   return (
     <div className="flex h-16 w-full items-center justify-center">
-      <p className="text-[rgb(255,255,255,0.6)]">
+      <p className="text-[rgb(0,0,0,0.6)] dark:text-[rgb(255,255,255,0.6)]">
         {text}
-        <a href={'/auth/' + href} className="text-red-500">
+        <a href={'/auth/' + href} className="font-bold text-[#284F50] dark:text-red-500">
           {href}
         </a>
       </p>

@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Home() {
   return (
-    <div className="relative z-[1] h-screen w-full overflow-hidden bg-[#13191D]">
+    <div className="relative z-[1] h-screen w-full overflow-hidden bg-white dark:bg-[#13191D]">
       <Background />
     </div>
   );
