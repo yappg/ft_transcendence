@@ -10,14 +10,14 @@ interface InputBarProps {
 
 function InputBar({ Icon, placeholder, value, type, setValue }: InputBarProps) {
   return (
-    <div className="flex w-full items-center gap-5 rounded-full border border-[rgb(255,255,255,0.6)] bg-[rgb(0,0,0,0.2)] px-6 py-3 focus-within:border-none focus-within:bg-[rgb(0,0,0,0.6)]">
-      <Icon className="size-[30px] min-w-[30px] opacity-60" />
+    <div className="flex w-full items-center gap-5 rounded-full border border-[rgb(0,0,0,0.6)] px-6 py-3 focus-within:border-none focus-within:bg-[rgb(0,0,0,0.4)] dark:border dark:border-[rgb(255,255,255,0.6)] dark:bg-[rgb(0,0,0,0.2)] dark:focus-within:bg-[rgb(0,0,0,0.6)]">
+      <Icon className="size-[30px] min-w-[30px] opacity-60 dark:text-white" />
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full appearance-none bg-transparent text-lg text-white opacity-60 focus:outline-none"
+        className="w-full bg-transparent text-lg font-light opacity-60 text-black dark:text-white placeholder:text-black focus:outline-none dark:placeholder:text-white"
       />
     </div>
   );
