@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from .models import Player
-from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer
+from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer
 from .utils import APIdata, fetch_user_data, store_user_data, generate_tokens
 
 class PlayersViewList(ListAPIView):
@@ -88,7 +88,6 @@ class GenerateURI(APIView):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
         #     return Response(serializer.errors, status=400)
-
         user = Player.objects.get(username=request.data['username'])
         if user == None:
             return Response({'error': 'user Not found'}, status=404)
@@ -105,6 +104,7 @@ class GenerateURI(APIView):
         user.save()
         return Response({'uri': uri}, status=200)
 
+# this view is for the user to verify the otp token after scanning the qr code(enabling the 2fa)
 class VerifyOTP(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VerifyOTPSerializer
@@ -127,6 +127,28 @@ class VerifyOTP(APIView):
             return Response({'error': 'invalid token'}, status=400)
         user.verified_otp = True
         user.save()
+        return Response({'message': '2fa Verified'}, status=200)
+
+class ValidateOTP(APIView):
+    permission_class = [IsAuthenticated]
+    serializer_class = ValidateOTPSerializer
+
+    def get(self, request):
+        return Response({'page to Serve': 'verify otp page'}, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(request.data)
+        # if not serializer.is_valid():
+        #     return Response(serializer.errors, status=400)
+        username = request.data['username']
+        otp_token = request.data['otp_token']
+        user = Player.objects.get(username=username)
+        if user == None:
+            return Response({'error': 'user Not found'}, status=404)
+        totp = pyotp.TOTP(user.otp_secret_key)
+        bol = totp.verify(otp_token)
+        if not bol:
+            return Response({'message': 'Invalid Token'}, status=400)
         return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
@@ -153,11 +175,11 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
-from django.http import JsonResponse
 from oauth2_provider.models import Application
+from rest_framework.response import Response
 
-
-class OAuth42LoginView(View):
+class OAuth42LoginView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, provider):
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
@@ -173,7 +195,8 @@ class OAuth42LoginView(View):
             return Response({'error': 'Invalid platform'}, status=400)
         return redirect(authorization_url)
 
-class OAuth42CallbackView(View):
+class OAuth42CallbackView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, provider):
 
         if (provider != '42' and provider != 'google'):
@@ -226,9 +249,15 @@ class OAuth42CallbackView(View):
             'access_token': token_data['access_token'],
             'token_type': token_data['token_type'],
             'expires_in': token_data['expires_in'],
-            # 'username': user.username,
+            'username': user.username,
         })
 
 
 # admin {"username":"kadigh1","password":"kadigh123"}
 # {"username": "abdo", "password": "kadigh123"}
+
+#--------------------------User Infos Update ------------------------------
+class UpdateUserInfos(APIView):
+    def get(self, request):
+        pass
+    def post(self, request):

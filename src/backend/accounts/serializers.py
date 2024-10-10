@@ -66,3 +66,12 @@ class GenerateOTPSerializer(serializers.Serializer):
 class VerifyOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
+
+class ValidateOTPSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    otp_token = serializers.CharField(max_length=6)
+
+class UpdateUserInfos(serializers.ModelSerializer):
+    class Meta:
+        Model=Player
+        fields=()
