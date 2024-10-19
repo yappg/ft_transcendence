@@ -28,7 +28,6 @@ class Player(AbstractUser):
 #     blocked_by_User_id=models.ForeignKey("Player", on_delete=models.CASCADE)
 #     # event_date = models.models.DateTimeField( auto_now=False, auto_now_add=False) #ma3erft wash anhtajo ou non 
 
-class Friends(models.Model):
-    friend_requester_id = models.ForeignKey("Player", ) #, on_delete=models.CASCADE or make it blank Unknown
-    friend_responder_id = models.ForeignKey("Player", ) #, on_delete=models.CASCADE or make it blank Unknown
-<div class="user-profile-picture visible-sidebars" style="background-image: url(https://cdn.intra.42.fr/users/c619cd088c438561751a86db54863355/aaoutem-.jpg)"></div>
+# class Friends(models.Model):
+#     friend_requester_id = models.ForeignKey(Player, related_name='friend_requester', on_delete=models.CASCADE ) #, on_delete=models.CASCADE or make it blank Unknown
+#     friend_responder_id = models.ForeignKey(Player, related_name='friend_responder', on_delete=models.CASCADE ) #, on_delete=models.CASCADE or make it blank Unknown
