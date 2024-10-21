@@ -41,6 +41,7 @@ def store_user_data(user_data, provider):
                 'email' : user_data['email'],
                 'first_name' : user_data['first_name'],
                 'last_name' : user_data['last_name'],
+                'otp_secret_key' : None,
                 # :user_data['image']['link']
             }
         )
@@ -57,6 +58,7 @@ def store_user_data(user_data, provider):
                 'username' : Gusername,
                 'first_name' : user_data['given_name'],
                 'last_name' : user_data['family_name'],
+                'otp_secret_key' : None,
                 # :user_data['image']['link']
             }
         )
