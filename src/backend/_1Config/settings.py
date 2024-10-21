@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     #local apps
     'game',
+    'Users',
 ]
 
 MIDDLEWARE = [
@@ -139,14 +140,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTH_USER_MODEL='accounts.Game' #CostumUserModel
+AUTH_USER_MODEL='Users.Player' #CostumUserModel
 
 SITE_ID = 1
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
+USER_MODEL_USERNAME_FIELD = 'username'
+USER_EMAIL_REQUIRED = False
+USER_USERNAME_REQUIRED = True
+USER_AUTHENTICATION_METHOD = 'username'
+USER_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
