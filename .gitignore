@@ -1,0 +1,27 @@
+# Virtual environment
+venv/
+env/
+*.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Database
+db.sqlite3
+
+# Static and media files
+/static/
+/media/
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Build artifacts
+*.egg-info/
+dist/
