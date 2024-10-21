@@ -256,8 +256,8 @@ class OAuth42CallbackView(APIView):
 # admin {"username":"kadigh1","password":"kadigh123"}
 # {"username": "abdo", "password": "kadigh123"}
 
-#--------------------------User Infos Update ------------------------------
-class UpdateUserInfos(APIView):
-    def get(self, request):
-        pass
-    def post(self, request):
+# #--------------------------User Infos Update ------------------------------
+# class UpdateUserInfos(APIView):
+#     def get(self, request):
+#         pass
+#     def post(self, request):
