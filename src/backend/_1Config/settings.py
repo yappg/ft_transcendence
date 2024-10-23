@@ -12,12 +12,13 @@ SECRET_KEY = 'django-insecure-*bok4t@yesu4==8yn!+4juc1skc$$ys#x=agk2il9xh7u4z_l!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     #local apps
     'game',
     'Users',
+    'chatoom',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -82,13 +85,24 @@ TEMPLATES = [
     },
 ]
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis-server-name", 6379)],
+        },
+    },
+}
+
+
 WSGI_APPLICATION = '_1Config.wsgi.application'
 
-
+ASGI_APPLICATION = '_1Config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
@@ -117,6 +131,26 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+OAUTH2_PROVIDER_42 = {
+    'CLIENT_ID': 'u-s4t2ud-4aae62bd87a3daa2bf54d50bbccb9a771a1cfde5353d8a10bd6ed5d8fe263033',
+    'CLIENT_SECRET': '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',
+    'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
+    'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
+    'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/42',
+    'SCOPE': 'public',
+}
+
+OAUTH2_PROVIDER_GOOGLE = {
+    'CLIENT_ID': '182265720847-k8uvnm7i3oeh35t05aalu6lrj0blejh8.apps.googleusercontent.com',
+    'CLIENT_SECRET': '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',
+    'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
+    'TOKEN_URL': 'https://oauth2.googleapis.com/token',
+    'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/google',
+    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+}
 
 
 # Internationalization
