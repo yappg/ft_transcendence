@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ChatRoom',
+            name='chatoom',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('password', models.CharField(blank=True, max_length=100, null=True)),
-                ('users', models.ManyToManyField(related_name='chatrooms', to=settings.AUTH_USER_MODEL)),
+                ('users', models.ManyToManyField(related_name='chatooms', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
