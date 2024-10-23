@@ -1,3 +1,0 @@
-UID=u-s4t2ud-6f07f2706eaa37af4ae15590c68293bbf85b4e49db087456bd090479a7c936bb
-secret=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
-https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6f07f2706eaa37af4ae15590c68293bbf85b4e49db087456bd090479a7c936bb&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code
