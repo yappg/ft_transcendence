@@ -11,4 +11,5 @@ class ChatConsumer(WebsocketConsumer):
                 'message': 'Hello first connection'
             })
         )
-        
+    def respond(self, event):
+        self.send(text_data=json.dumps(event))

@@ -5,13 +5,31 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Lobby</h1>
+    <h1>let's chaaaaaaaaaat mother F$^kers</h1>
+    <form id="form" >
+        <input type="text" name="message" />
     <script type="text/javascript">
         const ws = new WebSocket('ws://e1r8p15.1337.ma:8001/ws/socket-server');
+        function isOpen(ws) { return ws.readyState === ws.OPEN }
+        {% comment %} if (!isOpen(ws)) return; {% endcomment %}
         ws.onmessage = function(e) {
             let data = JSON.parse(e.data);
             console.log('Data:', data);
         };
-    </script>
+        let form = document.getElementById('form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let message = e.target.message.value;
+            if (!isOpen(ws)) {
+                console.warn('WebSocket is not open. Message not sent.');
+                return;
+            }
+            ws.send(JSON.stringify({
+                'message': message
+            })
+            );
+        }
+        );
+    </script> 
 </body>
 </html>
