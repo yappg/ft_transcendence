@@ -9,4 +9,5 @@ urlpatterns = [
     path('2fa/', include('Users.urls')),
     path('players/', include('Users.urls')),
     path('api/', include('game.urls')),
+    path('chat', include('chatoom.urls')),
 ]

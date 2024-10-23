@@ -76,7 +76,8 @@ class LogoutView(APIView):
 #------------------------------------- 2FA ------------------------------------
 
 import pyotp
-
+import qrcode
+ 
 class GenerateURI(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = GenerateOTPSerializer
@@ -102,6 +103,7 @@ class GenerateURI(APIView):
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
+        qrcode.make(uri).save('/Users/otaraki/Desktop_qr.png')
         return Response({'uri': uri}, status=200)
 
 # this view is for the user to verify the otp token after scanning the qr code(enabling the 2fa)
