@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from .models import Player
-from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer
+from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer, UpdateAvatarSerializer
 from .utils import APIdata, fetch_user_data, store_user_data, generate_tokens
 
 class PlayersViewList(ListAPIView):
@@ -102,9 +102,12 @@ class GenerateURI(APIView):
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
+        qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
         return Response({'uri': uri}, status=200)
 
 # this view is for the user to verify the otp token after scanning the qr code(enabling the 2fa)
+
+import qrcode
 class VerifyOTP(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VerifyOTPSerializer
@@ -175,7 +178,7 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
-from oauth2_provider.models import Application
+# from oauth2_provider.models import Application
 from rest_framework.response import Response
 
 class OAuth42LoginView(APIView):
@@ -261,3 +264,10 @@ class OAuth42CallbackView(APIView):
 #     def get(self, request):
 #         pass
 #     def post(self, request):
+
+class UpdateAvatar(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UpdateAvatarSerializer
+
+    def post(self, request):
+        serializer = UpdateAvatarSerializer(request)

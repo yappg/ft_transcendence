@@ -4,6 +4,7 @@ OMAR:
     -read about websockets 
 NOUREDDINE:
     - validate email, password and username in front (kadigh)
+    - (Kadigh): for the profile picture uploads validate the extension (jpg,jpeg,png...), && put a size limit for the picture
 MERIEM:
 MEHDI:
     -read about websockets 

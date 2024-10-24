@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,17 +34,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     #generate tokens for an authenticated player
     'rest_framework.authtoken',
-    # 3rd party libs
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.oauth2',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'oauth2_provider',
     #swagger api documentation
     'drf_yasg',
     #local apps
+    #versitileImageField
+    'versatileimagefield',
     'accounts',
     'game',
     'tournament',
@@ -59,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -192,3 +187,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
 
 # LOGIN_REDIRECT_URL = 'players/'
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
+MEDIA_URL='/media/'

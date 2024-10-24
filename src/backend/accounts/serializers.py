@@ -75,3 +75,8 @@ class UpdateUserInfos(serializers.ModelSerializer):
     class Meta:
         Model=Player
         fields=()
+
+class UpdateAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        Model=Player
+        fields=('avatar',)
