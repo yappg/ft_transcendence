@@ -976,4 +976,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 ### VisualStudio Patch ###
+<<<<<<< HEAD
 # Additional files built by Visual Studio
+=======
+# Additional files built by Visual Studio
+>>>>>>> first-vgame
