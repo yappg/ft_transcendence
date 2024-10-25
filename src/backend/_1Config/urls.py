@@ -9,8 +9,12 @@ urlpatterns = [
     path('oauth/', include('accounts.urls')),
     path('2fa/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
+    path('upload/', include('accounts.urls')),
 ]
-urlpatterns += static(settings.MEDIA_ROOT, document_root=settings.MEDIA_ROOT)
+
+# django would take resp of serving media files only in dev mode, and in production NGINX should serve them
+if settings.DEBUG == True: 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # from rest_framework import permissions
 # from drf_yasg.views import get_schema_view

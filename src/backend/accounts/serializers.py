@@ -71,12 +71,18 @@ class ValidateOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
-class UpdateUserInfos(serializers.ModelSerializer):
+class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
-        Model=Player
-        fields=()
+        model=Player
+        fields=('username','avatar','cover',)
 
-class UpdateAvatarSerializer(serializers.ModelSerializer):
-    class Meta:
-        Model=Player
-        fields=('avatar',)
+    def save(self, **kwargs):
+        user = self.context['user']
+        player = Player.objects.get(username=user.username)
+        if 'username' in self.validated_data:
+            player.username = self.validated_data['username']
+        if 'avatar' in self.validated_data:
+            player.avatar = self.validated_data['avatar']
+        if 'cover' in self.validated_data:
+            player.cover = self.validated_data['cover']
+        player.save()

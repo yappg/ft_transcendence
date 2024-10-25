@@ -1,13 +1,15 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from .models import Player
-from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer, UpdateAvatarSerializer
-from .utils import APIdata, fetch_user_data, store_user_data, generate_tokens
+from .serializers import * #PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer, UpdateAvatarSerializer
+from .utils import *
+
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -200,6 +202,7 @@ class OAuth42LoginView(APIView):
 
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request, provider):
 
         if (provider != '42' and provider != 'google'):
@@ -257,17 +260,19 @@ class OAuth42CallbackView(APIView):
 
 
 # admin {"username":"kadigh1","password":"kadigh123"}
-# {"username": "abdo", "password": "kadigh123"}
+# {"username": "rxtx", "password": "kadigh123"}
 
 #--------------------------User Infos Update ------------------------------
-# class UpdateUserInfos(APIView):
-#     def get(self, request):
-#         pass
-#     def post(self, request):
 
-class UpdateAvatar(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UpdateAvatarSerializer
+class UpdateUserInfos(APIView):
+    serializer_class = UpdateUserInfosSerializer
 
     def post(self, request):
-        serializer = UpdateAvatarSerializer(request)
+        serializer = UpdateUserInfosSerializer(
+            data=request.data,
+            context={'user':request.user}
+            )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
