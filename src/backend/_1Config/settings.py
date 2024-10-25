@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'chat',
     'api',
     #generate tokens for an authenticated player
-    'rest_framework.authtoken',
     'rest_framework.decorators',
     # 3rd party libs
     'allauth',
@@ -55,8 +54,6 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'oauth2_provider',
     #local apps
-    'game',
-    'Users',
     'chatoom',
     'channels',
 ]
@@ -69,7 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
