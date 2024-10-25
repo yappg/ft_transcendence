@@ -10,6 +10,7 @@ urlpatterns = [
     path('2fa/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
     path('upload/', include('accounts.urls')),
+    path('chat/', include('chatoom.urls')),
 ]
 
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
