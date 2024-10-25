@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <style>
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <div id="messages"></div>
+    <form id="form">
+        <input type="text" name="message" placeholder="Type your message..." required />
+        <button type="submit">Send</button>
+    </form>
+
+    <script type="text/javascript">
+        const ws = new WebSocket('ws://localhost:8001/ws/socket-server');
+        const messagesDiv = document.getElementById('messages');
+        const form = document.getElementById('form');
+
+        ws.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log('Data:', data);
+            
+            if (data.type === 'chat') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.textContent = data.message;
+                messagesDiv.appendChild(messageDiv);
+                
+                // Auto-scroll to bottom
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+        };
+
+        ws.onerror = function(e) {
+            console.error('WebSocket error:', e);
+        };
+
+        ws.onclose = function(e) {
+            console.log('WebSocket connection closed:', e);
+        };
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = e.target.message.value.trim();
+            
+            if (message && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    'message': message
+                }));
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
