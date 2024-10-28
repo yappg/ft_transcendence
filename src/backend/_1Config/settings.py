@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'accounts',
     'game',
     'tournament',
-    'chat',
     'api',
     #generate tokens for an authenticated player
     'rest_framework.decorators',
