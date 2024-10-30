@@ -1,89 +1,138 @@
 import json
-from channels.generic.websocket import WebsocketConsumer
-from asgiref.sync import async_to_sync
+import logging
+from channels.generic.websocket import AsyncWebsocketConsumer
+from django.contrib.auth.models import AnonymousUser
 from .services import GameService, LeaderboardService
 from .models import Game, PlayerProfile
 
-class GameConsumer(WebsocketConsumer):
-    def connect(self):
-        self.player_profile = self.scope["user"].player_profile
-        self.game = None
-        self.accept()
+logger = logging.getLogger(__name__)
 
-        # Try to join existing game or create new one
-        available_game = Game.objects.filter(status='WAITING', player2=None).first()
-        if available_game:
-            try:
-                self.game = GameService.join_game(available_game, self.player_profile)
-                GameService.start_game(self.game)
-            except ValueError:
-                self.game = GameService.create_game(self.player_profile, f"game_{self.game_id}")
-        else:
-            self.game = GameService.create_game(self.player_profile, f"game_{self.game_id}")
+class GameConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        if not self.scope["user"].is_authenticated:
+            logger.warning("Unauthenticated connection attempt rejected")
+            await self.close(code=4003)
+            return
+        await self.accept()
+        print(self.scope["user"].username)
+        # print(self.scope["user"].email)
+    
+    async def receive_json(self, message):
+        cmd = message.get("command")
+        if command == "access":
+            print(message["data_string"])
+            await self.send_json({
+                "command_response": "The command to \
+                say hello was received ",
+                "data_string_bacK": message.get
+              ("data_string", None)
+            })
+    # async def connect(self):
+    #     # Reject connection if user is not authenticated
+    #     if not self.scope["user"].is_authenticated:
+    #         logger.warning("Unauthenticated connection attempt rejected")
+    #         await self.close(code=4003)
+    #         return
+    #     try:
+    #         logger.info("Starting connection attempt...")
+            
+    #         self.user = self.scope["user"]
+            
+    #         # Handle anonymous users and save the profile
+    #         if isinstance(self.user, AnonymousUser):
+    #             print("debuuuuusuusuususususus")
+    #             logger.info("Creating anonymous player profile")
+    #             self.player_profile = PlayerProfile(display_name="Anonymous")
+    #             # Save the anonymous profile to the database
+    #             await self.save_player_profile()
+    #         else:
+    #             logger.info(f"Getting profile for user: {self.user.username}")
+    #             self.player_profile = await self.get_or_create_player_profile()
+            
+    #         logger.info("Accepting connection...")
+    #         await self.accept()
+            
+    #         # Generate a unique room name
+    #         self.room_name = f"game_{self.channel_name}"
+            
+    #         # Try to join existing game or create a new one
+    #         logger.info("Looking for available game...")
+    #         available_game = await self.get_available_game()
+            
+    #         if available_game:
+    #             logger.info(f"Joining existing game {available_game.id}")
+    #             self.game = await GameService.join_game(available_game, self.player_profile)
+    #             self.room_name = f"game_{self.game.id}"
+    #             logger.info("Starting game...")
+    #             await GameService.start_game(self.game)
+    #         else:
+    #             logger.info("Creating new game...")
+    #             self.game = await GameService.create_game(
+    #                 player=self.player_profile,
+    #                 room_name=self.room_name
+    #             )
+    #             logger.info(f"New game created with ID: {self.game.id}")
+            
+    #         # Add to game group
+    #         logger.info(f"Adding to game group: {self.room_name}")
+    #         await self.channel_layer.group_add(
+    #             self.room_name,
+    #             self.channel_name
+    #         )
+            
+    #         # Send initial game state
+    #         logger.info("Broadcasting initial game state...")
+    #         await self.broadcast_game_state()
+            
+    #         logger.info("Connection setup complete!")
+            
+    #     except Exception as e:
+    #         logger.error(f"Error during connection: {str(e)}", exc_info=True)
+    #         if hasattr(self, 'room_name'):
+    #             await self.channel_layer.group_discard(
+    #                 self.room_name,
+    #                 self.channel_name
+    #             )
+    #         await self.close()
 
-        # Add to game group
-        async_to_sync(self.channel_layer.group_add)(
-            f"game_{self.game.game_id}",
-            self.channel_name
-        )
+    # async def save_player_profile(self):
+    #     """Save the player profile to the database"""
+    #     try:
+    #         # Use sync_to_async if your PlayerProfile.save() is not async
+    #         from asgiref.sync import sync_to_async
+    #         await sync_to_async(self.player_profile.save)()
+    #     except Exception as e:
+    #         logger.error(f"Error saving player profile: {str(e)}")
+    #         raise
 
-    def receive(self, text_data):
-        data = json.loads(text_data)
-        action = data.get('action')
+    # async def get_or_create_player_profile(self):
+    #     """Get existing profile or create new one for authenticated user"""
+    #     try:
+    #         # First try to get existing profile
+    #         profile = await PlayerProfile.objects.filter(user=self.user).afirst()
+    #         if profile:
+    #             return profile
 
-        if action == 'move':
-            GameService.record_move(
-                self.game,
-                self.player_profile,
-                data.get('position', 0)
-            )
-            self.broadcast_game_state()
+    #         # If no profile exists, create one
+    #         profile = PlayerProfile(
+    #             user=self.user,
+    #             name=self.user.username
+    #         )
+    #         await sync_to_async(profile.save)()
+    #         return profile
+    #     except Exception as e:
+    #         logger.error(f"Error getting/creating player profile: {str(e)}")
+    #         raise
 
-        elif action == 'end_game':
-            winner_id = data.get('winner_id')
-            if winner_id:
-                winner = PlayerProfile.objects.get(id=winner_id)
-                GameService.end_game(self.game, winner)
-                LeaderboardService.update_leaderboard()
-                self.broadcast_game_state()
+    # # ... rest of the consumer methods remain the same ...
 
-    def disconnect(self, close_code):
-        if self.game and self.game.status == 'IN_PROGRESS':
-            # If game was in progress, other player wins
-            winner = self.game.player2 if self.game.player1 == self.player_profile else self.game.player1
-            GameService.end_game(self.game, winner)
-            LeaderboardService.update_leaderboard()
-            self.broadcast_game_state()
-
-        async_to_sync(self.channel_layer.group_discard)(
-            f"game_{self.game.game_id}",
-            self.channel_name
-        )
-
-    def broadcast_game_state(self):
-        """Broadcast current game state to all players"""
-        async_to_sync(self.channel_layer.group_send)(
-            f"game_{self.game.game_id}",
-            {
-                'type': 'game_state_update',
-                'game_state': self.get_game_state()
-            }
-        )
-
-    def get_game_state(self):
-        """Get current game state for broadcasting"""
-        return {
-            'game_id': str(self.game.game_id),
-            'status': self.game.status,
-            'player1': {
-                'id': self.game.player1.id,
-                'name': self.game.player1.display_name,
-                'score': self.game.player1_score
-            },
-            'player2': {
-                'id': self.game.player2.id,
-                'name': self.game.player2.display_name,
-                'score': self.game.player2_score
-            } if self.game.player2 else None,
-            'winner': self.game.winner.id if self.game.winner else None
-        }
+    # async def get_available_game(self):
+    #     """Get an available game or return None"""
+    #     try:
+    #         logger.info("Searching for available games...")
+    #         game = await Game.objects.filter(status='WAITING', player2=None).afirst()
+    #         logger.info(f"Found game: {game.id if game else None}")
+    #         return game
+    #     except Exception as e:
+    #         logger.error(f"Error finding available game: {str(e)}")
+    #         return None
