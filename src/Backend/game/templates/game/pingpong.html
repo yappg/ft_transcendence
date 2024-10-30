@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
+    <style>
+        #gameArea {
+            width: 600px;
+            height: 400px;
+            border: 2px solid black;
+            position: relative;
+            overflow: hidden;
+        }
+        #ball {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ping Pong Game</h1>
+    <div id="gameArea">
+        <div id="ball"></div>
+    </div>
+    <button id="startButton">Start Game</button>
+
+    <script type="text/javascript">
+        const gameArea = document.getElementById('gameArea');
+        const ball = document.getElementById('ball');
+        const startButton = document.getElementById('startButton');
+        let socket;
+        let ballPosition = { x: 290, y: 190 };
+        let ballSpeed = { x: 2, y: 2 };
+
+        class GameWebSocket {
+            constructor() {
+                // Check authentication before connecting
+                if (this.isAuthenticated()) {
+                    this.connect();
+                } else {
+                    console.log('User not authenticated. Redirecting to login...');
+                    window.location.href = '/auth/singin';  // or your login route
+                }
+            }
+        
+            isAuthenticated() {
+                // Check if user has valid token/session
+                const token = localStorage.getItem('token'); // or wherever you store your auth token
+                console.log
+                return !!token;
+            }
+        
+            connect() {
+                // Add authentication token to WebSocket URL
+                const token = localStorage.getItem('token');
+                const wsUrl = `ws://${window.location.hostname}:8002/ws/socket-server/?token=${token}`;
+                
+                console.log('Attempting to connect to:', wsUrl);
+                
+                this.socket = new WebSocket(wsUrl);
+        
+                this.socket.onopen = (e) => {
+                    console.log('WebSocket connection established');
+                };
+        
+                this.socket.onclose = (e) => {
+                    console.log('WebSocket connection closed:', e.code, e.reason);
+                    if (e.code === 4003) {  // Authentication error code
+                        console.log('Authentication failed. Redirecting to login...');
+                        window.location.href = '/auth/sigin';
+                    }
+                };
+        
+                this.socket.onerror = (e) => {
+                    console.error('WebSocket error:', e);
+                };
+            }
+        }
+        
+        // Usage
+        document.addEventListener('DOMContentLoaded', () => {
+            // Only initialize WebSocket if user is logged in
+            if (localStorage.getItem('token')) {
+                const gameSocket = new GameWebSocket();
+            } else {
+                window.location.href = '/auth/signin';
+            }
+        });
+
+        function startGame() {
+            setInterval(() => {
+                moveBall();
+                sendGameState();
+            }, 1000 / 60); // 60 frames per second
+        }
+
+        function moveBall() {
+            ballPosition.x += ballSpeed.x;
+            ballPosition.y += ballSpeed.y;
+
+            // Collision detection with walls
+            if (ballPosition.x < 0 || ballPosition.x > (gameArea.clientWidth - 20)) {
+                ballSpeed.x *= -1; // Reverse direction
+            }
+            if (ballPosition.y < 0 || ballPosition.y > (gameArea.clientHeight - 20)) {
+                ballSpeed.y *= -1; // Reverse direction
+            }
+
+            ball.style.left = ballPosition.x + 'px';
+            ball.style.top = ballPosition.y + 'px';
+        }
+
+        function sendGameState() {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = {
+                    position: ballPosition
+                };
+                socket.send(JSON.stringify(message));
+            }
+        }
+    </script>
+</body>
+</html>

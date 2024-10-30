@@ -16,31 +16,29 @@ class PlayerProfile(models.Model):
     class Meta:
         ordering = ['-rank_points']
 
+
 class Game(models.Model):
-    GAME_STATUS_CHOICES = [
-        ('WAITING', 'Waiting for Players'),
-        ('IN_PROGRESS', 'Game in Progress'),
-        ('FINISHED', 'Game Finished'),
-        ('CANCELLED', 'Game Cancelled'),
+    STATUS_CHOICES = [
+        ('WAITING', 'Waiting'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
     ]
 
-    # game_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    player1 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='games_as_player1')
-    player2 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='games_as_player2', null=True)
-    winner = models.ForeignKey(PlayerProfile, on_delete=models.SET_NULL, related_name='won', null=True)
+    player1 = models.ForeignKey('PlayerProfile', on_delete=models.CASCADE, related_name='games_as_player1')
+    player2 = models.ForeignKey('PlayerProfile', on_delete=models.CASCADE, related_name='games_as_player2', null=True, blank=True)
+    winner = models.ForeignKey('PlayerProfile', on_delete=models.SET_NULL, related_name='game_win', null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='WAITING')
+    room_name = models.CharField(max_length=100)
     player1_score = models.IntegerField(default=0)
     player2_score = models.IntegerField(default=0)
-    status = models.CharField(max_length=20, choices=GAME_STATUS_CHOICES, default='WAITING')
     created_at = models.DateTimeField(auto_now_add=True)
-    started_at = models.DateTimeField(null=True)
-    finished_at = models.DateTimeField(null=True)
-    room_name = models.CharField(max_length=100, default=None)
-
-    def __str__(self):
-        return f"Game {self.game_id} - {self.get_status_display()}"
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Game {self.id}: {self.player1} vs {self.player2 or 'Waiting'}"
 
 class GameMove(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')

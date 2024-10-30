@@ -19,7 +19,10 @@ from django.urls import path
 from channels.security.websocket import AllowedHostsOriginValidator
 from chatoom.consumers import ChatConsumer
 from django.urls import re_path
-from chatoom.routing import websockets_urlpatterns 
+# from chatoom.routing import websockets_urlpatterns
+from game.routing import websockets_urlpatterns
+from game.consumers import GameConsumer
+from game.middlewares import TokenAuthMiddleWare
 
 
 
@@ -35,11 +38,12 @@ application = ProtocolTypeRouter(
         #         )
         #     )
         # ),
-        "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
+        "websocket": TokenAuthMiddleWare(
+        AllowedHostsOriginValidator(
             URLRouter([
                 # path("chat/admin/", AdminChatConsumer.as_asgi()),
-                path('ws/socket-server', ChatConsumer.as_asgi()),
+                # path('ws/socket-server', ChatConsumer.as_asgi()),
+                re_path(r'ws/socket-server/', GameConsumer.as_asgi()),
             ])
         )
     ),
