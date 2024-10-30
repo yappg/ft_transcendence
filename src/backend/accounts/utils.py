@@ -60,6 +60,8 @@ def store_user_data(user_data, provider):
                 # :user_data['image']['link']
             }
         )
+        if not created:
+            user.save()
     return (user, created)
 
 def generate_tokens(user):
