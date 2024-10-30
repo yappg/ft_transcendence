@@ -1,6 +1,10 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+#env path ../../.env
+env_path=env_path = os.path.abspath(os.path.join('../../.env'))
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*bok4t@yesu4==8yn!+4juc1skc$$ys#x=agk2il9xh7u4z_l!'
+SECRET_KEY = 'TransgendergGame3334-CreatedBy:ObikaPipoOtarakiEl-binxAaaaaaandMerryyyyyyy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,33 +36,16 @@ INSTALLED_APPS = [
     #django-rest-framework
     'rest_framework',
     'rest_framework_simplejwt',
-    #generate tokens for an authenticated player
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
     #swagger api documentation
     'drf_yasg',
     #local apps
-    #versitileImageField
-    'versatileimagefield',
     'accounts',
     'game',
     'tournament',
-    'chat',
-    'api',
-    #generate tokens for an authenticated player
-    'rest_framework.authtoken',
-    'rest_framework.decorators',
-    # 3rd party libs
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'oauth2_provider',
-    #local apps
-    'game',
-    'Users',
-    'chatoom',
     'channels',
+    'chatoom',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -77,9 +64,18 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_THROTTLE_RATES' : {
+        'anon' : '3/min',
+    }
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
 }
 
 ROOT_URLCONF = '_1Config.urls'
@@ -117,16 +113,13 @@ ASGI_APPLICATION = '_1Config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = { 
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
@@ -149,7 +142,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 OAUTH2_PROVIDER_42 = {
     'CLIENT_ID': 'u-s4t2ud-4aae62bd87a3daa2bf54d50bbccb9a771a1cfde5353d8a10bd6ed5d8fe263033',
-    'CLIENT_SECRET': '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',
+    'CLIENT_SECRET': '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',
+    # 'CLIENT_ID': os.getenv("42_CLIENT_ID"),
+    # 'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
@@ -160,6 +155,8 @@ OAUTH2_PROVIDER_42 = {
 OAUTH2_PROVIDER_GOOGLE = {
     'CLIENT_ID': '182265720847-k8uvnm7i3oeh35t05aalu6lrj0blejh8.apps.googleusercontent.com',
     'CLIENT_SECRET': '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',
+    # 'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
+    # 'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
