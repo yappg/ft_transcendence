@@ -63,7 +63,7 @@ push:
 	git add .
 	git status
 	@echo "$(GREEN)>$(YELLOW) Committing changes...$(RESET)"
-	git commit -m $(DEFAULT_COMMIT)
+	git commit -m "$(filter-out $@, $(MAKECMDGOALS))"
 	@echo "$(GREEN)>$(YELLOW) Pushing changes...$(RESET)"
 	git push
 
