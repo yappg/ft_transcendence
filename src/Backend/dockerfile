@@ -3,9 +3,9 @@ FROM python:3.8-slim
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /app/source
+COPY ./config /app/config
 
-COPY . /app
+WORKDIR /app/source
 
 # RUN apt update && apt install wget -y
 # RUN wget https://github.com/prometheus/node_exporter/releases/download/v1.1.1/node_exporter-1.1.1.linux-amd64.tar.gz
