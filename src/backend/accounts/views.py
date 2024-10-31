@@ -35,7 +35,7 @@ class BaseAuthView(APIView):
         return ip
 
 #------------------------------------ Auth ------------------------------------
-class SignUpView(BaseAuthView):
+class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
     throttle_classes = [AnonRateLimitThrottling]
@@ -50,7 +50,7 @@ class SignUpView(BaseAuthView):
                 return Response({'tokens': tokens}, status=201)
         return Response(serializer.errors, status=400)
 
-class SignInView(BaseAuthView):
+class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
     throttle_classes = [AnonRateLimitThrottling]
@@ -58,34 +58,28 @@ class SignInView(BaseAuthView):
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
 
-        if Serializer.is_valid() :
+        if Serializer.is_valid():
             user = Serializer.validated_data['user']
-            # if (user.enabled_2fa == True):
-            #     implement 2fa
+            # maybe it would be implemented as follow  or it could be validated on the serializer
+            if (user.enabled_2fa == True):
+                redirect('validate_otp')
             tokens = generate_tokens(user)
-            print('\n\n\n\n\n\n\n\n')
-            print(os.getenv('JWT_SECRET_KEY'))
-            print('\n\n\n\n\n\n\n\n')
-            return Response({'tokens': tokens}, status=200)
+            return Response({'tokens': tokens}, status=status.HTTP_200_OK)
         else :
-            return Response(Serializer.errors, status=400)
+            return Response(Serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-class LogoutView(BaseAuthView):
+class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         try:
-            # must the user send the tokens in header
             refresh_token = request.data['refresh']
-            print(request.data)
-            # logout(request)
             tokens = RefreshToken(refresh_token)
             tokens.blacklist()
-            # Refresh_token = request.data['']
         except Exception as e:
             return Response({'error': str(e)}, status=400)
         return Response({'message': 'loggedOut Successfuly'}, status=200)
 
-#------------------------------------- 2FA ------------------------------------
+#------------------------------------- 2FA ------------------------------------19788791
 import pyotp
 
 class GenerateURI(APIView):
@@ -142,9 +136,6 @@ class ValidateOTP(APIView):
     permission_class = [IsAuthenticated]
     serializer_class = ValidateOTPSerializer
 
-    def get(self, request):
-        return Response({'page to Serve': 'verify otp page'}, status=200)
-
     def post(self, request):
         serializer = self.serializer_class(request.data)
         if not serializer.is_valid():
@@ -158,7 +149,9 @@ class ValidateOTP(APIView):
         bol = totp.verify(otp_token)
         if not bol:
             return Response({'message': 'Invalid Token'}, status=400)
-        return Response({'message': '2fa Verified'}, status=200)
+        tokens = generate_tokens(user)
+        return Response({'tokens': tokens}, status=status.HTTP_200_OK)
+        # return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
     permission_classes = [IsAuthenticated]
@@ -267,3 +260,9 @@ class UpdateUserInfos(APIView):
 
 #{"username":"kadigh1","password":"kadigh123"}  admin 
 # {"username": "rxtx", "password": "kadigh123"}
+
+            # if (user.enabled_2fa == True):
+            #     if OTPVerification(user) == False:
+            #         return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+            # we could do the above implementation or 
+            # we could redirect the user to the 2fa view
