@@ -3,9 +3,9 @@ FROM python:3.8-slim
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY ./config /app/config
+WORKDIR /app
 
-WORKDIR /app/source
+COPY ./config ./config
 
 # RUN apt update && apt install wget -y
 # RUN wget https://github.com/prometheus/node_exporter/releases/download/v1.1.1/node_exporter-1.1.1.linux-amd64.tar.gz
@@ -13,12 +13,12 @@ WORKDIR /app/source
 # RUN tar xvfz node_exporter-*.*-amd64.tar.gz
 # RUN ./node_exporter & in the background
 
-RUN chmod -R +x /app/config \
+RUN chmod -R +x ./config \
     && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sh", "/app/config/autoLaunch.sh" ]
+ENTRYPOINT [ "sh", "./config/autoLaunch.sh" ]
 CMD [ "python", "manage.py", "runsever", "0.0.0.0:8080"]
 
 

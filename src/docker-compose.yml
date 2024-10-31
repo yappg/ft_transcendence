@@ -11,14 +11,10 @@ services:
     #   ports:
     #     - 443:443
     #   depends_on:
-    #     - frontend
-    #     - backend
-    #   # healthcheck:
-    #   #     test: ["executable", "arg"]
-    #   #     interval: 1m30s
-    #   #     timeout: 30s
-    #   #     retries: 5
-    #   #     start_period: 30s
+    #     frontend:
+    #         condition: service_healthy
+    #     backend:
+    #         condition: service_healthy
     #   restart: unless-stopped
 
     # frontend:
@@ -28,13 +24,14 @@ services:
     #     image: Frontend
     #     container_name: Frontend
     #     environment:
-    #       BACKEND_URL: http://backend:8000
+    #       BACKEND_URL: http://backend:8080
     #     networks:
     #       - transcendence
     #     ports:
     #       - 3000:3000
     #     depends_on:
-    #       - backend
+    #         backend:
+    #             condition: service_healthy
     #     # healthcheck:
     #     #     test: ["executable", "arg"]
     #     #     interval: 1m30s
@@ -59,12 +56,14 @@ services:
         networks:
           - transcendence
         ports:
-          - 8000:8080
+          - 8080:8080
         depends_on:
-          - database
-          - redis
+          redis:
+            condition: service_healthy
+          database:
+            condition: service_healthy
         # healthcheck:
-        #     test: ["executable", "arg"]
+        #     test: ["CMD", ""]
         #     interval: 1m30s
         #     timeout: 30s
         #     retries: 5
@@ -72,17 +71,23 @@ services:
         restart: always
 
     redis:
-        image: redis
+        image: redis:alpine
         container_name: redis
         environment:
             REDIS_PASS: ${REDIS_PASS}
         command: "redis-server --requirepass $REDIS_PASS"
         networks:
             - transcendence
+        healthcheck:
+            test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+            interval: 30s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
         restart: always
 
     database:
-        image: postgres
+        image: postgres:alpine
         container_name: database
         volumes:
             - database:/var/lib/postgresql/data
@@ -92,54 +97,60 @@ services:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         networks:
             - transcendence
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+            interval: 30s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
         restart: always
 
 #  of the docker container factory failed: failed to validate Docker info: failed to detect Docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 # 9] Registration of the containerd container factory failed: unable to create containerd client: containerd: cannot unix dial containerd api service: dial unix /run/containerd/containerd.sock: connect: no such file or directory
-    cadvisor:
-      image: gcr.io/cadvisor/cadvisor:latest
-      container_name: cadvisor
-      # privileged: true
-      networks:
-        - transcendence
-      ports:
-        - "8080:8080"
-      volumes:
-        - /:/rootfs:ro
-        - /var/run:/var/run:ro
-        - /sys:/sys:ro
-        # - /Users/ebennix/goinfre/docker/.docker:/var/lib/docker:ro
-        - /dev/disk/:/dev/disk:ro
-        - /dev/kmsg:/dev/kmsg:ro  # Add this device
-      restart: unless-stopped
+    # cadvisor:
+    #   image: gcr.io/cadvisor/cadvisor:latest
+    #   container_name: cadvisor
+    #   # privileged: true
+    #   networks:
+    #     - transcendence
+    #   ports:
+    #     - "8080:8080"
+    #   volumes:
+    #     - /:/rootfs:ro
+    #     - /var/run:/var/run:ro
+    #     - /sys:/sys:ro
+    #     # - /Users/ebennix/goinfre/docker/.docker:/var/lib/docker:ro
+    #     - /dev/disk/:/dev/disk:ro
+    #     - /dev/kmsg:/dev/kmsg:ro  # Add this device
+    #   restart: unless-stopped
 
-    prometheus:
-        image: prom/prometheus:latest
-        container_name: prometheus
-        volumes:
-          - "./monitor/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-          - prom:/prometheus
-        command:
-          - '--config.file=/etc/prometheus/prometheus.yml'
-          - '--storage.tsdb.path=/prometheus'
-          - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-          - '--web.console.templates=/usr/share/prometheus/consoles'
-        networks:
-          - transcendence
-        ports:
-          - "9090:9090"
-        restart: always
+    # prometheus:
+    #     image: prom/prometheus:latest
+    #     container_name: prometheus
+    #     volumes:
+    #       - "./monitor/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    #       - prom:/prometheus
+    #     command:
+    #       - '--config.file=/etc/prometheus/prometheus.yml'
+    #       - '--storage.tsdb.path=/prometheus'
+    #       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+    #       - '--web.console.templates=/usr/share/prometheus/consoles'
+    #     networks:
+    #       - transcendence
+    #     ports:
+    #       - "9090:9090"
+    #     restart: always
 
-    grafana:
-        image: grafana/grafana
-        container_name: grafana
-        environment:
-            - GF_SECURITY_ADMIN_PASSWORD=mehdi1234
-        networks:
-          - transcendence
-        ports:
-          - "3000:3000"
-        restart: unless-stopped
+    # grafana:
+    #     image: grafana/grafana
+    #     container_name: grafana
+    #     environment:
+    #         - GF_SECURITY_ADMIN_PASSWORD=mehdi1234
+    #     networks:
+    #       - transcendence
+    #     ports:
+    #       - "3000:3000"
+    #     restart: unless-stopped
 
   # alertmanager:
   #   image: prom/alertmanager
@@ -172,12 +183,13 @@ services:
 
 
 volumes:
+    database:
+        name: database
+
     graf:
         name: graf
     prom:
         name: prom
-    database:
-        name: database
 
 networks:
     transcendence:
