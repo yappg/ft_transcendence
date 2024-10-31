@@ -2,18 +2,17 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
-#env path ../../.env
-env_path=env_path = os.path.abspath(os.path.join('../../.env'))
-load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR.parent.parent / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'TransgendergGame3334-CreatedBy:ObikaPipoOtarakiEl-binxAaaaaaandMerryyyyyyy'
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -141,10 +140,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': 'u-s4t2ud-4aae62bd87a3daa2bf54d50bbccb9a771a1cfde5353d8a10bd6ed5d8fe263033',
-    'CLIENT_SECRET': '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',
-    # 'CLIENT_ID': os.getenv("42_CLIENT_ID"),
-    # 'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
+    'CLIENT_ID': os.getenv("42_CLIENT_ID"),
+    'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
@@ -153,10 +150,8 @@ OAUTH2_PROVIDER_42 = {
 }
 
 OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': '182265720847-k8uvnm7i3oeh35t05aalu6lrj0blejh8.apps.googleusercontent.com',
-    'CLIENT_SECRET': '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',
-    # 'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
-    # 'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+    'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
+    'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',

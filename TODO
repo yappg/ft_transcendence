@@ -5,8 +5,13 @@ OMAR:
 NOUREDDINE:
     - validate email, password and username in front (kadigh)
     - (Kadigh): for the profile picture uploads validate the extension (jpg,jpeg,png...), && put a size limit for the picture
+    - (kadigh) in front if a user activated 2fa i would expect {username, password, otp_token(2facode)}
 MERIEM:
 MEHDI:
     -read about websockets 
 KADIGH:
     -read about websockets 
+    -writing Tests
+    -rate limiting 
+    -implement 2fa check in login
+    -put credentials in .env file
