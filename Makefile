@@ -34,7 +34,6 @@ list:
 clean: down
 	@docker rmi $$(docker compose -p $(PROJECT) images -q) || true
 
-#improve remove of vols compose down --volumes
 fclean: clean
 	@docker compose -p $(PROJECT) down --volumes
 

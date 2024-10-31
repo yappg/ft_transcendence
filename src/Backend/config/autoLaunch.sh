@@ -2,8 +2,7 @@
 
 # wait for database to be up and running ...
 
-sh /app/config/dev.sh
-
+# python manage.py makemigrations
 python manage.py migrate
 
 exec "$@"
