@@ -32,12 +32,12 @@ list:
 	@docker compose -p $(PROJECT) images
 
 clean: down
-	@docker rmi $$(docker compose -p $(PROJECT) images -q) || true
+	@docker rmi $$(docker compose -p $(PROJECT) images -q) 2>/dev/null || true
 
 fclean: clean
 	@docker compose -p $(PROJECT) down --volumes
 
-re: fclean all
+re: fclean up
 
 ########################################## DEVELOPMENT ##########################################
 
@@ -64,8 +64,8 @@ push:
 	git status
 	@echo "$(GREEN)>$(YELLOW) Committing changes...$(RESET)"
 	git commit -m "$(filter-out $@, $(MAKECMDGOALS))"
-	@echo "$(GREEN)>$(YELLOW) Pushing changes...$(RESET)"
-	git push
+	# @echo "$(GREEN)>$(YELLOW) Pushing changes...$(RESET)"
+	# git push
 
 #################################################################################################
 
