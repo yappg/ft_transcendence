@@ -1,5 +1,5 @@
 # import pyotp
-# import time 
+# import time
 
 # # secret_key = pyotp.random_base32()
 # # totp = pyotp.TOTP(secret_key) #totp object

@@ -17,48 +17,48 @@ services:
     #         condition: service_healthy
     #   restart: unless-stopped
 
-    frontend:
-        build:
-          context: ./frontend
-          dockerfile: Dockerfile
-        image: Frontend
-        container_name: Frontend
-        environment:
-          BACKEND_URL: http://backend:8080
-        networks:
-          - transcendence
-        ports:
-          - 3000:3000
-        depends_on:
-            backend:
-                condition: service_healthy
-        # healthcheck:
-        #     test: ["executable", "arg"]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
-        restart: always
+    # frontend:
+    #     build:
+    #       context: ./frontend
+    #       dockerfile: Dockerfile
+    #     image: Frontend
+    #     container_name: Frontend
+    #     environment:
+    #       BACKEND_URL: http://backend:8080
+    #     networks:
+    #       - transcendence
+    #     ports:
+    #       - 3000:3000
+    #     depends_on:
+    #         backend:
+    #             condition: service_healthy
+    #     # healthcheck:
+    #     #     test: ["executable", "arg"]
+    #     #     interval: 1m30s
+    #     #     timeout: 30s
+    #     #     retries: 5
+    #     #     start_period: 30s
+    #     restart: always
 
     backend:
         build:
           context: ./Backend
           dockerfile: Dockerfile
-        image: Backend
-        container_name: Backend
+        image: backend
+        container_name: backend
         volumes:
-            - ./Backend/source:/app:ro
+            - ./Backend/source:/app/source:ro
         environment:
-            REDIS_PASS: ${REDIS_PASS}
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            REDIS_PASS: ${REDIS_PASS}
         networks:
           - transcendence
         ports:
           - 8080:8080
         depends_on:
-          redis:
+          cache:
             condition: service_healthy
           database:
             condition: service_healthy
@@ -70,7 +70,7 @@ services:
         #     start_period: 30s
         restart: always
 
-    redis:
+    cache:
         image: redis:alpine
         container_name: redis
         environment:
@@ -82,13 +82,13 @@ services:
             test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
             interval: 30s
             timeout: 5s
-            retries: 5
-            start_period: 10s
+            retries: 3
+            # start_period: 10s
         restart: always
 
     database:
         image: postgres:alpine
-        container_name: database
+        container_name: postgres
         volumes:
             - database:/var/lib/postgresql/data
         environment:
@@ -101,8 +101,8 @@ services:
             test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
             interval: 30s
             timeout: 5s
-            retries: 5
-            start_period: 10s
+            retries: 3
+            # start_period: 10s
         restart: always
 
 #  of the docker container factory failed: failed to validate Docker info: failed to detect Docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
@@ -119,7 +119,7 @@ services:
     #     - /:/rootfs:ro
     #     - /var/run:/var/run:ro
     #     - /sys:/sys:ro
-    #     # - /Users/ebennix/goinfre/docker/.docker:/var/lib/docker:ro
+    #     # - /Users/${USER}/.docker/run/:/var/run/:ro
     #     - /dev/disk/:/dev/disk:ro
     #     - /dev/kmsg:/dev/kmsg:ro  # Add this device
     #   restart: unless-stopped
@@ -128,7 +128,7 @@ services:
     #     image: prom/prometheus:latest
     #     container_name: prometheus
     #     volumes:
-    #       - "./monitor/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    #       - "./Config/prom/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
     #       - prom:/prometheus
     #     command:
     #       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -145,7 +145,13 @@ services:
     #     image: grafana/grafana
     #     container_name: grafana
     #     environment:
-    #         - GF_SECURITY_ADMIN_PASSWORD=mehdi1234
+    #         GF_SECURITY_ADMIN_USER : ${GRAFANA_USER}
+    #         GF_SECURITY_ADMIN_PASSWORD : ${GRAFANA_PASSWORD}
+    #         GF_DATASOURCES_PATH : /etc/grafana/provisioning/datasources
+    #         GF_PROVISIONING_PATHS : /etc/grafana/provisioning
+    #     volumes:
+    #         - grafana-data:/var/lib/grafana:rw
+    #         - ./Config/provisioning:/etc/grafana/provisioning:rw
     #     networks:
     #       - transcendence
     #     ports:
@@ -186,8 +192,8 @@ volumes:
     database:
         name: database
 
-    graf:
-        name: graf
+    grafana-data:
+        name: grafana-data
     prom:
         name: prom
 
