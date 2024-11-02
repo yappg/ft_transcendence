@@ -47,7 +47,8 @@ services:
         image: backend
         container_name: backend
         volumes:
-            - ./Backend/source:/app/source:ro
+            - ./Backend/source:/app/source:rw
+            # DEV
         environment:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}

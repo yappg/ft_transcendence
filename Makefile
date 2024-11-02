@@ -42,7 +42,7 @@ re: fclean up
 ########################################## DEVELOPMENT ##########################################
 
 it:
-	@docker compose -p $(PROJECT) exec -it $(filter-out $@, $(MAKECMDGOALS)) "/bin/bash"
+	@docker compose -p $(PROJECT) exec -it $(filter-out $@, $(MAKECMDGOALS)) "/bin/sh"
 
 restart:
 	@docker-compose -p $(PROJECT_NAME) restart $(filter-out $@, $(MAKECMDGOALS))

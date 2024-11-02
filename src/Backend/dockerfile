@@ -3,10 +3,14 @@ FROM python:alpine
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+RUN pip install --upgrade pip
+
 WORKDIR /app/source
 
 COPY ./config /app/config
 
+
+# RUN mkdir -p /app/staticfiles/
 # RUN apt update && apt install wget -y
 # RUN wget https://github.com/prometheus/node_exporter/releases/download/v1.1.1/node_exporter-1.1.1.linux-amd64.tar.gz
 
