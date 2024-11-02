@@ -3,7 +3,7 @@ FROM python:alpine
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN pip install --upgrade pip
+# RUN pip install --upgrade pip
 
 WORKDIR /app/source
 
@@ -16,12 +16,11 @@ COPY ./config /app/config
 
 # RUN tar xvfz node_exporter-*.*-amd64.tar.gz
 # RUN ./node_exporter & in the background
-
 RUN chmod -R +x /app/config
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sh", "/app/config/autoLaunch.sh" ]
+# ENTRYPOINT [ "sh", "/app/config/autoLaunch.sh" ]
 # CMD [ "python", "manage.py", "runsever", "0.0.0.0:8080"]
 CMD [ "tail", "-f", "/dev/null"]
 
