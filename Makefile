@@ -66,8 +66,11 @@ push:
 	git commit -m "$(filter-out $@, $(MAKECMDGOALS))"
 	@echo "$(GREEN)>$(YELLOW) Pushing changes...$(RESET)"
 	git push
-	exit 0
-	@false
+# exit 0
+# @false
+
+%:
+	@true
 
 #################################################################################################
 
