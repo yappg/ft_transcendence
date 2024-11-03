@@ -31,9 +31,9 @@ services:
           - transcendence
         ports:
           - 3000:3000
-        depends_on:
-            backend:
-                condition: service_healthy
+        # depends_on:
+        #     backend:
+        #         condition: service_healthy
         # healthcheck:
         #     test: ["executable", "arg"]
         #     interval: 1m30s
@@ -92,7 +92,7 @@ services:
         container_name: postgres
         image: postgres:alpine3.20
         volumes:
-            - database:/var/lib/postgresql/data
+            - postgres-data:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
@@ -108,8 +108,6 @@ services:
             # start_period: 10s
         restart: always
 
-#  of the docker container factory failed: failed to validate Docker info: failed to detect Docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
-# 9] Registration of the containerd container factory failed: unable to create containerd client: containerd: cannot unix dial containerd api service: dial unix /run/containerd/containerd.sock: connect: no such file or directory
     # cadvisor:
     #   image: gcr.io/cadvisor/cadvisor:latest
     #   container_name: cadvisor
@@ -161,47 +159,63 @@ services:
     #       - "3000:3000"
     #     restart: unless-stopped
 
-  # alertmanager:
-  #   image: prom/alertmanager
-  #   container_name: alertmanager
-  #   networks:
-  #     - monitoring
-  #   volumes:
-  #     - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
-  #   environment:
-  #     - SMTP_USERNAME=${SMTP_USERNAME}  # Store sensitive data in environment variables
-  #     - SMTP_PASSWORD=${SMTP_PASSWORD}
+    # - GF_SERVER_ROOT_URL=http://my.grafana.server/
+    # - Setting	Default value
+    # - GF_PATHS_CONFIG	/etc/grafana/grafana.ini
+    # - GF_PATHS_DATA	/var/lib/grafana
+    # - GF_PATHS_HOME	/usr/share/grafana
+    # - GF_PATHS_LOGS	/var/log/grafana
+    # - GF_PATHS_PLUGINS	/var/lib/grafana/plugins
+    # - GF_PATHS_PROVISIONING	/etc/grafana/provisioning
+    # - GF_INSTALL_PLUGINS=grafana-clock-panel
 
+    # alertmanager:
+    #   image: prom/alertmanager
+    #   container_name: alertmanager
+    #   networks:
+    #     - monitoring
+    #   volumes:
+    #     - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    #   environment:
+    #     - SMTP_USERNAME=${SMTP_USERNAME}  # Store sensitive data in environment variables
+    #     - SMTP_PASSWORD=${SMTP_PASSWORD}
 
-      # - GF_SERVER_ROOT_URL=http://my.grafana.server/
-      # - Setting	Default value
-      # - GF_PATHS_CONFIG	/etc/grafana/grafana.ini
-      # - GF_PATHS_DATA	/var/lib/grafana
-      # - GF_PATHS_HOME	/usr/share/grafana
-      # - GF_PATHS_LOGS	/var/log/grafana
-      # - GF_PATHS_PLUGINS	/var/lib/grafana/plugins
-      # - GF_PATHS_PROVISIONING	/etc/grafana/provisioning
-      # - GF_INSTALL_PLUGINS=grafana-clock-panel
-
-# nginx-exporter:
-#   image: nginx/nginx-prometheus-exporter:latest
-#   command:
-#     - '-nginx.scrape-uri=http://nginx:8080/stub_status'
-#   ports:
-#     - 9113:9113
+    # nginx-exporter:
+    #   image: nginx/nginx-prometheus-exporter:latest
+    #   command:
+    #     - '-nginx.scrape-uri=http://nginx:8080/stub_status'
+    #   ports:
+    #     - 9113:9113
 
 
 volumes:
-    database:
+    postgres-data:
         name: database
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/volumes
 
     grafana-data:
-        name: grafana-data
-    prom:
-        name: prom
+        name: grafana
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/volumes
+
+    prometheus-data:
+        name: prometheus
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/volumes
+
 
 networks:
     transcendence:
         name: transcendence
-    infra:
-        name: infra
+    # infra:
+    #     name: infra
