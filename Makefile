@@ -15,12 +15,13 @@ RESET := \033[0m
 ##########################################    BUILD    ##########################################
 
 up: down
+	@mkdir -p volumes
 	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d
 	@docker system prune -f
 	$(MAKE) logs
 
 down:
-	docker compose -p $(PROJECT) down
+	docker compose -p $(PROJECT) down --volumes
 
 logs:
 	docker compose -p $(PROJECT) logs -f
@@ -35,11 +36,14 @@ clean: down
 	@docker rmi $$(docker compose -p $(PROJECT) images -q) 2>/dev/null || true
 
 fclean: clean
-	@docker compose -p $(PROJECT) down --volumes
+	@rm -rf volumes
 
-re: fclean up
+re: clean up
 
 ########################################## DEVELOPMENT ##########################################
+
+compose:
+	@docker-compose -p $(PROJECT_NAME) $(filter-out $@, $(MAKECMDGOALS))
 
 it:
 	@docker compose -p $(PROJECT) exec -it $(filter-out $@, $(MAKECMDGOALS)) "/bin/sh"
@@ -72,4 +76,4 @@ push:
 
 #################################################################################################
 
-.PHONEY: up down logs list clean fclean re prune push
+.PHONEY: up down logs list clean re prune push
