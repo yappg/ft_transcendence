@@ -1,24 +1,20 @@
+import os
 from pathlib import Path
 from datetime import timedelta
-import os
-from dotenv import load_dotenv
+from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR.parent.parent / ".env")
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -38,13 +34,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     #swagger api documentation
     'drf_yasg',
+    'channels',
     #local apps
     'accounts',
+    'api',
+    'chat',
+    'chatoom',
     'game',
     'tournament',
-    'channels',
-    'chatoom',
-    'api',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +71,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
+    "SIGNING_KEY": settings.SECRET_KEY,
 }
 
 ROOT_URLCONF = '_1Config.urls'
@@ -95,31 +92,45 @@ TEMPLATES = [
     },
 ]
 
-
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(f'redis://:{os.getenv('REDIS_PASS')}@cache:6379/0')],
         },
     },
 }
 
-
 WSGI_APPLICATION = '_1Config.wsgi.application'
 
 ASGI_APPLICATION = '_1Config.asgi.application'
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': 'database',
+        'PORT': '5432',
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'redis://:{os.getenv('REDIS_PASS')}@cache:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions
+SESSION_CACHE_ALIAS = "default"  # Use the default cache defined above
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -159,7 +170,6 @@ OAUTH2_PROVIDER_GOOGLE = {
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -170,7 +180,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

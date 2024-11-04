@@ -12,20 +12,21 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+
 from django.urls import path
-from channels.security.websocket import AllowedHostsOriginValidator
-from chatoom.consumers import ChatConsumer
 from django.urls import re_path
-from chatoom.routing import websockets_urlpatterns 
+from chatoom.consumers import ChatConsumer
+from channels.security.websocket import AllowedHostsOriginValidator
+
+from chatoom.routing import websockets_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
-
 
 django_asgi_app = get_asgi_application()
 application = ProtocolTypeRouter(
     {
         'http': django_asgi_app,
-        # 'websocket': 
+        # 'websocket':
         #     AllowedHostsOriginValidator(
         #     AuthMiddlewareStack(
         #         URLRouter(
@@ -42,4 +43,3 @@ application = ProtocolTypeRouter(
         )
     ),
     })
-  
