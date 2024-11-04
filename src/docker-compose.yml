@@ -23,8 +23,10 @@ services:
           context: ./frontend
           dockerfile: Dockerfile
         image: frontend
-        # volumes:
-        #   - ./Frontend/source:/app/source:rw
+        volumes:
+          - /app/.next
+          - /app/node_modules
+          - ./Frontend/source:/app/source:rw
         environment:
           BACKEND_URL: http://backend:8080
         networks:
