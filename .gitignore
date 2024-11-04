@@ -2,7 +2,6 @@
 volumes
 
 ### direnv ###
-.env
 .direnv
 .envrc
 
