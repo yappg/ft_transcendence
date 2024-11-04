@@ -8,8 +8,13 @@ COPY . /app
 WORKDIR /app/source
 
 RUN pip install --upgrade pip \
-    # && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app
+    && pip install --no-cache-dir -r requirements.txt \
+    && chmod -R +x /app \
+    && apk update \
+    && apk add --no-cache \
+    curl \
+    wget
+
 
 # RUN mkdir -p /app/staticfiles/
 # RUN apt update && apt install wget -y
@@ -21,6 +26,5 @@ RUN pip install --upgrade pip \
 
 EXPOSE 8080
 
-# ENTRYPOINT [ "sh", "../config/autoLaunch.sh" ]
-# CMD ["daphne", "-p", "8080", "source.asgi:application"]
-CMD [ "tail", "-f", "/dev/null"]
+ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
