@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import SignInView, SignUpView, OAuth42LoginView, OAuth42CallbackView, LogoutView , PlayersViewList, GenerateURI, VerifyOTP, DisableOTP
+from .views import * # SignInView, SignUpView, OAuth42LoginView, OAuth42CallbackView, LogoutView , PlayersViewList, GenerateURI, VerifyOTP, DisableOTP
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -15,8 +15,12 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token'),
 #2fa
     path('generate-uri/', GenerateURI.as_view(), name='generate_uri'),
-    path('verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'),
+    path('verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'), 
+    path('validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('disable-otp/', DisableOTP.as_view(), name='disable_otp'),
+#upload media UpdateUserInfos
+    path('update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
+
 #list users
     path('all/', PlayersViewList.as_view(), name='playersList'),
 ]

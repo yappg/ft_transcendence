@@ -1,13 +1,16 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.contrib.auth import logout
+from django.core.cache import cache
+from .permissions import AnonRateLimitThrottling
 from .models import Player
-from .serializers import PlayerSerializer, SignInSerializer, SignUpSerializer, GenerateOTPSerializer, VerifyOTPSerializer, ValidateOTPSerializer
-from .utils import APIdata, fetch_user_data, store_user_data, generate_tokens
+from .serializers import * 
+from .utils import *
+
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -16,19 +19,23 @@ class PlayersViewList(ListAPIView):
     queryset=Player.objects.all()
 
 # class PlayerView(APIView):
+class BaseAuthView(APIView):
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
 #------------------------------------ Auth ------------------------------------
-
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
-
-    def get(self, request):
-        return Response({'message': 'Signup page'}, status=200)
+    throttle_classes = [AnonRateLimitThrottling]
 
     def post(self, request):
-
-        #implement a rate limit 
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -41,40 +48,48 @@ class SignUpView(APIView):
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
-
-    #still need to implement a rate limit login attempts
-    def get(self, request):
-        return Response({'page to Serve': 'SignIn page'}, status=200)
+    throttle_classes = [AnonRateLimitThrottling]
 
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
 
-        if Serializer.is_valid() :
+        if Serializer.is_valid():
             user = Serializer.validated_data['user']
-            # if (user.enabled_2fa == True and ):
-            #     implement 2fa
-            login(request, user)
-            tokens = generate_tokens(user)
-            return Response({'tokens': tokens}, status=200)
+            # maybe it would be implemented as follow  or it could be validated on the serializer
+            if (user.enabled_2fa == True):
+                redirect('validate_otp')
+
+            access_token, refresh_token = generate_tokens(user)
+            print(access_token)
+            print(refresh_token)
+
+            resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+            resp.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=False
+            )
+            resp.set_cookie(
+                key='refresh_token',
+                value=refresh_token,
+                httponly=False
+            )
+            return resp
         else :
-            return Response(Serializer.errors, status=400)
+            return Response(Serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
-    def get(self, request):
+    def post(self, request):
         try:
-            # must the user send the tokens in header
-            # refresh_token = request.data["refresh_token"]
-            # tokens = RefreshToken(refresh_token)
-            # tokens.backlist()
-            # Refresh_token = request.data['']
-            logout(request)
+            refresh_token = request.data['refresh']
+            tokens = RefreshToken(refresh_token)
+            tokens.blacklist()
         except Exception as e:
             return Response({'error': str(e)}, status=400)
         return Response({'message': 'loggedOut Successfuly'}, status=200)
 
-#------------------------------------- 2FA ------------------------------------
-
+#------------------------------------- 2FA ------------------------------------19788791
 import pyotp
 
 class GenerateURI(APIView):
@@ -102,15 +117,13 @@ class GenerateURI(APIView):
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
+        qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
         return Response({'uri': uri}, status=200)
 
-# this view is for the user to verify the otp token after scanning the qr code(enabling the 2fa)
+import qrcode
 class VerifyOTP(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VerifyOTPSerializer
-
-    def get(self, request):
-        return Response({'page to Serve': 'verify otp page'}, status=200)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -133,13 +146,10 @@ class ValidateOTP(APIView):
     permission_class = [IsAuthenticated]
     serializer_class = ValidateOTPSerializer
 
-    def get(self, request):
-        return Response({'page to Serve': 'verify otp page'}, status=200)
-
     def post(self, request):
         serializer = self.serializer_class(request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=400)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
@@ -149,7 +159,9 @@ class ValidateOTP(APIView):
         bol = totp.verify(otp_token)
         if not bol:
             return Response({'message': 'Invalid Token'}, status=400)
-        return Response({'message': '2fa Verified'}, status=200)
+        tokens = generate_tokens(user)
+        return Response({'tokens': tokens}, status=status.HTTP_200_OK)
+        # return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
     permission_classes = [IsAuthenticated]
@@ -168,14 +180,12 @@ class DisableOTP(APIView):
         return Response({'message':'2fa Disabled'})
 
 #---------------------------------- OAuth2.0 ----------------------------------
-
 import requests
 from django.conf import settings
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
-from oauth2_provider.models import Application
 from rest_framework.response import Response
 
 class OAuth42LoginView(APIView):
@@ -197,6 +207,7 @@ class OAuth42LoginView(APIView):
 
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request, provider):
 
         if (provider != '42' and provider != 'google'):
@@ -209,55 +220,51 @@ class OAuth42CallbackView(APIView):
         token_url, data = APIdata(code, provider)
         response = requests.post(token_url, data=data)
         token_data = response.json()
+        print(token_data)
 
         if 'access_token' not in token_data:
             return Response({'error': 'Failed to obtain access token'}, status=400)
 
         user_data = fetch_user_data(token_data['access_token'], provider)
-
         user, created = store_user_data(user_data, provider)
-        # print(user.id)
-        if not created:
-            user.email = user_data['email']
-            # user.avatar_url = user_data['image']['link']
-            user.save()
 
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-        # Log the user in
-        login(request, user)
-
-        # Create OAuth2 application for the user if it doesn't exist
-        # app, _ = Application.objects.get_or_create(
-        #     user=user,
-        #     client_type=Application.CLIENT_CONFIDENTIAL,
-        #     authorization_grant_type=Application.GRANT_AUTHORIZATION_CODE,
-        #     name=f'42 OAuth App for {user.username}'
-        # )
-
-        # # # Generate access token for the user
-        # token_url = reverse('oauth2_provider:token')
-        # data = {
-        #     'grant_type': 'client_credentials',
-        #     'client_id': app.client_id,
-        #     'client_secret': app.client_secret,
-        # }
-        # response = requests.post(request.build_absolute_uri(token_url), data=data)
-        # token_data = response.json()
-        # print('\n\n-----------' + str(token_data) + '----------\n\n')
-
+        jwt_tokens = generate_tokens(user)
         return Response({
-            'access_token': token_data['access_token'],
-            'token_type': token_data['token_type'],
-            'expires_in': token_data['expires_in'],
+            'id': user.id,
             'username': user.username,
-        })
-
-
-# admin {"username":"kadigh1","password":"kadigh123"}
-# {"username": "abdo", "password": "kadigh123"}
+            'tokens' : jwt_tokens,
+        }, status=status.HTTP_200_OK)
 
 #--------------------------User Infos Update ------------------------------
-# class UpdateUserInfos(APIView):
+
+class UpdateUserInfos(APIView):
+    serializer_class = UpdateUserInfosSerializer
+
+    def post(self, request):
+        serializer = UpdateUserInfosSerializer(
+            data=request.data,
+            context={'user':request.user}
+            )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class PlayerStats(APIView):
+#     permission_classes = [IsAuthenticated]
+
 #     def get(self, request):
-#         pass
-#     def post(self, request):
+#         user = request.user
+        # return Response({
+        #     'username': user.username,
+        #     'email': user.email,
+        #     'score': user.score,
+        #     'games_played': user.games_played,
+        #     'games_won': user.games_won,
+        #     'games_lost': user.games_lost,
+        #     'games_draw': user.games_draw,
+        #     'win_rate': user.win_rate,
+        #     'last_game': user.last_game,
+        # }, status=200)
+
