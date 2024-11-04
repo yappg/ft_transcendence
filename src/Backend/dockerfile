@@ -3,11 +3,13 @@ FROM python:alpine
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN pip install --upgrade pip
+COPY . /app
 
 WORKDIR /app/source
 
-COPY ./config /app/config
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && chmod -R +x /app
 
 # RUN mkdir -p /app/staticfiles/
 # RUN apt update && apt install wget -y
@@ -15,12 +17,10 @@ COPY ./config /app/config
 
 # RUN tar xvfz node_exporter-*.*-amd64.tar.gz
 # RUN ./node_exporter & in the background
-RUN chmod -R +x /app/config
+# curl http://backend:9100/metrics for metrics
 
 EXPOSE 8080
 
-# ENTRYPOINT [ "sh", "/app/config/autoLaunch.sh" ]
-# CMD [ "python", "manage.py", "runsever", "0.0.0.0:8080"]
+ENTRYPOINT [ "sh", "../config/autoLaunch.sh" ]
+# CMD ["daphne", "-p", "8080", "source.asgi:application"]
 CMD [ "tail", "-f", "/dev/null"]
-
-# curl http://backend:9100/metrics for metrics
