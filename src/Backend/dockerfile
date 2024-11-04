@@ -8,7 +8,7 @@ COPY . /app
 WORKDIR /app/source
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
+    # && pip install --no-cache-dir -r requirements.txt \
     && chmod -R +x /app
 
 # RUN mkdir -p /app/staticfiles/
@@ -21,6 +21,6 @@ RUN pip install --upgrade pip \
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sh", "../config/autoLaunch.sh" ]
+# ENTRYPOINT [ "sh", "../config/autoLaunch.sh" ]
 # CMD ["daphne", "-p", "8080", "source.asgi:application"]
 CMD [ "tail", "-f", "/dev/null"]
