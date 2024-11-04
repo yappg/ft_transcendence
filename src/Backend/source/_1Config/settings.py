@@ -1,53 +1,49 @@
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR.parent.parent / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*bok4t@yesu4==8yn!+4juc1skc$$ys#x=agk2il9xh7u4z_l!'
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # needed for the allauth
+    #needed for the allauth
     'django.contrib.sites',
-    # django-rest-framework
+    #django-rest-framework
     'rest_framework',
     'rest_framework_simplejwt',
-    # generate tokens for an authenticated player
-    'rest_framework.authtoken',
-    # 3rd party libs
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.oauth2',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'oauth2_provider',
-    # swagger api documentation
+    'rest_framework_simplejwt.token_blacklist',
+    #swagger api documentation
     'drf_yasg',
-    # local apps
+    #local apps
     'accounts',
     'game',
     'tournament',
-    'chat',
+    'channels',
+    'chatoom',
     'api',
 ]
 
@@ -59,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -67,43 +63,18 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        # 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+    'DEFAULT_THROTTLE_RATES' : {
+        'anon' : '3/min',
+    }
 }
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-)
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=120),
-
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=2),
-    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
-
-    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
-    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
-}
-
-OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': 'u-s4t2ud-4aae62bd87a3daa2bf54d50bbccb9a771a1cfde5353d8a10bd6ed5d8fe263033',
-    'CLIENT_SECRET': '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',
-    'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
-    'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
-    'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/42',
-    'SCOPE': 'public',
-}
-
-OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': '182265720847-k8uvnm7i3oeh35t05aalu6lrj0blejh8.apps.googleusercontent.com',
-    'CLIENT_SECRET': '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',
-    'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
-    'TOKEN_URL': 'https://oauth2.googleapis.com/token',
-    'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/google',
-    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
 }
 
 ROOT_URLCONF = '_1Config.urls'
@@ -124,39 +95,31 @@ TEMPLATES = [
     },
 ]
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+
+
 WSGI_APPLICATION = '_1Config.wsgi.application'
 
-
+ASGI_APPLICATION = '_1Config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-from os import environ
 
-# PostgreSQL settings
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME' : environ.get('POSTGRES_DB'),
-        'USER': environ.get('POSTGRES_USER'),
-        'PASSWORD': environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'database',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# Redis settings for caching
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{environ.get('REDIS_PASS')}@redis:6379/1",
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
-        }
-    }
-}
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -175,6 +138,26 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+OAUTH2_PROVIDER_42 = {
+    'CLIENT_ID': os.getenv("42_CLIENT_ID"),
+    'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
+    'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
+    'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
+    'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/42',
+    'SCOPE': 'public',
+}
+
+OAUTH2_PROVIDER_GOOGLE = {
+    'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
+    'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+    'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
+    'TOKEN_URL': 'https://oauth2.googleapis.com/token',
+    'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
+    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/google',
+    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+}
 
 
 # Internationalization
@@ -212,3 +195,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
 
 # LOGIN_REDIRECT_URL = 'players/'
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
+MEDIA_URL='/media/'

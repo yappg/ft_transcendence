@@ -11,6 +11,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    otp_token = serializers.CharField(max_length=6, required=False)
     extra_kwargs = {
         'password':{'write_only':True}
     }
@@ -22,8 +23,17 @@ class SignInSerializer(serializers.Serializer):
             user = authenticate(username=usernm, password=passwd)
             if not user:
                 raise serializers.ValidationError("Invalid Credentials")
+            # if the the otp would be sent with the user credentials
+            # if user.enabled_2fa:
+            #     if attrs.get('otp_token'):
+            #         totp = pyotp.TOTP(user.otp_secret_key)
+            #         if not totp.verify(otp_token):
+            #             raise serializers.ValidationError("Invalid OTP Token")
+            #     else:
+            #         raise serializers.ValidationError("OTP Token required")
         else :
             serializers.ValidationError("Both Username and password required")
+
         attrs['user'] = user
         return attrs
 
@@ -71,7 +81,22 @@ class ValidateOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
-class UpdateUserInfos(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if not attrs.get('otp_token') or not attrs.get('username'):
+            raise serializers.ValidationError("OTP Token required")
+
+class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
-        Model=Player
-        fields=()
+        model=Player
+        fields=('username','avatar','cover',)
+
+    def save(self, **kwargs):
+        user = self.context['user']
+        player = Player.objects.get(username=user.username)
+        if 'username' in self.validated_data:
+            player.username = self.validated_data['username']
+        if 'avatar' in self.validated_data:
+            player.avatar = self.validated_data['avatar']
+        if 'cover' in self.validated_data:
+            player.cover = self.validated_data['cover']
+        player.save()
