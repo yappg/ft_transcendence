@@ -11,11 +11,6 @@ from .models import Player
 from .serializers import * 
 from .utils import *
 
-import os
-from dotenv import load_dotenv
-env_path=env_path = os.path.abspath(os.path.join('../../.env'))
-load_dotenv(dotenv_path=env_path)
-
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -63,8 +58,23 @@ class SignInView(APIView):
             # maybe it would be implemented as follow  or it could be validated on the serializer
             if (user.enabled_2fa == True):
                 redirect('validate_otp')
-            tokens = generate_tokens(user)
-            return Response({'tokens': tokens}, status=status.HTTP_200_OK)
+
+            access_token, refresh_token = generate_tokens(user)
+            print(access_token)
+            print(refresh_token)
+
+            resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+            resp.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=False
+            )
+            resp.set_cookie(
+                key='refresh_token',
+                value=refresh_token,
+                httponly=False
+            )
+            return resp
         else :
             return Response(Serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -258,11 +268,3 @@ class UpdateUserInfos(APIView):
         #     'last_game': user.last_game,
         # }, status=200)
 
-#{"username":"kadigh1","password":"kadigh123"}  admin 
-# {"username": "rxtx", "password": "kadigh123"}
-
-            # if (user.enabled_2fa == True):
-            #     if OTPVerification(user) == False:
-            #         return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
-            # we could do the above implementation or 
-            # we could redirect the user to the 2fa view

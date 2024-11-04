@@ -2,6 +2,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 from .models import Player
 import requests
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 def APIdata(code, provider):
     if provider == '42':
@@ -35,36 +37,42 @@ def fetch_user_data(access_token, provider):
 
 def store_user_data(user_data, provider):
     if provider == '42':
-        user, created = Player.objects.get_or_create(username=user_data['login'],
-            defaults={
-                'username' : user_data['login'],
-                'email' : user_data['email'],
-                'first_name' : user_data['first_name'],
-                'last_name' : user_data['last_name'],
-                # :user_data['image']['link']
-            }
-        )
+        username = user_data['login']
+        email = user_data['email']
+        f_name = user_data['first_name']
+        l_name = user_data['last_name']
+        img_url = user_data['image']['link'] if 'image' in user_data else None
     elif provider == 'google':
-        if 'email' in user_data:
-            email = user_data['email']
-        else :
-            email = None
-        Gusername = str(user_data['given_name']) + str(user_data['family_name'])
-        user, created = Player.objects.get_or_create(username=Gusername,
-            defaults={
-                'email' : email,
-                'email' : user_data['email'],
-                'username' : Gusername,
-                'first_name' : user_data['given_name'],
-                'last_name' : user_data['family_name'],
-                # :user_data['image']['link']
-            }
-        )
-        if not created:
-            user.save()
+        email = user_data['email']
+        f_name = user_data['given_name']
+        l_name = user_data['family_name']
+        username =  str(f_name)+str(l_name)
+        img_url = user_data['picture'] if 'picture' in user_data else None 
+
+    user, created = Player.objects.get_or_create(
+        username=username,
+        defaults={
+            'username' : username,
+            'email' : email,
+            'first_name' : f_name,
+            'last_name' : l_name,
+        }
+    )
+    if created and img_url:
+        try :
+            response = requests.get(img_url)
+            tmpImg = NamedTemporaryFile(delete=True)
+            tmpImg.write(response.content)
+            tmpImg.flush()
+            # here may be a problem if all 42 images arent .jpg extension or google being .png 
+            if provider == '42':
+                user.avatar.save(f"{username}_profile.jpg", File(tmpImg), save=True)
+            elif provider == 'google':
+                user.avatar.save(f"{username}_profile.png", File(tmpImg), save=True)
+        except requests.RequestException as e:
+            print(f"Failed to download image: {e}")
     return (user, created)
 
 def generate_tokens(user):
         refresh_token = RefreshToken.for_user(user)
-        tokens = {'access':str(refresh_token.access_token), 'refresh':str(refresh_token)}
-        return tokens
+        return (str(refresh_token.access_token), str(refresh_token))

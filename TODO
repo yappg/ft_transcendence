@@ -10,8 +10,11 @@ MERIEM:
 MEHDI:
     -read about websockets 
 KADIGH:
-    -read about websockets 
+    -implement 2fa check in login view [implemented][must be tested]
+    -warap the tokens in cookies or httpOnly
+    -implement the Player stats 
+    -implement friends system
+    -read about websockets
+    -implement the chat system
+    -implement the notifications system
     -writing Tests
-    -rate limiting 
-    -implement 2fa check in login
-    -put credentials in .env file
