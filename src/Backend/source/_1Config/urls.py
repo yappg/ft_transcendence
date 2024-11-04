@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -7,7 +9,13 @@ urlpatterns = [
     path('oauth/', include('accounts.urls')),
     path('2fa/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
+    path('upload/', include('accounts.urls')),
 ]
+
+# django would take resp of serving media files only in dev mode, and in production NGINX should serve them
+if settings.DEBUG == True: 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 # from rest_framework import permissions
 # from drf_yasg.views import get_schema_view
 # from drf_yasg import openapi
@@ -22,5 +30,4 @@ urlpatterns = [
 # )
 
 
-    # path('oauth/', include('allauth.urls')),
     # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
