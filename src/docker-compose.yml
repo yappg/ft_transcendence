@@ -51,9 +51,13 @@ services:
         image: backend
         volumes:
             - ./Backend/source:/app/source:rw
-            # DEV
         environment:
-            JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+            DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+            JWT_SECRET_KEY: $${JWT_SECRET_KEY}
+            42_CLIENT_ID: $${42_CLIENT_ID}
+            42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+            GOOGLE_CLIENT_ID: $${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: $${GOOGLE_CLIENT_SECRET}
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -189,7 +193,6 @@ services:
     #     - '-nginx.scrape-uri=http://nginx:8080/stub_status'
     #   ports:
     #     - 9113:9113
-
 
 volumes:
     postgres-data:

@@ -3,6 +3,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# from django.http import JsonResponse
+
+# # temporary
+# def health_checkup(request):
+#     return JsonResponse({"status", "healty"}, status=200)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
@@ -10,10 +16,11 @@ urlpatterns = [
     path('2fa/', include('accounts.urls')),
     path('players/', include('accounts.urls')),
     path('upload/', include('accounts.urls')),
+    # path('health/', health_checkup, name='health_checkup'),
 ]
 
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
-if settings.DEBUG == True: 
+if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # from rest_framework import permissions
