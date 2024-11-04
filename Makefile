@@ -38,7 +38,7 @@ clean: down
 fclean: clean
 	@rm -rf volumes
 
-re: clean up
+re: fclean up
 
 ########################################## DEVELOPMENT ##########################################
 
