@@ -1,14 +1,18 @@
+# frontend/Dockerfile
 FROM node:18-alpine
 
+# Set the working directory
 WORKDIR /app
 
-# COPY package.json yarn.lock ./
-# RUN yarn install --frozen-lockfile
+# Install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install
 
-# COPY . .
+# Copy the project files
+COPY . .
 
-# RUN yarn build
+# Build the application
+RUN yarn build
 
-EXPOSE 3000
-# CMD ["yarn", "start"]
-CMD ["tail", "-f", "/dev/null"]
+# Start the application
+CMD ["yarn", "start"]
