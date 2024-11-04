@@ -18,6 +18,9 @@ db.sqlite3-journal
 **/src/backend/db.sqlite3
 **/*.json
 **/*.pyc
+src/backend/UsersMedia/Avatars/AbdlkadrAoutem_profile.png
+src/backend/UsersMedia/Avatars/aaoutem-_profile.jpg
+
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
