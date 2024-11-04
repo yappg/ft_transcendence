@@ -17,30 +17,31 @@ services:
     #         condition: service_healthy
     #   restart: unless-stopped
 
-    frontend:
-        container_name: frontend
-        build:
-          context: ./frontend
-          dockerfile: Dockerfile
-        image: frontend
-        volumes:
-          - ./Frontend/source:/app/source:rw
-        environment:
-          BACKEND_URL: http://backend:8080
-        networks:
-          - transcendence
-        ports:
-          - 3000:3000
-        # depends_on:
-        #     backend:
-        #         condition: service_healthy
-        # healthcheck:
-        #     test: ["executable", "arg"]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
-        restart: always
+    # frontend:
+    #     container_name: frontend
+    #     build:
+    #       context: ./frontend
+    #       dockerfile: Dockerfile
+    #     image: frontend
+    #     volumes:
+    #       - ./Frontend/source:/app/source:rw
+    #       # DEV
+    #     environment:
+    #       BACKEND_URL: http://backend:8080
+    #     networks:
+    #       - transcendence
+    #     ports:
+    #       - 3000:3000
+    #     # depends_on:
+    #     #     backend:
+    #     #         condition: service_healthy
+    #     # healthcheck:
+    #     #     test: ["executable", "arg"]
+    #     #     interval: 1m30s
+    #     #     timeout: 30s
+    #     #     retries: 5
+    #     #     start_period: 30s
+    #     restart: always
 
     backend:
         container_name: backend
@@ -50,6 +51,7 @@ services:
         image: backend
         volumes:
             - ./Backend/source:/app/source:rw
+            # DEV
         environment:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
@@ -197,21 +199,21 @@ volumes:
             type: none
             device: ${PWD}/volumes
 
-    grafana-data:
-        name: grafana
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${PWD}/volumes
+    # grafana-data:
+    #     name: grafana
+    #     driver: local
+    #     driver_opts:
+    #         o: bind
+    #         type: none
+    #         device: ${PWD}/volumes
 
-    prometheus-data:
-        name: prometheus
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${PWD}/volumes
+    # prometheus-data:
+    #     name: prometheus
+    #     driver: local
+    #     driver_opts:
+    #         o: bind
+    #         type: none
+    #         device: ${PWD}/volumes
 
 
 networks:
