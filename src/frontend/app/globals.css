@@ -7,8 +7,8 @@
 }
 
 body {
-  color: rgb(0,0,0,0.75);
-  background: rgb(var(255,255,255));
+  color: rgb(0, 0, 0, 0.75);
+  background: rgb(var(255, 255, 255));
 }
 
 @layer utilities {

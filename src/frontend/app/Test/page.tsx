@@ -18,7 +18,7 @@ function achievements() {
         description="hello lorem ipsum ipsum lorem"
         title="Earth"
         imageUrl="/image.png"
-        heigh={70}
+        heigh="70"
       />
     </div>
   );
