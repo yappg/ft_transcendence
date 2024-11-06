@@ -1,22 +1,15 @@
 # frontend/Dockerfile
 FROM node:22-alpine
 
-# Set the working directory
 COPY . /app
 
 WORKDIR /app/source
 
-# Install dependencies
-# COPY package.json yarn.lock ./
-# RUN yarn install
+RUN yarn install
 
-# Copy the project files
-
-# Build the application
 # RUN yarn build
 
 EXPOSE 3000
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-# CMD ["npm", "run", "dev"]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["yarn", "run", "dev"]
