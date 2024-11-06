@@ -9,11 +9,11 @@ WORKDIR /app/source
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app \
-    && apk update \
-    && apk add --no-cache \
-    curl \
-    wget
+    && chmod -R +x /app 
+    # && apk update \
+    # && apk add --no-cache \
+    # curl \
+    # wget
 
 
 # RUN mkdir -p /app/staticfiles/
