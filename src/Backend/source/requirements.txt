@@ -46,5 +46,6 @@ txaio==23.1.1
 typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.2.3
+whitenoise==6.8.2
 yarg==0.1.10
 zope.interface==7.1.1
