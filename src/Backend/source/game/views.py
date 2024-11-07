@@ -7,7 +7,6 @@ from .serializers import GameSerializer
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
@@ -30,4 +29,3 @@ class GameViewSet(viewsets.ModelViewSet):
         game.is_active = False
         game.save()
         return Response({'status': 'game ended'})
-    
