@@ -43,13 +43,13 @@ re: fclean up
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	@docker-compose -p $(PROJECT_NAME) $(filter-out $@, $(MAKECMDGOALS))
+	@docker-compose -p $(PROJECT) $(filter-out $@, $(MAKECMDGOALS))
 
 it:
 	@docker compose -p $(PROJECT) exec -it $(filter-out $@, $(MAKECMDGOALS)) "/bin/sh"
 
 restart:
-	@docker-compose -p $(PROJECT_NAME) restart $(filter-out $@, $(MAKECMDGOALS))
+	@docker-compose -p $(PROJECT) restart $(filter-out $@, $(MAKECMDGOALS))
 
 prune:
 	@echo "$(GREEN)>$(YELLOW) removing all docker resources: CONTRL + C to cancel...$(RESET)"
