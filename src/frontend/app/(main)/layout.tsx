@@ -5,7 +5,7 @@ import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
 import { useState } from 'react';
-
+import { useRouter } from 'next/router';
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -13,7 +13,6 @@ export default function RootLayout({
 }>) {
   const [isActivated, setIsActivated] = useState(0);
   const [showSideBarIcon, setShowSideBarIcon] = useState(false);
-
   const handleRightClick = (id: number) => {
     setIsActivated(id);
     if (id === 7 || id === 6) {
@@ -22,10 +21,9 @@ export default function RootLayout({
       setShowSideBarIcon(false);
     }
   };
-
   return (
     <div className="bg-white h-[100vh] w-[100vw] overflow-auto grid p-8 grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px]">
-      <div className="row-[span_9_/_span_9] flex items-center justify-center ">
+      <div className="row-[span_9_/_span_9] flex items-center justify-center min-h-0 flex-grow">
         <SideBar
           isActivated={isActivated}
           setIsActivated={setIsActivated}
