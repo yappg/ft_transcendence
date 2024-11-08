@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IconConeFilled } from '@tabler/icons-react';
@@ -55,33 +56,29 @@ export const SideBar = ({
           className={`${id === selectedId ? 'bg-[#66C3BD]' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
         />
         <Icon
-          className={`text-[50px] ${id === selectedId ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.5)]'} ${id === selectedId ? 'size-14' : 'size-12'} transition-all duration-300 absolute z-99 hover:text-[#66C3BD]`}
+          className={` ${id === selectedId ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.5)]'} ${id === selectedId ? 'size-14 h-600-800:size-9' : 'size-12 h-600-800:size-7'} transition-all duration-300 absolute z-99 hover:text-[#66C3BD]`}
         />
       </div>
     </Link>
   );
   return (
-    <div className="  min-h-[600px] md:flex hidden relative w-[80px] lg:w-[97px]  md:w-[10%] min-w-[70px] h-[95%] pb-4 bg-side-bar rounded-[50px] flex-col items-center justify-between shadow-2xl transition-all duration-300 ">
+    <div className="min-h-[580px] md:flex hidden relative w-[80px] h-600-800:w-[80px] lg:w-[97px]  md:w-[10%] min-w-[70px] h-[95%] pb-4 bg-side-bar rounded-[50px] flex-col items-center justify-between shadow-2xl transition-all duration-300 ">
       <Image
         src="/Icone.svg"
         alt=""
         width={100}
         height={100}
-        className="w-[69px] h-[69px] md:w-[96px] md:h-[96px] "
+        className="w-[69px] h-[69px] h-600-800:w-[74px] h-600-800:h-[74px] md:w-[96px] md:h-[96px] "
       />
-      <div className="flex flex-col items-center justify-between gap-16 pb-20 relative md:h-[50%] h-[300px] min-h-[200px] ">
+      <div className="flex flex-col items-center justify-between md:h-[60%] md:w-[65px] h-[300px] min-h-[400px] h-600-800:min-h-[350px] min-w-[50px]">
         {arr.map((item, index) => {
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        <div
-          className={` flex flex-col items-center gap-12 transition-all duration-300`}
-        >
-          {ShowSideBarIcon &&
-            smallScreenIcons.map((item) => {
-              return showIcon(item.Icon, item.id, isActivated, item.path);
-            })}
-        </div>
+        {ShowSideBarIcon &&
+          smallScreenIcons.map((item) => {
+            return showIcon(item.Icon, item.id, isActivated, item.path);
+          })}
       </div>
       <button
         className={`flex items-center justify-center w-[50px] h-[50px] `}
@@ -95,7 +92,7 @@ export const SideBar = ({
         ></div>
         <IconSettingsFilled
           size={isActivated == 8 ? 70 : 60}
-          className={`text-[50px] ${isActivated == 8 ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.4)]'} transition-all duration-300 absolute z-10 hover:text-[#66C3BD]`}
+          className={`text-[50px] ${isActivated == 8 ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.4)]'} h-600-800:text-[74px] transition-all duration-300 absolute z-10 hover:text-[#66C3BD]`}
         />
       </button>
     </div>

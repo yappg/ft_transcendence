@@ -28,7 +28,7 @@ export const RightBar = ({
   }
   return (
     <div className="h-[95%] w-[80px] lg:w-[97px] md:w-[70px] transition-all duration-300 md:flex hidden flex-col items-center justify-between ">
-      <div className="h-[55%]  w-full items-center justify-start rounded-[50px] bg-side-bar shadow-2xl">
+      <div className="h-[55%]  w-full items-center justify-start rounded-[50px] bg-side-bar shadow-2xl overflow-hidden">
         <Image
           src="/ProfilePhoto.svg"
           alt=""
@@ -40,7 +40,7 @@ export const RightBar = ({
           <Link href="/friends">
             <FaUsers
               onClick={() => handleClick(6)}
-              className="text-[50px] size-12 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
+              className="text-[50px] size-12 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
             />
           </Link>
         </div>
@@ -57,11 +57,11 @@ export const RightBar = ({
           ))}
         </div>
       </div>
-      <div className="h-[40%] w-full items-start justify-center rounded-[40px] bg-side-bar pt-8 shadow-2xl">
-        <div className="flex items-center justify-center ">
+      <div className="h-[40%] w-full items-start justify-center rounded-[40px] bg-side-bar pt-8 shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-center">
           <FaComments
             onClick={() => handleClick(7)}
-            className="size-16 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
+            className="size-16 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
           />
         </div>
         <div className="flex flex-col items-center justify-between gap-10 mt-12">

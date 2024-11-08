@@ -16,7 +16,7 @@ export default function LoginTFA() {
   };
   return (
     <div className="w-full h-screen bg-[#13191D] flex items-start p-0 xl:pt-[5%] justify-center overflow-auto">
-      <Card style="min-h-[500px] flex flex-col items-center justify-center transition-all gap-4 overflow-auto">
+      <Card style="min-h-[1000px] flex flex-col items-center justify-center transition-all gap-4">
         <div className="md:w-[85%] md:h-[90%] h-auto w-auto flex flex-col  items-center justify-center gap-10">
           <h1 className=" text-white text-lg md:text-[70px] transition-all duration-300 text-[40px] font-days-one flex items-center justify-center">
             activate 2FA
