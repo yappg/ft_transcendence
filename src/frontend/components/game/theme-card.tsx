@@ -11,7 +11,7 @@ const EarthModeCard = ({
     <div className="group relative size-[350px]" style={{ height: `${height}px` }}>
       {/* Card Container */}
       <div
-        className="costum-shadow absolute inset-0 overflow-hidden rounded-3xl transition-all duration-700 
+        className="costum-big-shadow absolute inset-0 overflow-hidden rounded-3xl transition-all duration-700 
                     ease-in group-hover:opacity-0"
       >
         {/* Default State */}
