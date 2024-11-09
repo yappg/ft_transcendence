@@ -1,6 +1,6 @@
 import Circle from '@/components/landing-page/Circle';
 import circleData from '@/constants/circleData';
-import Card from './Card';
+import LandingCard from './LandingCard';
 
 const Background = () => {
   return (
@@ -19,7 +19,7 @@ const Background = () => {
         />
       ))}
       <div className="z-[2] flex h-screen w-full items-center justify-center">
-        <Card />
+        <LandingCard />
       </div>
     </div>
   );
