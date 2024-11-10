@@ -1,5 +1,7 @@
+volumes
 
 ### direnv ###
+.env
 .direnv
 .envrc
 
@@ -204,7 +206,6 @@ cython_debug/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
@@ -976,8 +977,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 ### VisualStudio Patch ###
-<<<<<<< HEAD
 # Additional files built by Visual Studio
-=======
-# Additional files built by Visual Studio
->>>>>>> first-vgame
