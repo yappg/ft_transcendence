@@ -7,11 +7,7 @@ import { Header } from '@/components/header';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isActivated, setIsActivated] = useState(0);
   const [showSideBarIcon, setShowSideBarIcon] = useState(true);
@@ -25,12 +21,7 @@ export default function RootLayout({
 
   const handleRightClick = (id: number) => {
     setIsActivated(id);
-    if (
-      pathname === '/friends' ||
-      pathname === '/messages' ||
-      id === 6 ||
-      id === 7
-    ) {
+    if (pathname === '/friends' || pathname === '/messages' || id === 6 || id === 7) {
       setShowSideBarIcon(true);
     } else {
       setShowSideBarIcon(false);
