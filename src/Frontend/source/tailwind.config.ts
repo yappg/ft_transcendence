@@ -1,4 +1,3 @@
-import { text } from 'stream/consumers';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -15,7 +14,7 @@ const config: Config = {
         'gradient-linear-white':
           'linear-gradient(125deg, rgba(242,242,242,1) 0%, rgba(40,175,176,1) 100%);',
         custom: 'linear-gradient(125deg, rgba(19,25,29,1) 0%,rgba(19,25,29,1) 100%);',
-        custom2: 'linear-gradient(125deg, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%);',
+        custom2: 'linear-gradient(125deg, rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.2) 100%);',
       },
       backgroundColor: {},
       colors: {
