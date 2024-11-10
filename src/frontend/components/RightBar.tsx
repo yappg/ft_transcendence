@@ -40,7 +40,7 @@ export const RightBar = ({
           <Link href="/friends">
             <FaUsers
               onClick={() => handleClick(6)}
-              className="text-[50px] size-12 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
+              className="text-[50px] size-12 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] dark:text-white hover:text-aqua hover:dark:text-fire-red"
             />
           </Link>
         </div>
@@ -61,7 +61,7 @@ export const RightBar = ({
         <div className="flex items-center justify-center">
           <FaComments
             onClick={() => handleClick(7)}
-            className="size-16 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] hover:text-[#66C3BD]"
+            className="size-16 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] dark:text-white hover:text-aqua hover:dark:text-fire-red"
           />
         </div>
         <div className="flex flex-col items-center justify-between gap-10 mt-12">

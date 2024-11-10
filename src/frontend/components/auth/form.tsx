@@ -28,6 +28,7 @@ interface FormProps {
   fields: FormField[];
   buttonProps: ButtonProps;
   isSignup: boolean;
+  redirPath?: string;
 }
 
 interface MyLinkProps {
@@ -95,7 +96,7 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
   );
 };
 
-export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => {
+export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup, redirPath }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -145,11 +146,9 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     setIsSubmitting(true);
 
     const formData = fields.reduce(
@@ -170,7 +169,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
       });
 
       // Redirect to dashboard or home page
-      router.push('/dashboard');
+      router.push(redirPath || '/');
     } catch (error) {
       toast({
         title: 'Error',
@@ -178,6 +177,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         variant: 'destructive',
         className: 'bg-primary-dark border-none text-white',
       });
+      router.push(redirPath || '/');
     } finally {
       setIsSubmitting(false);
     }
@@ -215,7 +215,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
             type="submit"
             disabled={isSubmitting}
             className="min-w-[120px] disabled:opacity-50"
-            route="/dashboard"
           >
             {buttonProps.text}
           </MyButton>

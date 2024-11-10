@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div className="bg-white h-[100vh] w-[100vw] overflow-auto grid p-8 grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px]">
+    <div className=" bg-linear-gradient dark:bg-linear-gradient-dark h-[100vh] w-[100vw] overflow-auto grid p-8 grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px]">
       <div className="row-[span_9_/_span_9] flex items-center justify-center min-h-0 flex-grow">
         <SideBar
           isActivated={isActivated}

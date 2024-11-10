@@ -63,7 +63,12 @@ function Signup() {
     <div className="costum-big-shadow bg-white-crd dark:bg-secondary order-3 flex w-full grow flex-col justify-center gap-3 rounded-t-[50px] px-9 pt-16 sm:px-16 md:h-fit md:rounded-b-[50px] lg:ml-[-250px] lg:min-h-0 lg:w-5/6 lg:pl-[250px] lg:pt-4">
       <div className="flex h-fit flex-col gap-2">
         <Title />
-        <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
+        <Form
+          fields={fields}
+          buttonProps={buttonProps}
+          redirPath="/2fa/Signup-2fa"
+          isSignup={true}
+        />
         <MyLink text="Already have an account? " href="login" />
       </div>
     </div>

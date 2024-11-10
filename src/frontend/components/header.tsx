@@ -27,10 +27,10 @@ export const Header = () => {
   return (
     <div className="flex items-center justify-between w-full h-full px-4">
       <div className="flex items-center justify-start gap-4 w-fit  h-full">
-        <h1 className=" text-black xl:text-[36px] lg:text-[32px] md:text-[25px] text-[20px] font-days-one">
+        <h1 className=" text-black dark:text-white font-black xl:text-[36px] lg:text-[32px] md:text-[25px] text-[20px] font-dayson">
           Welcome
         </h1>
-        <span className="text-[#66C3BD] xl:text-[36px] lg:text-[32px] md:text-[25px] text-[20px] font-days-one">
+        <span className="font-black dark:text-fire-red text-aqua xl:text-[36px] lg:text-[32px] md:text-[25px] text-[20px] font-dayson">
           {profile.name}
         </span>
       </div>

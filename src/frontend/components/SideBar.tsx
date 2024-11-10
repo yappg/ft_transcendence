@@ -41,22 +41,17 @@ export const SideBar = ({
     } else setShowSideBarIcon(false);
     setIsActivated(id);
   }
-  const showIcon = (
-    Icon: any,
-    id: number,
-    selectedId: number,
-    path: string
-  ) => (
+  const showIcon = (Icon: any, id: number, selectedId: number, path: string) => (
     <Link href={path} key={id}>
       <div
         className="size-8 md:h-[40px] md:w-[40px] relative flex items-center justify-center transition-all duration-300"
         onClick={() => handleRightClick(id)}
       >
         <div
-          className={`${id === selectedId ? 'bg-[#66C3BD]' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
+          className={`${id === selectedId ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
         />
         <Icon
-          className={` ${id === selectedId ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.5)]'} ${id === selectedId ? 'size-14 h-600-800:size-9' : 'size-12 h-600-800:size-7'} transition-all duration-300 absolute z-99 hover:text-[#66C3BD]`}
+          className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${id === selectedId ? 'size-14 h-600-800:size-9' : 'size-12 h-600-800:size-7'} transition-all duration-300 absolute z-99 hover:text-aqua hover:dark:text-fire-red`}
         />
       </div>
     </Link>
@@ -88,11 +83,11 @@ export const SideBar = ({
         }}
       >
         <div
-          className={`${isActivated == 8 ? 'bg-[#66C3BD]' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
+          className={`${isActivated == 8 ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
         ></div>
         <IconSettingsFilled
           size={isActivated == 8 ? 70 : 60}
-          className={`text-[50px] ${isActivated == 8 ? 'text-[#355557]' : 'text-[rgba(28,28,28,0.4)]'} h-600-800:text-[74px] transition-all duration-300 absolute z-10 hover:text-[#66C3BD]`}
+          className={`text-[50px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] transition-all duration-300 absolute z-10 hover:text-aqua hover:dark:text-fire-red`}
         />
       </button>
     </div>
