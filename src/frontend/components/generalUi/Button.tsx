@@ -17,7 +17,7 @@ const MyButton = ({ children, className, onClick, disabled, type, route }: Butto
 
   const handleClick = () => {
     if (onClick) onClick();
-    else router.push(`${route}`);
+    else if (route) router.push(`${route}`);
   };
   return (
     <button
