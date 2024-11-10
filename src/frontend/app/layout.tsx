@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Days_One, Poppins } from 'next/font/google';
-import './globals.css';
+import '@/app/globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 
