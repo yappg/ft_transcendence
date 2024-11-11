@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     # asgi app
     'daphne',
     'channels',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +39,7 @@ INSTALLED_APPS = [
     #local apps
     'accounts',
     'chat',
-    'game',
+    # 'game',
 ]
 
 MIDDLEWARE = [
