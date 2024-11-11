@@ -19,6 +19,10 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # asgi app
+    'daphne',
+    'channels',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,16 +37,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     #swagger api documentation
     'drf_yasg',
-    # asgi app
-    'daphne',
-    'channels',
     #local apps
     'accounts',
-    'api',
     'chat',
-    'chatoom',
     'game',
-    'tournament',
 ]
 
 MIDDLEWARE = [
