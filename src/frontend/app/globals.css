@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #1c7c7d;
+  --secondary-color: rgb(19, 25, 29, 0.8);
+  --primary-color-dark: #a63026;
+  --secondary-color-dark: rgb(255, 255, 255, 0.3);
+  --linear-gradient: linear-gradient(125deg, rgba(217, 217, 217, 1) 0%, rgba(47, 207, 208, 1) 100%);
+  --linear-gradient-dark: linear-gradient(
+    125deg,
+    rgba(34, 33, 33, 0.2) 0%,
+    rgba(127, 166, 192, 0.2) 37%,
+    rgba(193, 56, 44, 0.2) 70%,
+    rgba(136, 132, 132, 0.2) 100%
+  );
+  --white-color-card: rgb(119, 119, 119, 0.5);
+  --font-dayson: 'Days One', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+body {
+  color: rgb(0, 0, 0, 0.75);
+  background: rgb(var(255, 255, 255));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.costum-big-shadow {
+  -webkit-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+  box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+}
+
+.costum-little-shadow {
+  -webkit-box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+  box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+}
+
+.font-dayson {
+  font-family: var(--font-dayson);
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+}
