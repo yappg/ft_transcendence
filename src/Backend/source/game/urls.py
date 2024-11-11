@@ -1,11 +1,13 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import GameViewSet
+# from .views import lobby_game
+from . import views
 
-router = DefaultRouter()
-router.register(r'games', GameViewSet)
+
+# router = DefaultRouter()
+# router.register(r'games', lobby_game)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', views.lobby_game),
 ]
