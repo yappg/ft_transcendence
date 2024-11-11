@@ -11,9 +11,9 @@ const Card = ({ children, className }: cardProps) => {
   return (
     // eslint-disable-next-line tailwindcss/no-custom-classname
     <div
-      className={`bg-white-crd costum-big-shadow dark:bg-secondary
-      flex h-screen min-h-[515px] flex-col items-center justify-center
-      rounded-t-[30px] p-4 md:rounded-b-[30px]${className}`}
+      className={`${className} bg-white-crd costum-big-shadow dark:bg-secondary
+      flex w-full flex-col items-center justify-center
+      rounded-t-[30px] p-4 md:min-h-[515px] md:w-[90%] md:rounded-b-[30px]`}
     >
       {children}
     </div>

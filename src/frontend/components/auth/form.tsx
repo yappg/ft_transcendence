@@ -215,7 +215,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
             type="submit"
             disabled={isSubmitting}
             className="min-w-[120px] disabled:opacity-50"
-            route="/dashboard"
           >
             {buttonProps.text}
           </MyButton>

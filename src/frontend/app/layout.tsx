@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dayson.variable} ${poppins.variable}`}>
+      <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
