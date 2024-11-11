@@ -15,10 +15,10 @@ from channels.auth import AuthMiddlewareStack
 
 from django.urls import path
 from django.urls import re_path
-from chatoom.consumers import ChatConsumer
+from chat.consumers import ChatConsumer
 from channels.security.websocket import AllowedHostsOriginValidator
 
-from chatoom.routing import websockets_urlpatterns
+from chat.routing import websockets_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
 
