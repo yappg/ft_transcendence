@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 from django.http import JsonResponse
 
 # # temporary
-def health_checkup(request):
-    return JsonResponse({'status', 'healty'}, status=200)
+# def health_checkup(request):
+#     return JsonResponse({'status', 'healty'}, status=200)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,7 +20,7 @@ urlpatterns = [
     # structering api endpoints
     # path('api')
 
-    path('health/', health_checkup, name='health_checkup'),
+    # path('health/', health_checkup, name='health_checkup'),
 ]
 
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
