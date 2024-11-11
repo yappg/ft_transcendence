@@ -1,8 +1,9 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import React from 'react';
 import { z } from 'zod';
 import { useToast } from '@/components/ui/use-toast';
 import InputBar from './input-bar';
-import { Button } from '@/components/ui/button';
+import { MyButton } from '@/components/generalUi/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -61,7 +62,6 @@ class AuthClient {
       return await response.json();
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Authentication error:', error.message);
         throw new Error(`Authentication error: ${error.message}`);
       }
       throw new Error('Authentication failed');
@@ -85,7 +85,7 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
         {text}
         <Link
           href={`/auth/${href}`}
-          className="font-bold text-[#284F50] hover:underline dark:text-red-500"
+          className="text-primary dark:text-primary-dark font-bold hover:underline"
         >
           {href}
         </Link>
@@ -126,7 +126,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
     if (isSignup) {
       const passwordField = fields.find((f) => f.placeholder === 'password');
-      const confirmPasswordField = fields.find((f) => f.placeholder === 'confirmPassword');
+      const confirmPasswordField = fields.find((f) => f.placeholder === 'password2');
 
       if (
         passwordField &&
@@ -134,6 +134,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         passwordField.value !== confirmPasswordField.value
       ) {
         newErrors.confirmPassword = 'Passwords do not match';
+        newErrors[fields[3].placeholder] = 'Passwords do not match';
       }
     }
 
@@ -145,11 +146,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
     event.preventDefault();
 
     if (!validateForm()) {
-      toast({
-        title: 'Validation Error',
-        description: 'Please check the form for errors',
-        variant: 'destructive',
-      });
       return;
     }
 
@@ -169,6 +165,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
       toast({
         title: 'Success',
         description: isSignup ? 'Account created successfully' : 'Logged in successfully',
+        className: 'bg-primary border-none text-white',
       });
 
       // Redirect to dashboard or home page
@@ -178,6 +175,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         title: 'Error',
         description: error instanceof Error ? error.message : 'Authentication failed',
         variant: 'destructive',
+        className: 'bg-primary-dark border-none text-white',
       });
     } finally {
       setIsSubmitting(false);
@@ -186,11 +184,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
   return (
     <div className="flex w-full items-center justify-center px-4 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
-      <form
-        className="flex size-full flex-col items-start gap-8"
-        onSubmit={handleSubmit}
-        noValidate
-      >
+      <form className="flex size-full flex-col items-start gap-8" onSubmit={handleSubmit} id="1">
         <div className="flex w-full flex-col gap-5">
           {fields.map((field) => (
             <div key={field.placeholder} className="w-full">
@@ -216,20 +210,13 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
           ))}
         </div>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
-          <Button
+          <MyButton
             type="submit"
             disabled={isSubmitting}
             className="min-w-[120px] disabled:opacity-50"
           >
-            {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                {buttonProps.text}
-              </span>
-            ) : (
-              buttonProps.text
-            )}
-          </Button>
+            {buttonProps.text}
+          </MyButton>
         </div>
       </form>
     </div>
