@@ -59,8 +59,8 @@ services:
         environment:
             DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
             JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-            # 42_CLIENT_ID: ${42_CLIENT_ID}
-            # 42_CLIENT_SECRET: ${42_CLIENT_SECRET}
+            42_CLIENT_ID: $${42_CLIENT_ID}
+            42_CLIENT_SECRET: $${42_CLIENT_SECRET}
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
             POSTGRES_DB: ${POSTGRES_DB}
