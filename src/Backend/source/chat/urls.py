@@ -1,7 +1,8 @@
 
-from django.urls import path, include
-from . import views
+from .views import *
+from django.urls import path
+from .views import LobbyView
 
 urlpatterns = [
-    path('', views.lobby),
-    ]
+    path('lobby/', LobbyView.as_view(), name='lobby'),
+]
