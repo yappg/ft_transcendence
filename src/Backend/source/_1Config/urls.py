@@ -17,6 +17,7 @@ urlpatterns = [
         path('2fa/', include('accounts.urls')),
         path('players/', include('accounts.urls')),
         path('upload/', include('accounts.urls')),
+        path('chatoom/', include('chat.urls')),
     # structering api endpoints
     # path('api')
 
