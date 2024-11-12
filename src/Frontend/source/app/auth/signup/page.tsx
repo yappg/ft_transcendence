@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 import React, { useState } from 'react';
 import Title from '@/components/auth/title';
@@ -18,7 +19,7 @@ function Signup() {
       Icon: MdOutlineMail,
       placeholder: 'email',
       value: email,
-      type: 'email' as const, // Fixed type
+      type: 'email' as const,
       setValue: setEmail,
       validation: z.string().email('Invalid email format'),
     },
@@ -26,7 +27,7 @@ function Signup() {
       Icon: FaRegUser,
       placeholder: 'username',
       value: username,
-      type: 'text' as const, // Fixed type
+      type: 'text' as const,
       setValue: setUsername,
       validation: z.string().min(3, 'Username must be at least 3 characters'),
     },
@@ -49,7 +50,7 @@ function Signup() {
   ];
 
   const buttonProps = {
-    text: 'Sign Up',
+    text: 'Signup',
     onClick: () => {
       console.log('clicked');
       let result = '';
@@ -59,10 +60,17 @@ function Signup() {
   };
 
   return (
-    <div className="costum-shadow bg-custom2 dark:bg-gradient-radial order-3 flex w-full grow flex-col justify-between gap-3 rounded-t-[50px] px-9 pt-16 sm:px-16 md:h-fit md:rounded-b-[50px] lg:ml-[-250px] lg:min-h-0 lg:w-5/6 lg:pl-[250px] lg:pt-4">
-      <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
-      <MyLink text="Already have an account? " href="login" />
+    <div className="costum-big-shadow bg-white-crd dark:bg-secondary order-3 flex w-full grow flex-col justify-center gap-3 rounded-t-[50px] px-9 pt-16 sm:px-16 md:h-fit md:rounded-b-[50px] lg:ml-[-250px] lg:min-h-0 lg:w-5/6 lg:pl-[250px] lg:pt-4">
+      <div className="flex h-fit flex-col gap-2">
+        <Title />
+        <Form
+          fields={fields}
+          buttonProps={buttonProps}
+          redirPath="/2fa/Signup-2fa"
+          isSignup={true}
+        />
+        <MyLink text="Already have an account? " href="login" />
+      </div>
     </div>
   );
 }
