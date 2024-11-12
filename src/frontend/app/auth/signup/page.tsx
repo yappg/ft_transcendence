@@ -3,10 +3,8 @@
 import React, { useState } from 'react';
 import Title from '@/components/auth/title';
 import { Form, MyLink } from '@/components/auth/form';
-import { FaRegUser } from 'react-icons/fa';
-import { RiLock2Line } from 'react-icons/ri';
-import { MdOutlineMail } from 'react-icons/md';
-import { z } from 'zod';
+import { getFields } from './fieldes';
+import Card from '@/components/generalUi/Card';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -14,40 +12,16 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [verifyPassword, setVerifyPassword] = useState('');
 
-  const fields = [
-    {
-      Icon: MdOutlineMail,
-      placeholder: 'email',
-      value: email,
-      type: 'email' as const,
-      setValue: setEmail,
-      validation: z.string().email('Invalid email format'),
-    },
-    {
-      Icon: FaRegUser,
-      placeholder: 'username',
-      value: username,
-      type: 'text' as const,
-      setValue: setUsername,
-      validation: z.string().min(3, 'Username must be at least 3 characters'),
-    },
-    {
-      Icon: RiLock2Line,
-      placeholder: 'password',
-      value: password,
-      type: 'password' as const,
-      setValue: setPassword,
-      validation: z.string().min(8, 'Password must be at least 8 characters'),
-    },
-    {
-      Icon: RiLock2Line,
-      placeholder: 'password2',
-      value: verifyPassword,
-      type: 'password' as const,
-      setValue: setVerifyPassword,
-      validation: z.string().min(8, 'Password must be at least 8 characters'),
-    },
-  ];
+  const fields = getFields(
+    username,
+    email,
+    password,
+    verifyPassword,
+    setUsername,
+    setEmail,
+    setPassword,
+    setVerifyPassword
+  );
 
   const buttonProps = {
     text: 'Signup',
@@ -60,7 +34,7 @@ function Signup() {
   };
 
   return (
-    <div className="costum-big-shadow bg-white-crd dark:bg-secondary order-3 flex w-full grow flex-col justify-center gap-3 rounded-t-[50px] px-9 pt-16 sm:px-16 md:h-fit md:rounded-b-[50px] lg:ml-[-250px] lg:min-h-0 lg:w-5/6 lg:pl-[250px] lg:pt-4">
+    <Card className="order-3 h-auto w-full px-9 pt-16 sm:px-16 md:h-auto md:w-full md:rounded-b-[30px] lg:ml-[-250px] lg:min-h-[550px] lg:w-5/6 lg:pl-[250px] lg:pt-4">
       <div className="flex h-fit flex-col gap-2">
         <Title />
         <Form
@@ -71,7 +45,7 @@ function Signup() {
         />
         <MyLink text="Already have an account? " href="login" />
       </div>
-    </div>
+    </Card>
   );
 }
 

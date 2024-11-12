@@ -20,10 +20,9 @@ function InputBar({ Icon, placeholder, value, type, setValue, error }: InputBarP
           placeholder={placeholder}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-full bg-transparent text-lg font-light text-black opacity-60 placeholder:text-black focus:outline-none dark:text-white dark:placeholder:text-white"
+          className="font-poppins w-full bg-transparent text-lg text-black opacity-60 placeholder:text-black focus:outline-none dark:text-white dark:placeholder:text-white"
         />
       </div>
-      {/* <p>{error}</p> */}
     </>
   );
 }
