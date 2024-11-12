@@ -1,51 +1,70 @@
 'use client';
-
-import React from 'react';
+import Link from 'next/link';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
-import Card from '@/components/generalUi/Card';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import { MyButton } from '@/components/generalUi/Button';
+import { useQRCode } from 'next-qrcode';
+import axios from 'axios';
+import { headers } from 'next/headers';
 
 export default function LoginTFA() {
   const myString = 'Submit';
   const [value, setValue] = React.useState('');
-
+  const [QRcode, setQRcode] = React.useState('e');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMzk1NDg5LCJpYXQiOjE3MzEzOTM2ODksImp0aSI6IjJkY2FmMmM0ODA4NzQ5NTZhZTRhZmM5NjA0NWUwZjIxIiwidXNlcl9pZCI6Mn0.l_fnwmxtdTe8zKAXGwPDpP272Bhqlehv3c2dv8JgKPM';
+  useEffect(() => {
+    try {
+      const fetchData = async () => {
+        const data = await axios.post('http://127.0.0.1:8000/2fa/generate-uri/', {
+          username: 'mmesbahi',
+        });
+        console.log(data.data.uri);
+        setQRcode(data.data.uri);
+      };
+      fetchData();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, []);
+  const { Canvas } = useQRCode();
   const handleClick = () => {
     if (value == '000000') alert('2FA activated successfully');
     else alert('Invalis OTP');
   };
   return (
-    <div className=" w-full h-screen bg-[#13191D] flex items-start p-0 xl:pt-[5%] justify-center overflow-auto">
-      <Card
-        className="size-full lg:h-full lg:w-full xl:h-[90%] xl:w-[90%] 2xl:w-[80%] 2xl:max-w-[1200px] tfa-card-bg xl:rounded-[50px] shadow-2xl 
-      md:min-h-[1000px] flex flex-col items-center justify-center transition-all gap-4"
-      >
-        <div className="md:w-[85%] md:h-[90%] h-auto w-auto flex flex-col  items-center justify-center gap-10">
-          <h1 className=" text-white text-lg md:text-[70px] transition-all duration-300 text-[40px]  font-dayson flex items-center justify-center">
-            activate 2FA
-          </h1>
-          <Image
-            src="/QRcode.svg"
-            alt="2fa"
-            width={250}
-            height={250}
-            className=" md:w-[350px] md:h-[350px] transition-all duration-300"
-          />
-          <InputOTPDemo value={value} setValue={setValue} />
-          <div className="flex flex-col items-center mt-20 md:mt-0 justify-center gap-[20px] md:gap-[40px] md:w-full md:h-[">
-            <MyButton
-              onClick={handleClick}
-              className="w-[201px] h-[68px] md:w-[301px] md:h-[88px] md:text-[36px] 
-      text-[24px] font-coustard font-black transition-all duration-300 rounded-lg"
-            >
-              {myString}
-            </MyButton>
-            <a href="#" className="font-coustard text-[#C1382C]">
-              Skip this step
-            </a>
-          </div>
-        </div>
-      </Card>
+    <div className="relative flex size-auto flex-col items-center justify-center  gap-10 md:h-[90%] md:w-[85%]">
+      <h1 className=" font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300 md:text-[70px]">
+        activate 2FA
+      </h1>
+      <Canvas
+        text={QRcode}
+        options={{
+          errorCorrectionLevel: 'M',
+          margin: 3,
+          scale: 4,
+          width: 250,
+          color: {
+            dark: '#000',
+            light: '#fff',
+          },
+        }}
+      />
+      <InputOTPDemo value={value} setValue={setValue} />
+      <div className="md:h-[ mt-20 flex flex-col items-center justify-center gap-[20px] md:mt-0 md:w-full md:gap-[40px]">
+        <MyButton
+          onClick={handleClick}
+          className="font-coustard h-[68px] w-[201px] rounded-lg text-[24px] 
+      font-black transition-all duration-300 md:h-[88px] md:w-[301px] md:text-[36px]"
+        >
+          {myString}
+        </MyButton>
+        <Link href="/Home" className="font-coustard text-[#284F50]">
+          Skip this step
+        </Link>
+      </div>
     </div>
   );
 }

@@ -7,7 +7,7 @@ import Card from '@/components/generalUi/Card';
 const LandingCard = () => {
   return (
     <div className="z-[2] flex  size-full flex-col items-start justify-start overflow-auto md:items-center md:justify-start">
-      <div className="z-[3] mb-[-100px] flex h-[280px] w-full min-w-[400px] items-end justify-center md:mb-[-120px]">
+      <div className="z-[3] mb-[-100px] flex h-[280px] w-full items-end justify-center md:mb-[-120px]">
         <img
           src="/landing-page-dark-logo.svg"
           alt="logo"
@@ -20,13 +20,13 @@ const LandingCard = () => {
         />
       </div>
       <Card
-        className="size-full h-[90%] min-h-[500px] min-w-[400px]
+        className="size-full h-[90%] min-h-[500px]
         md:h-auto md:w-[90%] md:max-w-[1200px] md:rounded-b-[30px]"
       >
         <div className="flex h-[95%] w-full items-center justify-center">
           {/* left side */}
-          <div className="flex size-full flex-col items-center justify-center gap-10 px-10 py-20 md:gap-4 lg:w-3/4 lg:pr-0 ">
-            <div className="absolute left-0 top-0 h-1/6 w-full p-2 md:relative">
+          <div className="flex size-full flex-col items-center justify-center gap-10 px-10 py-20 md:gap-8 lg:w-3/4 lg:pr-0 ">
+            <div className="absolute left-2 top-2 h-1/6 w-full p-2 md:relative">
               <MdLanguage className="bg-secondary costum-little-shadow size-[50px] rounded-md p-2 text-white md:size-[65px]" />
             </div>
             <h1 className="font- text-[40px] font-black leading-tight text-[rgb(0,0,0,0.7)] md:text-[50px] dark:text-white">
