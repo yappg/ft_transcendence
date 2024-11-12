@@ -62,6 +62,7 @@ class AuthClient {
       return await response.json();
     } catch (error) {
       if (error instanceof Error) {
+        console.error('Authentication error:', error.message);
         throw new Error(`Authentication error: ${error.message}`);
       }
       throw new Error('Authentication failed');
@@ -184,7 +185,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
   return (
     <div className="flex w-full items-center justify-center px-4 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
-      <form className="flex size-full flex-col items-start gap-8" onSubmit={handleSubmit} id="1">
+      <form className="flex size-full flex-col items-start gap-8" onSubmit={handleSubmit}>
         <div className="flex w-full flex-col gap-5">
           {fields.map((field) => (
             <div key={field.placeholder} className="w-full">
