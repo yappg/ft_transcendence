@@ -1,17 +1,11 @@
-export default function Button({
-  value,
-  onClick,
-}: {
-  value: string;
-  onClick: () => void;
-}) {
+export default function Button({ value, onClick }: { value: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-[201px] h-[68px] md:w-[301px] md:h-[88px] font-coustard
-     font-black bg-[#C1382C] transition-all duration-300
-      rounded-[21px] text-white md:text-[36px] 
-      text-[24px] mt-12 md:mt-0 shadow-2xl"
+      className="font-coustard mt-12 h-[68px] w-[201px] rounded-[21px]
+     bg-[#C1382C] text-[24px] font-black text-white
+      shadow-2xl transition-all duration-300 
+      md:mt-0 md:h-[88px] md:w-[301px] md:text-[36px]"
     >
       {value}
     </button>

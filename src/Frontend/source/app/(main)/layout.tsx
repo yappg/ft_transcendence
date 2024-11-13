@@ -29,8 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div className=" bg-linear-gradient dark:bg-linear-gradient-dark h-[100vh] w-[100vw] overflow-auto grid p-8 grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px]">
-      <div className="row-[span_9_/_span_9] flex items-center justify-center min-h-0 flex-grow">
+    <div className=" bg-linear-gradient dark:bg-linear-gradient-dark grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto p-8">
+      <div className="row-[span_9_/_span_9] flex min-h-0 grow items-center justify-center">
         <SideBar
           isActivated={isActivated}
           setIsActivated={setIsActivated}
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
       </div>
       <div
-        className={`${isActivated === 7 || isActivated === 6 || pathname === '/friends' || pathname === '/messages' ? 'hidden' : 'flex'} row-[span_9_/_span_9] col-start-12 row-start-1 items-center justify-center transition-all duration-300`}
+        className={`${isActivated === 7 || isActivated === 6 || pathname === '/friends' || pathname === '/messages' ? 'hidden' : 'flex'} col-start-12 row-[span_9_/_span_9] row-start-1 items-center justify-center transition-all duration-300`}
       >
         <RightBar
           handleRightClick={handleRightClick}

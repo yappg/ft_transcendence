@@ -21,10 +21,15 @@ function Login() {
   return (
     //   md:rounded-b-[50px] lg:mr-[-250px] lg:h-auto lg:min-h-[550px] lg:w-5/6 lg:pr-[250px] lg:pt-4"
     // >
-    <Card className="bg-white order-2 w-full px-9 pt-16 sm:px-16  rounded-b-[30px] md:rounded-b-[50px] lg:mr-[-250px] lg:h-auto lg:min-h-[550px] lg:w-5/6 lg:pr-[250px] lg:pt-4">
+    <Card className="order-2 w-full rounded-b-[30px] bg-white px-9 pt-16  sm:px-16 md:rounded-b-[50px] lg:mr-[-250px] lg:h-auto lg:min-h-[550px] lg:w-5/6 lg:pr-[250px] lg:pt-4">
       <div className="flex h-fit flex-col gap-4">
         <Title />
-        <Form fields={fields} buttonProps={buttonProps} redirPath="/2fa/login-2fa" isSignup={false} />
+        <Form
+          fields={fields}
+          buttonProps={buttonProps}
+          redirPath="/2fa/login-2fa"
+          isSignup={false}
+        />
         <MyLink text="Have no account yet? " href="signup" />
       </div>
     </Card>
