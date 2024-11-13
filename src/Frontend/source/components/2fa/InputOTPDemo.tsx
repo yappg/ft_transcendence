@@ -20,13 +20,13 @@ export function InputOTPDemo({
       value={value}
       onChange={(value) => setValue(value)}
     >
-      <InputOTPGroup className="w-1/2 h-[200px] dark:text-white text-black justify-end">
+      <InputOTPGroup className="h-[200px] w-1/2 justify-end text-black dark:text-white">
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />
         <InputOTPSlot index={2} />
       </InputOTPGroup>
-      <InputOTPSeparator className="dark:text-white text-black" />
-      <InputOTPGroup className="w-1/2 h-[200px] dark:text-white text-black justify-end">
+      <InputOTPSeparator className="text-black dark:text-white" />
+      <InputOTPGroup className="h-[200px] w-1/2 justify-end text-black dark:text-white">
         <InputOTPSlot index={3} />
         <InputOTPSlot index={4} />
         <InputOTPSlot index={5} />
