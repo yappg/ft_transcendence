@@ -16,7 +16,7 @@ export default function SignupTFA() {
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
       <div className="flex flex-col items-start justify-center transition-all">
-        <h1 className="font-dayson text-3xl text-black opacity-80 transition-all duration-300 sm:text-5xl dark:text-white ">
+        <h1 className="font-dayson text-3xl text-black opacity-80 transition-all duration-300 sm:text-5xl dark:text-white">
           2FA Code Required
         </h1>
       </div>
