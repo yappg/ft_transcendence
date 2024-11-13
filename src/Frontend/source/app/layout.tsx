@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Days_One, Poppins } from 'next/font/google';
-import '@/app/globals.css';
+import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dayson.variable} ${poppins.variable}`}>
+      <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>

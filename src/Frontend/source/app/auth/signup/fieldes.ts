@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { FaRegUser } from 'react-icons/fa';
 import { MdOutlineMail } from 'react-icons/md';
 import { RiLock2Line } from 'react-icons/ri';
