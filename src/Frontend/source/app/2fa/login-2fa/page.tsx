@@ -1,17 +1,31 @@
 'use client';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MyButton } from '@/components/generalUi/Button';
+import axios from 'axios';
 export default function SignupTFA() {
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
   const router = useRouter();
   const handleClick = () => {
-    if (value == '000000') {
-      alert('2FA activated successfully');
-      router.push('/Home');
-    } else alert('Invalis OTP');
+    sendOtp();
+  };
+  const sendOtp = async () => {
+    try {
+      const result = await axios.post('http://127.0.0.1:8000/2fa/validate-otp/', {
+        username: 'mmesbahi',
+        otp_token: value,
+      });
+      console.log(result);
+      if (result.data.status) {
+        alert('OTP verified');
+      } else {
+        alert('Invalid OTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
