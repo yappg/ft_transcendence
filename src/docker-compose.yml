@@ -46,59 +46,59 @@ services:
 #         #     start_period: 30s
 #         restart: always
 
-    backend:
-        container_name: backend
-        build:
-          context: ./Backend
-          dockerfile: Dockerfile
-        image: backend
-# DEV =====>
-        volumes:
-            - ./Backend/source:/app/source:rw
-# =========>
-        environment:
-            DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-            JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-            42_CLIENT_ID: $${42_CLIENT_ID}
-            42_CLIENT_SECRET: $${42_CLIENT_SECRET}
-            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            REDIS_PASS: ${REDIS_PASS}
-        networks:
-          - transcendence
-        ports:
-          - 8080:8080
-        depends_on:
-          cache:
-            condition: service_healthy
-          database:
-            condition: service_healthy
-        # healthcheck:
-        #     test: ["CMD", ""]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
-        restart: always
+#     backend:
+#         container_name: backend
+#         build:
+#           context: ./Backend
+#           dockerfile: Dockerfile
+#         image: backend
+# # DEV =====>
+#         volumes:
+#             - ./Backend/source:/app/source:rw
+# # =========>
+#         environment:
+#             DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+#             JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+#             42_CLIENT_ID: $${42_CLIENT_ID}
+#             42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+#             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+#             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+#             POSTGRES_DB: ${POSTGRES_DB}
+#             POSTGRES_USER: ${POSTGRES_USER}
+#             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#             REDIS_PASS: ${REDIS_PASS}
+#         networks:
+#           - transcendence
+#         ports:
+#           - 8080:8080
+#         depends_on:
+#           cache:
+#             condition: service_healthy
+#           database:
+#             condition: service_healthy
+#         # healthcheck:
+#         #     test: ["CMD", ""]
+#         #     interval: 1m30s
+#         #     timeout: 30s
+#         #     retries: 5
+#         #     start_period: 30s
+#         restart: always
 
-    cache:
-        container_name: redis
-        image: redis:alpine
-        environment:
-            REDIS_PASS: ${REDIS_PASS}
-        command: "redis-server --requirepass $REDIS_PASS"
-        networks:
-            - transcendence
-        healthcheck:
-            test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
-            interval: 30s
-            timeout: 5s
-            retries: 3
-            # start_period: 10s
-        restart: always
+#     cache:
+#         container_name: redis
+#         image: redis:alpine
+#         environment:
+#             REDIS_PASS: ${REDIS_PASS}
+#         command: "redis-server --requirepass $REDIS_PASS"
+#         networks:
+#             - transcendence
+#         healthcheck:
+#             test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+#             interval: 30s
+#             timeout: 5s
+#             retries: 3
+#             # start_period: 10s
+#         restart: always
 
     database:
         container_name: postgres
@@ -120,39 +120,63 @@ services:
             # start_period: 10s
         restart: always
 
-    # cadvisor:
-    #   image: gcr.io/cadvisor/cadvisor:latest
-    #   container_name: cadvisor
-    #   # privileged: true
-    #   networks:
-    #     - transcendence
-    #   ports:
-    #     - "8080:8080"
-    #   volumes:
-    #     - /:/rootfs:ro
-    #     - /var/run:/var/run:ro
-    #     - /sys:/sys:ro
-    #     # - /Users/${USER}/.docker/run/:/var/run/:ro
-    #     - /dev/disk/:/dev/disk:ro
-    #     - /dev/kmsg:/dev/kmsg:ro  # Add this device
-    #   restart: unless-stopped
+    database-exporter:
+      image: wrouesnel/postgres_exporter
+      container_name: postgres-exporter
+      environment:
+        DATA_SOURCE_URI: "database:5432/postgres?sslmode=disable"
+        DATA_SOURCE_USER: ${POSTGRES_USER}
+        DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
+      networks:
+        - transcendence
+      ports:
+        - "9187:9187"
+      depends_on:
+          database :
+              condition: service_healthy
+      restart: unless-stopped
 
-    # prometheus:
-    #     image: prom/prometheus:latest
-    #     container_name: prometheus
-    #     volumes:
-    #       - "./Config/prom/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-    #       - prom:/prometheus
-    #     command:
-    #       - '--config.file=/etc/prometheus/prometheus.yml'
-    #       - '--storage.tsdb.path=/prometheus'
-    #       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-    #       - '--web.console.templates=/usr/share/prometheus/consoles'
-    #     networks:
-    #       - transcendence
-    #     ports:
-    #       - "9090:9090"
-    #     restart: always
+# docker run \
+#   --net=host \
+#   -e DATA_SOURCE_URI="localhost:5432/postgres?sslmode=disable" \
+#   -e DATA_SOURCE_USER=postgres \
+#   -e DATA_SOURCE_PASS=password \
+#   quay.io/prometheuscommunity/postgres-exporter
+
+    cadvisor:
+      image: gcr.io/cadvisor/cadvisor:latest
+      container_name: cadvisor
+      privileged: true
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:ro
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        # - /Users/${USER}/.docker/run/:/var/run/:ro
+        - /dev/disk/:/dev/disk:ro
+        - /dev/kmsg:/dev/kmsg:ro  # Add this device
+      networks:
+        - transcendence
+      ports:
+        - "8080:8080"
+      restart: unless-stopped
+
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        volumes:
+          - "./Services/prom/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+          - prometheus-data:/prometheus
+        command:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus'
+          - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+          - '--web.console.templates=/usr/share/prometheus/consoles'
+        networks:
+          - transcendence
+        ports:
+          - "9090:9090"
+        restart: always
 
     # grafana:
     #     image: grafana/grafana
@@ -208,6 +232,14 @@ volumes:
             type: none
             device: ${PWD}/volumes
 
+    prometheus-data:
+        name: prometheus
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ${PWD}/volumes
+
     # grafana-data:
     #     name: grafana
     #     driver: local
@@ -216,13 +248,6 @@ volumes:
     #         type: none
     #         device: ${PWD}/volumes
 
-    # prometheus-data:
-    #     name: prometheus
-    #     driver: local
-    #     driver_opts:
-    #         o: bind
-    #         type: none
-    #         device: ${PWD}/volumes
 
 
 networks:
