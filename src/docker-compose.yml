@@ -17,34 +17,34 @@ services:
     #         condition: service_healthy
     #   restart: unless-stopped
 
-    frontend:
-        container_name: frontend
-        build:
-          context: ./frontend
-          dockerfile: Dockerfile
-        image: frontend
-# DEV =====>
-        volumes:
-          - ./Frontend/source:/app/source:rw
-          - /app/source/.next
-          - /app/source/node_modules
-# =========>
-        environment:
-          BACKEND_URL: http://backend:8080
-        networks:
-          - transcendence
-        ports:
-          - 3000:3000
-        # depends_on:
-        #     backend:
-        #         condition: service_healthy
-        # healthcheck:
-        #     test: ["CMD", ""]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
-        restart: always
+#     frontend:
+#         container_name: frontend
+#         build:
+#           context: ./frontend
+#           dockerfile: Dockerfile
+#         image: frontend
+# # DEV =====>
+#         volumes:
+#           - ./Frontend/source:/app/source:rw
+#           - /app/source/.next
+#           - /app/source/node_modules
+# # =========>
+#         environment:
+#           BACKEND_URL: http://backend:8080
+#         networks:
+#           - transcendence
+#         ports:
+#           - 3000:3000
+#         # depends_on:
+#         #     backend:
+#         #         condition: service_healthy
+#         # healthcheck:
+#         #     test: ["CMD", ""]
+#         #     interval: 1m30s
+#         #     timeout: 30s
+#         #     retries: 5
+#         #     start_period: 30s
+#         restart: always
 
     backend:
         container_name: backend
@@ -58,11 +58,11 @@ services:
 # =========>
         environment:
             DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-            JWT_SECRET_KEY: $${JWT_SECRET_KEY}
+            JWT_SECRET_KEY: ${JWT_SECRET_KEY}
             42_CLIENT_ID: $${42_CLIENT_ID}
             42_CLIENT_SECRET: $${42_CLIENT_SECRET}
-            GOOGLE_CLIENT_ID: $${GOOGLE_CLIENT_ID}
-            GOOGLE_CLIENT_SECRET: $${GOOGLE_CLIENT_SECRET}
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

@@ -19,6 +19,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # asgi app
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,16 +36,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     #swagger api documentation
     'drf_yasg',
-    # asgi app
-    'daphne',
-    'channels',
     #local apps
     'accounts',
-    'api',
     'chat',
-    'chatoom',
-    'game',
-    'tournament',
+    # 'game',
 ]
 
 MIDDLEWARE = [
@@ -153,23 +150,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#env
 OAUTH2_PROVIDER_42 = {
     'CLIENT_ID': os.getenv("42_CLIENT_ID"),
     'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/42',
+    'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/42',
     'SCOPE': 'public',
 }
 
+#env
 OAUTH2_PROVIDER_GOOGLE = {
     'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
     'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://127.0.0.1:8000/oauth/callback/google',
+    'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/google',
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
 

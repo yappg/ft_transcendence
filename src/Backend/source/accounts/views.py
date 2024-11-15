@@ -39,10 +39,26 @@ class SignUpView(APIView):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            #why i do save the user here if i already returned one in the serializer create method
             user = serializer.save()
             if user:
-                tokens = generate_tokens(user)
-                return Response({'tokens': tokens}, status=201)
+                access_token, refresh_token = generate_tokens(user)
+
+                resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+                resp.set_cookie(
+                    key='access_token',
+                    value=access_token,
+                    httponly=False
+                )
+                resp.set_cookie(
+                    key='refresh_token',
+                    value=refresh_token,
+                    httponly=False
+                )
+                return resp
+            else : 
+                return Response({'error': 'user not created'}, status=400)
+
         return Response(serializer.errors, status=400)
 
 class SignInView(APIView):
@@ -60,10 +76,9 @@ class SignInView(APIView):
                 redirect('validate_otp')
 
             access_token, refresh_token = generate_tokens(user)
-            print(access_token)
-            print(refresh_token)
-
             resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+
+            #clear the old cookies before sign in with new ones
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
@@ -74,20 +89,33 @@ class SignInView(APIView):
                 value=refresh_token,
                 httponly=False
             )
+            # csrf_token = get_token(request)
+            # resp.set_cookie(
+            #     key='csrftoken',
+            #     value=csrf_token,
+            #     samesite='Lax'
+            # )
             return resp
-        else :
-            return Response(Serializer.errors, status=HTTP_400_BAD_REQUEST)
+        else : 
+            return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from .authenticate import CotumAuthentication
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
+    # permission_classes = [CotumAuthentication]
+
+    #before logout clear the cookies in th browser  
     def post(self, request):
         try:
-            refresh_token = request.data['refresh']
+            refresh_token = request.COOKIES.get('refresh_token')
             tokens = RefreshToken(refresh_token)
             tokens.blacklist()
+            response = Response({'message': 'Logged Out Successfuly'}, status=200)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
         except Exception as e:
             return Response({'error': str(e)}, status=400)
-        return Response({'message': 'loggedOut Successfuly'}, status=200)
+        return response
 
 #------------------------------------- 2FA ------------------------------------19788791
 import pyotp
@@ -159,8 +187,19 @@ class ValidateOTP(APIView):
         bol = totp.verify(otp_token)
         if not bol:
             return Response({'message': 'Invalid Token'}, status=400)
-        tokens = generate_tokens(user)
-        return Response({'tokens': tokens}, status=status.HTTP_200_OK)
+        access_token, refresh_token = generate_tokens(user)
+        resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+        resp.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=False
+        )
+        resp.set_cookie(
+            key='refresh_token',
+            value=refresh_token,
+            httponly=False
+        )
+        return resp
         # return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
@@ -194,7 +233,7 @@ class OAuth42LoginView(APIView):
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
             client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
-            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth%2Fcallback%2F42&response_type=code"
+            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Foauth%2Fcallback%2F42&response_type=code"
         elif provider == 'google':
             Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
             client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
