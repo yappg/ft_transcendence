@@ -20,13 +20,11 @@ export default function Home_TFA() {
   }
   return (
     <div
-      className={`tfa-card-bg h-[100vh] w-[100vw] overflow-auto grid p-8 ${
-        ShowRightBar
-          ? 'grid-cols-[repeat(12,_1fr)]'
-          : 'grid-cols-[repeat(11,_1fr)]'
+      className={`tfa-card-bg grid h-screen w-screen overflow-auto p-8 ${
+        ShowRightBar ? 'grid-cols-[repeat(12,_1fr)]' : 'grid-cols-[repeat(11,_1fr)]'
       } grid-rows-[repeat(9,_1fr)] gap-[8px]`}
     >
-      <div className="row-[span_9_/_span_9] bg-[1C1C1C] flex items-center justify-center">
+      <div className="row-[span_9_/_span_9] flex items-center justify-center bg-[1C1C1C]">
         <SideBar
           isActivated={isActivated}
           setIsActivated={setIsActivated}
@@ -36,12 +34,9 @@ export default function Home_TFA() {
       </div>
       {ShowRightBar && (
         <div
-          className={`${isActivated == 7 ? 'hidden' : 'flex'} row-[span_9_/_span_9] col-start-12 row-start-1 bg-[1C1C1C] items-center justify-center transition-all duration-300`}
+          className={`${isActivated == 7 ? 'hidden' : 'flex'} col-start-12 row-[span_9_/_span_9] row-start-1 items-center justify-center bg-[1C1C1C] transition-all duration-300`}
         >
-          <RightBar
-            handleRightClick={handleRightClick}
-            setIsActivated={setIsActivated}
-          />
+          <RightBar handleRightClick={handleRightClick} setIsActivated={setIsActivated} />
         </div>
       )}
       <div
@@ -49,17 +44,11 @@ export default function Home_TFA() {
       >
         <Header />
       </div>
-      <div className="col-span-5 row-[span_8_/_span_8] col-start-2 row-start-2 bg-white">
-        4
-      </div>
+      <div className="col-span-5 col-start-2 row-[span_8_/_span_8] row-start-2 bg-white">4</div>
       <div className="col-span-5 col-start-7 row-start-2 bg-white">5</div>
       <div className="col-span-5 col-start-7 row-start-3 bg-white">6</div>
-      <div className="col-span-5 row-span-3 col-start-7 row-start-4 bg-white">
-        7
-      </div>
-      <div className="col-span-5 row-span-3 col-start-7 row-start-7 bg-white">
-        8
-      </div>
+      <div className="col-span-5 col-start-7 row-span-3 row-start-4 bg-white">7</div>
+      <div className="col-span-5 col-start-7 row-span-3 row-start-7 bg-white">8</div>
     </div>
   );
 }
