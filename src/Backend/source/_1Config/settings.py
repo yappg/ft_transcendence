@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     #swagger api documentation
     'drf_yasg',
     #local apps
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     #take off above
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,6 +56,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'allauth.account.middleware.AccountMiddleware',
 ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:5173',
+# ]
+
+
+# CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -169,7 +181,7 @@ OAUTH2_PROVIDER_GOOGLE = {
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
     'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/google',
-    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    'SCOPE': 'https://www.googleapis.com/auth/update-user-infosinfo.profile https://www.googleapis.com/auth/update-user-infosinfo.email',
 }
 
 # Internationalization
