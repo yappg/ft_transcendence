@@ -24,6 +24,11 @@ scrape_configs:
       - targets:
         - cadvisor:8080
 
+  - job_name: postgres
+    static_configs:
+      - targets:
+        - database-exporter:9187
+
 
   # - job_name: 'node_exporter'
   #   scrape_interval: 5s
