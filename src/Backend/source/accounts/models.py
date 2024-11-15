@@ -28,8 +28,9 @@ class Player(AbstractUser):
 # # class BlockedUsers(models.Model):
 # #     blocked_User_id=models.ForeignKey("Player", on_delete=models.CASCADE)
 # #     blocked_by_User_id=models.ForeignKey("Player", on_delete=models.CASCADE)
-# #     # event_date = models.models.DateTimeField( auto_now=False, auto_now_add=False) #ma3erft wash anhtajo ou non
+# #     # event_date = models.models.DateTimeField( auto_now=False, auto_now_add=False) #ma3erft wash anhtajo ou non 
 
-# class Friends(models.Model):
-#     friend_requester_id = models.ForeignKey(Player, related_name='friend_requester', on_delete=models.CASCADE ) #, on_delete=models.CASCADE or make it blank Unknown
-#     friend_responder_id = models.ForeignKey(Player, related_name='friend_responder', on_delete=models.CASCADE ) #, on_delete=models.CASCADE or make it blank Unknown
+class Friends(models.Model):
+    friend_requester = models.ForeignKey(Player, related_name='friend_requests_sent', on_delete=models.CASCADE)
+    friend_responder = models.ForeignKey(Player, related_name='friend_requests_received', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
