@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const handleRightClick = (id: number) => {
     setIsActivated(id);
-    if (pathname === '/friends' || pathname === '/messages' || id === 6 || id === 7) {
+    if (id === 6 || id === 7) {
       setShowSideBarIcon(true);
     } else {
       setShowSideBarIcon(false);
