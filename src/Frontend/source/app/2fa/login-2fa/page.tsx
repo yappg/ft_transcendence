@@ -1,13 +1,11 @@
 'use client';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { MyButton } from '@/components/generalUi/Button';
 import axios from 'axios';
 export default function SignupTFA() {
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
-  const router = useRouter();
   const handleClick = () => {
     sendOtp();
   };
@@ -17,7 +15,6 @@ export default function SignupTFA() {
         username: 'mmesbahi',
         otp_token: value,
       });
-      console.log(result);
       if (result.data.status) {
         alert('OTP verified');
       } else {

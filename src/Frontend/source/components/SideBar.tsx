@@ -44,28 +44,28 @@ export const SideBar = ({
   const showIcon = (Icon: any, id: number, selectedId: number, path: string) => (
     <Link href={path} key={id}>
       <div
-        className="size-8 md:h-[40px] md:w-[40px] relative flex items-center justify-center transition-all duration-300"
+        className="relative flex size-8 items-center justify-center transition-all duration-300 md:size-[40px]"
         onClick={() => handleRightClick(id)}
       >
         <div
-          className={`${id === selectedId ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
+          className={`${id === selectedId ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} size-[40px] rounded-[50px] blur-lg`}
         />
         <Icon
-          className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${id === selectedId ? 'size-14 h-600-800:size-9' : 'size-12 h-600-800:size-7'} transition-all duration-300 absolute z-99 hover:text-aqua hover:dark:text-fire-red`}
+          className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${id === selectedId ? 'h-600-800:size-9 size-14' : 'h-600-800:size-7 size-12'} z-99 hover:text-aqua hover:dark:text-fire-red absolute transition-all duration-300`}
         />
       </div>
     </Link>
   );
   return (
-    <div className="min-h-[580px] md:flex hidden relative w-[80px] h-600-800:w-[80px] lg:w-[97px]  md:w-[10%] min-w-[70px] h-[95%] pb-4 bg-side-bar rounded-[50px] flex-col items-center justify-between shadow-2xl transition-all duration-300 ">
+    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-[95%] min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
       <Image
         src="/Icone.svg"
         alt=""
         width={100}
         height={100}
-        className="w-[69px] h-[69px] h-600-800:w-[74px] h-600-800:h-[74px] md:w-[96px] md:h-[96px] "
+        className="h-600-800:size-[74px] size-[69px] md:size-[96px] "
       />
-      <div className="flex flex-col items-center justify-between md:h-[60%] md:w-[65px] h-[300px] min-h-[400px] h-600-800:min-h-[350px] min-w-[50px]">
+      <div className="h-600-800:min-h-[350px] flex h-[300px] min-h-[400px] min-w-[50px] flex-col items-center justify-between md:h-3/5 md:w-[65px]">
         {arr.map((item, index) => {
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
@@ -76,18 +76,18 @@ export const SideBar = ({
           })}
       </div>
       <button
-        className={`flex items-center justify-center w-[50px] h-[50px] `}
+        className={`flex size-[50px] items-center justify-center `}
         onClick={() => {
           setIsActivated(8);
           if (isActivated == 8) setIsActivated(0);
         }}
       >
         <div
-          className={`${isActivated == 8 ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} w-[40px] h-[40px] blur-lg rounded-[50px]`}
+          className={`${isActivated == 8 ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} size-[40px] rounded-[50px] blur-lg`}
         ></div>
         <IconSettingsFilled
           size={isActivated == 8 ? 70 : 60}
-          className={`text-[50px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] transition-all duration-300 absolute z-10 hover:text-aqua hover:dark:text-fire-red`}
+          className={`text-[50px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] hover:text-aqua hover:dark:text-fire-red absolute z-10 transition-all duration-300`}
         />
       </button>
     </div>
