@@ -57,7 +57,7 @@ export const SideBar = ({
     </Link>
   );
   return (
-    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-[95%] min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
+    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-[100%] min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
       <Image
         src="/Icone.svg"
         alt=""
