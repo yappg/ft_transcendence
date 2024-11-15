@@ -1,23 +1,94 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import render
-from accounts.models import Player, Friends
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-class LobbyView(APIView):
+from .models import ChatRoom, Message
+from .serializers import MessageSerializer, ChatRoomSerializer
+from accounts.models import Player
+from django.db import transaction
+
+
+
+class ChatView(APIView):
+    def post(self, request):
+        current_user = request.user
+        friend_username = request.data.get('senders')
+
+        # Ensure the friend exists
+        try:
+            friend = Player.objects.get(username=friend_username)
+        except Player.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+
+        # Stop the user from chatting with themselves
+        if current_user == friend:
+            return Response({"error": "You cannot start a chat with yourself"}, status=400)
+
+        # Check if a chat between the two participants already exists
+        chat = ChatRoom.objects.filter(senders=current_user).filter(senders=friend).first()
+ 
+        # Create a new chat and add both senders
+        if chat is None:
+            chat = ChatRoom.objects.create()
+            chat.senders.add(current_user, friend)
+
+        # Serialize and return the chat
+        serializer = ChatRoomSerializer(chat)
+        return Response(serializer.data)
+
+
+class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
-        friends = Friends.objects.filter(friend_requester=user) | Friends.objects.filter(friend_responder=user)
-        friends_list = []
-
-        for friend in friends:
-            if friend.friend_requester == user:
-                friends_list.append(friend.friend_responder)
-            else:
-                friends_list.append(friend.friend_requester)
-
-        context = {
-            'friends': friends_list
-        }
-        return render(request, 'lobby.html', context)
+        chats = ChatRoom.objects.filter(senders=user)
+        serializer = ChatRoomSerializer(chats, many=True)
+        return Response(serializer.data)
+    
+    
+class ChatMessagesView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request , chatId):
+        try:
+            chat = ChatRoom.objects.get(id=chatId)
+        except ChatRoom.DoesNotExist:
+            return Response({"error": "Chat se7ra"}, status=404)
+        # obtain all the history
+        messages = Message.objects.filter(chatroom=chat).order_by('send_at')
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, chatId):
+        sender = request.user
+        receiverId = request.data.get('receiver')
+        content = request.data.get('content')
+        
+        #validate that chat exists
+        try:
+            chat = ChatRoom.objects.get(id=chatId)
+        except ChatRoom.DoesNotExist:
+            return Response({"error": "Chat makynsh"}, status=404)
+        
+        #validate that receiver exists and is a participants of the chat
+        
+        try:
+            receiver = Player.objects.get(id=receiverId)
+        except Player.DoesNotExists:
+            return Response({"error": "Receiver makynsh"}, status=404)
+        
+        if receiver not in chat.senders.all():
+            return Response({"error": "Receiver is not a sender of this chat"}, status=404)
+        #create save
+        message = Message.objects.create(
+            chatroom = chat,
+            sender=sender,
+            receiver=receiver,
+            content=content
+        )
+        
+        serializer = MessageSerializer(message)
+        return Response(serializer.data, status=201)

@@ -11,29 +11,18 @@ Content-Type: application/json
 
 ########
 
-POST http://localhost:8080/auth/l/
-Content-Type: application/json
-
-{
-    "username": "xasdasdvs",
-    "email": "vscodevscode@gmail.com",
-    "password": "dasdasdsadasddasdasdad",
-    "password2": "dasdasdsadasddasdasdad"
-}
+GET http://localhost:8080/oauth/login/42
 
 ########
 
 GET http://localhost:8080/auth/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ2NjQ0LCJpYXQiOjE3MzE1NDQ4NDQsImp0aSI6ImQxODc1MGYwNWIyMTQ0MDViNGVmMzVhOGRmYjYzMjM2IiwidXNlcl9pZCI6M30.4bOJNppxJJnoe1ck_E6X2jLRH0jcy9UQIV_TiK5370g
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNzAxNTg4LCJpYXQiOjE3MzE2OTk3ODgsImp0aSI6IjZmM2M3NzBiMmUxMTQ1MmM5ZWEwNTFlMjYwNTZiMTdhIiwidXNlcl9pZCI6NH0.t2_8a30e44WwwxSZvjcJgLp0nSROOS0u4MDONk7RbdE
 
 ########
 ########
 
-GET http://localhost:8080/chatoom/lobby
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ2NjQ0LCJpYXQiOjE3MzE1NDQ4NDQsImp0aSI6ImQxODc1MGYwNWIyMTQ0MDViNGVmMzVhOGRmYjYzMjM2IiwidXNlcl9pZCI6M30.4bOJNppxJJnoe1ck_E6X2jLRH0jcy9UQIV_TiK5370g
-
-
+GET http://localhost:8080/chat/list/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNzAxNTg4LCJpYXQiOjE3MzE2OTk3ODgsImp0aSI6IjZmM2M3NzBiMmUxMTQ1MmM5ZWEwNTFlMjYwNTZiMTdhIiwidXNlcl9pZCI6NH0.t2_8a30e44WwwxSZvjcJgLp0nSROOS0u4MDONk7RbdE
 ########
 // access
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ0NjUxLCJpYXQiOjE3MzE1NDI4NTEsImp0aSI6IjM4ZGI1MjllNDExMjQ3MGJiZThmZDAzZmZkMTc1MWU1IiwidXNlcl9pZCI6MX0.P1JiLlPUq7JS5zDcBrKRDv7lZmNWVlHJsp75lCvFz_c
