@@ -27,12 +27,12 @@ export const RightBar = ({
     setIsActivated(id);
   }
   return (
-    <div className="h-[95%] w-[80px] lg:w-[97px] md:w-[70px] transition-all duration-300 md:flex hidden flex-col items-center justify-between ">
-      <div className="h-[55%]  w-full items-center justify-start rounded-[50px] bg-side-bar shadow-2xl overflow-hidden">
+    <div className="hidden h-[95%] w-[80px] flex-col items-center justify-between transition-all duration-300 md:flex md:w-[70px] lg:w-[97px] ">
+      <div className="bg-side-bar  h-[55%] w-full items-center justify-start overflow-hidden rounded-[50px] shadow-2xl">
         <Image
           src="/ProfilePhoto.svg"
           alt=""
-          className="w-[69px] h-[69px] md:w-[130px] md:h-[130px]"
+          className="size-[69px] md:size-[130px]"
           width={100}
           height={100}
         />
@@ -40,11 +40,11 @@ export const RightBar = ({
           <Link href="/friends">
             <FaUsers
               onClick={() => handleClick(6)}
-              className="text-[50px] size-12 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] dark:text-white hover:text-aqua hover:dark:text-fire-red"
+              className="h-600-800:size-9 hover:text-aqua hover:dark:text-fire-red size-12 text-[50px] text-[rgba(28,28,28,0.5)] transition-all duration-300 dark:text-white"
             />
           </Link>
         </div>
-        <div className="flex flex-col items-center justify-between gap-10 mt-6">
+        <div className="mt-6 flex flex-col items-center justify-between gap-10">
           {avatars.map((avatar) => (
             <Image
               key={avatar.id}
@@ -52,19 +52,19 @@ export const RightBar = ({
               alt={`Avatar ${avatar.id}`}
               width={100}
               height={100}
-              className="w-[30px] h-[30px] md:w-[70px] md:h-[70px] rounded-full"
+              className="size-[30px] rounded-full md:size-[70px]"
             />
           ))}
         </div>
       </div>
-      <div className="h-[40%] w-full items-start justify-center rounded-[40px] bg-side-bar pt-8 shadow-2xl overflow-hidden">
+      <div className="bg-side-bar h-2/5 w-full items-start justify-center overflow-hidden rounded-[40px] pt-8 shadow-2xl">
         <div className="flex items-center justify-center">
           <FaComments
             onClick={() => handleClick(7)}
-            className="size-16 h-600-800:size-9 transition-all duration-300 text-[rgba(28,28,28,0.5)] dark:text-white hover:text-aqua hover:dark:text-fire-red"
+            className="h-600-800:size-9 hover:text-aqua hover:dark:text-fire-red size-16 text-[rgba(28,28,28,0.5)] transition-all duration-300 dark:text-white"
           />
         </div>
-        <div className="flex flex-col items-center justify-between gap-10 mt-12">
+        <div className="mt-12 flex flex-col items-center justify-between gap-10">
           {friends.map((friend) => (
             <Image
               key={friend.id}
@@ -72,7 +72,7 @@ export const RightBar = ({
               alt={`friend ${friend.id}`}
               width={100}
               height={100}
-              className="w-[30px] h-[30px] md:w-[70px] md:h-[70px] rounded-full"
+              className="size-[30px] rounded-full md:size-[70px]"
             />
           ))}
         </div>
