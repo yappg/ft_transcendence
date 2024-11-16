@@ -1,5 +1,16 @@
+version: '3.8'
 
 services:
+
+    docker_exporter:
+      container_name: docker-exporter
+      image: prometheusnet/docker_exporter
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+      networks:
+        - transcendence
+      restart: unless-stopped
+
     # web:
     #   image: nginx
     #   container_name: nginx
@@ -16,6 +27,26 @@ services:
     #     backend:
     #         condition: service_healthy
     #   restart: unless-stopped
+
+    # nginx-exporter:
+    #   image: nginx/nginx-prometheus-exporter:latest
+    #   command:
+    #     - '-nginx.scrape-uri=http://nginx:8080/stub_status'
+    #   ports:
+    #     - 9113:9113
+
+
+# npm install prom-client
+
+# import { collectDefaultMetrics, register } from 'prom-client';
+
+# collectDefaultMetrics();
+
+# export default async function handler(req, res) {
+#   res.setHeader('Content-Type', register.contentType);
+#   res.end(await register.metrics());
+# }
+
 
 #     frontend:
 #         container_name: frontend
@@ -45,6 +76,30 @@ services:
 #         #     retries: 5
 #         #     start_period: 30s
 #         restart: always
+
+
+# pip install django-prometheus
+# INSTALLED_APPS = [
+#     ...
+#     'django_prometheus',
+#     ...
+# ]
+
+# MIDDLEWARE = [
+#     'django_prometheus.middleware.PrometheusBeforeMiddleware',
+#     ...
+#     'django_prometheus.middleware.PrometheusAfterMiddleware',
+# ]
+# from django.urls import path, include
+
+# urlpatterns = [
+#     ...
+#     path('', include('django_prometheus.urls')),
+#     ...
+# ]
+
+
+
 
 #     backend:
 #         container_name: backend
@@ -84,21 +139,35 @@ services:
 #         #     start_period: 30s
 #         restart: always
 
-#     cache:
-#         container_name: redis
-#         image: redis:alpine
-#         environment:
-#             REDIS_PASS: ${REDIS_PASS}
-#         command: "redis-server --requirepass $REDIS_PASS"
-#         networks:
-#             - transcendence
-#         healthcheck:
-#             test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
-#             interval: 30s
-#             timeout: 5s
-#             retries: 3
-#             # start_period: 10s
-#         restart: always
+    cache:
+        container_name: redis
+        image: redis:alpine
+        volumes:
+            - redis-data:/data
+        environment:
+            REDIS_PASS: ${REDIS_PASS}
+        command: "redis-server --requirepass $REDIS_PASS"
+        networks:
+            - transcendence
+        healthcheck:
+            test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            # start_period: 10s
+        restart: always
+
+    cache_exporter:
+        container_name: redis-exporter
+        image: oliver006/redis_exporter
+        environment:
+            REDIS_URL: redis://:${REDIS_PASS}@cache:6379
+        networks:
+            - transcendence
+        depends_on:
+            cache :
+                condition: service_healthy
+        restart: unless-stopped
 
     database:
         container_name: postgres
@@ -109,57 +178,27 @@ services:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            PGDATA: /var/lib/postgresql/data/pgdata
         networks:
             - transcendence
         healthcheck:
             test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
-            interval: 30s
-            timeout: 5s
-            retries: 3
-            # start_period: 10s
+            interval: 30s # every interval runs
+            timeout: 5s # runs  5 time before failing the command
+            retries: 3  # 3 times before failing the container
+            # start_period: 10s # Uncommented to allow time for the database to start before health checks begin
         restart: always
 
     database-exporter:
-      image: wrouesnel/postgres_exporter
-      container_name: postgres-exporter
-      environment:
-        DATA_SOURCE_URI: "database:5432/postgres?sslmode=disable"
-        DATA_SOURCE_USER: ${POSTGRES_USER}
-        DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
-      networks:
-        - transcendence
-      ports:
-        - "9187:9187"
-      depends_on:
-          database :
-              condition: service_healthy
-      restart: unless-stopped
-
-# docker run \
-#   --net=host \
-#   -e DATA_SOURCE_URI="localhost:5432/postgres?sslmode=disable" \
-#   -e DATA_SOURCE_USER=postgres \
-#   -e DATA_SOURCE_PASS=password \
-#   quay.io/prometheuscommunity/postgres-exporter
-
-    cadvisor:
-      image: gcr.io/cadvisor/cadvisor:latest
-      container_name: cadvisor
-      privileged: true
-      volumes:
-        - /:/rootfs:ro
-        - /var/run:/var/run:ro
-        - /sys:/sys:ro
-        - /var/lib/docker/:/var/lib/docker:ro
-        # - /Users/${USER}/.docker/run/:/var/run/:ro
-        - /dev/disk/:/dev/disk:ro
-        - /dev/kmsg:/dev/kmsg:ro  # Add this device
-      networks:
-        - transcendence
-      ports:
-        - "8080:8080"
-      restart: unless-stopped
+        container_name: postgres-exporter
+        image: wrouesnel/postgres_exporter
+        environment:
+            DATA_SOURCE_URI: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
+        networks:
+            - transcendence
+        depends_on:
+            database :
+                condition: service_healthy
+        restart: unless-stopped
 
     prometheus:
         image: prom/prometheus:latest
@@ -170,30 +209,28 @@ services:
         command:
           - '--config.file=/etc/prometheus/prometheus.yml'
           - '--storage.tsdb.path=/prometheus'
-          - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-          - '--web.console.templates=/usr/share/prometheus/consoles'
         networks:
           - transcendence
         ports:
           - "9090:9090"
         restart: always
 
-    # grafana:
-    #     image: grafana/grafana
-    #     container_name: grafana
-    #     environment:
-    #         GF_SECURITY_ADMIN_USER : ${GRAFANA_USER}
-    #         GF_SECURITY_ADMIN_PASSWORD : ${GRAFANA_PASSWORD}
-    #         GF_DATASOURCES_PATH : /etc/grafana/provisioning/datasources
-    #         GF_PROVISIONING_PATHS : /etc/grafana/provisioning
-    #     volumes:
-    #         - grafana-data:/var/lib/grafana:rw
-    #         - ./Config/provisioning:/etc/grafana/provisioning:rw
-    #     networks:
-    #       - transcendence
-    #     ports:
-    #       - "3000:3000"
-    #     restart: unless-stopped
+    grafana:
+        image: grafana/grafana
+        container_name: grafana
+        environment:
+            GF_SECURITY_ADMIN_USER : ${GRAFANA_USER}
+            GF_SECURITY_ADMIN_PASSWORD : ${GRAFANA_PASSWORD}
+            GF_DATASOURCES_PATH : /etc/grafana/provisioning/datasources
+            GF_PROVISIONING_PATHS : /etc/grafana/provisioning
+        volumes:
+            - grafana-data:/var/lib/grafana:rw
+            - ./Config/provisioning:/etc/grafana/provisioning:rw
+        networks:
+          - transcendence
+        ports:
+          - "3000:3000"
+        restart: unless-stopped
 
     # - GF_SERVER_ROOT_URL=http://my.grafana.server/
     # - Setting	Default value
@@ -216,29 +253,27 @@ services:
     #     - SMTP_USERNAME=${SMTP_USERNAME}  # Store sensitive data in environment variables
     #     - SMTP_PASSWORD=${SMTP_PASSWORD}
 
-    # nginx-exporter:
-    #   image: nginx/nginx-prometheus-exporter:latest
-    #   command:
-    #     - '-nginx.scrape-uri=http://nginx:8080/stub_status'
-    #   ports:
-    #     - 9113:9113
+#//TODO add health checkes for front and back
 
 volumes:
+    redis-data:
+        name: cache
+
     postgres-data:
         name: database
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${PWD}/volumes
+        # driver: local
+        # driver_opts:
+        #     o: bind
+        #     type: none
+        #     device: ${PWD}/volumes/postgres
 
     prometheus-data:
         name: prometheus
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${PWD}/volumes
+        # driver: local
+        # driver_opts:
+        #     o: bind
+        #     type: none
+        #     device: ${PWD}/volumes/prometheus
 
     # grafana-data:
     #     name: grafana
