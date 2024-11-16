@@ -14,24 +14,44 @@ global:
 
 scrape_configs:
 
-  - job_name: prometheus
-    static_configs:
-    - targets:
-      - localhost:9090
-
-  - job_name: cadvisor
+  - job_name: Docker
     static_configs:
       - targets:
-        - cadvisor:8080
+        - docker_exporter:9417
 
-  - job_name: postgres
+  - job_name: Proxy
+    static_configs:
+      - targets:
+        - web:9113
+
+  - job_name: Frontend
+    static_configs:
+      - targets:
+        - frontend:3000
+
+  - job_name: Backend
+    static_configs:
+      - targets:
+        - backend:8080
+
+  - job_name: Cache
+    static_configs:
+      - targets:
+        - cache_exporter:9121
+
+  - job_name: Database
     static_configs:
       - targets:
         - database-exporter:9187
 
+#######################################################################
+
+  - job_name: Prometheus
+    static_configs:
+    - targets:
+      - localhost:9090
 
   # - job_name: 'node_exporter'
-  #   scrape_interval: 5s
   #   static_configs:
   #     - targets:
   #       - node-exporter:9100
