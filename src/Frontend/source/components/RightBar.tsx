@@ -59,10 +59,12 @@ export const RightBar = ({
       </div>
       <div className="bg-side-bar h-2/5 w-full items-start justify-center overflow-hidden rounded-[40px] pt-8 shadow-2xl">
         <div className="flex items-center justify-center">
-          <FaComments
-            onClick={() => handleClick(7)}
-            className="h-600-800:size-9 hover:text-aqua hover:dark:text-fire-red size-16 text-[rgba(28,28,28,0.5)] transition-all duration-300 dark:text-white"
-          />
+          <Link href="/messages">
+            <FaComments
+              onClick={() => handleClick(7)}
+              className="h-600-800:size-9 hover:text-aqua hover:dark:text-fire-red size-16 text-[rgba(28,28,28,0.5)] transition-all duration-300 dark:text-white"
+            />
+          </Link>
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-10">
           {friends.map((friend) => (
