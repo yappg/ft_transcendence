@@ -7,8 +7,8 @@
   --secondary-color: rgb(19, 25, 29, 0.8);
   --primary-color-dark: #a63026;
   --secondary-color-dark: rgb(255, 255, 255, 0.3);
-  --aqua: #66C3BD;
-  --fire-red: #E23323;
+  --aqua: #66c3bd;
+  --fire-red: #e23323;
   --dark-teal: #355557;
   --linear-gradient: linear-gradient(125deg, rgba(217, 217, 217, 1) 0%, rgba(47, 207, 208, 1) 100%);
   --linear-gradient-dark: linear-gradient(
@@ -20,7 +20,7 @@
   );
   --white-color-card: rgb(119, 119, 119, 0.5);
   --font-dayson: 'Days One', sans-serif;
-  --font-poppins: 'Poppins', sans-serif; 
+  --font-poppins: 'Poppins', sans-serif;
   --font-coustard: 'Coustard', serif;
 }
 
@@ -74,4 +74,19 @@ body {
 }
 .bg-side-bar {
   background-color: rgba(28, 28, 28, 0.5);
+}
+
+.custom-scrollbar-container {
+  height: 100%; /* Adjust the height */
+  overflow: auto; /* Enables scrolling */
+}
+
+/* Hide the scrollbar but allow scrolling */
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
+/* Firefox scrollbar hiding */
+.custom-scrollbar-container {
+  scrollbar-width: none; /* Hides the scrollbar in Firefox */
 }

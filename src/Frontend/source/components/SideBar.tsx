@@ -14,15 +14,13 @@ import { FaUsers } from 'react-icons/fa';
 export const SideBar = ({
   isActivated,
   setIsActivated,
-  ShowSideBarIcon,
+  pathname,
   handleRightClick,
-  setShowSideBarIcon,
 }: {
   isActivated: number;
   setIsActivated: (id: number) => void;
-  ShowSideBarIcon: boolean;
+  pathname: string;
   handleRightClick: (id: number) => void;
-  setShowSideBarIcon: (value: boolean) => void;
 }) => {
   const arr = [
     { Icon: IconConeFilled, id: 1, path: '/Home' },
@@ -31,16 +29,16 @@ export const SideBar = ({
     { Icon: FaTrophy, id: 4, path: '/trophies' },
     { Icon: IconChartDonutFilled, id: 5, path: '/achievement' },
   ];
+
   const smallScreenIcons = [
-    { Icon: FaUsers, id: 6, path: '/Friends' },
+    { Icon: FaUsers, id: 6, path: '/friends' },
     { Icon: FaComments, id: 7, path: '/messages' },
   ];
-  function handleClick(id: number, index: number) {
-    if (id == 7 || id == 6) {
-      setShowSideBarIcon(true);
-    } else setShowSideBarIcon(false);
+
+  function handleClick(id: number) {
     setIsActivated(id);
   }
+
   const showIcon = (Icon: any, id: number, selectedId: number, path: string) => (
     <Link href={path} key={id}>
       <div
@@ -51,26 +49,30 @@ export const SideBar = ({
           className={`${id === selectedId ? 'bg-aqua dark:bg-fire-red' : 'bg-transparent'} size-[40px] rounded-[50px] blur-lg`}
         />
         <Icon
-          className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${id === selectedId ? 'h-600-800:size-9 size-14' : 'h-600-800:size-7 size-12'} z-99 hover:text-aqua hover:dark:text-fire-red absolute transition-all duration-300`}
+          className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${
+            id === selectedId ? 'h-600-800:size-9 size-14' : 'h-600-800:size-7 size-12'
+          } z-99 hover:text-aqua hover:dark:text-fire-red absolute transition-all duration-300`}
         />
       </div>
     </Link>
   );
+
   return (
-    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-[100%] min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
+    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-full min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
       <Image
         src="/Icone.svg"
         alt=""
         width={100}
+        priority
         height={100}
         className="h-600-800:size-[74px] size-[69px] md:size-[96px] "
       />
       <div className="h-600-800:min-h-[350px] flex h-[300px] min-h-[400px] min-w-[50px] flex-col items-center justify-between md:h-3/5 md:w-[65px]">
-        {arr.map((item, index) => {
+        {arr.map((item) => {
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        {ShowSideBarIcon &&
+        {(pathname === '/friends' || pathname === '/messages') &&
           smallScreenIcons.map((item) => {
             return showIcon(item.Icon, item.id, isActivated, item.path);
           })}
