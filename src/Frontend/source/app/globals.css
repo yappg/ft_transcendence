@@ -77,16 +77,19 @@ body {
 }
 
 .custom-scrollbar-container {
-  height: 100%; /* Adjust the height */
-  overflow: auto; /* Enables scrolling */
+  height: 100%;
+  overflow: auto; 
 }
 
 /* Hide the scrollbar but allow scrolling */
 .custom-scrollbar-container::-webkit-scrollbar {
-  display: none; /* Hide scrollbar */
+  display: none; 
 }
 
 /* Firefox scrollbar hiding */
 .custom-scrollbar-container {
-  scrollbar-width: none; /* Hides the scrollbar in Firefox */
+  scrollbar-width: none; 
+}
+.friend-bar-bg {
+  background-color: rgba(28, 28, 28, 0.7);
 }
