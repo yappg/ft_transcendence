@@ -1,0 +1,38 @@
+groups:
+- name: app_alerts
+  rules:
+  - alert: HighPostgresLatency
+    expr: rate(pg_stat_statements_avg_time{job="postgres"}[5m]) > 500 # Example threshold for latency in ms
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High PostgreSQL latency detected"
+      description: "PostgreSQL query latency is above 500ms for more than 5 minutes."
+
+  - alert: RedisMemoryUsageHigh
+    expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.8 # More than 80% memory usage
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High Redis memory usage"
+      description: "Redis memory usage is above 80%."
+
+  - alert: DjangoErrorRateHigh
+    expr: rate(django_request_errors_total[5m]) > 1 # More than one error per minute
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High error rate in Django application"
+      description: "Django application has an error rate exceeding one error per minute."
+
+  - alert: NginxHighRequestLatency
+    expr: rate(nginx_http_request_duration_seconds_sum[5m]) / rate(nginx_http_requests_total[5m]) > 1 # Average request duration exceeds 1 second
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High request latency on Nginx"
+      description: "Nginx has an average request latency exceeding one second."
