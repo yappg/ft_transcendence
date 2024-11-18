@@ -6,7 +6,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'chatRoom', 'sender', 'content', 'send_at']
+        fields = ['id', 'chatroom', 'sender', 'content', 'send_at']
 
 
 class ChatRoomSerializer(serializers.ModelSerializer):
@@ -19,10 +19,10 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ChatRoom
-        fields = {'id', 'senders', 'created_at', 'last_message'}
+        fields = ['id', 'senders', 'created_at', 'last_message']
     
-    def getConv(self, obj):
-        LastMessage = obj.messages.order_by('send_at').first()
+    def get_last_message(self, obj):
+        LastMessage = obj.messages.order_by('-send_at').first()
         if LastMessage:
-            return MessageSerializer(LastMessage)
+            return MessageSerializer(LastMessage).data
         return None

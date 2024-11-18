@@ -27,5 +27,6 @@ RUN pip install --upgrade pip \
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
+
 # CMD ["python", "manage.py", "runserver"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
