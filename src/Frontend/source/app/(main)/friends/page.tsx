@@ -22,6 +22,7 @@ export default function Page() {
               name={friend.name}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
+              wins={friend.wins}
             />
           ))}
         </div>

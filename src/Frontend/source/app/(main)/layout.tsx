@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SideBar
           isActivated={isActivated}
           setIsActivated={setIsActivated}
-          pathname={pathname} // Pass pathname directly
+          pathname={pathname}
           handleRightClick={handleRightClick}
         />
       </div>
