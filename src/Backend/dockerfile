@@ -9,12 +9,11 @@ WORKDIR /app/source
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app 
+    && chmod -R +x /app
     # && apk update \
     # && apk add --no-cache \
     # curl \
     # wget
-
 
 # RUN mkdir -p /app/staticfiles/
 # RUN apt update && apt install wget -y
@@ -24,9 +23,12 @@ RUN pip install --upgrade pip \
 # RUN ./node_exporter & in the background
 # curl http://backend:9100/metrics for metrics
 
+
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
+CMD ["python", "manage.py", "runserver" ,"0.0.0.0:8080"]
+# CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"] #
 
 # CMD ["python", "manage.py", "runserver"]
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
