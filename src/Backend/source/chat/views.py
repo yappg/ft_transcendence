@@ -14,6 +14,7 @@ from django.db import transaction
 class ChatView(APIView):
     def post(self, request):
         current_user = request.user
+        print(current_user)
         friend_username = request.data.get('senders')
 
         # Ensure the friend exists
@@ -64,8 +65,11 @@ class ChatMessagesView(APIView):
     
     def post(self, request, chatId):
         sender = request.user
+        print(f"-----------------{sender}-----------------------------------1")
         receiverId = request.data.get('receiver')
+        print(f"-----------------{receiverId}-----------------------------------2")
         content = request.data.get('content')
+        print(f"-----------------{content}-----------------------------------3")
         
         #validate that chat exists
         try:
@@ -73,12 +77,14 @@ class ChatMessagesView(APIView):
         except ChatRoom.DoesNotExist:
             return Response({"error": "Chat makynsh"}, status=404)
         
+        print(f"-----------------{chat}-----------------------------------4")
         #validate that receiver exists and is a participants of the chat
         
         try:
-            receiver = Player.objects.get(id=receiverId)
-        except Player.DoesNotExists:
+            receiver = Player.objects.get(username=receiverId)
+        except Player.DoesNotExist:
             return Response({"error": "Receiver makynsh"}, status=404)
+        print(f"-----------------{receiver}-----------------------------------5")
         
         if receiver not in chat.senders.all():
             return Response({"error": "Receiver is not a sender of this chat"}, status=404)
@@ -86,7 +92,7 @@ class ChatMessagesView(APIView):
         message = Message.objects.create(
             chatroom = chat,
             sender=sender,
-            receiver=receiver,
+            # receiver=receiver,
             content=content
         )
         
