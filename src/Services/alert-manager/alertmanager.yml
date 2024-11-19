@@ -1,28 +1,27 @@
+
 global:
   resolve_timeout: 5m
+#   smtp_smarthost: 'smtp.gmail.com:587' # Use SMTP server
+#   smtp_from: 'alertmanager@example.com' # sender email
+#   smtp_auth_username: 'your_email@gmail.com' # my email
+#   smtp_auth_password: 'your_email_password' # my email password
+#   smtp_require_tls: true
 
 route:
   group_by: ['alertname']
   group_wait: 30s
   group_interval: 5m
-  repeat_interval: 3h
-  receiver: 'discord_email'
+  repeat_interval: 1h
+  receiver: 'discord'
 
-# Combining gmail and discord notifications in one receiver
 receivers:
-- name: 'discord_email'
-  # email_configs:
-  #   - smarthost: 'smtp.gmail.com:465'
-  #     auth_username: 'my_email@gmail.com'
-  #     auth_password: 'my_password'
-  #     from: 'from@gmail.com'
-  #     to: 'to@gmail.com'
-  #     tls_config:
-  #       insecure_skip_verify: true
-  #     send_resolved: true
-  discord_configs:
-    - api_url: 'https://discord.com/api/webhooks/1307500185248600214/eIXE-PnCw3W5o03QDCxHbdfMMSqnqEMfjsDqd5SseSaYSlCko8hAYC4vjA6Mg6RguFNU'
-      username: 'Alert BOT'
-      send_resolved: true
-      tls_config:
-        insecure_skip_verify: true
+  - name: 'discord'
+    webhook_configs:
+      - url: "https://discord.com/api/webhooks/1308402593545977896/CRkQGMW2qJ7873_AdWfCyCyrFj24G4jJdipgCq4LCjeS-V4jvzsV7Zml4EL9R9lxgdTY"
+        send_resolved: true
+#   - name: 'email'
+#     email_configs:
+#       - to: 'recipient@example.com' # Recipient's email address
+#         from: 'alertmanager@example.com'
+#         subject: '{{ .GroupLabels.alertname }} Alert!'
+#         send_resolved: true

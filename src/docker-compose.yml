@@ -19,6 +19,7 @@ services:
         container_name: nginx
         image: nginx:alpine
         volumes:
+        #   - SSL\SSL:ro
           - ./Services/nginx/nginx.conf:/etc/nginx/conf.d/endpoints.conf:ro
         command: ["nginx-debug", "-g", "daemon off;"]
         networks:
@@ -228,19 +229,19 @@ services:
             - "9090:9090"
         restart: always
 
-    # alert-manager:
-    #     container_name: alert-manager
-    #     image: prom/alertmanager
-    #     volumes:
-    #         - alert-manager-data:/alertmanager
-    #         - "./Services/alert-manager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
-    #     environment:
-    #         ALERTMANAGER_STORAGE_PATH: /alertmanager
-    #     command:
-    #         - '--config.file=/etc/alertmanager/alertmanager.yml'
-    #     networks:
-    #         - transcendence
-    #     restart: always
+    alert-manager:
+        container_name: alert-manager
+        image: prom/alertmanager
+        volumes:
+            - alert-manager-data:/alertmanager
+            - "./Services/alert-manager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
+        environment:
+            DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+        command:
+            - '--config.file=/etc/alertmanager/alertmanager.yml'
+        networks:
+            - transcendence
+        restart: always
 
 
     # grafana:
