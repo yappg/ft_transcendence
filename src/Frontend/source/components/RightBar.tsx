@@ -2,15 +2,10 @@ import Link from 'next/link';
 import { FaComments } from 'react-icons/fa6';
 import { FaUsers } from 'react-icons/fa';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-export const RightBar = ({
-  handleRightClick,
-  setIsActivated,
-  isActivated,
-}: {
-  handleRightClick: (id: number) => void;
-  setIsActivated: (id: number) => void;
-  isActivated: number;
-}) => {
+import { useContext } from 'react';
+import { SideBarContext } from '@/context/SideBarContext';
+export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) => void }) => {
+  const { setIsActivated } = useContext(SideBarContext);
   const avatars = [
     { id: 1, path: '/Avatar.svg' },
     { id: 2, path: '/Avatar.svg' },
