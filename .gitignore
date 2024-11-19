@@ -4,6 +4,8 @@ volumes
 .env
 .direnv
 .envrc
+**/.env
+
 
 ### Django ###
 *.log
