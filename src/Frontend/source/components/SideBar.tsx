@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IconConeFilled } from '@tabler/icons-react';
@@ -10,18 +10,16 @@ import { IconChartDonutFilled } from '@tabler/icons-react';
 import { IconSettingsFilled } from '@tabler/icons-react';
 import { FaComments } from 'react-icons/fa6';
 import { FaUsers } from 'react-icons/fa';
+import { SideBarContext } from '@/context/SideBarContext';
 
 export const SideBar = ({
-  isActivated,
-  setIsActivated,
   pathname,
   handleRightClick,
 }: {
-  isActivated: number;
-  setIsActivated: (id: number) => void;
   pathname: string;
   handleRightClick: (id: number) => void;
 }) => {
+  const { isActivated, setIsActivated } = useContext(SideBarContext);
   const arr = [
     { Icon: IconConeFilled, id: 1, path: '/Home' },
     { Icon: IconDeviceGamepad3Filled, id: 2, path: '/games' },

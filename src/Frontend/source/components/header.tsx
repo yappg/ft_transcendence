@@ -10,7 +10,7 @@ export const Header = ({ isActivated }: { isActivated: number }) => {
     { id: 4, path: 'Trophies' },
     { id: 5, path: 'Achievement' },
     { id: 6, path: 'Friends' },
-    { id: 7, path: 'Messages' },
+    { id: 7, path: 'Live chat' },
   ];
   const profile = {
     name: 'Meryeme',
@@ -50,7 +50,7 @@ export const Header = ({ isActivated }: { isActivated: number }) => {
           <CommandList />
         </Command>
         <div className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
-          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] opacity-40 md:size-[30px]" />
+          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] md:size-[30px] dark:text-[#B8B8B8]" />
         </div>
       </div>
     </div>
