@@ -15,10 +15,10 @@ const config: Config = {
         primary: 'var(--primary-color)',
         'secondary-dark': 'var(--secondary-color-dark)',
         'primary-dark': 'var(--primary-color-dark)',
-        // 'white-crd': 'var(--white-color-card)',
       },
       backgroundColor: {},
       colors: {
+        'black-crd': 'var(--black-color-card)',
         'white-crd': 'var(--white-color-card)',
         secondary: 'var(--secondary-color)',
         primary: 'var(--primary-color)',
@@ -36,7 +36,7 @@ const config: Config = {
       textColor: ['dark'],
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: 'class',
 };
 
