@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
       </div>
       <div className="col-span-10 col-start-2 row-start-1 flex items-center justify-start transition-all duration-300 ">
-        <Header isActivated={isActivated} />
+        <Header />
       </div>
       <div
         className={`${

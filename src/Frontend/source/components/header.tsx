@@ -1,8 +1,11 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { IoMdNotifications } from 'react-icons/io';
+import { useContext } from 'react';
+import { SideBarContext } from '@/context/SideBarContext';
+import { useState } from 'react';
 
-export const Header = ({ isActivated }: { isActivated: number }) => {
+export const Header = () => {
   const paths = [
     { id: 1, path: 'Welcome' },
     { id: 2, path: 'Games' },
@@ -23,6 +26,11 @@ export const Header = ({ isActivated }: { isActivated: number }) => {
       },
     },
   };
+  function handleClick() {
+    setShowSearchBar(true);
+  }
+  const { isActivated } = useContext(SideBarContext);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   return (
     <div className="flex size-full items-center justify-between px-4">
       {paths
@@ -40,12 +48,19 @@ export const Header = ({ isActivated }: { isActivated: number }) => {
           </div>
         ))}
       <div className="flex  w-fit items-center justify-center gap-12">
-        <button className="flex lg:hidden">
-          <div className="flex size-[30px] items-center justify-center md:size-[40px]">
+        <button
+          className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 lg:hidden`}
+        >
+          <div
+            className="size-[30px] items-center justify-center  md:size-[40px]"
+            onClick={handleClick}
+          >
             <IconSearch className="size-[35px] text-gray-400" />
           </div>
         </button>
-        <Command className="hidden lg:flex lg:w-[340px] xl:w-[400px]">
+        <Command
+          className={`${showSearchBar ? 'flex' : 'hidden'} transition-all duration-300 lg:flex lg:w-[340px] xl:w-[400px]`}
+        >
           <CommandInput placeholder="Search..." />
           <CommandList />
         </Command>
