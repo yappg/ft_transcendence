@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${dayson.variable} ${poppins.variable}`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
