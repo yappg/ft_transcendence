@@ -47,22 +47,22 @@ const UserFriendsNav = ({ player }: { player: typeof player }): JSX.Element => {
   };
   return (
     <div className="flex size-full w-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-[150px] w-full flex-row items-center justify-between px-9">
-        <div className="flex flex-row gap-4">
-          <Avatar className="md:size-[100px] 2xl:size-[150px]">
+      <div className="friend-bar-bg flex h-[150px] w-full flex-row items-center justify-between px-2 xl:px-5">
+        <div className="flex flex-row items-center justify-center lg:gap-4">
+          <Avatar className="md:size-[90px] 2xl:size-[150px]">
             <AvatarImage src="/ProfilePhoto.svg" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col p-6">
-            <h1 className="font-dayson text-[20px] text-white opacity-[80%] md:text-[27px] lg:text-[25px] 2xl:text-[35px]">
+          <div className="flex flex-col lg:p-6">
+            <h1 className="font-dayson text-[20px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
               {name}
             </h1>
-            <h1 className="font-coustard text-white opacity-[40%] md:text-[22px] lg:text-[26px] 2xl:text-[30px]">
+            <h1 className="font-coustard text-white opacity-[40%] md:text-[17px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
               Level {level}
             </h1>
           </div>
         </div>
-        <div className="flex h-[60px] w-auto flex-row transition-all duration-300 md:gap-[60px] lg:gap-[100px] xl:gap-[125px] 2xl:gap-[180px]">
+        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 md:gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
           {headers.map((header, index) => (
             <Link href={header.href} key={index}>
               <h1
@@ -70,7 +70,7 @@ const UserFriendsNav = ({ player }: { player: typeof player }): JSX.Element => {
                   activeIndex === index
                     ? 'border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]'
                     : 'text-white opacity-[60%]'
-                } font-dayson cursor-pointer transition-all duration-300 md:text-[20px] lg:text-[18px] xl:text-[25px] 2xl:text-[30px]`}
+                } font-dayson cursor-pointer transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px]`}
                 onClick={() => handleClick(index)}
               >
                 {header.title}
