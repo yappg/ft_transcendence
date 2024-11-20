@@ -81,7 +81,7 @@ body {
   overflow: auto;
 }
 
-/* Hide the scrollbar but allow scrolling */
+
 .custom-scrollbar-container::-webkit-scrollbar {
   display: none;
 }
