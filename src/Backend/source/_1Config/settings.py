@@ -19,32 +19,39 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # prometheus
+    'django_prometheus',
     # asgi app
     'daphne',
     'channels',
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #needed for the allauth
+    # needed for the allauth
     'django.contrib.sites',
-    #django-rest-framework
+    # django-rest-framework
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    #swagger api documentation
+    # swagger api documentation
     'drf_yasg',
-    #local apps
+    # local apps
     'accounts',
     'chat',
     # 'game',
 ]
 
 MIDDLEWARE = [
+    #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    #take off above
+    # prometheus middleware
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
+    # django middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

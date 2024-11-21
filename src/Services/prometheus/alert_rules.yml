@@ -1,5 +1,5 @@
 groups:
-- name: app_alerts
+- name: application_alerts
   rules:
   - alert: NginxHighRequestLatency
     expr: rate(nginx_http_request_duration_seconds_sum[5m]) / rate(nginx_http_requests_total[5m]) > 1 # Average request duration exceeds 1 second
