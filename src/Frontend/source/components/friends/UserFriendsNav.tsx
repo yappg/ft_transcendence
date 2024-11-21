@@ -3,7 +3,11 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { friends } from '@/constants/friendsList';
 import FriendsComponent from '@/components/friends/FriendsComponent';
-const UserFriendsNav = ({ player }: { player: typeof player }): JSX.Element => {
+const UserFriendsNav = (): JSX.Element => {
+  const player = {
+    name: 'Noureddine Akebli',
+    level: 22,
+  }
   const { name, level } = player;
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -22,7 +26,8 @@ const UserFriendsNav = ({ player }: { player: typeof player }): JSX.Element => {
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {friends.map((friend, index) => (
             <FriendsComponent
-              key={index}
+              key={index} // Required for React's reconciliation
+              index={index} // Pass `index` explicitly as a prop if needed
               name={friend.name}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}

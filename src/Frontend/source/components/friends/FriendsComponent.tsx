@@ -2,13 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaCommentDots } from 'react-icons/fa';
 import Link from 'next/link';
 const FriendsComponent = ({
-  key,
+  index,
   name,
   ProfilePhoto,
   level,
   wins,
 }: {
-  key: number;
+  index: number;
   name: string;
   ProfilePhoto: string;
   level: number;
