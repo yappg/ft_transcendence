@@ -26,15 +26,17 @@ class ChatView(APIView):
         # Stop the user from chatting with themselves
         if current_user == friend:
             return Response({"error": "You cannot start a chat with yourself"}, status=400)
-
         # Check if a chat between the two participants already exists
-        chat = ChatRoom.objects.filter(senders=current_user).filter(senders=friend).first()
+        chat_name = f"{current_user}_{friend}_room"
+        chat = ChatRoom.objects.filter(name=chat_name).first()
+        print("ddddddddddddddddd1")
  
         # Create a new chat and add both senders
         if chat is None:
-            chat = ChatRoom.objects.create()
+            chat = ChatRoom.objects.create(name=chat_name)
             chat.senders.add(current_user, friend)
 
+        print("ddddddddddddddddd2")
         # Serialize and return the chat
         serializer = ChatRoomSerializer(chat)
         return Response(serializer.data)
