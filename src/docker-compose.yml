@@ -1,19 +1,17 @@
 services:
 
-    # container-exporter:
-    #     container_name: cadvisor
-    #     image: google/cadvisor
-    #     volumes:
-    #         - "/:/rootfs:ro"
-    #         - "/var/run:/var/run:ro"
-    #         - "/sys:/sys:ro"
-    #         - "/var/lib/docker/:/var/lib/docker:ro"
-    #         - "/dev/disk/:/dev/disk:ro"
-    #     networks:
-    #         - transcendence
-    #     ports:
-    #         - "8080:8080"
-    #     restart: unless-stopped
+    container-exporter:
+        container_name: cadvisor
+        image: google/cadvisor
+        volumes:
+            - "/:/rootfs:ro"
+            - "/var/run:/var/run:ro"
+            - "/sys:/sys:ro"
+            - "/var/lib/docker/:/var/lib/docker:ro"
+            - "/dev/disk/:/dev/disk:ro"
+        networks:
+            - transcendence
+        restart: unless-stopped
 
     web:
         container_name: nginx
@@ -50,17 +48,6 @@ services:
                 # condition: service_healthy
         restart: unless-stopped
 
-# npm install prom-client
-
-# import { collectDefaultMetrics, register } from 'prom-client';
-
-# collectDefaultMetrics();
-
-# export default async function handler(req, res) {
-#   res.setHeader('Content-Type', register.contentType);
-#   res.end(await register.metrics());
-# }
-
 
 #     frontend:
 #         container_name: frontend
@@ -91,63 +78,43 @@ services:
 #         #     start_period: 30s
 #         restart: always
 
-# pip install django-prometheus
-# INSTALLED_APPS = [
-#     ...
-#     'django_prometheus',
-#     ...
-# ]
-
-# MIDDLEWARE = [
-#     'django_prometheus.middleware.PrometheusBeforeMiddleware',
-#     ...
-#     'django_prometheus.middleware.PrometheusAfterMiddleware',
-# ]
-# from django.urls import path, include
-
-# urlpatterns = [
-#     ...
-#     path('', include('django_prometheus.urls')),
-#     ...
-# ]
-
-#     backend:
-#         container_name: backend
-#         build:
-#           context: ./Backend
-#           dockerfile: Dockerfile
-#         image: backend
-# # DEV =====>
-#         volumes:
-#             - ./Backend/source:/app/source:rw
-# # =========>
-#         environment:
-#             DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-#             JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-#             42_CLIENT_ID: $${42_CLIENT_ID}
-#             42_CLIENT_SECRET: $${42_CLIENT_SECRET}
-#             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-#             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-#             POSTGRES_DB: ${POSTGRES_DB}
-#             POSTGRES_USER: ${POSTGRES_USER}
-#             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#             REDIS_PASS: ${REDIS_PASS}
-#         networks:
-#           - transcendence
-#         ports:
-#           - 8080:8080
-#         depends_on:
-#           cache:
-#             condition: service_healthy
-#           database:
-#             condition: service_healthy
-#         # healthcheck:
-#         #     test: ["CMD", ""]
-#         #     interval: 1m30s
-#         #     timeout: 30s
-#         #     retries: 5
-#         #     start_period: 30s
-#         restart: always
+    backend:
+        container_name: backend
+        build:
+          context: ./Backend
+          dockerfile: Dockerfile
+        image: backend
+# DEV =====>
+        volumes:
+            - ./Backend/source:/app/source:rw
+# =========>
+        environment:
+            DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+            JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+            42_CLIENT_ID: $${42_CLIENT_ID}
+            42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            REDIS_PASS: ${REDIS_PASS}
+        networks:
+          - transcendence
+        ports:
+          - 8080:8080
+        depends_on:
+          cache:
+            condition: service_healthy
+          database:
+            condition: service_healthy
+        # healthcheck:
+        #     test: ["CMD", ""]
+        #     interval: 1m30s
+        #     timeout: 30s
+        #     retries: 5
+        #     start_period: 30s
+        restart: always
 
 
     cache:
@@ -180,6 +147,7 @@ services:
             cache :
                 condition: service_healthy
         restart: unless-stopped
+
 
     database:
         container_name: postgres
@@ -229,38 +197,38 @@ services:
             - "9090:9090"
         restart: always
 
-    alert-manager:
-        container_name: alert-manager
-        image: prom/alertmanager
-        volumes:
-            - alert-manager-data:/alertmanager
-            - "./Services/alert-manager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
+    # alert-manager:
+    #     container_name: alert-manager
+    #     image: prom/alertmanager
+    #     volumes:
+    #         - alert-manager-data:/alertmanager
+    #         - "./Services/alert-manager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
+    #     environment:
+    #         DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+    #     command:
+    #         - '--config.file=/etc/alertmanager/alertmanager.yml'
+    #     networks:
+    #         - transcendence
+    #     restart: always
+
+
+    grafana:
+        container_name: grafana
+        image: grafana/grafana
         environment:
-            DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
-        command:
-            - '--config.file=/etc/alertmanager/alertmanager.yml'
+            - GF_SECURITY_ADMIN_USER=admino
+            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+        volumes:
+            # - grafana-data:/var/lib/grafana
+            - ./Services/grafana/provisioning:/etc/grafana/provisioning
+            - ./Services/grafana/dashboards:/var/lib/grafana/dashboards
         networks:
             - transcendence
-        restart: always
-
-
-    # grafana:
-    #     container_name: grafana
-    #     image: grafana/grafana
-    #     environment:
-    #         # - GRAFANA_USER- =${GRAFANA_USER}
-    #         - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-    #         - GF_DASHBOARDS_JSON_ENABLED=true
-    #         # - GF_DASHBOARDS_JSON_PATH=/var/
-    #     volumes:
-    #         - grafana-data:/var/lib/grafana
-    #         - "./Services/grafana/dashboards.yml:/var/lib/grafana/dashboards.yml:ro"
-    #         - "./Services/grafana/provisioning.yml:/etc/grafana/provisioning.yml:ro"
-    #     ports:
-    #         - "3000:3000"
-    #     depends_on:
-    #         - prometheus
-    #     restart: unless-stopped
+        ports:
+            - "3000:3000"
+        depends_on:
+            - prometheus
+        restart: unless-stopped
 
 
 #//TODO add health checkes for front and back
@@ -269,6 +237,11 @@ volumes:
 
     redis-data:
         name: cache
+        # driver: local
+        # driver_opts:
+        #     o: bind
+        #     type: none
+        #     device: ${PWD}/volumes/postgres
 
     postgres-data:
         name: database
@@ -294,8 +267,8 @@ volumes:
         #     type: none
         #     device: ${PWD}/volumes/prometheus
 
-    grafana-data:
-        name: grafana
+    # grafana-data:
+    #     name: grafana
     #     driver: local
     #     driver_opts:
     #         o: bind
