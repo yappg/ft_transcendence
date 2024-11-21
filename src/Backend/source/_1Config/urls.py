@@ -18,6 +18,9 @@ urlpatterns = [
         path('players/', include('accounts.urls')),
         path('upload/', include('accounts.urls')),
         path('chatoom/', include('chat.urls')),
+
+    path('prometheus/', include('django_prometheus.urls')),
+
     # structering api endpoints
     # path('api')
 

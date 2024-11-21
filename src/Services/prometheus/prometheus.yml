@@ -22,15 +22,11 @@ scrape_configs:
       - targets:
         - web-exporter:9113
 
-  # - job_name: Frontend
-  #   static_configs:
-  #     - targets:
-  #       - frontend:3000
-
-  # - job_name: Backend
-  #   static_configs:
-  #     - targets:
-  #       - backend:8080
+  - job_name: Backend
+    static_configs:
+      - targets:
+        - backend:8080
+    metrics_path: /prometheus/metrics
 
   - job_name: Cache
     static_configs:
