@@ -18,8 +18,8 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
     { id: 3, path: '/Avatar.svg' },
   ];
   function handleClick(id: number) {
-    handleRightClick(id);
-    setIsActivated(id);
+    handleRightClick(id); // Pass the ID to the parent handler
+    setIsActivated(id); // Update the context value
   }
   return (
     <div className="hidden h-[95%] w-[80px] flex-col items-center justify-between transition-all duration-300 md:flex md:w-[70px] lg:w-[97px] ">

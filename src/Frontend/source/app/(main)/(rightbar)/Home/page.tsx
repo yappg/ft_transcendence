@@ -1,9 +1,11 @@
 'use client';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext } from 'react';
-
+import { useEffect } from 'react';
 export default function Home_TFA() {
   const { setIsActivated } = useContext(SideBarContext);
-  setIsActivated(1);
+  useEffect(() => {
+    setIsActivated(1);
+  }, [setIsActivated]);
   return <div></div>;
 }
