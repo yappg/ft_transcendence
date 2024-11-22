@@ -58,13 +58,19 @@ body {
 
 /* hide scrollbar */
 
-.no-scrollbar::-webkit-scrollbar {
+.custom-scrollbar-container {
+  height: 100%;
+  overflow: auto;
+}
+
+
+.custom-scrollbar-container::-webkit-scrollbar {
   display: none;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.custom-scrollbar-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 @keyframes moveToLeft {
@@ -96,3 +102,5 @@ body {
 .animate-move-right {
   animation: moveToRight 0.5s ease-in-out forwards;
 }
+
+/* my changes ends here */
