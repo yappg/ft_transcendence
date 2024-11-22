@@ -70,7 +70,7 @@ export const ChatList = () => {
           <FiPlus className="size-[30px] text-[rgb(0,0,0,0.8)] dark:text-white" />
         </div>
       </div>
-      <div className="no-scrollbar h-full overflow-y-scroll">
+      <div className="custom-scrollbar-container">
         {FChatProps.map((data, index) => (
           <FriendsChat key={index} {...data} />
         ))}
@@ -82,14 +82,14 @@ export const ChatList = () => {
 const Message = () => {
   return (
     <div className="h-fit w-full text-gray-100">
-      <div className="h-fit w-[400px] rounded-md bg-black-crd px-3 py-2">
+      <div className="bg-black-crd h-fit w-[400px] rounded-md px-3 py-2">
         <h1>John Doe</h1>
         <p className=" h-fit w-full font-thin">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.Lorem ipsumdolor
           sit amet consectetur adipisicing elit. Quisquam, quod.Lorem ipsum dolor sit
           ametconsectetur adipisicing elit. Quisquam, quod.Lorem ipsum dolor sit amet
         </p>
-        <h3 className="text-sm text-[rgb(255,255,255,0.5)] text-end">10:30</h3>
+        <h3 className="text-end text-sm text-[rgb(255,255,255,0.5)]">10:30</h3>
       </div>
     </div>
   );
@@ -99,20 +99,20 @@ export const Messages = () => {
   return (
     <div className="costum-little-shadow bg-black-crd col-start-1 col-end-3 hidden items-center justify-center overflow-hidden rounded-2xl bg-[url('/chat-bg.png')] pb-4 lg:flex lg:flex-col">
       {/* headbar */}
-      <div className="bg-[rgb(0,0,0,0.7)] h-[120px] w-full costum-little-shadow px-4 flex items-center justify-between text-white font-dayson">
-        <div className='flex items-start gap-4'>
-          <div className='size-[70px] rounded-full bg-slate-400 flex items-center justify-center'>
-            <img src="/logo.svg" alt="" />
+      <div className="costum-little-shadow font-dayson flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 text-white">
+        <div className="flex items-start gap-4">
+          <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
+            <img src={''} alt="" />
           </div>
           <div>
-            <h2>John Doe</h2>
-            <h3 className='text-primary dark:text-primary-dark font-poppins'>online</h3>
+            <h2>{'John Doe'}</h2>
+            <h3 className="text-primary dark:text-primary-dark font-poppins">online</h3>
           </div>
         </div>
         . . .
       </div>
       {/* messages */}
-      <div className="no-scrollbar flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
+      <div className="custom-scrollbar-container flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
         <Message />
         <Message />
         <Message />
@@ -124,7 +124,7 @@ export const Messages = () => {
         <Message />
       </div>
       {/* message input  */}
-      <div className="bg-black-crd flex h-[60px]  w-11/12 items-center gap-4 rounded-md px-4 ">
+      <div className="flex h-[60px] w-11/12  items-center gap-4 rounded-md bg-[rgb(0,0,0,0.7)] px-4 py-1">
         <div className="flex size-full items-center  gap-3 px-4">
           <FiPlus className="dark: size-[30px] text-white" />
           <input
