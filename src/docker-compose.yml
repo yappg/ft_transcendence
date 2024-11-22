@@ -15,12 +15,10 @@ services:
 
     web:
         container_name: nginx
-        image: nginx:alpine
-        volumes:
-          - ./Services/nginx/nginx.conf:/etc/nginx/conf.d/endpoints.conf:ro
-          - ./Services/nginx/nginx.key:/etc/nginx/ssl/nginx.key:ro
-          - ./Services/nginx/nginx.crt:/etc/nginx/ssl/nginx.crt:ro
-        command: ["nginx-debug", "-g", "daemon off;"]
+        build:
+          context: ./Services/nginx
+          dockerfile: Dockerfile
+        image: nginx
         networks:
           - transcendence
         ports:
@@ -30,12 +28,12 @@ services:
         #       condition: service_healthy
         #   backend:
         #       condition: service_healthy
-        # healthcheck:
-        #     test: ["CMD", "curl", "-f", "http://localhost/stub_status"]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 5s
         restart: always
 
     web-exporter:
@@ -44,9 +42,9 @@ services:
         command: --nginx.scrape-uri=http://web:8080/stub_status
         networks:
             - transcendence
-        # depends_on:
-            # web :
-                # condition: service_healthy
+        depends_on:
+            web :
+                condition: service_healthy
         restart: unless-stopped
 
 
@@ -79,43 +77,43 @@ services:
 #         #     start_period: 30s
 #         restart: always
 
-    backend:
-        container_name: backend
-        build:
-          context: ./Backend
-          dockerfile: Dockerfile
-        image: backend
-# DEV =====>
-        volumes:
-            - ./Backend/source:/app/source:rw
-# =========>
-        environment:
-            DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-            JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-            42_CLIENT_ID: $${42_CLIENT_ID}
-            42_CLIENT_SECRET: $${42_CLIENT_SECRET}
-            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            REDIS_PASS: ${REDIS_PASS}
-        networks:
-          - transcendence
-        ports:
-          - 8080:8080
-        depends_on:
-          cache:
-            condition: service_healthy
-          database:
-            condition: service_healthy
-        # healthcheck:
-        #     test: ["CMD", ""]
-        #     interval: 1m30s
-        #     timeout: 30s
-        #     retries: 5
-        #     start_period: 30s
-        restart: always
+#     backend:
+#         container_name: backend
+#         build:
+#           context: ./Backend
+#           dockerfile: Dockerfile
+#         image: backend
+# # DEV =====>
+#         volumes:
+#             - ./Backend/source:/app/source:rw
+# # =========>
+#         environment:
+#             DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+#             JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+#             42_CLIENT_ID: $${42_CLIENT_ID}
+#             42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+#             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+#             GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+#             POSTGRES_DB: ${POSTGRES_DB}
+#             POSTGRES_USER: ${POSTGRES_USER}
+#             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#             REDIS_PASS: ${REDIS_PASS}
+#         networks:
+#           - transcendence
+#         ports:
+#           - 8080:8080
+#         depends_on:
+#           cache:
+#             condition: service_healthy
+#           database:
+#             condition: service_healthy
+#         # healthcheck:
+#         #     test: ["CMD", ""]
+#         #     interval: 1m30s
+#         #     timeout: 30s
+#         #     retries: 5
+#         #     start_period: 30s
+#         restart: always
 
 
     cache:
@@ -133,7 +131,7 @@ services:
             interval: 10s
             timeout: 5s
             retries: 3
-            start_period: 10s
+            start_period: 5s
         restart: always
 
     cache-exporter:
@@ -166,7 +164,7 @@ services:
             interval: 10s
             timeout: 5s
             retries: 3
-            start_period: 10s
+            start_period: 5s
         restart: always
 
     database-exporter:
@@ -198,31 +196,17 @@ services:
             - "9090:9090"
         restart: always
 
-    # alert-manager:
-    #     container_name: alert-manager
-    #     image: prom/alertmanager
-    #     volumes:
-    #         - alert-manager-data:/alertmanager
-    #         - "./Services/alert-manager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"
-    #     environment:
-    #         DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
-    #     command:
-    #         - '--config.file=/etc/alertmanager/alertmanager.yml'
-    #     networks:
-    #         - transcendence
-    #     restart: always
-
-
     grafana:
         container_name: grafana
         image: grafana/grafana
-        environment:
-            - GF_SECURITY_ADMIN_USER=admino
-            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
         volumes:
-            # - grafana-data:/var/lib/grafana
-            - ./Services/grafana/provisioning:/etc/grafana/provisioning
-            - ./Services/grafana/dashboards:/var/lib/grafana/dashboards
+            - grafana-data:/var/lib/grafana
+            - "./Services/grafana/provisioning:/etc/grafana/provisioning"
+            - "./Services/grafana/dashboards:/var/lib/grafana/dashboards"
+        environment:
+            - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+            - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
         networks:
             - transcendence
         ports:
@@ -231,8 +215,6 @@ services:
             - prometheus
         restart: unless-stopped
 
-
-#//TODO add health checkes for front and back
 
 volumes:
 
@@ -260,22 +242,8 @@ volumes:
         #     type: none
         #     device: ${PWD}/volumes/prometheus
 
-    alert-manager-data:
-        name: alert-manager
-        # driver: local
-        # driver_opts:
-        #     o: bind
-        #     type: none
-        #     device: ${PWD}/volumes/prometheus
-
-    # grafana-data:
-    #     name: grafana
-    #     driver: local
-    #     driver_opts:
-    #         o: bind
-    #         type: none
-    #         device: ${PWD}/volumes
-
+    grafana-data:
+        name: grafana
 
 
 networks:
