@@ -17,12 +17,11 @@ const config: Config = {
         'primary-dark': 'var(--primary-color-dark)',
         'fire-red': 'var(--fire-red)',
         'dark-teal': 'var(--dark-teal)',
-        // 'white-crd': 'var(--white-color-card)',
       },
       backgroundColor: {},
       colors: {
-        'white-crd': 'var(--white-color-card)',
         'black-crd': 'var(--black-color-card)',
+        'white-crd': 'var(--white-color-card)',
         secondary: 'var(--secondary-color)',
         primary: 'var(--primary-color)',
         'secondary-dark': 'var(--secondary-color-dark)',
@@ -41,7 +40,7 @@ const config: Config = {
       textColor: ['dark'],
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: 'class',
 };
 
