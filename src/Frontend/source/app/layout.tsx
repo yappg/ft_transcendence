@@ -3,6 +3,8 @@ import { Days_One, Poppins } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
+import { SideBar } from '@/components/SideBar';
+import { SideBarProvider } from '@/context/SideBarContext';
 
 const dayson = Days_One({
   subsets: ['latin'],
@@ -27,10 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${dayson.variable} ${poppins.variable}`}>
-        <Providers>{children}</Providers>
-        <Toaster />
+    <html lang="en" suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
+        <SideBarProvider>
+          <Providers>{children}</Providers>
+          <Toaster />
+        </SideBarProvider>
       </body>
     </html>
   );

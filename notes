@@ -1,0 +1,3 @@
+    -request this end-point (/2fa/generate-uri/)to generate the User-URI(string) which from we would generate a QRcode 
+    - send request to the following endpoint (/2fa/verifiy-otp) containing the OTP-code(6digits) to the backend 
+    - 

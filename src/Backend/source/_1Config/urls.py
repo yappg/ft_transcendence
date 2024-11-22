@@ -28,18 +28,19 @@ urlpatterns = [
 if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# from rest_framework import permissions
-# from drf_yasg.views import get_schema_view
-# from drf_yasg import openapi
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
-# schema_view = get_schema_view(
-#     openapi.Info(
-#         title="Tournament API",
-#         default_version='v1',
-#         description="API for the Tournament App",),
-#     public=True,
-#     permission_classes=(permissions.AllowAny,),
-# )
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Tournament API",
+        default_version='v1',
+        description="API for the Tournament App",),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
-
-    # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
+urlpatterns += [
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
+]
