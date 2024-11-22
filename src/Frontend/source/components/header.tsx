@@ -32,16 +32,16 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
-    <div className="flex size-full items-center justify-between px-4">
+    <div className="flex h-fit w-full items-center justify-between px-4">
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
           <div key={path.id} className="flex h-full w-fit items-center justify-start  gap-4">
-            <h1 className=" font-dayson text-[20px] font-black text-black md:text-[25px] lg:text-[32px] xl:text-[36px] dark:text-white">
+            <h1 className=" font-dayson text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
               {path.path}
             </h1>
             {path.id === 1 && (
-              <span className="dark:text-fire-red text-aqua font-dayson text-[20px] font-black md:text-[25px] lg:text-[32px] xl:text-[36px]">
+              <span className="font-dayson text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
                 {profile.name}
               </span>
             )}
@@ -65,7 +65,7 @@ export const Header = () => {
           <CommandList />
         </Command>
         <div className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
-          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] md:size-[30px] dark:text-[#B8B8B8]" />
+          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
         </div>
       </div>
     </div>

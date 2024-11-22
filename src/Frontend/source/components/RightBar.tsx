@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import Link from 'next/link';
 import { FaComments } from 'react-icons/fa6';
 import { FaUsers } from 'react-icons/fa';
@@ -22,9 +23,9 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
     setIsActivated(id); // Update the context value
   }
   return (
-    <div className="hidden h-[95%] w-[80px] flex-col items-center justify-between transition-all duration-300 md:flex md:w-[70px] lg:w-[97px] ">
-      <div className="bg-side-bar min-h[400px] flex h-[55%] max-h-screen min-h-[400px] w-full flex-col items-center justify-start overflow-hidden rounded-[50px] shadow-2xl">
-        <Avatar className="size-[60px] md:size-[80px] lg:size-[100px]">
+    <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
+      <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
+        <Avatar className="size-auto">
           <AvatarImage src="/ProfilePhoto.svg" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -32,37 +33,31 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
           <Link href="/friends">
             <FaUsers
               onClick={() => handleClick(6)}
-              className="hover:text-aqua hover:dark:text-fire-red size-[60px] text-[rgba(28,28,28,0.5)] transition-all duration-300 md:size-[60px] xl:size-[75px] lg:size-[72px] dark:text-white"
+              className="size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300 hover:text-aqua dark:text-white  hover:dark:text-fire-red"
             />
           </Link>
         </div>
-        <div className=" custom-scrollbar-container mt-8 flex flex-col items-center justify-between gap-7 overflow-y-auto">
+        <div className=" custom-scrollbar-container flex flex-col items-center justify-start gap-1">
           {avatars.map((avatar) => (
-            <Avatar
-              className="size-[30px] rounded-full md:size-[60px] lg:size-[70px]"
-              key={avatar.id}
-            >
+            <Avatar className="size-[80px] rounded-full p-2" key={avatar.id}>
               <AvatarImage src={avatar.path} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
         </div>
       </div>
-      <div className="bg-side-bar flex h-auto max-h-[80vh] min-h-[300px] w-full flex-col items-center justify-start rounded-[40px] pt-6 shadow-2xl">
+      <div className="costum-little-shadow flex min-h-[300px] flex-col items-center justify-start gap-2 rounded-[40px] bg-black-crd pt-4 overflow-hidden">
         <div className="flex items-center justify-center">
           <Link href="/messages">
             <FaComments
               onClick={() => handleClick(7)}
-              className="hover:text-aqua hover:dark:text-fire-red size-[60px] text-[rgba(28,28,28,0.5)] transition-all duration-300 md:size-[60px] xl:size-[75px] lg:size-[72px] dark:text-white"
+              className="size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300 hover:text-aqua dark:text-white hover:dark:text-fire-red"
             />
           </Link>
         </div>
-        <div className="custom-scrollbar-container mt-8 flex flex-col items-center justify-between gap-7 overflow-y-auto">
+        <div className="custom-scrollbar-container h-fit flex flex-col items-start justify-start overflow-y-scroll">
           {friends.map((friend) => (
-            <Avatar
-              className="size-[40px] rounded-full md:size-[60px] lg:size-[70px]"
-              key={friend.id}
-            >
+            <Avatar className="size-[80px] rounded-full p-2" key={friend.id}>
               <AvatarImage src={friend.path} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>

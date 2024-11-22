@@ -15,11 +15,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     setIsActivated(id);
   };
   return (
-    <div className=" bg-linear-gradient dark:bg-linear-gradient-dark grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto p-8">
-      <div className="row-[span_9_/_span_9] flex min-h-0 grow items-center justify-center">
+    <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
+      <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
       </div>
-      <div className="col-span-10 col-start-2 row-start-1 flex items-center justify-start transition-all duration-300 ">
+      <div className="col-span-10 col-start-2 row-start-1 flex items-start justify-start pt-2 transition-all duration-300 ">
         <Header />
       </div>
       <div
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           pathname === '/messages'
             ? 'hidden'
             : 'flex'
-        } col-start-12 row-[span_9_/_span_9] row-start-1 items-center justify-center transition-all duration-300`}
+        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
