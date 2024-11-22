@@ -16,32 +16,32 @@ GET http://localhost:8080/oauth/login/42
 ########
 
 GET http://localhost:8080/auth/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTMwMjcyLCJpYXQiOjE3MzE5Mjg0NzIsImp0aSI6ImQyMTBhYjdkNDQ4ODQ1MGM4OTIyMjA3MDM5NmU0NGEzIiwidXNlcl9pZCI6Mn0.ciI9QvJmXi93X2_pM9rPFfIV11t5t3R-VhInI5uT88U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjc4NDY0LCJpYXQiOjE3MzIyNzY2NjQsImp0aSI6ImU1ZGI4NjQ3NDhiOTRmYmZiY2I5MzQxZDdlY2ZmOWFlIiwidXNlcl9pZCI6MX0.-UoMCNwlPLqPQzCm4Q4Ne5R1d17g5T4o_VnLFEfqeiY
 ########
 ########
 
 POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTMwMjcyLCJpYXQiOjE3MzE5Mjg0NzIsImp0aSI6ImQyMTBhYjdkNDQ4ODQ1MGM4OTIyMjA3MDM5NmU0NGEzIiwidXNlcl9pZCI6Mn0.ciI9QvJmXi93X2_pM9rPFfIV11t5t3R-VhInI5uT88U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjc4NDY0LCJpYXQiOjE3MzIyNzY2NjQsImp0aSI6ImU1ZGI4NjQ3NDhiOTRmYmZiY2I5MzQxZDdlY2ZmOWFlIiwidXNlcl9pZCI6MX0.-UoMCNwlPLqPQzCm4Q4Ne5R1d17g5T4o_VnLFEfqeiY
 Content-Type: application/json
 
 {
-    "senders": "Omar"
+    "senders": "ola"
 }
 ########
 
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTMwMjcyLCJpYXQiOjE3MzE5Mjg0NzIsImp0aSI6ImQyMTBhYjdkNDQ4ODQ1MGM4OTIyMjA3MDM5NmU0NGEzIiwidXNlcl9pZCI6Mn0.ciI9QvJmXi93X2_pM9rPFfIV11t5t3R-VhInI5uT88U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjc4NDY0LCJpYXQiOjE3MzIyNzY2NjQsImp0aSI6ImU1ZGI4NjQ3NDhiOTRmYmZiY2I5MzQxZDdlY2ZmOWFlIiwidXNlcl9pZCI6MX0.-UoMCNwlPLqPQzCm4Q4Ne5R1d17g5T4o_VnLFEfqeiY
 
 ########
 
-POST  http://localhost:8080/chat/1/messages/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTMwMjcyLCJpYXQiOjE3MzE5Mjg0NzIsImp0aSI6ImQyMTBhYjdkNDQ4ODQ1MGM4OTIyMjA3MDM5NmU0NGEzIiwidXNlcl9pZCI6Mn0.ciI9QvJmXi93X2_pM9rPFfIV11t5t3R-VhInI5uT88U
-Content-Type: application/json
+GET  http://localhost:8080/chat/ch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjc4NDY0LCJpYXQiOjE3MzIyNzY2NjQsImp0aSI6ImU1ZGI4NjQ3NDhiOTRmYmZiY2I5MzQxZDdlY2ZmOWFlIiwidXNlcl9pZCI6MX0.-UoMCNwlPLqPQzCm4Q4Ne5R1d17g5T4o_VnLFEfqeiY
+# Content-Type: application/json
 
-{
-    "receiver":"ola",
-    "content":"hey body"
-}
+# {
+#     "receiver":"ola",
+#     "content":"hey body"
+# }
 
 ########
 
