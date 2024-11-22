@@ -22,6 +22,7 @@ const config: Config = {
       backgroundColor: {},
       colors: {
         'white-crd': 'var(--white-color-card)',
+        'black-crd': 'var(--black-color-card)',
         secondary: 'var(--secondary-color)',
         primary: 'var(--primary-color)',
         'secondary-dark': 'var(--secondary-color-dark)',

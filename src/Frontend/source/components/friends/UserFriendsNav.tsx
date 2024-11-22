@@ -7,7 +7,7 @@ const UserFriendsNav = (): JSX.Element => {
   const player = {
     name: 'Noureddine Akebli',
     level: 22,
-  }
+  };
   const { name, level } = player;
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -52,13 +52,15 @@ const UserFriendsNav = (): JSX.Element => {
   };
   return (
     <div className="flex size-full w-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-[150px] w-full flex-row items-center justify-between px-2 xl:px-5">
-        <div className="flex flex-row items-center justify-center lg:gap-4">
-          <Avatar className="md:size-[90px] 2xl:size-[150px]">
+      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between px-2 md:pr-4">
+        <div className="flex h-fit flex-row items-center justify-between">
+          <Avatar className="max-w-[120px] md:size-auto ">
             <AvatarImage src="/ProfilePhoto.svg" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback className="bg-[rgba(28,28,28,0.5)] size-[80px] m-2 font-dayson text-lg text-white">
+              CN
+            </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col lg:p-6">
+          <div className="flex flex-col ">
             <h1 className="font-dayson text-[20px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
               {name}
             </h1>
@@ -75,7 +77,7 @@ const UserFriendsNav = (): JSX.Element => {
                   activeIndex === index
                     ? 'border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]'
                     : 'text-white opacity-[60%]'
-                } font-dayson cursor-pointer transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px]`}
+                } cursor-pointer font-dayson transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] text-center`}
                 onClick={() => handleClick(index)}
               >
                 {header.title}
