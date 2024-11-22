@@ -29,7 +29,7 @@ const FriendsComponent = ({
     },
   ];
   return (
-    <div className="bg-side-bar flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 lg:px-5">
+    <div className="bg-black-crd flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 lg:px-5">
       <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-8 xl:gap-10">
         <Avatar className="size-[65px] transition-all duration-300 md:size-[70px] lg:size-[75px]">
           <AvatarImage src={ProfilePhoto} />

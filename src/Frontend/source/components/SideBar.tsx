@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 import React, { useContext } from 'react';
 import Link from 'next/link';
@@ -48,24 +49,33 @@ export const SideBar = ({
         />
         <Icon
           className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${
-            id === selectedId ? 'h-600-800:size-9 size-14' : 'h-600-800:size-7 size-12'
-          } z-99 hover:text-aqua hover:dark:text-fire-red absolute transition-all duration-300`}
+            id === selectedId ? 'h-600-800:size-9 size-12' : 'h-600-800:size-7 size-10'
+          } z-99 absolute transition-all duration-300 hover:text-aqua hover:dark:text-fire-red`}
         />
       </div>
     </Link>
   );
 
   return (
-    <div className="h-600-800:w-[80px] bg-side-bar relative hidden h-full min-h-[580px] w-[80px]  min-w-[70px] flex-col items-center justify-between rounded-[50px] pb-4 shadow-2xl transition-all duration-300 md:flex md:w-[10%] lg:w-[97px] ">
+    <div className="costum-little-shadow relative hidden h-full min-h-[550px] w-auto flex-col items-center justify-between rounded-[50px] bg-black-crd px-1 pb-4 transition-all duration-300 md:flex">
       <Image
-        src="/Icone.svg"
+        src="/logo.svg"
         alt=""
-        width={100}
+        width={50}
         priority
-        height={100}
-        className="h-600-800:size-[74px] size-[69px] md:size-[96px] "
+        height={50}
+        className="h-600-800:size-[74px] size-[80px]"
       />
-      <div className="h-600-800:min-h-[350px] flex h-[300px] min-h-[400px] min-w-[50px] flex-col items-center justify-between md:h-3/5 md:w-[65px]">
+      <div
+        className={`flex w-full flex-col items-center ${
+          isActivated === 7 ||
+          isActivated === 6 ||
+          pathname === '/friends' ||
+          pathname === '/messages'
+            ? 'gap-3'
+            : 'gap-6'
+        } px-2`}
+      >
         {arr.map((item) => {
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
@@ -87,7 +97,7 @@ export const SideBar = ({
         ></div>
         <IconSettingsFilled
           size={isActivated == 8 ? 70 : 60}
-          className={`text-[50px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] hover:text-aqua hover:dark:text-fire-red absolute z-10 transition-all duration-300`}
+          className={`text-[40px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] absolute z-10 transition-all duration-300 hover:text-aqua hover:dark:text-fire-red`}
         />
       </button>
     </div>
