@@ -12,9 +12,11 @@ from django.db import transaction
 
 
 class ChatView(APIView):
+    
+    # def get(self, request):
+        
     def post(self, request):
         current_user = request.user
-        print(current_user)
         friend_username = request.data.get('senders')
 
         # Ensure the friend exists
