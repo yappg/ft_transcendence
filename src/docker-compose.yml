@@ -17,8 +17,9 @@ services:
         container_name: nginx
         image: nginx:alpine
         volumes:
-        #   - SSL\SSL:ro
           - ./Services/nginx/nginx.conf:/etc/nginx/conf.d/endpoints.conf:ro
+          - ./Services/nginx/nginx.key:/etc/nginx/ssl/nginx.key:ro
+          - ./Services/nginx/nginx.crt:/etc/nginx/ssl/nginx.crt:ro
         command: ["nginx-debug", "-g", "daemon off;"]
         networks:
           - transcendence
