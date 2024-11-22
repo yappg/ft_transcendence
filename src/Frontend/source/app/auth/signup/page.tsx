@@ -34,13 +34,11 @@ function Signup() {
   };
 
   return (
-    <Card className="order-3 h-auto w-full px-9 pt-16 sm:px-16 md:h-auto md:w-full md:rounded-b-[30px] lg:ml-[-250px] lg:min-h-[550px] lg:w-5/6 lg:pl-[250px] lg:pt-4">
-      <div className="flex h-fit flex-col gap-2">
-        <Title />
-        <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
-        <MyLink text="Already have an account? " href="login" />
-      </div>
-    </Card>
+    <div className="flex h-fit flex-col gap-2">
+      <Title />
+      <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
+      <MyLink text="Already have an account? " href="login" />
+    </div>
   );
 }
 

@@ -19,7 +19,7 @@
     rgba(136, 132, 132, 0.2) 100%
   );
   --white-color-card: rgb(119, 119, 119, 0.5);
-  --black-color-card: rgb(28, 28, 28, 0.4);
+  --black-color-card: rgb(19, 25, 29, 0.5);
   --font-dayson: 'Days One', sans-serif;
   --font-poppins: 'Poppins', sans-serif;
   --font-coustard: 'Coustard', serif;
@@ -36,6 +36,8 @@ body {
   }
 }
 
+/* shadows */
+
 .costum-big-shadow {
   -webkit-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
   -moz-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
@@ -48,15 +50,14 @@ body {
   box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
 }
 
+/* fonts */
+
 .font-dayson {
   font-family: var(--font-dayson);
 }
 
 .font-poppins {
   font-family: var(--font-poppins);
-}
-.font-coustard {
-  font-family: var(--font-coustard);
 }
 
 .backdrop-blur-xlg {
@@ -89,3 +90,52 @@ body {
   -webkit-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.75);
 }
+
+/* hide scrollbar */
+
+.custom-scrollbar-container {
+  height: 100%;
+  overflow: auto;
+}
+
+
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@keyframes moveToLeft {
+  0% {
+    left: auto;
+    right: -200px;
+  }
+  100% {
+    left: -200px;
+    right: auto;
+  }
+}
+
+@keyframes moveToRight {
+  0% {
+    left: -200px;
+    right: auto;
+  }
+  100% {
+    left: auto;
+    right: -200px;
+  }
+}
+
+.animate-move-left {
+  animation: moveToLeft 0.5s ease-in-out forwards;
+}
+
+.animate-move-right {
+  animation: moveToRight 0.5s ease-in-out forwards;
+}
+
+/* my changes ends here */
