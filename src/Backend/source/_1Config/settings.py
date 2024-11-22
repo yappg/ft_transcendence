@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     #local apps
     'accounts',
     'chat',
-    # 'game',
+    'relations',
 ]
 
 MIDDLEWARE = [

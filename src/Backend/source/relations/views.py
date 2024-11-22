@@ -71,3 +71,27 @@ class FriendInvitationView(APIView):
 
         serializer = FriendInvitationSerializer(invitation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class AcceptInvitationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        receiver = request.user
+        sender_username = request.data.get('sender')
+        try:
+            sender = Player.objects.get(username=sender_username)
+        except Player.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver, status='pending').first()
+        if not invitation:
+            return Response({"error": "Invitation not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
+
+        invitation.status = 'accepted'
+        invitation.save()
+
+        # Create a new Friends object to establish the friendship
+        Friends.objects.create(friend_requester=sender, friend_responder=receiver)
+
+        return Response({"message": "Invitation accepted and friendship established"}, status=status.HTTP_200_OK)
