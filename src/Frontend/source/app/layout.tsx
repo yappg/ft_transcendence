@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 import { SideBar } from '@/components/SideBar';
 import { SideBarProvider } from '@/context/SideBarContext';
+import { TabProvider } from '@/context/TabContext';
 
 const dayson = Days_One({
   subsets: ['latin'],
@@ -32,7 +33,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
         <SideBarProvider>
-          <Providers>{children}</Providers>
+          <TabProvider>
+            <Providers>{children}</Providers>
+          </TabProvider>
           <Toaster />
         </SideBarProvider>
       </body>
