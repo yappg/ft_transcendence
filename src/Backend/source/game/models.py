@@ -1,8 +1,9 @@
 from django.db import models
-from django.conf import settings 
+from django.conf import settings
+from accounts.models import Player
 
 class PlayerProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='player_profile')
+    user = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='player_profile')
     display_name = models.CharField(max_length=50, unique=True)
     rank_points = models.IntegerField(default=1000)
     games_played = models.IntegerField(default=0)
