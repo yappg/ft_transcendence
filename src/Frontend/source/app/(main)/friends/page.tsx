@@ -1,6 +1,7 @@
 'use client';
 import UserFriendsNav from '@/components/friends/UserFriendsNav';
 import { SideBarContext } from '@/context/SideBarContext';
+import { TabProvider } from '@/context/TabContext';
 import { useContext } from 'react';
 import { useEffect } from 'react';
 export default function Page() {
@@ -15,7 +16,9 @@ export default function Page() {
   return (
     <div className="col-span-10 col-start-2 row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] py-4 pl-6">
       <div className="costum-little-shadow h-full w-[95%] overflow-hidden rounded-[50px] md:w-full">
-        <UserFriendsNav />
+        <TabProvider>
+          <UserFriendsNav />
+        </TabProvider>
       </div>
     </div>
   );
