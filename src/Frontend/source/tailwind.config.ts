@@ -9,20 +9,29 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-radial':
-          'linear-gradient(125deg, rgba(34,33,33,0.2) 0%, rgba(127,166,192,0.2) 37%, rgba(193,56,44,0.2) 70%, rgba(136,132,132,0.2) 100%)',
-        'gradient-linear-white':
-          'linear-gradient(125deg, rgba(242,242,242,1) 0%, rgba(40,175,176,1) 100%);',
-        custom: 'linear-gradient(125deg, rgba(19,25,29,1) 0%,rgba(19,25,29,1) 100%);',
-        custom2: 'linear-gradient(125deg, rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.2) 100%);',
+        'linear-gradient-dark': 'var(--linear-gradient-dark)',
+        'linear-gradient': 'var(--linear-gradient)',
+        secondary: 'var(--secondary-color)',
+        primary: 'var(--primary-color)',
+        'secondary-dark': 'var(--secondary-color-dark)',
+        'primary-dark': 'var(--primary-color-dark)',
+        'fire-red': 'var(--fire-red)',
+        'dark-teal': 'var(--dark-teal)',
       },
       backgroundColor: {},
       colors: {
-        'my-red': 'var(--myred)',
-        'my-red-90': 'rgb(193,56,44,0.9)',
+        'black-crd': 'var(--black-color-card)',
+        'white-crd': 'var(--white-color-card)',
+        secondary: 'var(--secondary-color)',
+        primary: 'var(--primary-color)',
+        'secondary-dark': 'var(--secondary-color-dark)',
+        'primary-dark': 'var(--primary-color-dark)',
+        aqua: 'var(--aqua)',
+        'fire-red': 'var(--fire-red)',
       },
       fontFamily: {
         coustard: ['Coustard', 'serif'],
+        dayson: ['Days On', 'serif'],
       },
     },
   },
@@ -31,7 +40,7 @@ const config: Config = {
       textColor: ['dark'],
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: 'class',
 };
 

@@ -1,11 +1,21 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Days_One, Poppins } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
+import { SideBar } from '@/components/SideBar';
+import { SideBarProvider } from '@/context/SideBarContext';
 
-const inter = Inter({
+const dayson = Days_One({
   subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-dayson',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
@@ -19,10 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-        <Toaster />
+    <html lang="en" suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
+        <SideBarProvider>
+          <Providers>{children}</Providers>
+          <Toaster />
+        </SideBarProvider>
       </body>
     </html>
   );
