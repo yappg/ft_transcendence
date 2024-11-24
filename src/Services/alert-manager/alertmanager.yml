@@ -2,9 +2,9 @@
 route:
   group_by: ['alertname', 'job']
 
-  group_wait: 1s
-  group_interval: 1s
-  repeat_interval: 1s
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
 
   receiver: 'discord'
 
