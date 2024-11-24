@@ -201,6 +201,7 @@ services:
     container_name: alert-manager
     image: prom/alertmanager
     volumes:
+      - alert-manager-data:/alertmanager
       - "./Services/alert-manager:/etc/alertmanager:ro"
     networks:
         - transcendence
@@ -232,8 +233,6 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
     networks:
       - transcendence
-    ports:
-      - "3000:3000"
     depends_on:
       - prometheus
     restart: unless-stopped
@@ -265,12 +264,12 @@ volumes:
     #     device: ${PWD}/volumes/prometheus
 
   alert-manager-data:
+    name: alert-manager
     # driver: local
     # driver_opts:
     #     o: bind
     #     type: none
     #     device: ${PWD}/volumes/prometheus
-    name: alert-manager
 
   grafana-data:
     name: grafana
