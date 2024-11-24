@@ -13,8 +13,6 @@ RUN pip install --upgrade pip \
 
 # RUN mkdir -p /app/staticfiles/
 
-
-
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
