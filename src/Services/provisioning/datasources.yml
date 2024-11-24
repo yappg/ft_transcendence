@@ -1,9 +1,0 @@
-apiVersion: 1
-
-datasources:
-  - name: MyDataSource
-    type: prometheus
-    access: proxy
-    url: http://your-prometheus-url:9090
-    jsonData:
-      tlsSkipVerify: true
