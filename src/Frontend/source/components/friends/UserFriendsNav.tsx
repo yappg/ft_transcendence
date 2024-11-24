@@ -1,18 +1,20 @@
 import Link from 'next/link';
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { friends } from '@/constants/friendsList';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import InvitationsComponent from './InivationsComponent';
 import { invitations } from '@/constants/InvitationsList';
-import { useContext } from 'react';
-import { SideBarContext } from '@/context/SideBarContext';
-
 const UserFriendsNav = (): JSX.Element => {
-  const { activeIndex, setActiveIndex } = useContext(SideBarContext);
-
   const player = {
     name: 'Noureddine Akebli',
     level: 22,
+  };
+  // const { name, level } = player;
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleClick = (index: number) => {
+    setActiveIndex(index);
   };
 
   const headers = [
@@ -20,7 +22,6 @@ const UserFriendsNav = (): JSX.Element => {
     { title: 'Invitations', href: '' },
     { title: 'Add New', href: '' },
   ];
-
   const renderContent = () => {
     if (activeIndex === 0) {
       return (
@@ -41,18 +42,23 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {invitations.map((invitation, index) => (
-            <InvitationsComponent
-              key={index}
-              name={invitation.senderName}
-              ProfilePhoto={invitation.senderProfilePhoto}
-              sendAt={invitation.sentAt}
+            <InvitationsComponent 
+            key={index}
+            name={invitation.senderName}
+            ProfilePhoto={invitation.senderProfilePhoto}
+            sendAt={invitation.sentAt}
             />
           ))}
         </div>
       );
+    } else if (activeIndex === 2) {
+      return (
+        <div className="flex size-full items-center justify-center">
+          <h1 className="text-[30px] text-white">Add New</h1>
+        </div>
+      );
     }
   };
-
   return (
     <div className="flex size-full w-full flex-col items-start justify-start">
       <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between px-2 md:pr-4">
@@ -81,7 +87,7 @@ const UserFriendsNav = (): JSX.Element => {
                     ? 'border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]'
                     : 'text-white opacity-[60%]'
                 } cursor-pointer font-dayson transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] text-center`}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => handleClick(index)}
               >
                 {header.title}
               </h1>
