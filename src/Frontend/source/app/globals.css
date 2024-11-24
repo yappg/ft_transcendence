@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #1c7c7d;
+  --secondary-color: rgb(19, 25, 29, 0.8);
+  --primary-color-dark: #a63026;
+  --secondary-color-dark: rgb(255, 255, 255, 0.3);
+  --aqua: #66c3bd;
+  --fire-red: #e23323;
+  --dark-teal: #355557;
+  --linear-gradient: linear-gradient(125deg, rgba(217, 217, 217, 1) 0%, rgba(47, 207, 208, 1) 100%);
+  --linear-gradient-dark: linear-gradient(
+    125deg,
+    rgba(34, 33, 33, 0.2) 0%,
+    rgba(127, 166, 192, 0.2) 37%,
+    rgba(193, 56, 44, 0.2) 70%,
+    rgba(136, 132, 132, 0.2) 100%
+  );
+  --white-color-card: rgb(119, 119, 119, 0.5);
+  --black-color-card: rgb(19, 25, 29, 0.5);
+  --font-dayson: 'Days One', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-coustard: 'Coustard', serif;
+}
+
+body {
+  color: rgb(0, 0, 0, 0.75);
+  background: rgb(var(255, 255, 255));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* shadows */
+
+.costum-big-shadow {
+  -webkit-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+  box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 1);
+}
+
+.costum-little-shadow {
+  -webkit-box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+  box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 1);
+}
+
+/* fonts */
+
+.font-dayson {
+  font-family: var(--font-dayson);
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+.backdrop-blur-xlg {
+  -webkit-box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 8px 8px 50px 0px rgba(0, 0, 0, 0.75);
+}
+.shadow_hover path {
+  -webkit-box-shadow: 0px -1px 52px 21px rgba(192, 56, 44, 1);
+  -moz-box-shadow: 0px -1px 52px 21px rgba(192, 56, 44, 1);
+  box-shadow: 0px -1px 52px 21px rgba(192, 56, 44, 1);
+}
+
+.custom-scrollbar-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox scrollbar hiding */
+.custom-scrollbar-container {
+  scrollbar-width: none;
+}
+
+.friend-bar-bg {
+  background-color: rgba(28, 28, 28, 0.7);
+  -webkit-box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.75);
+}
+
+/* hide scrollbar */
+
+.custom-scrollbar-container {
+  height: 100%;
+  overflow: auto;
+}
+
+
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@keyframes moveToLeft {
+  0% {
+    left: auto;
+    right: -200px;
+  }
+  100% {
+    left: -200px;
+    right: auto;
+  }
+}
+
+@keyframes moveToRight {
+  0% {
+    left: -200px;
+    right: auto;
+  }
+  100% {
+    left: auto;
+    right: -200px;
+  }
+}
+
+.animate-move-left {
+  animation: moveToLeft 0.5s ease-in-out forwards;
+}
+
+.animate-move-right {
+  animation: moveToRight 0.5s ease-in-out forwards;
+}
+
+/* my changes ends here */
