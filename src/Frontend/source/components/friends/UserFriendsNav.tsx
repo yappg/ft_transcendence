@@ -7,6 +7,7 @@ import InvitationsComponent from './InivationsComponent';
 import { invitations } from '@/constants/InvitationsList';
 import { TabContext } from '@/context/TabContext';
 import { useContext } from 'react';
+import AddNew from './AddNewComponent';
 const UserFriendsNav = (): JSX.Element => {
   const player = {
     name: 'Noureddine Akebli',
@@ -55,11 +56,7 @@ const UserFriendsNav = (): JSX.Element => {
         </div>
       );
     } else if (activeIndex === 2) {
-      return (
-        <div className="flex size-full items-center justify-center">
-          <h1 className="text-[30px] text-white">Add New</h1>
-        </div>
-      );
+      return <AddNew />;
     }
   };
   return (
