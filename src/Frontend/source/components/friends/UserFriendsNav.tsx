@@ -5,13 +5,16 @@ import { friends } from '@/constants/friendsList';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import InvitationsComponent from './InivationsComponent';
 import { invitations } from '@/constants/InvitationsList';
+import { TabContext } from '@/context/TabContext';
+import { useContext } from 'react';
 const UserFriendsNav = (): JSX.Element => {
   const player = {
     name: 'Noureddine Akebli',
     level: 22,
   };
   // const { name, level } = player;
-  const [activeIndex, setActiveIndex] = useState(0);
+  // const [activeIndex, setActiveIndex] = useState(0);
+  const { activeIndex, setActiveIndex } = useContext(TabContext);
 
   const handleClick = (index: number) => {
     setActiveIndex(index);
@@ -42,11 +45,11 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {invitations.map((invitation, index) => (
-            <InvitationsComponent 
-            key={index}
-            name={invitation.senderName}
-            ProfilePhoto={invitation.senderProfilePhoto}
-            sendAt={invitation.sentAt}
+            <InvitationsComponent
+              key={index}
+              name={invitation.senderName}
+              ProfilePhoto={invitation.senderProfilePhoto}
+              sendAt={invitation.sentAt}
             />
           ))}
         </div>
@@ -65,7 +68,7 @@ const UserFriendsNav = (): JSX.Element => {
         <div className="flex h-fit flex-row items-center justify-between">
           <Avatar className="max-w-[120px] md:size-auto ">
             <AvatarImage src="/ProfilePhoto.svg" />
-            <AvatarFallback className="bg-[rgba(28,28,28,0.5)] size-[80px] m-2 font-dayson text-lg text-white">
+            <AvatarFallback className="font-dayson m-2 size-[80px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
               CN
             </AvatarFallback>
           </Avatar>
@@ -80,14 +83,13 @@ const UserFriendsNav = (): JSX.Element => {
         </div>
         <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 md:gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
           {headers.map((header, index) => (
-            <Link href={header.href} key={index}>
+            <Link href="#" key={index} onClick={() => setActiveIndex(index)}>
               <h1
                 className={`${
                   activeIndex === index
                     ? 'border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]'
                     : 'text-white opacity-[60%]'
-                } cursor-pointer font-dayson transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] text-center`}
-                onClick={() => handleClick(index)}
+                } font-dayson cursor-pointer text-center transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px]`}
               >
                 {header.title}
               </h1>

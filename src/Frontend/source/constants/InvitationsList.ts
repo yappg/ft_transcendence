@@ -29,4 +29,22 @@ export const invitations = [
     sentAt: '5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
+  {
+    senderName: 'Jane Smith',
+    senderProfilePhoto: '/Avatar.svg',
+    sentAt: '5 minutes ago',
+    recipientName: 'Noureddine Akebli',
+  },
+  {
+    senderName: 'Jane Smith',
+    senderProfilePhoto: '/Avatar.svg',
+    sentAt: '5 minutes ago',
+    recipientName: 'Noureddine Akebli',
+  },
+  {
+    senderName: 'Jane Smith',
+    senderProfilePhoto: '/Avatar.svg',
+    sentAt: '5 minutes ago',
+    recipientName: 'Noureddine Akebli',
+  },
 ];
