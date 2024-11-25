@@ -8,13 +8,13 @@ from .models import ChatRoom, Message
 from .serializers import MessageSerializer, ChatRoomSerializer
 from accounts.models import Player
 from django.db import transaction
-
+from drf_yasg.utils import swagger_auto_schema
 
 
 class ChatView(APIView):
     
+    @swagger_auto_schema(request_body=ChatRoomSerializer)
     # def get(self, request):
-        
     def post(self, request):
         current_user = request.user
         friend_username = request.data.get('senders')
@@ -67,6 +67,7 @@ class ChatMessagesView(APIView):
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
     
+    @swagger_auto_schema(request_body=MessageSerializer)
     def post(self, request, chatId):
         sender = request.user
         print(f"-----------------{sender}-----------------------------------1")

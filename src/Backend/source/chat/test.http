@@ -1,10 +1,44 @@
 
-POST http://localhost:8080/auth/signup/
+POST http://localhost:8080/api/signup/
 Content-Type: application/json
 
 {
-    "username": "ola",
-    "email": "ola@gmail.com",
+    "username": "opa",
+    "email": "opa@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+
+######################
+ 
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa12",
+    "email": "opa12@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+######################
+
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa123",
+    "email": "opa123@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+######################
+
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa12345",
+    "email": "opa12345@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
