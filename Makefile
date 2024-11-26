@@ -14,6 +14,12 @@ RESET := \033[0m
 
 ##########################################    BUILD    ##########################################
 
+build: 
+	@mkdir -p volumes
+	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d
+	@docker system prune -f
+	$(MAKE) logs
+
 up: down
 	@mkdir -p volumes
 	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d
