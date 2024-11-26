@@ -13,8 +13,8 @@ class Friends(models.Model):
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
     receiver = models.ForeignKey(Player, related_name='received_invitations', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('declined', 'Declined')], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('sender', 'receiver')

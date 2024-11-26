@@ -1,12 +1,31 @@
 from rest_framework import serializers
-from .models import Player
+from .models import Player , PlayerProfile , PlayerSettings
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Player
-        fields = ('id', 'username','email', 'wins', 'losses',)
+        fields = ('id', 'username','email',)
+        # fields = ('id', 'username','email', 'wins', 'losses',)
+
+#########################
+
+class PlayerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=PlayerProfile
+        fields = '__all__'
+
+
+class PlayerSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=PlayerSettings
+        fields = '__all__'
+
+
+#########################
+
+
 
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField()

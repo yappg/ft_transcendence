@@ -25,8 +25,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message':'you\'re now connected'
         }))
         # print(f"-----------------[DEBUG] WebSocket connection established for chat ID: {self.chatId}")
-    
-    
+
+
     async def disconnect(self, close_code):
         # Leave the chat group
         await self.channel_layer.group_discard(
@@ -36,7 +36,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Debug: Print when the WebSocket is disconnected
         # print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
-    
+
     async def receive(self, text_data):
         # Debug: Print the received WebSocket message data
         print(f"-----------------[DEBUG] Received message data: {text_data}")
@@ -57,7 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Chat.DoesNotExist:
             print(f"-----------------[DEBUG] Chat with ID {self.chatId} does not exist")
             return
-        
+
         print(f"-----------------[DEBUG] Valid sender {sender.username} and chat {self.chatId} found")
 
         # Save the message to the database

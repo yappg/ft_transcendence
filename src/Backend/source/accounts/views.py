@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.core.cache import cache
 from .permissions import AnonRateLimitThrottling
 from .models import Player
-from .serializers import * 
+from .serializers import *
 from .utils import *
 
 
@@ -56,7 +56,7 @@ class SignUpView(APIView):
                     httponly=False
                 )
                 return resp
-            else : 
+            else :
                 return Response({'error': 'user not created'}, status=400)
 
         return Response(serializer.errors, status=400)
@@ -96,7 +96,7 @@ class SignInView(APIView):
             #     samesite='Lax'
             # )
             return resp
-        else : 
+        else :
             return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 from .authenticate import CotumAuthentication
@@ -104,7 +104,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     # permission_classes = [CotumAuthentication]
 
-    #before logout clear the cookies in th browser  
+    #before logout clear the cookies in th browser
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get('refresh_token')
@@ -141,7 +141,7 @@ class GenerateURI(APIView):
         totp = pyotp.TOTP(secret_key)
         uri = totp.provisioning_uri(name='transcendence', issuer_name='kadigh') # issuer_name=username
         #URI must be converted to QR Code in frontend
-        #save user data secret key in the model 
+        #save user data secret key in the model
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
@@ -306,4 +306,3 @@ class UpdateUserInfos(APIView):
         #     'win_rate': user.win_rate,
         #     'last_game': user.last_game,
         # }, status=200)
-

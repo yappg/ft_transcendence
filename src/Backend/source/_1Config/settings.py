@@ -40,16 +40,18 @@ INSTALLED_APPS = [
     'corsheaders',
     #swagger api documentation
     'drf_yasg',
+    'schema_viewer',
     # local apps
     'accounts',
     'chat',
-    'relations',
     'game',
+    'relations',
 ]
 
 MIDDLEWARE = [
     #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    #corsheader middleware
     'corsheaders.middleware.CorsMiddleware',
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -87,14 +89,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_THROTTLE_RATES' : {
-        'anon' : '3/min',
-    }
+    # 'DEFAULT_THROTTLE_RATES' : {
+    #     'anon' : '3/min',
+    # }
+    'DEFAULT_THROTTLE_CLASSES': [],
 }
 
 SIMPLE_JWT = {
