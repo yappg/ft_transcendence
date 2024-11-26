@@ -19,16 +19,6 @@ class PlayersViewList(ListAPIView):
     queryset=Player.objects.all()
 
 # class PlayerView(APIView):
-class BaseAuthView(APIView):
-
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
 #------------------------------------ Auth ------------------------------------
 class SignUpView(APIView):
     permission_classes = [AllowAny]
@@ -40,7 +30,6 @@ class SignUpView(APIView):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            #why i do save the user here if i already returned one in the serializer create method
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
@@ -101,12 +90,10 @@ class SignInView(APIView):
         else : 
             return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from .authenticate import CotumAuthentication
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     # permission_classes = [CotumAuthentication]
 
-    #before logout clear the cookies in th browser  
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get('refresh_token')
