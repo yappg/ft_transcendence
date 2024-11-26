@@ -1,5 +1,5 @@
 # frontend/Dockerfile
-FROM node:22-alpine
+FROM node:alpine
 
 COPY . /app
 
