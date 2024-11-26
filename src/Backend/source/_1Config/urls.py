@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+# fron django.request import 
 
 from django.http import JsonResponse
 
@@ -21,18 +22,22 @@ schema_view = get_schema_view(
 
 
 
-# def health_checkup(request):
-#     return JsonResponse({'status', 'healty'}, status=200)
+def health_checkup(request):
+    return JsonResponse({'status', 'healty'}, status=200)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
+    path('schema-viewer/', include('schema_viewer.urls')),
+    path('prometheus/', include('django_prometheus.urls')),
+
+
     #all entrys go to one point
         path('api/', include('accounts.urls')),
         path('chat/', include('chat.urls')),
-        path('relations/', include('relations.urls')),
         path('game/', include('game.urls')),
+        path('relations/', include('relations.urls')),
 
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
-    path('prometheus/', include('django_prometheus.urls')),
 
     # structering api endpoints
     # path('api')
@@ -43,4 +48,3 @@ urlpatterns = [
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
 if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

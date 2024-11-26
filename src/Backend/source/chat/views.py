@@ -12,7 +12,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 class ChatView(APIView):
-    
+
     @swagger_auto_schema(request_body=ChatRoomSerializer)
     # def get(self, request):
     def post(self, request):
@@ -32,7 +32,7 @@ class ChatView(APIView):
         chat_name = f"{current_user}_{friend}_room"
         chat = ChatRoom.objects.filter(name=chat_name).first()
         print("ddddddddddddddddd1")
- 
+
         # Create a new chat and add both senders
         if chat is None:
             chat = ChatRoom.objects.create(name=chat_name)
@@ -52,11 +52,11 @@ class ChatListView(APIView):
         chats = ChatRoom.objects.filter(senders=user)
         serializer = ChatRoomSerializer(chats, many=True)
         return Response(serializer.data)
-    
-    
+
+
 class ChatMessagesView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request , chatId):
         try:
             chat = ChatRoom.objects.get(id=chatId)
@@ -66,7 +66,7 @@ class ChatMessagesView(APIView):
         messages = Message.objects.filter(chatroom=chat).order_by('send_at')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
-    
+
     @swagger_auto_schema(request_body=MessageSerializer)
     def post(self, request, chatId):
         sender = request.user
@@ -75,22 +75,22 @@ class ChatMessagesView(APIView):
         print(f"-----------------{receiverId}-----------------------------------2")
         content = request.data.get('content')
         print(f"-----------------{content}-----------------------------------3")
-        
+
         #validate that chat exists
         try:
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
             return Response({"error": "Chat makynsh"}, status=404)
-        
+
         print(f"-----------------{chat}-----------------------------------4")
         #validate that receiver exists and is a participants of the chat
-        
+
         try:
             receiver = Player.objects.get(username=receiverId)
         except Player.DoesNotExist:
             return Response({"error": "Receiver makynsh"}, status=404)
         print(f"-----------------{receiver}-----------------------------------5")
-        
+
         if receiver not in chat.senders.all():
             return Response({"error": "Receiver is not a sender of this chat"}, status=404)
         #create save
@@ -100,6 +100,6 @@ class ChatMessagesView(APIView):
             # receiver=receiver,
             content=content
         )
-        
+
         serializer = MessageSerializer(message)
         return Response(serializer.data, status=201)
