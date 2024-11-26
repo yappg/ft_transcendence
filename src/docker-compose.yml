@@ -17,24 +17,24 @@ services:
     #         condition: service_healthy
     #   restart: unless-stopped
 
-#     frontend:
-#         container_name: frontend
-#         build:
-#           context: ./frontend
-#           dockerfile: Dockerfile
-#         image: frontend
+    frontend:
+        container_name: frontend
+        build:
+          context: ./frontend
+          dockerfile: Dockerfile
+        image: frontend
 # # DEV =====>
-#         volumes:
-#           - ./Frontend/source:/app/source:rw
-#           - /app/source/.next
-#           - /app/source/node_modules
+        volumes:
+          - ./Frontend/source:/app/source:rw
+          - /app/source/.next
+          - /app/source/node_modules
 # # =========>
-#         environment:
-#           BACKEND_URL: http://backend:8080
-#         networks:
-#           - transcendence
-#         ports:
-#           - 3000:3000
+        environment:
+          BACKEND_URL: http://backend:8080
+        networks:
+          - transcendence
+        ports:
+          - 3000:3000
 #         # depends_on:
 #         #     backend:
 #         #         condition: service_healthy
