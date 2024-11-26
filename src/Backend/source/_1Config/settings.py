@@ -80,7 +80,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:5173',
 # ]
-
+  
 
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
@@ -91,6 +91,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',

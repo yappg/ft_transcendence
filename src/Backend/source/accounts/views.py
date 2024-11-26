@@ -10,7 +10,7 @@ from .permissions import AnonRateLimitThrottling
 from .models import Player
 from .serializers import * 
 from .utils import *
-
+from drf_yasg.utils import swagger_auto_schema
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -35,6 +35,7 @@ class SignUpView(APIView):
     serializer_class = SignUpSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
+    @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
 
         serializer = self.serializer_class(data=request.data)
@@ -66,6 +67,7 @@ class SignInView(APIView):
     Serializer_class = SignInSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
+    @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
 
