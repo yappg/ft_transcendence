@@ -233,7 +233,7 @@ class OAuth42LoginView(APIView):
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
             client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
-            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth%2Fcallback%2F42&response_type=code"
+            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Foauth%2Fcallback%2F42&response_type=code"
         elif provider == 'google':
             Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
             client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
