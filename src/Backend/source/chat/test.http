@@ -1,35 +1,34 @@
 
-POST http://localhost:8080/auth/signup/
+POST http://localhost:8080/api/auth/signin
 Content-Type: application/json
 
 {
-    "username": "ola",
-    "email": "ola@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "tokenjdid",
+    "password": "csfdsgbcvbdfgdfg"
 }
 
 ########
 
-GET http://localhost:8080/oauth/login/42
+GET http://localhost:8080/api/oauth/login/42
 
+    # "email": "tokenjdid@gmail.com",
+    # "password2": "csfdsgbcvbdfgdfg",
 ########
 
-GET http://localhost:8080/auth/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+
+
+# POST http://localhost:8080/api/JWT/token/refresh
+
+GET http://localhost:8080/api/list/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 ########
 ########
 
 POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
-Content-Type: application/json
-
-{
-    "senders": "ola"
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 ########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 Content-Type: application/json
 
 {
@@ -38,22 +37,23 @@ Content-Type: application/json
 ########
 
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 
 ########
 GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 
 ########
 
-GET  http://localhost:8080/chat/ch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
-# Content-Type: application/json
 
-# {
-#     "receiver":"ola",
-#     "content":"hey body"
-# }
+POST  http://localhost:8080/chat/1/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+Content-Type: application/json
+
+{
+    "receiver":"zb",
+    "content":"hey body"
+}
 
 ########
 
