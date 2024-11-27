@@ -13,55 +13,57 @@ services:
   #   restart: unless-stopped
 
 
-  # web:
-  #   container_name: nginx
-  #   build:
-  #     context: ./Services/nginx
-  #     dockerfile: Dockerfile
-  #   image: nginx
-  #   networks:
-  #     - transcendence
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   # depends_on:
-  #   #   frontend:
-  #   #       condition: service_healthy
-  #   #   backend:
-  #   #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 3
-  #     start_period: 5s
-  #   restart: always
+  web:
+    container_name: nginx
+    build:
+      context: ./Services/nginx
+      dockerfile: Dockerfile
+    image: nginx
+    networks:
+      - transcendence
+    ports:
+      - 80:80
+      - 443:443
+    # depends_on:
+    #   frontend:
+    #       condition: service_healthy
+    #   backend:
+    #       condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: always
 
-  # web-exporter:
-  #   container_name: nginx-exporter
-  #   image: nginx/nginx-prometheus-exporter
-  #   command: --nginx.scrape-uri=http://web:8080/stub_status
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     web:
-  #       condition: service_healthy
-  #   restart: unless-stopped
+  web-exporter:
+    container_name: nginx-exporter
+    image: nginx/nginx-prometheus-exporter
+    command: --nginx.scrape-uri=http://web:8080/stub_status
+    networks:
+      - transcendence
+    depends_on:
+      web:
+        condition: service_healthy
+    restart: unless-stopped
 
 
   frontend:
       container_name: frontend
       build:
         context: ./Frontend
-        # target: development
+        target: ${NODE_ENV:-development}
         dockerfile: Dockerfile
       image: frontend
-      # DEV =====>
+      environment:
+        NODE_ENV: ${NODE_ENV:-development}
+# DEV ==============>
       volumes:
-        - ./Frontend/source:/app/source:rw
-        - /app/source/.next
-        - /app/source/node_modules
-      # =========>
+        - ./Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
       networks:
         - transcendence
       ports:
@@ -84,12 +86,8 @@ services:
         context: ./Backend
         dockerfile: Dockerfile
       image: backend
-      # DEV =====>
-      volumes:
-        - ./Backend/source:/app/source:rw
-      # =========>
       environment:
-        DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-_1Config.settings}
+        DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-_1Config.development}
         JWT_SECRET_KEY: ${JWT_SECRET_KEY}
         42_CLIENT_ID: $${42_CLIENT_ID}
         42_CLIENT_SECRET: $${42_CLIENT_SECRET}
@@ -99,6 +97,10 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
+# DEV ==============>
+      volumes:
+        - ./Backend/source:/app/source:rw
+# ==================>
       networks:
         - transcendence
       ports:
@@ -120,11 +122,11 @@ services:
   cache:
     container_name: redis
     image: redis:alpine
+    environment:
+      REDIS_PASS: ${REDIS_PASS}
     volumes:
       - redis-data:/data
       - "./Services/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro"
-    environment:
-      REDIS_PASS: ${REDIS_PASS}
     command: "redis-server /usr/local/etc/redis/redis.conf  --requirepass $REDIS_PASS"
     networks:
       - transcendence
@@ -136,29 +138,29 @@ services:
       start_period: 5s
     restart: always
 
-  # cache-exporter:
-  #   container_name: redis-exporter
-  #   image: bitnami/redis-exporter
-  #   environment:
-  #     REDIS_PASSWORD: ${REDIS_PASS}
-  #     REDIS_ADDR: "redis://cache:6379"
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     cache:
-  #       condition: service_healthy
-  #   restart: unless-stopped
+  cache-exporter:
+    container_name: redis-exporter
+    image: bitnami/redis-exporter
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASS}
+      REDIS_ADDR: "redis://cache:6379"
+    networks:
+      - transcendence
+    depends_on:
+      cache:
+        condition: service_healthy
+    restart: unless-stopped
 
 
   database:
     container_name: postgres
     image: postgres:alpine
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - transcendence
     healthcheck:
@@ -170,73 +172,73 @@ services:
       start_period: 5s
     restart: always
 
-  # database-exporter:
-  #   container_name: postgres-exporter
-  #   image: wrouesnel/postgres_exporter
-  #   environment:
-  #     DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #   restart: unless-stopped
+  database-exporter:
+    container_name: postgres-exporter
+    image: wrouesnel/postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
+    networks:
+      - transcendence
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
 
 
-  # prometheus:
-  #   container_name: prometheus
-  #   image: prom/prometheus:latest
-  #   volumes:
-  #     - prometheus-data:/prometheus
-  #     - "./Services/prometheus:/etc/prometheus:ro"
-  #     - "./Services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-  #     - "./Services/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
-  #   command:
-  #     - "--config.file=/etc/prometheus/prometheus.yml"
-  #     - "--storage.tsdb.path=/prometheus"
-  #   networks:
-  #     - transcendence
-  #   restart: always
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - prometheus-data:/prometheus
+      - "./Services/prometheus:/etc/prometheus:ro"
+      - "./Services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./Services/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    networks:
+      - transcendence
+    restart: always
 
-  # alert-manager:
-  #   container_name: alert-manager
-  #   image: prom/alertmanager
-  #   volumes:
-  #     - alert-manager-data:/alertmanager
-  #     - "./Services/alert-manager:/etc/alertmanager:ro"
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     - prometheus
-  #   restart: always
+  alert-manager:
+    container_name: alert-manager
+    image: prom/alertmanager
+    volumes:
+      - alert-manager-data:/alertmanager
+      - "./Services/alert-manager:/etc/alertmanager:ro"
+    networks:
+      - transcendence
+    depends_on:
+      - prometheus
+    restart: always
 
-  # disord-alerts:
-  #   container_name: discord-alerts
-  #   image: benjojo/alertmanager-discord
-  #   environment:
-  #     DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     - alert-manager
-  #   restart: always
+  disord-alerts:
+    container_name: discord-alerts
+    image: benjojo/alertmanager-discord
+    environment:
+      DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
+    networks:
+      - transcendence
+    depends_on:
+      - alert-manager
+    restart: always
 
-  # grafana:
-  #   container_name: grafana
-  #   image: grafana/grafana
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #     - "./Services/grafana:/etc/grafana/provisioning:ro"
-  #   environment:
-  #     GF_SERVER_ROOT_URL: https://localhost/monitoring
-  #     GF_SERVER_SERVE_FROM_SUB_PATH: true
-  #     GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
-  #     GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     - prometheus
-  #   restart: unless-stopped
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    environment:
+      GF_SERVER_ROOT_URL: https://localhost/monitoring
+      GF_SERVER_SERVE_FROM_SUB_PATH: true
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - "./Services/grafana:/etc/grafana/provisioning:ro"
+    networks:
+      - transcendence
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 
 volumes:
