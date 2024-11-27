@@ -36,7 +36,7 @@ function Signup() {
   return (
     <div className="flex h-fit flex-col gap-2">
       <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
+      <Form fields={fields} buttonProps={buttonProps} isSignup={true} redirPath={'/Home'} />
       <MyLink text="Already have an account? " href="login" />
     </div>
   );

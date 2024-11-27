@@ -18,11 +18,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
-# Application definition
 
+# Application definition
 INSTALLED_APPS = [
     # prometheus
     'django_prometheus',
@@ -56,6 +59,8 @@ MIDDLEWARE = [
     #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -81,11 +86,6 @@ SWAGGER_SETTINGS = {
     }
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:5173',
-# ]
-
 
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
@@ -96,7 +96,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'accounts.authenticate.CotumAuthentication',
+        # 'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
@@ -258,4 +258,3 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
 MEDIA_URL='/media/'
 
 
-CORS_ALLOW_CREDENTIALS = True

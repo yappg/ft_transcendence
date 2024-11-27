@@ -21,7 +21,7 @@ function Login() {
   return (
     <div className="flex h-auto flex-col gap-4">
       <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={false} />
+      <Form fields={fields} buttonProps={buttonProps} isSignup={false} redirPath={'/Home'} />
       <MyLink text="Have no account yet? " href="signup" />
     </div>
   );
