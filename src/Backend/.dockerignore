@@ -1,21 +1,29 @@
+**/.git
+**/.idea/
+**/.vscode/
+**/*.sublime-project
+**/*.sublime-workspace
 
-**/.vscode
+**/.env
+**/venv/
+**/env/
 
-**/__pycache__/
 **/*.pyc
 **/*.pyo
-
-**/*.sqlite3
-
-**/.*
-*.local
-
-**/venv
-**/env
+**/*.pyd
+**/__pycache__/
 
 **/*.log
+**/*.pot
 
-.git
+**/*.sqlite3
+**/db.sqlite3
+
+**/UsersMedia/*/*
+!**/UsersMedia/*/.default*.jpeg
+
+**/migrations/*
+!**/migrations/__init__.py
 
 Dockerfile
 .dockerignore
