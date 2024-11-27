@@ -77,63 +77,63 @@ services:
       restart: always
 
 
-  # backend:
-  #     container_name: backend
-  #     build:
-  #       context: ./Backend
-  #       dockerfile: Dockerfile
-  #     image: backend
-  #     # DEV =====>
-  #     volumes:
-  #       - ./Backend/source:/app/source:rw
-  #     # =========>
-  #     environment:
-  #       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-  #       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-  #       42_CLIENT_ID: $${42_CLIENT_ID}
-  #       42_CLIENT_SECRET: $${42_CLIENT_SECRET}
-  #       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-  #       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-  #       POSTGRES_DB: ${POSTGRES_DB}
-  #       POSTGRES_USER: ${POSTGRES_USER}
-  #       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #       REDIS_PASS: ${REDIS_PASS}
-  #     networks:
-  #       - transcendence
-  #     ports:
-  #       - 8080:8080
-  #     depends_on:
-  #       cache:
-  #         condition: service_healthy
-  #       database:
-  #         condition: service_healthy
-  #     # healthcheck:
-  #     #     test: ["CMD", ""]
-  #     #     interval: 1m30s
-  #     #     timeout: 30s
-  #     #     retries: 5
-  #     #     start_period: 30s
-  #     restart: always
+  backend:
+      container_name: backend
+      build:
+        context: ./Backend
+        dockerfile: Dockerfile
+      image: backend
+      # DEV =====>
+      volumes:
+        - ./Backend/source:/app/source:rw
+      # =========>
+      environment:
+        DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-_1Config.settings}
+        JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+        42_CLIENT_ID: $${42_CLIENT_ID}
+        42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+        GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+        GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        REDIS_PASS: ${REDIS_PASS}
+      networks:
+        - transcendence
+      ports:
+        - 8080:8080
+      depends_on:
+        cache:
+          condition: service_healthy
+        database:
+          condition: service_healthy
+      # healthcheck:
+      #     test: ["CMD", ""]
+      #     interval: 1m30s
+      #     timeout: 30s
+      #     retries: 5
+      #     start_period: 30s
+      restart: always
 
 
-  # cache:
-  #   container_name: redis
-  #   image: redis:alpine
-  #   volumes:
-  #     - redis-data:/data
-  #     - "./Services/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro"
-  #   environment:
-  #     REDIS_PASS: ${REDIS_PASS}
-  #   command: "redis-server /usr/local/etc/redis/redis.conf  --requirepass $REDIS_PASS"
-  #   networks:
-  #     - transcendence
-  #   healthcheck:
-  #     test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 3
-  #     start_period: 5s
-  #   restart: always
+  cache:
+    container_name: redis
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+      - "./Services/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro"
+    environment:
+      REDIS_PASS: ${REDIS_PASS}
+    command: "redis-server /usr/local/etc/redis/redis.conf  --requirepass $REDIS_PASS"
+    networks:
+      - transcendence
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: always
 
   # cache-exporter:
   #   container_name: redis-exporter
@@ -149,25 +149,25 @@ services:
   #   restart: unless-stopped
 
 
-  # database:
-  #   container_name: postgres
-  #   image: postgres:alpine
-  #   volumes:
-  #     - postgres-data:/var/lib/postgresql/data
-  #   environment:
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #   networks:
-  #     - transcendence
-  #   healthcheck:
-  #     test:
-  #       ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 3
-  #     start_period: 5s
-  #   restart: always
+  database:
+    container_name: postgres
+    image: postgres:alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - transcendence
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: always
 
   # database-exporter:
   #   container_name: postgres-exporter
