@@ -1,54 +1,113 @@
 
-POST http://localhost:8080/auth/signup/
+
+
+POST http://localhost:8080/api/signup/
 Content-Type: application/json
 
 {
-    "username": "dasdasdas",
-    "email": "dsadasdasd@gmail.com",
+    "username": "opa",
+    "email": "opa@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+
+######################
+ 
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa12",
+    "email": "opa12@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+######################
+
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa123",
+    "email": "opa123@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+######################
+
+POST http://localhost:8080/api/signup/
+Content-Type: application/json
+
+{
+    "username": "opa12345",
+    "email": "opa12345@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
 
 ########
 
-POST http://localhost:8080/auth/l/
-Content-Type: application/json
-
-{
-    "username": "xasdasdvs",
-    "email": "vscodevscode@gmail.com",
-    "password": "dasdasdsadasddasdasdad",
-    "password2": "dasdasdsadasddasdasdad"
-}
+GET http://localhost:8080/oauth/login/42
 
 ########
 
 GET http://localhost:8080/auth/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ2NjQ0LCJpYXQiOjE3MzE1NDQ4NDQsImp0aSI6ImQxODc1MGYwNWIyMTQ0MDViNGVmMzVhOGRmYjYzMjM2IiwidXNlcl9pZCI6M30.4bOJNppxJJnoe1ck_E6X2jLRH0jcy9UQIV_TiK5370g
-
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
 ########
 ########
 
-GET http://localhost:8080/chatoom/lobby
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ2NjQ0LCJpYXQiOjE3MzE1NDQ4NDQsImp0aSI6ImQxODc1MGYwNWIyMTQ0MDViNGVmMzVhOGRmYjYzMjM2IiwidXNlcl9pZCI6M30.4bOJNppxJJnoe1ck_E6X2jLRH0jcy9UQIV_TiK5370g
+POST http://localhost:8080/chat/ch/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+Content-Type: application/json
 
+{
+    "senders": "ola"
+}
+########
+POST http://localhost:8080/relations/friends/invite/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+Content-Type: application/json
+
+{
+    "receiver": "ola"
+}
+########
+
+GET http://localhost:8080/chat/list/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
 
 ########
-// access
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTQ0NjUxLCJpYXQiOjE3MzE1NDI4NTEsImp0aSI6IjM4ZGI1MjllNDExMjQ3MGJiZThmZDAzZmZkMTc1MWU1IiwidXNlcl9pZCI6MX0.P1JiLlPUq7JS5zDcBrKRDv7lZmNWVlHJsp75lCvFz_c
-// refrech
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTgwMjA1MSwiaWF0IjoxNzMxNTQyODUxLCJqdGkiOiI0YWNhYTEwN2NlNzc0OGE2ODM0Y2M0ZmFkNDhkYWI2ZCIsInVzZXJfaWQiOjF9.lb1p4NlYcS6HgeUGOJJegsegfxd3MKRnBtAqk0oYAZQ
-# GET http://localhost:8080/auth/generate-uri/
+GET http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
 
-# ############
-# #
-# GET http://localhost:8080/auth/generate-uri/
+########
+
+GET  http://localhost:8080/chat/ch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg2MTQ3LCJpYXQiOjE3MzIyODQzNDcsImp0aSI6IjYxOTBmNDMwMjgyZTQ0NGU4MjcwNzE0Zjk0NTY5ZGE3IiwidXNlcl9pZCI6MX0.zmoqo_ADPDuF4mc_okwFnobrFW0so2yTOPf3lt6l1PM
+# Content-Type: application/json
+
+# {
+#     "receiver":"ola",
+#     "content":"hey body"
+# }
+
+########
+
+### WebSocket Connection Test
+WEBSOCKET ws://127.0.0.1:8080/ws/chat/1/
+
+# # Send a message
+# > websocket-send
+# {
+#     "type": "websocket.send",
+#     "message": "Hello, WebSocket!"
+# }
 
 
-
-# GET http://localhost:8080/auth/generate-uri/
-
-
-
-# GET http://localhost:8080/auth/generate-uri/
+# /
+# # Optional: multiple sends
+# > websocket-send
+# {
+#     "type": "websocket.send",
+#     "message": "Another test message"
+# }
