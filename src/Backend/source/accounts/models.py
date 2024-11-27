@@ -11,10 +11,10 @@ class Player(AbstractUser):
     # is_online=models.BooleanField(default=False)
     # wins=models.IntegerField(default=0)
     # losses=models.IntegerField(default=0)
-
-
     avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
     cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
+
+
     # pending_friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pending_friends', blank=True)
     # friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='friends', blank=True)
 
