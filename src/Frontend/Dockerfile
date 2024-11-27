@@ -3,6 +3,8 @@
 ######################################
 FROM node:alpine AS development
 
+ENV NODE_ENV=development
+
 WORKDIR /app
 
 COPY ./source/package.json ./source/yarn.lock ./
@@ -18,6 +20,8 @@ CMD ["yarn", "dev"]
 ######################################
 
 FROM node:alpine AS builder
+
+ENV NODE_ENV=production
 
 WORKDIR /app/source
 
@@ -35,6 +39,8 @@ RUN yarn build
 
 FROM node:alpine AS production
 
+ENV NODE_ENV=production
+
 WORKDIR /app
 
 COPY --from=builder /app /app
@@ -43,5 +49,3 @@ EXPOSE 3000
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["yarn", "start"]
-
-###### subject to change ######
