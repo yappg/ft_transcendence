@@ -2,7 +2,7 @@ export const invitations = [
   {
     senderName: 'John Doe',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
@@ -14,37 +14,37 @@ export const invitations = [
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
   {
     senderName: 'Jane Smith',
     senderProfilePhoto: '/Avatar.svg',
-    sentAt: '5 minutes ago',
+    sentAt: 'sent 5 minutes ago',
     recipientName: 'Noureddine Akebli',
   },
 ];
