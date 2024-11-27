@@ -12,17 +12,16 @@ RESET := \033[0m
 
 ##########################################    BUILD    ##########################################
 
+build: down
+	@docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
+	$(MAKE) logs
+
 up: down
 	@docker compose -p $(PROJECT) -f $(COMPOSE) up -d  && \
 	$(MAKE) logs
 
-build: down
-	@docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
-	docker system prune -f && \
-	$(MAKE) logs
-
 down:
-	@docker compose -p $(PROJECT) down
+	@docker compose -p $(PROJECT) down --remove-orphans
 
 logs:
 	@docker compose -p $(PROJECT) logs -f
@@ -34,8 +33,7 @@ list:
 	docker compose -p $(PROJECT) images  && \
 
 clean:
-	@docker compose -p $(PROJECT) down --volumes --remove-orphans
-	@docker rmi $$(docker compose -p $(PROJECT) images -q) 2>/dev/null || true
+	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
 
 re: clean build
 
