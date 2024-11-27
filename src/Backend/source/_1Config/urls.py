@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 # fron django.request import 
@@ -7,8 +7,8 @@ from django.conf.urls.static import static
 from django.http import JsonResponse
 from accounts.authenticate import CotumAuthentication
 
-# # temporary
 from rest_framework import permissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -23,6 +23,7 @@ schema_view = get_schema_view(
     
 )
 
+from .views import YourAPIView
 
 
 def health_checkup(request):
@@ -46,7 +47,9 @@ urlpatterns = [
     # path('api')
 
     # path('health/', health_checkup, name='health_checkup'),
-]
+
+# def health_checkup(request):
+#     return JsonResponse({'status', 'healty'}, status=200)
 
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
 if settings.DEBUG == True:

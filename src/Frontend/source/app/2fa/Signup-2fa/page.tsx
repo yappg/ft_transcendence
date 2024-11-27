@@ -16,7 +16,7 @@ export default function LoginTFA() {
     try {
       const fetchData = async () => {
         setIsLoading(true);
-        const data = await axios.post('http://127.0.0.1:8000/2fa/generate-uri/', {
+        const data = await axios.post('http://backend:8080/2fa/generate-uri/', {
           username: 'mmesbahi',
         });
         console.log(data.data.uri);
@@ -31,7 +31,7 @@ export default function LoginTFA() {
 
   const sendOtp = async () => {
     try {
-      const result = await axios.post('http://127.0.0.1:8000/2fa/verifiy-otp/', {
+      const result = await axios.post('http://backend:8080/2fa/verifiy-otp/', {
         username: 'mmesbahi',
         otp_token: value,
       });

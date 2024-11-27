@@ -7,7 +7,6 @@ import { Header } from '@/components/header';
 import { SideBarContext } from '@/context/SideBarContext';
 import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
-import { useEffect } from 'react';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
