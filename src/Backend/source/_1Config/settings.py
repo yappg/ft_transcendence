@@ -24,36 +24,42 @@ CORS_ALLOWED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    # prometheus
+    'django_prometheus',
     # asgi app
     'daphne',
     'channels',
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #needed for the allauth
+    # needed for the allauth
     'django.contrib.sites',
-    #django-rest-framework
+    # django-rest-framework
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     #swagger api documentation
     'drf_yasg',
-    #local apps
+    # local apps
     'accounts',
     'chat',
-    'corsheaders',
-
-    # 'game',
+    'relations',
+    'game',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    #take off above
+    'corsheaders.middleware.CorsMiddleware',
+    # prometheus middleware
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
+    # django middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,12 +70,33 @@ MIDDLEWARE = [
     # 'allauth.account.middleware.AccountMiddleware',
 ]
 
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:5173',
+# ]
+
+
+# CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
@@ -129,8 +156,13 @@ ASGI_APPLICATION = '_1Config.asgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': 'database',
+        'PORT': '5432',
+        'CONN_MAX_AGE': 600,  # Increase connection timeout to 10 minutes
     }
 }
 
@@ -184,7 +216,7 @@ OAUTH2_PROVIDER_GOOGLE = {
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
     'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/google',
-    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    'SCOPE': 'https://www.googleapis.com/auth/update-user-infosinfo.profile https://www.googleapis.com/auth/update-user-infosinfo.email',
 }
 
 # Internationalization

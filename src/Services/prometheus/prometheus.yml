@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 10s
+  scrape_timeout: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alert-manager:9093']
+
+rule_files:
+  - "/etc/prometheus/alert_rules.yml"
+
+scrape_configs:
+
+  - job_name: containers
+    static_configs:
+      - targets:
+        - container-exporter:8080
+
+  - job_name: web
+    static_configs:
+      - targets:
+        - web-exporter:9113
+
+  - job_name: Backend
+    static_configs:
+      - targets:
+        - backend:8080
+    metrics_path: /prometheus/metrics
+
+  - job_name: Cache
+    static_configs:
+      - targets:
+        - cache-exporter:9121
+
+  - job_name: Database
+    static_configs:
+      - targets:
+        - database-exporter:9187
+
+#######################################################################
+
+  - job_name: Prometheus
+    static_configs:
+      - targets:
+        - localhost:9090

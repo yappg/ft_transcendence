@@ -1,8 +1,28 @@
 from rest_framework import serializers
-from models import ChatRoom
+from .models import ChatRoom, Message
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ['id', 'chatroom', 'sender', 'content', 'send_at']
 
 
-Class ChatRoomSerializer(serializers.ModelSerializer):
-    class meta:
+class ChatRoomSerializer(serializers.ModelSerializer):
+    senders = serializers.SlugRelatedField(
+        many=True,
+        slug_field='username',
+        read_only=True
+    )
+    last_message = serializers.SerializerMethodField()
+    
+    class Meta:
         model = ChatRoom
-        fields = ('id', 'name', 'users', 'password')
+        fields = ['id', 'senders', 'created_at', 'last_message']
+    
+    def get_last_message(self, obj):
+        LastMessage = obj.messages.order_by('-send_at').first()
+        if LastMessage:
+            return MessageSerializer(LastMessage).data
+        return None
