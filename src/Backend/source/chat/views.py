@@ -9,6 +9,8 @@ from .serializers import MessageSerializer, ChatRoomSerializer
 from accounts.models import Player
 from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 
 
 class ChatView(APIView):
@@ -37,8 +39,6 @@ class ChatView(APIView):
         if chat is None:
             chat = ChatRoom.objects.create(name=chat_name)
             chat.senders.add(current_user, friend)
-
-        print("ddddddddddddddddd2")
         # Serialize and return the chat
         serializer = ChatRoomSerializer(chat)
         return Response(serializer.data)

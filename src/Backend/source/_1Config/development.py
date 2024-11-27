@@ -2,12 +2,14 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+load_dotenv(BASE_DIR.parent.parent / ".env")
 
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
@@ -16,6 +18,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,18 +45,16 @@ INSTALLED_APPS = [
     'corsheaders',
     #swagger api documentation
     'drf_yasg',
-    'schema_viewer',
     # local apps
     'accounts',
     'chat',
-    'game',
     'relations',
+    'game',
 ]
 
 MIDDLEWARE = [
     #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    #corsheader middleware
     'corsheaders.middleware.CorsMiddleware',
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -82,24 +85,22 @@ CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:5173',
 # ]
-  
+
 
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'accounts.authenticate.CotumAuthentication',
-        
+        'accounts.authenticate.CotumAuthentication',
     ],
-    # 'DEFAULT_THROTTLE_RATES' : {
-    #     'anon' : '3/min',
-    # }
-    'DEFAULT_THROTTLE_CLASSES': [],
+    'DEFAULT_THROTTLE_RATES' : {
+        'anon' : '3/min',
+    }
 }
 
 SIMPLE_JWT = {
@@ -131,7 +132,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(f'redis://:{os.getenv('REDIS_PASS')}@cache:6379/0')],
+            "hosts": [f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/0"],
         },
     },
 }
@@ -143,6 +144,16 @@ ASGI_APPLICATION = '_1Config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv("POSTGRES_DB"),
+#         'USER': os.getenv("POSTGRES_USER"),
+#         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+#         'HOST': 'database',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -155,15 +166,15 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis://:{os.getenv('REDIS_PASS')}@cache:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions
 SESSION_CACHE_ALIAS = "default"  # Use the default cache defined above
@@ -245,3 +256,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
 MEDIA_URL='/media/'
+
+
+CORS_ALLOW_CREDENTIALS = True
