@@ -1,6 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import React, { ReactNode } from 'react';
-import { Interface } from 'readline';
 
 interface cardProps {
   children: React.ReactNode;
