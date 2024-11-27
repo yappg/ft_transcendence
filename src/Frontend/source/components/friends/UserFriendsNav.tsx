@@ -3,23 +3,17 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { friends } from '@/constants/friendsList';
 import FriendsComponent from '@/components/friends/FriendsComponent';
-import InvitationsComponent from './InivationsComponent';
+import FriendRequestCard from './FriendRequestCard';
 import { invitations } from '@/constants/InvitationsList';
-import { TabContext } from '@/context/TabContext';
-import { useContext } from 'react';
-import AddNew from './AddNewComponent';
+import AddFriends from './AddFriendsComponent';
 const UserFriendsNav = (): JSX.Element => {
   const player = {
     name: 'Noureddine Akebli',
     level: 22,
   };
   // const { name, level } = player;
-  // const [activeIndex, setActiveIndex] = useState(0);
-  const { activeIndex, setActiveIndex } = useContext(TabContext);
-
-  const handleClick = (index: number) => {
-    setActiveIndex(index);
-  };
+  const [activeIndex, setActiveIndex] = useState(0);
+  // const { activeIndex, setActiveIndex } = useContext(TabContext);
 
   const headers = [
     { title: 'Your Friends', href: '' },
@@ -46,22 +40,22 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {invitations.map((invitation, index) => (
-            <InvitationsComponent
+            <FriendRequestCard
               key={index}
               name={invitation.senderName}
               ProfilePhoto={invitation.senderProfilePhoto}
-              sendAt={invitation.sentAt}
+              vari={invitation.sentAt}
             />
           ))}
         </div>
       );
     } else if (activeIndex === 2) {
-      return <AddNew />;
+      return <AddFriends />;
     }
   };
   return (
     <div className="flex size-full w-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between px-2 md:pr-4">
+      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between md:px-2 md:pr-4 lg:px-10">
         <div className="flex h-fit flex-row items-center justify-between">
           <Avatar className="max-w-[120px] md:size-auto ">
             <AvatarImage src="/ProfilePhoto.svg" />
