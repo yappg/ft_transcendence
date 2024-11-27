@@ -53,6 +53,7 @@ services:
       container_name: frontend
       build:
         context: ./Frontend
+        # target: development
         dockerfile: Dockerfile
       image: frontend
       # DEV =====>
