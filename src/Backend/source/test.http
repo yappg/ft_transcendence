@@ -1,19 +1,17 @@
 
-
-# 
-POST http://localhost:8080/api/signup/
+POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "opa",
-    "email": "opa@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "opxaopxa",
+    "email": "opxaxopxa@gmail.com",
+    "password": "csfdsgopxabcvbdfgdfg",
+    "password2": "csfdsgopxabcvbdfgdfg"
 }
 
 ######################
- 
-POST http://localhost:8080/api/signup/
+
+POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
@@ -22,7 +20,7 @@ Content-Type: application/json
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
-###### 
+######
 
 POST http://localhost:8080/api/token/
 Content-Type: application/json

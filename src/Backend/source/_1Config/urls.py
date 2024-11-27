@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-# fron django.request import 
+# fron django.request import
 
 from django.http import JsonResponse
 from accounts.authenticate import CotumAuthentication
@@ -20,7 +20,7 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
     # authentication_classes=(CotumAuthentication,),
-    
+
 )
 
 
@@ -30,12 +30,12 @@ urlpatterns = [
     path('schema-viewer/', include('schema_viewer.urls')),
     path('prometheus/', include('django_prometheus.urls')),
 
-
     #all entrys go to one point
-        path('api/', include('accounts.urls')),
-        path('chat/', include('chat.urls')),
-        path('game/', include('game.urls')),
-        path('relations/', include('relations.urls')),
+    path('api/', include('accounts.urls')),
+    path('chat/', include('chat.urls')),
+    path('game/', include('game.urls')),
+    path('relations/', include('relations.urls')),
+
 ]
 
     # structering api endpoints
