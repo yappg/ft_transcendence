@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 # fron django.request import 
 
 from django.http import JsonResponse
+from accounts.authenticate import CotumAuthentication
 
 # # temporary
 from rest_framework import permissions
@@ -18,6 +19,7 @@ schema_view = get_schema_view(
         description="API for the Tournament App",),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    # authentication_classes=(CotumAuthentication,),
     
 )
 
