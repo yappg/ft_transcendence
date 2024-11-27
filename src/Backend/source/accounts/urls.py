@@ -1,26 +1,30 @@
 from django.urls import path, include
-from .views import * # SignInView, SignUpView, OAuth42LoginView, OAuth42CallbackView, LogoutView , PlayersViewList, GenerateURI, VerifyOTP, DisableOTP
+from .views import * 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
 # regular auth
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('signin/', SignInView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('auth/signup/', SignUpView.as_view(), name='signup'),
+    path('auth/signin/', SignInView.as_view(), name='login'),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
+
 # Oauth (42, Google)
-    path('login/<slug:provider>/', OAuth42LoginView.as_view(), name='oauth_login'),
-    path('callback/<slug:provider>/', OAuth42CallbackView.as_view(), name='oauth_callback'),
+    path('oauth/login/<slug:provider>/', OAuth42LoginView.as_view(), name='oauth_login'),
+    path('oauth/callback/<slug:provider>/', OAuth42CallbackView.as_view(), name='oauth_callback'),
+
 # JWT tokens
-    path('token/', TokenObtainPairView.as_view(), name='token'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token'),
+    path('JWT/token/', TokenObtainPairView.as_view(), name='token'),
+    path('JWT/token/refresh/', TokenRefreshView.as_view(), name='token'),
+
 #2fa
-    path('generate-uri/', GenerateURI.as_view(), name='generate_uri'),
-    path('verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'), 
-    path('validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
-    path('disable-otp/', DisableOTP.as_view(), name='disable_otp'),
-#upload media UpdateUserInfos
-    path('update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
+    path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),
+    path('2fa/verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'), 
+    path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
+    path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
+
+#upload media UpdateUserInfos0
+    path('upload/update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
 
 #list users
-    path('all/', PlayersViewList.as_view(), name='playersList'),
+    path('list/all/', PlayersViewList.as_view(), name='playersList'),
 ]

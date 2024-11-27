@@ -8,13 +8,16 @@ from .models import ChatRoom, Message
 from .serializers import MessageSerializer, ChatRoomSerializer
 from accounts.models import Player
 from django.db import transaction
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 
 class ChatView(APIView):
-    
-    # def get(self, request):
-        
+    @swagger_auto_schema(
+        request_body=ChatRoomSerializer,
+        responses={200: 'Success', 400: 'Invalid input'}
+    )
     def post(self, request):
         current_user = request.user
         friend_username = request.data.get('senders')
@@ -31,14 +34,11 @@ class ChatView(APIView):
         # Check if a chat between the two participants already exists
         chat_name = f"{current_user}_{friend}_room"
         chat = ChatRoom.objects.filter(name=chat_name).first()
-        print("ddddddddddddddddd1")
  
         # Create a new chat and add both senders
         if chat is None:
             chat = ChatRoom.objects.create(name=chat_name)
             chat.senders.add(current_user, friend)
-
-        print("ddddddddddddddddd2")
         # Serialize and return the chat
         serializer = ChatRoomSerializer(chat)
         return Response(serializer.data)
@@ -67,6 +67,10 @@ class ChatMessagesView(APIView):
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
     
+    @swagger_auto_schema(
+        request_body=MessageSerializer,
+        responses={200: 'Success', 400: 'Invalid input'}
+    )
     def post(self, request, chatId):
         sender = request.user
         print(f"-----------------{sender}-----------------------------------1")
