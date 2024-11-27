@@ -1,95 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
+HTTP/1.1 200 OK
+Date: Mon, 25 Nov 2024 16:28:23 GMT
+Content-Type: text/html;charset=utf-8
+Transfer-Encoding: chunked
+Connection: close
+Cache-Control: no-store, must-revalidate, max-age=0
+content-language: en
+content-security-policy: frame-src 'self'; frame-ancestors 'self'; object-src 'none';
+referrer-policy: no-referrer
+Set-Cookie: AUTH_SESSION_ID=173c1e37-1896-4a93-a1a8-7a3436ede540.keycloak-1-59989; Version=1; Path=/auth/realms/students-42/; SameSite=None; Secure; HttpOnly,AUTH_SESSION_ID_LEGACY=173c1e37-1896-4a93-a1a8-7a3436ede540.keycloak-1-59989; Version=1; Path=/auth/realms/students-42/; Secure; HttpOnly,KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIyMGFlMjM0My1lZmM2LTQ2M2QtOGU2MC04ODE0ZDIxZGVlNTgifQ.eyJjaWQiOiJpbnRyYSIsInB0eSI6Im9wZW5pZC1jb25uZWN0IiwicnVyaSI6Imh0dHBzOi8vcHJvZmlsZS5pbnRyYS40Mi5mci91c2Vycy9hdXRoL2tleWNsb2FrX3N0dWRlbnQvY2FsbGJhY2siLCJhY3QiOiJBVVRIRU5USUNBVEUiLCJub3RlcyI6eyJpc3MiOiJodHRwczovL2F1dGguNDIuZnIvYXV0aC9yZWFsbXMvc3R1ZGVudHMtNDIiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vcHJvZmlsZS5pbnRyYS40Mi5mci91c2Vycy9hdXRoL2tleWNsb2FrX3N0dWRlbnQvY2FsbGJhY2siLCJzdGF0ZSI6IjM2NmNlMzFhODU2ODk5MDZiNzllMGM2YzQ1YmVlMDE1Y2VkN2MwMmJhNjczODk2ZiJ9fQ.rgwjSAaRf46uiO6mIhcPR3vdINVuNsVhEE4m0Xcagnk; Version=1; Path=/auth/realms/students-42/; Secure; HttpOnly
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-robots-tag: none
+x-xss-protection: 1; mode=block
+cf-cache-status: DYNAMIC
+Server: cloudflare
+CF-RAY: 8e8302f7fdb73153-MAD
+Content-Encoding: gzip
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Room</title>
-    <style>
-        #messages {
-            height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        .message {
-            margin: 5px 0;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-        }
-        #friends-list {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-        }
-        .friend {
-            margin: 5px 0;
-            padding: 5px;
-            background-color: #e9e9e9;
-            border-radius: 5px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Sign in to Realm for 42 students</title>
+    <link rel="icon" href="/auth/resources/yyzrk/login/students/img/favicon.ico" />
+            <link href="/auth/resources/yyzrk/login/students/css/styles.css?v=1.2" rel="stylesheet" />
 </head>
-<body>
-    <h1>Chat Room</h1>
-    
-    <!-- Friends List Section -->
-    <div id="friends-list">
-        <h2>Friends</h2>
-        
-            <p>No friends found.</p>
-        
+
+<body class="">
+<div class="">
+    <div id="kc-header" class="">
+        <div id="kc-header-wrapper"
+             class="">Realm for 42 students</div>
+    </div>
+    <div class="">
+        <header class="">
+                <h1 id="kc-page-title">
+</h1>
+      </header>
+      <div id="kc-content">
+        <div id="kc-content-wrapper">
+
+
+    <div id="kc-form">
+      <img id="logo" src="/auth/resources/yyzrk/login/students/img/42_logo.svg"/>
+      <div id="kc-form-wrapper">
+            <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="https://auth.42.fr/auth/realms/students-42/login-actions/authenticate?session_code=1qx3OmwqpDKgmz8c4TFv2L9OuiwYh0v60T6BdWmH3gE&amp;execution=e3ed291b-5578-4fcf-9f1a-d38a1ee483af&amp;client_id=intra&amp;tab_id=uM6bPsyZUz4" method="post">
+                    <div class="">
+                        <input tabindex="1" id="username" class="" name="username" value=""  type="text" autofocus autocomplete="off"
+                               placeholder="Login or email"
+                               aria-invalid=""
+                        />
+
+
+                    </div>
+
+                <div class="">
+                    <input tabindex="2" id="password" class="" name="password" type="password" autocomplete="off"
+                           placeholder=Password
+                           aria-invalid=""
+                    />
+
+
+                </div>
+
+                <div class=" ">
+                    <div id="kc-form-options">
+                            <div class="checkbox" id="remember-me">
+                                <label>
+                                        <input tabindex="3" id="rememberMe" name="rememberMe" type="checkbox"> Remember me
+                                </label>
+                            </div>
+                        </div>
+
+                  </div>
+
+                  <div id="kc-form-buttons" class="">
+                      <input type="hidden" id="id-hidden-input" name="credentialId" />
+                      <input tabindex="4" class="   " name="login" id="kc-login" type="submit" value="Sign In"/>
+                  </div>
+
+                  <div class="">
+                    <a id="reset-password" tabindex="5" href="https://signin.intra.42.fr/users/password/new">Forgot or change your password?</a>
+                  </div>
+                            <div class="">
+                                <a id="change-realm" tabindex="5" href="https://admin.intra.42.fr/users/auth/keycloak_admin">Sign in as staff</a>
+                            </div>
+                  <div class="">
+                    <a id= "legal" href="https://profile.intra.42.fr/legal" target="_blank">Read our terms and conditions</a>
+                  </div>
+            </form>
+        </div>
+
+
     </div>
 
-    <!-- Chat Messages Section -->
-    <div id="messages"></div>
-    
-    <!-- Chat Form -->
-    <form id="form">
-        <input type="text" name="message" placeholder="Type your message..." required />
-        <button type="submit">Send</button>
-    </form>
 
-    <script type="text/javascript">
-        const ws = new WebSocket('ws://localhost:8001/ws/socket-server');
-        const messagesDiv = document.getElementById('messages');
-        const form = document.getElementById('form');
 
-        ws.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            console.log('Data:', data);
-            
-            if (data.type === 'chat') {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message';
-                messageDiv.textContent = data.message;
-                messagesDiv.appendChild(messageDiv);
-                
-                // Auto-scroll to bottom
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }
-        };
+        </div>
+      </div>
 
-        ws.onerror = function(e) {
-            console.error('WebSocket error:', e);
-        };
-
-        ws.onclose = function(e) {
-            console.log('WebSocket connection closed:', e);
-        };
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const message = e.target.message.value.trim();
-            
-            if (message && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({
-                    'message': message
-                }));
-                form.reset();
-            }
-        });
-    </script>
-</body>
+    </div>
+  </div>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8e8302f7fdb73153',t:'MTczMjU1MjEwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
