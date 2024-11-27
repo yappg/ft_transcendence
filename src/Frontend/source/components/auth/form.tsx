@@ -43,7 +43,7 @@ const usernameSchema = z.string().min(3, 'Username must be at least 3 characters
 
 // API client
 class AuthClient {
-  private static readonly BASE_URL = 'http://localhost:8080/auth';
+  private static readonly BASE_URL = 'http://backend:8080/api/auth';
   private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
     try {
       const response = await fetch(`${this.BASE_URL}/${endpoint}/`, {

@@ -11,7 +11,7 @@ export default function SignupTFA() {
   };
   const sendOtp = async () => {
     try {
-      const result = await axios.post('http://backend:8080/2fa/validate-otp/', {
+      const result = await axios.post('http://backend:8080/api/2fa/validate-otp/', {
         username: 'mmesbahi',
         otp_token: value,
       });
