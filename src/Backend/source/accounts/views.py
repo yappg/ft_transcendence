@@ -10,7 +10,7 @@ from .permissions import AnonRateLimitThrottling
 from .models import Player
 from .serializers import *
 from .utils import *
-
+from drf_yasg.utils import swagger_auto_schema
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -19,27 +19,17 @@ class PlayersViewList(ListAPIView):
     queryset=Player.objects.all()
 
 # class PlayerView(APIView):
-class BaseAuthView(APIView):
-
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
 #------------------------------------ Auth ------------------------------------
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
+    @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            #why i do save the user here if i already returned one in the serializer create method
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
@@ -66,6 +56,7 @@ class SignInView(APIView):
     Serializer_class = SignInSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
+    @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
 
@@ -99,7 +90,6 @@ class SignInView(APIView):
         else :
             return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from .authenticate import CotumAuthentication
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     # permission_classes = [CotumAuthentication]
