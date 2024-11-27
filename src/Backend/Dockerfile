@@ -3,19 +3,17 @@ FROM python:alpine
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY . /app
-
 WORKDIR /app/source
+
+COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && chmod -R +x /app
 
-# RUN mkdir -p /app/staticfiles/
-
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-# CMD [ "tail", "-f", "/dev/null" ]
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
 # CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
+# CMD [ "tail", "-f", "/dev/null" ]

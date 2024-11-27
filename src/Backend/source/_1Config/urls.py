@@ -23,11 +23,6 @@ schema_view = get_schema_view(
     
 )
 
-from .views import YourAPIView
-
-
-def health_checkup(request):
-    return JsonResponse({'status', 'healty'}, status=200)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,7 +36,7 @@ urlpatterns = [
         path('chat/', include('chat.urls')),
         path('game/', include('game.urls')),
         path('relations/', include('relations.urls')),
-
+]
 
     # structering api endpoints
     # path('api')
