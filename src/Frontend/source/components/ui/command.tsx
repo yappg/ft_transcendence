@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 
 import * as React from 'react';
@@ -39,12 +40,17 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    value?: string;
+  }
+>(({ className, onChange, value, ...props }, ref) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
     <Search className="mr-2 size-4 shrink-0 text-[#B8B8B8] opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
+      onChange={onChange}
+      value={value}
       className={cn(
         'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-[#B8B8B8] disabled:cursor-not-allowed disabled:opacity-50 font-coustard',
         className
@@ -53,8 +59,7 @@ const CommandInput = React.forwardRef<
     />
   </div>
 ));
-
-CommandInput.displayName = CommandPrimitive.Input.displayName;
+CommandInput.displayName = 'CommandInput';
 
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,

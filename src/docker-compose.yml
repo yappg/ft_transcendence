@@ -49,34 +49,35 @@ services:
     restart: unless-stopped
 
 
-  # frontend:
-  #     container_name: frontend
-  #     build:
-  #       context: ./frontend
-  #       dockerfile: Dockerfile
-  #     image: frontend
-  #     # DEV =====>
-  #     volumes:
-  #       - ./Frontend/source:/app/source:rw
-  #       - /app/source/.next
-  #       - /app/source/node_modules
-  #     # =========>
-  #     environment:
-  #       BACKEND_URL: http://backend:8080
-  #     networks:
-  #       - transcendence
-  #     ports:
-  #       - 3000:3000
-  #     # depends_on:
-  #     #     backend:
-  #     #         condition: service_healthy
-  #     # healthcheck:
-  #     #     test: ["CMD", ""]
-  #     #     interval: 1m30s
-  #     #     timeout: 30s
-  #     #     retries: 5
-  #     #     start_period: 30s
-  #     restart: always
+  frontend:
+      container_name: frontend
+      build:
+        context: ./Frontend
+        target: ${NODE_ENV:-development}
+        dockerfile: Dockerfile
+      image: frontend
+      environment:
+        NODE_ENV: ${NODE_ENV:-development}
+# DEV ==============>
+      volumes:
+        - ./Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
+      networks:
+        - transcendence
+      ports:
+        - 3000:3000
+      # depends_on:
+      #     backend:
+      #         condition: service_healthy
+      # healthcheck:
+      #     test: ["CMD", ""]
+      #     interval: 1m30s
+      #     timeout: 30s
+      #     retries: 5
+      #     start_period: 30s
+      restart: always
 
 
   backend:
@@ -85,12 +86,8 @@ services:
         context: ./Backend
         dockerfile: Dockerfile
       image: backend
-      # DEV =====>
-      volumes:
-        - ./Backend/source:/app/source:rw
-      # =========>
       environment:
-        DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+        DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-_1Config.development}
         JWT_SECRET_KEY: ${JWT_SECRET_KEY}
         42_CLIENT_ID: $${42_CLIENT_ID}
         42_CLIENT_SECRET: $${42_CLIENT_SECRET}
@@ -100,6 +97,10 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
+# DEV ==============>
+      volumes:
+        - ./Backend/source:/app/source:rw
+# ==================>
       networks:
         - transcendence
       ports:
@@ -121,11 +122,11 @@ services:
   cache:
     container_name: redis
     image: redis:alpine
+    environment:
+      REDIS_PASS: ${REDIS_PASS}
     volumes:
       - redis-data:/data
       - "./Services/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro"
-    environment:
-      REDIS_PASS: ${REDIS_PASS}
     command: "redis-server /usr/local/etc/redis/redis.conf  --requirepass $REDIS_PASS"
     networks:
       - transcendence
@@ -154,12 +155,12 @@ services:
   database:
     container_name: postgres
     image: postgres:alpine
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - transcendence
     healthcheck:
@@ -225,14 +226,14 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - "./Services/grafana:/etc/grafana/provisioning:ro"
     environment:
       GF_SERVER_ROOT_URL: https://localhost/monitoring
       GF_SERVER_SERVE_FROM_SUB_PATH: true
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - "./Services/grafana:/etc/grafana/provisioning:ro"
     networks:
       - transcendence
     depends_on:
@@ -275,5 +276,3 @@ volumes:
 networks:
   transcendence:
     name: transcendence
-  # infra:
-  #     name: infra

@@ -110,7 +110,8 @@ class LogoutView(APIView):
 import pyotp
 
 class GenerateURI(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
     serializer_class = GenerateOTPSerializer
 
     def get(self, request):
@@ -134,12 +135,12 @@ class GenerateURI(APIView):
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
-        qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
+        # qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
         return Response({'uri': uri}, status=200)
 
 import qrcode
 class VerifyOTP(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = VerifyOTPSerializer
 
     def post(self, request):
@@ -192,7 +193,7 @@ class ValidateOTP(APIView):
         # return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         username = request.data['username']
@@ -257,6 +258,7 @@ class OAuth42CallbackView(APIView):
         user, created = store_user_data(user_data, provider)
 
         jwt_tokens = generate_tokens(user)
+        print(jwt_tokens)
         return Response({
             'id': user.id,
             'username': user.username,
