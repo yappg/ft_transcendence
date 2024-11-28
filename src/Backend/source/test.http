@@ -14,13 +14,13 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "meryem",
-    "email": "meryem@gmail.com",
+    "username": "hiya",
+    "email": "hiya@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
 
-######################
+###################### 
 
 GET http://localhost:8080/relations/friends/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTkxLCJpYXQiOjE3MzI3NTQzOTEsImp0aSI6ImE1MWE3ZGU2YjdlMjQ4MzQ4MjE3MWZhMjgwNTgxZWMwIiwidXNlcl9pZCI6M30.lomaKh-0_TUc1jUXnnvp2DP3_e_05U29rSAjw41Q-qs
@@ -32,7 +32,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 Content-Type: application/json
 
 {
-    "id":4,
     "receiver":"meryem"
 }
 ########
@@ -91,8 +90,7 @@ GET http://localhost:8080/api/oauth/login/42
 # POST http://localhost:8080/api/JWT/token/refresh
 
 GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-########
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODI2OTY1LCJpYXQiOjE3MzI4MjUxNjUsImp0aSI6IjYzNjU1YzM5NDNjMjQ0MjBiNjIwOWU0MWE1OTQ0ODE1IiwidXNlcl9pZCI6MX0.21KdLFv3fuuw4dl4vMCOgmRIZQTo2--gq-IMmOfdtfM
 ########
 
 POST http://localhost:8080/chat/ch/
