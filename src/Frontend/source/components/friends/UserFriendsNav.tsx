@@ -58,7 +58,8 @@ const UserFriendsNav = (): JSX.Element => {
       <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between md:px-2 md:pr-4 lg:px-10">
         <div className="flex h-fit flex-row items-center justify-between">
           <Avatar className="max-w-[120px] md:size-auto ">
-            <AvatarImage src="/ProfilePhoto.svg" />
+            //////////
+            <AvatarImage src="" />
             <AvatarFallback className="font-dayson m-2 size-[80px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
               CN
             </AvatarFallback>
