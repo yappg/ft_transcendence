@@ -23,7 +23,7 @@ CMD [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
 # CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
-# Stage 3: Production build stage
+# Stage 2: Production build stage
 ######################################
 
 FROM python:alpine AS production
