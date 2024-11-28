@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import * 
+from .views import *
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -18,7 +18,7 @@ urlpatterns = [
 
 #2fa
     path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),
-    path('2fa/verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'), 
+    path('2fa/verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'),
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
