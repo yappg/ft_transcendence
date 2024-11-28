@@ -3,31 +3,56 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "opxaopxa",
-    "email": "opxaxopxa@gmail.com",
+    "username": "ali",
+    "email": "ali@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
 
 ######################
-
 POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "Teereeechoo",
-    "email": "Teereeechoo@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "hiya",
+    "email": "hiya@gmail.com",
+    "password": "csfdsgopxabcvbdfgdfg",
+    "password2": "csfdsgopxabcvbdfgdfg"
 }
-######
 
-POST http://localhost:8080/api/token/
+###################### 
+
+GET http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTkxLCJpYXQiOjE3MzI3NTQzOTEsImp0aSI6ImE1MWE3ZGU2YjdlMjQ4MzQ4MjE3MWZhMjgwNTgxZWMwIiwidXNlcl9pZCI6M30.lomaKh-0_TUc1jUXnnvp2DP3_e_05U29rSAjw41Q-qs
+
+######################
+
+POST http://localhost:8080/relations/friends/invite/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU0NzIzLCJpYXQiOjE3MzI3NTI5MjMsImp0aSI6ImMxMzFhY2QyMWQ2YzQyODNhMjdmYjAzNDNiZGM0MTg3IiwidXNlcl9pZCI6M30.uWwWu_BAwRD1wY65qvpD5WPb3-r9bk3C10j3G64yA0Y
 Content-Type: application/json
 
 {
-    "username": "opa",
-    "password": "csfdsgbcvbdfgdfg"
+    "receiver":"meryem"
+}
+########
+
+POST http://localhost:8080/relations/friends/accept/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTI5LCJpYXQiOjE3MzI3NTQzMjksImp0aSI6IjJjZDJiOTRiZTAxZTQwODA4ZjZjM2M3Y2I3ZWU4ODY1IiwidXNlcl9pZCI6M30.0-rPtXlFgXnQRCzyE4MFtdOKRiIFy2f--cMt4cvchvc
+Content-Type: application/json
+
+{
+    "sender":"meryem"
+}
+######
+
+
+
+POST http://localhost:8080/api/JWT/token/
+Content-Type: application/json
+
+{
+    "username": "ali",
+    "password": "csfdsgopxabcvbdfgdfg"
 }
 ######################
 
@@ -65,8 +90,7 @@ GET http://localhost:8080/api/oauth/login/42
 # POST http://localhost:8080/api/JWT/token/refresh
 
 GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-########
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODI2OTY1LCJpYXQiOjE3MzI4MjUxNjUsImp0aSI6IjYzNjU1YzM5NDNjMjQ0MjBiNjIwOWU0MWE1OTQ0ODE1IiwidXNlcl9pZCI6MX0.21KdLFv3fuuw4dl4vMCOgmRIZQTo2--gq-IMmOfdtfM
 ########
 
 POST http://localhost:8080/chat/ch/

@@ -31,7 +31,7 @@ const FriendRequestCard = ({
       icon: '/ach1.svg',
     },
   ];
-
+  console.log('-->', ProfilePhoto);
   return (
     <div
       className="bg-black-crd flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] px-10 xl:px-16 2xl:px-28"
