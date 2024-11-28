@@ -11,8 +11,8 @@ class Player(AbstractUser):
     # is_online=models.BooleanField(default=False)
     # wins=models.IntegerField(default=0)
     # losses=models.IntegerField(default=0)
-    avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
-    cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
+    avatar=models.ImageField(upload_to='Avatars/', default='Avatars/.defaultAvatar.jpeg')
+    cover=models.ImageField(upload_to='Covers/', default='Covers/.defaultCover.jpeg')
 
 
     # pending_friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pending_friends', blank=True)
@@ -24,7 +24,7 @@ class Player(AbstractUser):
     enabled_2fa=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=16, default=None, null=True, blank=True) #, null=True, blank=True
     verified_otp=models.BooleanField(default=False)
-
+    
     def __str__(self):
         return self.username
 
