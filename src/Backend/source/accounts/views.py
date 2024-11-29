@@ -28,6 +28,8 @@ class SignUpView(APIView):
     @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
 
+        if request.user.is_authenticated:
+            return Response({'error': 'You are already authenticated'}, status=400)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -58,8 +60,10 @@ class SignInView(APIView):
 
     @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
-        Serializer = self.Serializer_class(data=request.data)
 
+        if request.user.is_authenticated:
+            return Response({'error': 'You are already authenticated'}, status=400)
+        Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
             # maybe it would be implemented as follow  or it could be validated on the serializer
@@ -221,6 +225,9 @@ from rest_framework.response import Response
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, provider):
+
+        if request.user.is_authenticated:
+            return Response({'error': 'You are already authenticated'}, status=400)
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
             client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
