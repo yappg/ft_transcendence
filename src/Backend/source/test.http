@@ -1,4 +1,6 @@
 
+
+
 POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
@@ -10,6 +12,12 @@ Content-Type: application/json
 }
 
 ######################
+
+GET http://localhost:8080/api/users/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDAzMzU1LCJpYXQiOjE3MzMwMDE1NTUsImp0aSI6IjZiOTYwZWU0ZjU3MjQwODA4Yjc1MWRkZGU2Njk0MWI1IiwidXNlcl9pZCI6MX0.emVOBBsPqqjSBSY-UvFg4CP5mH2DhHf5DxCBrrHca-4
+
+
+###
 POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
@@ -89,12 +97,20 @@ GET http://localhost:8080/api/oauth/login/42
 
 # POST http://localhost:8080/api/JWT/token/refresh
 
-GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODI2OTY1LCJpYXQiOjE3MzI4MjUxNjUsImp0aSI6IjYzNjU1YzM5NDNjMjQ0MjBiNjIwOWU0MWE1OTQ0ODE1IiwidXNlcl9pZCI6MX0.21KdLFv3fuuw4dl4vMCOgmRIZQTo2--gq-IMmOfdtfM
+GET http://localhost:8080/api/ /all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDAzMzU1LCJpYXQiOjE3MzMwMDE1NTUsImp0aSI6IjZiOTYwZWU0ZjU3MjQwODA4Yjc1MWRkZGU2Njk0MWI1IiwidXNlcl9pZCI6MX0.emVOBBsPqqjSBSY-UvFg4CP5mH2DhHf5DxCBrrHca-4
+
 ########
 
 POST http://localhost:8080/chat/ch/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+Content-Type: application/json
+
+{
+    
+}
+
+
 ########
 POST http://localhost:8080/relations/friends/invite/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
@@ -106,8 +122,7 @@ Content-Type: application/json
 ########
 
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDEwODI4LCJpYXQiOjE3MzMwMDkwMjgsImp0aSI6IjJjNzRiYWU3NDA3MzRiOGRhY2RmNzc3OGRmODVlYWNlIiwidXNlcl9pZCI6MX0.koY_CfsHVsZoQzTg4poKiBs8uDN8CfdCmUSgO-z2bmo
 ########
 GET http://localhost:8080/relations/friends/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
