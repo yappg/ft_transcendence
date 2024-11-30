@@ -18,7 +18,6 @@ class PlayersViewList(ListAPIView):
     serializer_class=PlayerSerializer
     queryset=Player.objects.all()
 
-# class PlayerView(APIView):
 #------------------------------------ Auth ------------------------------------
 class SignUpView(APIView):
     permission_classes = [AllowAny]
@@ -298,3 +297,4 @@ class UpdateUserInfos(APIView):
         #     'win_rate': user.win_rate,
         #     'last_game': user.last_game,
         # }, status=200)
+
