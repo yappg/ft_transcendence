@@ -25,23 +25,6 @@ urlpatterns = [
 #upload media UpdateUserInfos0
     path('upload/update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
 
-
-#########################
-    path('Self/', SelfView.as_view(), name='self'),
-    path('Self/Profile', SelfView.as_view(), name='self'),
-    path('Self/Settings', SelfView.as_view(), name='self'),
-
-    path('Players/', PlayersView.as_view(), name='players'),
-    path('Players/<int:player-id>/',PlayersViewId.as_view(), name='playerId'),
-    path('Players/<int:player-id>/Profile/', ProfileView.as_view(), name='playersProfile'),
-    path('Players/<int:player-id>/Settings/', SettingsView.as_view(), name='playersSettings'),
-#########################
-
-
-    path('/<int:id>',),
-    # path('Player/<int:id>/',),
-
-
 #list users
     path('list/all/', PlayersViewList.as_view(), name='playersList'),
 ]
