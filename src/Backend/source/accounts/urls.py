@@ -27,4 +27,7 @@ urlpatterns = [
 
 #list users
     path('list/all/', PlayersViewList.as_view(), name='playersList'),
+# get user details
+
+    path('users/<int:userId>', PlayerProfileView.as_view(), name='playerDetails'),
 ]
