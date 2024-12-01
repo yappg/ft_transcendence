@@ -3,14 +3,40 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.core.cache import cache
 from .permissions import AnonRateLimitThrottling
-from .models import Player
+from .models import *
 from .serializers import *
 from .utils import *
 from drf_yasg.utils import swagger_auto_schema
+
+
+
+
+class PlayerProfileView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        userInfo = request.user
+        serializer = PlayerSerializer(userInfo)
+        return Response(serializer.data, status=200)
+
+
+# -----
+
+
+class PlayerProfileViewWithId(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, userId):
+        userInfo = get_object_or_404(Player, id=userId)
+        serializer = PlayerSerializer(userInfo)
+        return Response(serializer.data, status=200)
+
+# ----
 
 class PlayersViewList(ListAPIView):
     permission_classes = [IsAuthenticated]
