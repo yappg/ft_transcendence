@@ -25,8 +25,6 @@ class PlayerSettingsSerializer(serializers.ModelSerializer):
 
 #########################
 
-
-
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
