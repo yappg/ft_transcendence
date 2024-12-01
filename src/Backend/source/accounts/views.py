@@ -29,7 +29,7 @@ class SignUpView(APIView):
     def post(self, request):
 
         if request.user.is_authenticated:
-            return Response({'error': 'You are already authenticated'}, status=400)
+            return Response({'error': 'You are already authenticated'}, status=200)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -49,9 +49,9 @@ class SignUpView(APIView):
                 )
                 return resp
             else :
-                return Response({'error': 'user not created'}, status=400)
+                return Response({'error': 'user not created'}, status=200)
 
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=200)
 
 class SignInView(APIView):
     permission_classes = [AllowAny]
@@ -62,7 +62,7 @@ class SignInView(APIView):
     def post(self, request):
 
         if request.user.is_authenticated:
-            return Response({'error': 'You are already authenticated'}, status=400)
+            return Response({'error': 'You are already authenticated'}, status=200)
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
@@ -92,23 +92,21 @@ class SignInView(APIView):
             # )
             return resp
         else :
-            return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(Serializer.errors, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
-    # permission_classes = [CotumAuthentication]
 
-    #before logout clear the cookies in th browser
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get('refresh_token')
             tokens = RefreshToken(refresh_token)
             tokens.blacklist()
-            response = Response({'message': 'Logged Out Successfuly'}, status=200)
+            response = Response({'message': 'Logged Out Successfuly'}, status=HTTP_200_OK)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
         except Exception as e:
-            return Response({'error': str(e)}, status=400)
+            return Response({'error': str(e)}, status=200)
         return response
 
 #------------------------------------- 2FA ------------------------------------19788791
@@ -119,18 +117,15 @@ class GenerateURI(APIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = GenerateOTPSerializer
 
-    def get(self, request):
-        return Response({'page to Serve': 'generate uri page'}, status=200)
-
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
         #     return Response(serializer.errors, status=400)
         user = Player.objects.get(username=request.data['username'])
         if user == None:
-            return Response({'error': 'user Not found'}, status=404)
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         if user.enabled_2fa == True:
-            return Response({'error': '2fa already enabled'}, status=400)
+            return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
         secret_key = pyotp.random_base32()
         totp = pyotp.TOTP(secret_key)
@@ -141,7 +136,7 @@ class GenerateURI(APIView):
         user.otp_secret_key = secret_key
         user.save()
         # qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
-        return Response({'uri': uri}, status=200)
+        return Response({'uri': uri}, status=status.HTTP_200_OK)
 
 import qrcode
 class VerifyOTP(APIView):
@@ -156,14 +151,14 @@ class VerifyOTP(APIView):
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
         if user == None:
-            return Response({'error': 'user Not found'}, status=404)
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         totp = pyotp.TOTP(user.otp_secret_key)
         bol = totp.verify(otp_token)
         if not bol:
-            return Response({'error': 'invalid token'}, status=400)
+            return Response({'error': 'invalid token'}, status=status.HTTP_200_OK)
         user.verified_otp = True
         user.save()
-        return Response({'message': '2fa Verified'}, status=200)
+        return Response({'message': '2fa Verified'}, status=status.HTTP_200_OK)
 
 class ValidateOTP(APIView):
     permission_class = [IsAuthenticated]
@@ -172,16 +167,16 @@ class ValidateOTP(APIView):
     def post(self, request):
         serializer = self.serializer_class(request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_200_OK)
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
         if user == None:
-            return Response({'error': 'user Not found'}, status=404)
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         totp = pyotp.TOTP(user.otp_secret_key)
         bol = totp.verify(otp_token)
         if not bol:
-            return Response({'message': 'Invalid Token'}, status=400)
+            return Response({'message': 'Invalid Token'}, status=status.HTTP_200_OK)
         access_token, refresh_token = generate_tokens(user)
         resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
         resp.set_cookie(
@@ -195,7 +190,6 @@ class ValidateOTP(APIView):
             httponly=False
         )
         return resp
-        # return Response({'message': '2fa Verified'}, status=200)
 
 class DisableOTP(APIView):
     permission_classes = [AllowAny]
@@ -211,7 +205,7 @@ class DisableOTP(APIView):
         user.verified_otp = False
         user.otp_secret_key = ''
         user.save()
-        return Response({'message':'2fa Disabled'})
+        return Response({'message':'2fa Disabled'}, status=status.HTTP_200_OK)
 
 #---------------------------------- OAuth2.0 ----------------------------------
 import requests
@@ -248,11 +242,11 @@ class OAuth42CallbackView(APIView):
     def get(self, request, provider):
 
         if (provider != '42' and provider != 'google'):
-            return Response({'error': 'Invalid platform'}, status=400)
+            return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
         code = request.GET.get('code')
         if not code:
-            return Response({'error': 'No code provided'}, status=400)
+            return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 
         token_url, data = APIdata(code, provider)
         response = requests.post(token_url, data=data)
@@ -260,7 +254,7 @@ class OAuth42CallbackView(APIView):
         print(token_data)
 
         if 'access_token' not in token_data:
-            return Response({'error': 'Failed to obtain access token'}, status=400)
+            return Response({'error': 'Failed to obtain access token'}, status=status.HTTP_200_OK)
 
         user_data = fetch_user_data(token_data['access_token'], provider)
         user, created = store_user_data(user_data, provider)
@@ -286,22 +280,6 @@ class UpdateUserInfos(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
-# class PlayerStats(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-        # return Response({
-        #     'username': user.username,
-        #     'email': user.email,
-        #     'score': user.score,
-        #     'games_played': user.games_played,
-        #     'games_won': user.games_won,
-        #     'games_lost': user.games_lost,
-        #     'games_draw': user.games_draw,
-        #     'win_rate': user.win_rate,
-        #     'last_game': user.last_game,
-        # }, status=200)
