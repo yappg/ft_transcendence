@@ -112,6 +112,7 @@ class SignInView(APIView):
                 value=refresh_token,
                 httponly=False
             )
+        
             # csrf_token = get_token(request)
             # resp.set_cookie(
             #     key='csrftoken',
@@ -121,6 +122,7 @@ class SignInView(APIView):
             return resp
         else :
             return Response(Serializer.errors, status=status.HTTP_200_OK)
+
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
