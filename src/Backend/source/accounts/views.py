@@ -14,10 +14,21 @@ from .utils import *
 from drf_yasg.utils import swagger_auto_schema
 
 
-# -----
 
 
 class PlayerProfileView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        userInfo = request.user
+        serializer = PlayerSerializer(userInfo)
+        return Response(serializer.data, status=200)
+
+
+# -----
+
+
+class PlayerProfileViewWithId(APIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, request, userId):
