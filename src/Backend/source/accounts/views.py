@@ -148,7 +148,7 @@ class GenerateURI(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=400)
+        #     return Response(serializer.errors, status=status.HTTP_200_OK)
         user = Player.objects.get(username=request.data['username'])
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
@@ -158,13 +158,13 @@ class GenerateURI(APIView):
         secret_key = pyotp.random_base32()
         totp = pyotp.TOTP(secret_key)
         uri = totp.provisioning_uri(name='transcendence', issuer_name='kadigh') # issuer_name=username
-        #URI must be converted to QR Code in frontend
-        #save user data secret key in the model
+
         user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
-        # qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
-        return Response({'uri': uri}, status=status.HTTP_200_OK)
+        return Response(
+            {'uri': uri, 'enabled_2fa': user.enabled_2fa},
+            status=status.HTTP_200_OK)
 
 import qrcode
 class VerifyOTP(APIView):
@@ -233,7 +233,9 @@ class DisableOTP(APIView):
         user.verified_otp = False
         user.otp_secret_key = ''
         user.save()
-        return Response({'message':'2fa Disabled'}, status=status.HTTP_200_OK)
+        return Response(
+            {'message':'2fa Disabled', 'enabled_2fa': user.enabled_2fa},
+            status=status.HTTP_200_OK)
 
 #---------------------------------- OAuth2.0 ----------------------------------
 import requests
