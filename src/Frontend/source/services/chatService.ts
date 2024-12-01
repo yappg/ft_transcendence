@@ -17,13 +17,14 @@ const userApi = axios.create({
 });
 
 const setAuthToken = (config) => {
+  console.log('setting token')
   const token = Cookies.get('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+
   }
   return config;
 };
-
 chatApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 userApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 
@@ -98,7 +99,7 @@ export const chatService = {
   },
 
    getCurrentUserId: async () => {
-    const response = await axios.get(`${USER_BASE_URL}/users/me/`);
+    const response = await userApi.get(`${USER_BASE_URL}/users/me`);
     return response.data;
   },
 };
