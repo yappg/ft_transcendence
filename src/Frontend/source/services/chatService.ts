@@ -95,5 +95,10 @@ export const chatService = {
   async getUserDetails(userId: number): Promise<User> {
     const response = await userApi.get(`/users/${userId}`);
     return response.data;
-  }
+  },
+
+   getCurrentUserId: async () => {
+    const response = await axios.get(`${USER_BASE_URL}/users/me/`);
+    return response.data;
+  },
 };

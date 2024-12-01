@@ -11,6 +11,8 @@ import { Message, User, Chat } from '@/constants/chat';
 interface MessagesProps {
   chatId: number;
   chatPartner: User;
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
 const MessageBubble: React.FC<{ message: Message, isCurrentUser: boolean }> = ({
@@ -32,8 +34,7 @@ const MessageBubble: React.FC<{ message: Message, isCurrentUser: boolean }> = ({
   );
 };
 
-export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -41,18 +42,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner }) => {
   const currentUserId = Cookies.get('user_id');
 
   useEffect(() => {
-    // Fetch existing messages
-    const fetchMessages = async () => {
-      try {
-        const fetchedMessages = await chatService.getChatMessages(chatId);
-        setMessages(fetchedMessages);
-      } catch (error) {
-        console.error('Failed to fetch messages', error);
-      }
-    };
-
-    fetchMessages();
-
     // Establish WebSocket connection
     const setupWebSocket = async () => {
       try {
@@ -166,38 +155,17 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner }) => {
 interface ChatItemProps {
   chat: Chat;
   onClick: () => void;
+  users: { [key: number]: User };
+  selectedChat: Chat | null;
 }
 
-
-const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick }) => {
-  const { id, senders, last_message } = chat;
+const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat }) => {
+  const { senders, last_message } = chat;
   const participant = senders[0]; // Assuming the first participant is the one to display
-
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        setLoading(true);
-        const userDetails = await chatService.getUserDetails(participant.id);
-        setUser(userDetails);
-      } catch (err) {
-        setError('Failed to fetch user details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserDetails();
-  }, [participant.id]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  const user = users[participant.id];
 
   return (
-    <div onClick={onClick} className="flex h-[100px] w-full items-center justify-between gap-2 border-b border-gray-400 px-2 text-white cursor-pointer">
+    <div onClick={onClick} className={`flex h-[100px] w-full items-center justify-between gap-2 border-b border-gray-400 px-2 text-white cursor-pointer ${selectedChat && selectedChat.id === chat.id ? 'bg-gray-700' : ''}`}>
       <div className="flex h-full w-3/4 items-center justify-start gap-2 p-2">
         <div className="flex size-[60px] items-center justify-center rounded-full">
           {user?.profile_picture ? (
@@ -227,44 +195,25 @@ const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick }) => {
   );
 };
 
-export default ChatItem;
+interface ChatListProps {
+  onChatSelect: (chat: Chat) => void;
+  selectedChat: Chat | null;
+  chats: Chat[];
+  users: { [key: number]: User };
+}
 
-export const ChatList: React.FC<{ onChatSelect: (chat: Chat) => void }> = ({ onChatSelect }) => {
-  const [chats, setChats] = useState<Chat[]>([]);
-
-  useEffect(() => {
-    // Fetch chats when component mounts
-    const fetchChats = async () => {
-      try {
-        const fetchedChats = await chatService.getChatList();
-        setChats(fetchedChats);
-      } catch (error) {
-        console.error('Failed to fetch chats', error);
-      }
-    };
-
-    fetchChats();
-  }, []);
-
+export const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChat, chats, users }) => {
   return (
-    <div className="bg-black-crd costum-little-shadow relative col-start-1 col-end-4 overflow-hidden rounded-2xl lg:col-start-3">
-      <div className="bg-black-crd sticky top-0 flex h-[120px] w-full items-center justify-center gap-4 px-4 dark:bg-black">
-        {/* ... existing search input ... */}
-      </div>
-      <div className="custom-scrollbar-container">
-        {chats.map((chat, index) => (
-          <div
-            key={index}
-            onClick={() => onChatSelect(chat)}
-            className="cursor-pointer"
-          >
-            <ChatItem
-              chat={chat}
-              onClick={() => onChatSelect(chat)}
-            />
-          </div>
-        ))}
-      </div>
+    <div className="chat-list">
+      {chats.map(chat => (
+        <ChatItem
+          key={chat.id}
+          chat={chat}
+          onClick={() => onChatSelect(chat)}
+          users={users}
+          selectedChat={selectedChat}
+        />
+      ))}
     </div>
   );
 };

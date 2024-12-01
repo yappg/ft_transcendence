@@ -22,8 +22,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "hiya",
-    "email": "hiya@gmail.com",
+    "username": "rooo",
+    "email": "rooo@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -102,11 +102,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ########
 
+
+
 POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDE4MzI4LCJpYXQiOjE3MzMwMTY1MjgsImp0aSI6IjRmYmExMDRmZDI3MjRiMzM5MDk1MmVmMTVjZjQxMTEzIiwidXNlcl9pZCI6Mn0.TKvCn3Fqot-vLnclOnOMQuIABwT1H3Mfy1NRU4Z1FoI
 Content-Type: application/json
 
 {
+    "senders":"hiya"
     
 }
 
@@ -122,14 +125,20 @@ Content-Type: application/json
 ########
 
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDEwODI4LCJpYXQiOjE3MzMwMDkwMjgsImp0aSI6IjJjNzRiYWU3NDA3MzRiOGRhY2RmNzc3OGRmODVlYWNlIiwidXNlcl9pZCI6MX0.koY_CfsHVsZoQzTg4poKiBs8uDN8CfdCmUSgO-z2bmo
-########
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDE4MzI4LCJpYXQiOjE3MzMwMTY1MjgsImp0aSI6IjRmYmExMDRmZDI3MjRiMzM5MDk1MmVmMTVjZjQxMTEzIiwidXNlcl9pZCI6Mn0.TKvCn3Fqot-vLnclOnOMQuIABwT1H3Mfy1NRU4Z1FoI
+
+####
 GET http://localhost:8080/relations/friends/
+
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 
 ########
 
+GET http://localhost:8080/api/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDIxNTU4LCJpYXQiOjE3MzMwMTk3NTgsImp0aSI6IjZhNGQ4OWZmMjk4NjRkMjRiOWM0NjUxZDM2ZDg2MGI5IiwidXNlcl9pZCI6Mn0.o-IyWNeTrbjzy2Yhqxfap3mCExi1g4Lwt13-eNMCr7I
 
+
+######
 POST  http://localhost:8080/chat/1/messages
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
 Content-Type: application/json
