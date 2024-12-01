@@ -42,7 +42,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
   const currentUserId = Cookies.get('user_id');
 
   useEffect(() => {
-    // Establish WebSocket connection
     const setupWebSocket = async () => {
       try {
         socketRef.current = await chatService.createWebSocketConnection(
@@ -56,7 +55,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
 
     setupWebSocket();
 
-    // Cleanup function
     return () => {
       if (socketRef.current) {
         socketRef.current.close();
@@ -64,7 +62,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     };
   }, [chatId]);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -98,7 +95,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
 
   return (
     <div className="costum-little-shadow bg-black-crd col-start-1 col-end-3 hidden items-center justify-center overflow-hidden rounded-2xl bg-[url('/chat-bg.png')] pb-4 lg:flex lg:flex-col">
-      {/* Header */}
+      {/* headbar */}
       <div className="costum-little-shadow font-dayson flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 text-white">
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
@@ -114,8 +111,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
           </div>
         </div>
       </div>
-
-      {/* Messages Container */}
+      {/* messages */}
       <div className="custom-scrollbar-container flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
         {messages.map((message, index) => (
           <MessageBubble
@@ -126,8 +122,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
         ))}
         <div ref={messagesEndRef} />
       </div>
-
-      {/* Message Input */}
+      {/* message input */}
       <form
         onSubmit={handleSendMessage}
         className="flex h-[60px] w-11/12 items-center gap-4 rounded-md bg-[rgb(0,0,0,0.7)] px-4 py-1"
