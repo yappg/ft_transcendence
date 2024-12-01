@@ -47,6 +47,7 @@ class SignUpView(APIView):
                     value=refresh_token,
                     httponly=False
                 )
+        
                 return resp
             else :
                 return Response({'error': 'user not created'}, status=200)
@@ -68,10 +69,11 @@ class SignInView(APIView):
             user = Serializer.validated_data['user']
             # maybe it would be implemented as follow  or it could be validated on the serializer
             if (user.enabled_2fa == True):
-                redirect('validate_otp')
+                return Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
+                # redirect('validate_otp')
 
             access_token, refresh_token = generate_tokens(user)
-            resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+            resp = Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
 
             #clear the old cookies before sign in with new ones
             resp.set_cookie(
