@@ -2,11 +2,7 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import React, { useState, useEffect, useRef } from 'react';
 import { RiCheckDoubleLine } from 'react-icons/ri';
-import { IoSend } from 'react-icons/io5';
-import { FiPlus } from 'react-icons/fi';
-import Cookies from 'js-cookie';
-import { chatService  } from '@/services/chatService';
-import { Message, User, Chat } from '@/constants/chat';
+import { User, Chat } from '@/constants/chat';
 
 
 interface ChatItemProps {
