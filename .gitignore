@@ -1,3 +1,5 @@
+volumes
+
 # Environment variables
 **/.env
 **/venv/

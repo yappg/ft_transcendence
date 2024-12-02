@@ -100,7 +100,7 @@ GET http://localhost:8080/api/oauth/login/42
 # POST http://localhost:8080/api/JWT/token/refresh
 
 GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODI2OTY1LCJpYXQiOjE3MzI4MjUxNjUsImp0aSI6IjYzNjU1YzM5NDNjMjQ0MjBiNjIwOWU0MWE1OTQ0ODE1IiwidXNlcl9pZCI6MX0.21KdLFv3fuuw4dl4vMCOgmRIZQTo2--gq-IMmOfdtfM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTA0ODEzLCJpYXQiOjE3MzMxMDMwMTMsImp0aSI6IjljYmExY2ZmZDRiYjRkNTA4OWRjYjhhNzI0YjY5NDcwIiwidXNlcl9pZCI6MX0.pb6SZtPJ2rnppikd3Sa4UvvUAn2g1Q52geUHiKmJ9qM
 ########
 
 
