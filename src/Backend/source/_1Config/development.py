@@ -95,8 +95,7 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'accounts.authenticate.CotumAuthentication',
+        'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
@@ -138,7 +137,6 @@ CHANNEL_LAYERS = {
 }
 
 WSGI_APPLICATION = '_1Config.wsgi.application'
-
 ASGI_APPLICATION = '_1Config.asgi.application'
 
 # Database
