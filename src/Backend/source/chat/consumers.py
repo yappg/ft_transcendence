@@ -43,7 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         text_data_json = json.loads(text_data)
         content = text_data_json.get('content')
-        sender_id = text_data_json.get('sender')
+        sender_id = text_data_json.get('sender') 
 
         print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}")
 

@@ -97,7 +97,9 @@ const App: React.FC = () => {
     // Fetch chat partner details
     const currentUser = users[currentUserId];
     const chatPartnerUsername = chat.senders.find(sender => sender !== currentUser?.username);
+    
     console.log('Chat partner username:', chatPartnerUsername);
+    
     const chatPartner = Object.values(users).find(user => user.username === chatPartnerUsername);
     console.log('Chat partner:', chatPartner);
     if (chatPartner) {
