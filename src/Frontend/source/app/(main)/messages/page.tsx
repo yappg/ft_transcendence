@@ -5,7 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import Cookies from 'js-cookie';
-import { ChatList, Messages } from '@/components/chat/Messages';
+import { Messages } from '@/components/chat/Messages';
+import { ChatList } from '@/components/chat/chatList';
 import { SideBarContext } from '@/context/SideBarContext';
 import { chatService } from '@/services/chatService';
 import { Message, User, Chat } from '@/constants/chat';
