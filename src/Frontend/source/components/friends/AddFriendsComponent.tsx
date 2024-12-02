@@ -7,6 +7,7 @@ import { IconPlus } from '@tabler/icons-react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import {useEffect, useState} from 'react';
+import FriendServices from '@/services/friendServices';
 
 const AddFriends = () => {
   const [message, setMessage] = useState('');
@@ -14,50 +15,32 @@ const AddFriends = () => {
   const [UsersList , setUserList] = useState([]);
   const [searchUser , setsearchUser] = useState("");
   const [FiltredUsers , setFiltredUsers] = useState([]);
+
+  
   useEffect(() => {
     setFiltredUsers(UsersList)
     return () => {
       
     };
   }, [UsersList]);
-  useEffect(() => {
-    try {
-    const token = Cookies.get('access_token'); // Retrieve the access token from cookies
-    const resp =  axios.get('http://localhost:8080/api/list/all', 
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Use the token from cookies
-      }
-    } ).then((response:any)=>{
-      if (response.status === 200) {
-        console.log(response.data);
-        setUserList(response.data)
-        setMessage("Friend request sent to ");
-      } else {
-        setMessage("Error sending friend request to ");
-        console.log(response)
-      }
-    });
 
-    
-  } catch (error) {
-    console.log(error)
-    setMessage(`Error sending friend request to  `);
-  }
-  }, []);
+
+  useEffect(() => {
+      const fetchUsers = async () => {
+        try {
+          const response = await FriendServices.getPlayers();
+          setUserList(response);
+        } catch (error) {
+          console.log(error)
+          setMessage(`Error sending friend request to  `);
+        }
+      }
+      fetchUsers();
+    }, []);
 
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
-      const token = Cookies.get('access_token'); // Retrieve the access token from cookies
-      const response = await axios.post('http://localhost:8080/relations/friends/invite/', {
-        receiver: receiverUsername
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Use the token from cookies
-        }
-      });
+      const response = await FriendServices.sendFriendRequest(receiverUsername);
 
       if (response.status === 201) {
         setMessage(`Friend request sent to ${receiverUsername}`);
@@ -68,6 +51,8 @@ const AddFriends = () => {
       setMessage(`Error sending friend request to ${receiverUsername}: ${error.response ? error.response.data : error.message}`);
     }
   };
+
+
   const setsearchQuery = (username:string) => {
     if (username == "")
       {
@@ -78,8 +63,8 @@ const AddFriends = () => {
         ))
       }
       setsearchUser(username)
-    
   };
+  
   return (
     <div className="bg-black-crd flex size-full flex-col items-center justify-between gap-10 overflow-visible rounded-lg pt-10">
       <Form className="flex h-[70px] w-[65%] items-center justify-center rounded-[30px] bg-cyan-100 bg-opacity-20 shadow-2xl">

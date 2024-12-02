@@ -14,34 +14,42 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "hiya",
-    "email": "hiya@gmail.com",
+    "username": "youssra",
+    "email": "youssra@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
 
+
+
+#######
+GET http://localhost:8080/relations/players/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAwODY2LCJpYXQiOjE3MzMwOTkwNjYsImp0aSI6ImQ3ZjAyMmU0MjUyMDQwOTRiNzg5YjcyYTg1NzJlMWZkIiwidXNlcl9pZCI6M30.5ViJ8wJKodi1GhAiLaglRl34-QEtPJqxPRJPtB-I1sU
 ###################### 
 
 GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTkxLCJpYXQiOjE3MzI3NTQzOTEsImp0aSI6ImE1MWE3ZGU2YjdlMjQ4MzQ4MjE3MWZhMjgwNTgxZWMwIiwidXNlcl9pZCI6M30.lomaKh-0_TUc1jUXnnvp2DP3_e_05U29rSAjw41Q-qs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAzNzcwLCJpYXQiOjE3MzMxMDE5NzAsImp0aSI6ImQ2ODk1YTdkOWRlNDRmYWM5ZmJkODhkY2YzMWMxYjQwIiwidXNlcl9pZCI6NH0.aTmTarmfm0omUpBSBtyDYd92s6GZBeGw1PqUXmuWyUQ
+
+# ####
 
 ######################
 
+###################### 
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU0NzIzLCJpYXQiOjE3MzI3NTI5MjMsImp0aSI6ImMxMzFhY2QyMWQ2YzQyODNhMjdmYjAzNDNiZGM0MTg3IiwidXNlcl9pZCI6M30.uWwWu_BAwRD1wY65qvpD5WPb3-r9bk3C10j3G64yA0Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAyOTIwLCJpYXQiOjE3MzMxMDExMjAsImp0aSI6Ijc2YWM3ODExMWQwNDQ5ZDhiMzRmYTlhMzJiZGU0MzJjIiwidXNlcl9pZCI6Nn0.9KS_nyX8MWL6uRYdqZzHWvJtIYXWVDpDXJcmtlrWR3g
 Content-Type: application/json
 
 {
-    "receiver":"meryem"
+    "receiver":"mery"
 }
 ########
 
 POST http://localhost:8080/relations/friends/accept/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTI5LCJpYXQiOjE3MzI3NTQzMjksImp0aSI6IjJjZDJiOTRiZTAxZTQwODA4ZjZjM2M3Y2I3ZWU4ODY1IiwidXNlcl9pZCI6M30.0-rPtXlFgXnQRCzyE4MFtdOKRiIFy2f--cMt4cvchvc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAyOTIwLCJpYXQiOjE3MzMxMDExMjAsImp0aSI6Ijc2YWM3ODExMWQwNDQ5ZDhiMzRmYTlhMzJiZGU0MzJjIiwidXNlcl9pZCI6Nn0.9KS_nyX8MWL6uRYdqZzHWvJtIYXWVDpDXJcmtlrWR3g
 Content-Type: application/json
 
 {
-    "sender":"meryem"
+    "sender":"test"
 }
 ######
 
