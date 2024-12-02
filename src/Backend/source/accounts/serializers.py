@@ -3,11 +3,15 @@ from .models import Player , PlayerProfile , PlayerSettings
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
+
+
+
+
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Player
-        fields = '__all__'
-        # fields = ('id', 'username','email', 'wins', 'losses',)
+        fields = ['id', 'username','email', 'profile', 'settings']
+        # fields = '__all__'
 
 class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +23,9 @@ class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
         fields = '__all__'
+
+
+
 
 
 #########################
