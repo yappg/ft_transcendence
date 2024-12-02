@@ -30,6 +30,7 @@ const App: React.FC = () => {
       try {
         const response = await chatService.getCurrentUserId();
         setCurrentUserId(response.id);
+        console.log(response.id)
       } catch (error) {
         console.error('Failed to fetch current user ID', error);
       }
@@ -45,7 +46,7 @@ const App: React.FC = () => {
     const fetchChats = async () => {
       try {
         const fetchedChats = await chatService.getChatList();
-        console.log('this is the fetchedchat: ',fetchChats);
+        console.log('this is the fetched chat: ', fetchedChats);
         setChats(fetchedChats);
 
         // Fetch user details for all participants except the current user
@@ -68,6 +69,22 @@ const App: React.FC = () => {
           }
         };
 
+        // Fetch details for all users involved in the chats
+        for (const chat of fetchedChats) {
+          for (const sender of chat.senders) {
+            if (!Object.values(usersMap).some(user => user.username === sender)) {
+              const senderDetails = await chatService.getUserDetailsByUsername(sender);
+              usersMap[senderDetails.id] = {
+                id: senderDetails.id,
+                username: senderDetails.username,
+                email: senderDetails.email,
+                avatar: senderDetails.avatar,
+              };
+            }
+          }
+        }
+        
+        console.log(usersMap);
         setUsers(usersMap);
       } catch (error) {
         console.error('Failed to fetch chats or user details', error);
@@ -82,7 +99,7 @@ const App: React.FC = () => {
     setSelectedChat(chat);
   
     // Debugging: Check the current user ID and chat senders
-    const currentUserId = parseInt(Cookies.get('user_id') || '0');
+
     console.log('Current user ID:', currentUserId);
     console.log('Chat senders:', chat.senders);
   

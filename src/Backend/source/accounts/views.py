@@ -25,6 +25,14 @@ class PlayerProfileView(APIView):
         return Response(serializer.data, status=200)
 
 
+class PlayerProfileViewWithUserName(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, username):
+        userInfo = get_object_or_404(Player, username=username)
+        serializer = PlayerSerializer(userInfo)
+        return Response(serializer.data, status=200)
 # -----
 
 

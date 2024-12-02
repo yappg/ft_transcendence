@@ -17,7 +17,6 @@ const userApi = axios.create({
 });
 
 const setAuthToken = (config) => {
-  console.log('setting token')
   const token = Cookies.get('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -72,8 +71,7 @@ export const chatService = {
     return socket;
   },
 
-  async sendMessage(chatId: number, content: string): Promise<void> {
-    const userId = Cookies.get('user_id');
+  async sendMessage(chatId: number, content: string, userId: number): Promise<void> {
     
     const socket = new WebSocket(`ws://localhost:8080/ws/chat/${chatId}/`);
     
@@ -95,6 +93,11 @@ export const chatService = {
 
   async getUserDetails(userId: number): Promise<User> {
     const response = await userApi.get(`/users/${userId}`);
+    return response.data;
+  },
+
+  async getUserDetailsByUsername(username: string): Promise<User> {
+    const response = await userApi.get(`/users/${username}`);
     return response.data;
   },
 
