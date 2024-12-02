@@ -61,7 +61,6 @@ class SignUpView(APIView):
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
-
                 resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
                 resp.set_cookie(
                     key='access_token',
@@ -73,7 +72,6 @@ class SignUpView(APIView):
                     value=refresh_token,
                     httponly=False
                 )
-        
                 return resp
             else :
                 return Response({'error': 'user not created'}, status=200)
@@ -126,14 +124,14 @@ class LogoutView(APIView):
             refresh_token = request.COOKIES.get('refresh_token')
             tokens = RefreshToken(refresh_token)
             tokens.blacklist()
-            response = Response({'message': 'Logged Out Successfuly'}, status=HTTP_200_OK)
+            response = Response({'message': 'Logged Out Successfuly'}, status=status.HTTP_200_OK)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
         except Exception as e:
             return Response({'error': str(e)}, status=200)
         return response
 
-#------------------------------------- 2FA ------------------------------------19788791
+#------------------------------------- 2FA ------------------------------------
 import pyotp
 
 class GenerateURI(APIView):
@@ -177,18 +175,19 @@ class VerifyOTP(APIView):
         bol = totp.verify(otp_token)
         if not bol:
             return Response({'error': 'invalid token'}, status=status.HTTP_200_OK)
+        user.enabled_2fa = True
         user.verified_otp = True
         user.save()
         return Response({'message': '2fa Verified'}, status=status.HTTP_200_OK)
 
 class ValidateOTP(APIView):
-    permission_class = [AllowAny]
+    permission_classes = [AllowAny]
     serializer_class = ValidateOTPSerializer
 
     def post(self, request):
         serializer = self.serializer_class(request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_200_OK)
+        # if not serializer.is_valid():
+        #     return Response(serializer.errors, status=status.HTTP_200_OK)
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
@@ -221,8 +220,8 @@ class DisableOTP(APIView):
         user = Player.objects.get(username=username)
         if user is None:
             return Response({'error' : 'invalid user'})
-        # if user.enabled_2fa is True:
-        #     return Response({'message':'2fa Already Disabled'})
+        if user.enabled_2fa is False:
+            return Response({'error':'2fa Already Disabled'})
         user.enabled_2fa = False
         user.verified_otp = False
         user.otp_secret_key = ''
