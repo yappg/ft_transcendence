@@ -77,7 +77,6 @@ class SignUpView(APIView):
                 return resp
             else :
                 return Response({'error': 'user not created'}, status=200)
-
         return Response(serializer.errors, status=200)
 
 class SignInView(APIView):
@@ -93,15 +92,11 @@ class SignInView(APIView):
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
-            # maybe it would be implemented as follow  or it could be validated on the serializer
             if (user.enabled_2fa == True):
                 return Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
-                # redirect('validate_otp')
 
             access_token, refresh_token = generate_tokens(user)
-            resp = Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
-
-            #clear the old cookies before sign in with new ones
+            resp = Response({'message':'logged in Successfuly','enabled_2fa':'False'}, status=status.HTTP_200_OK)
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
@@ -111,8 +106,7 @@ class SignInView(APIView):
                 key='refresh_token',
                 value=refresh_token,
                 httponly=False
-            )
-        
+            )        
             # csrf_token = get_token(request)
             # resp.set_cookie(
             #     key='csrftoken',
@@ -144,13 +138,12 @@ import pyotp
 
 class GenerateURI(APIView):
     permission_classes = [AllowAny]
-    # permission_classes = [IsAuthenticated]
     serializer_class = GenerateOTPSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=status.HTTP_200_OK)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_200_OK)
         user = Player.objects.get(username=request.data['username'])
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
@@ -161,14 +154,12 @@ class GenerateURI(APIView):
         totp = pyotp.TOTP(secret_key)
         uri = totp.provisioning_uri(name='transcendence', issuer_name='kadigh') # issuer_name=username
 
-        user.enabled_2fa = True
         user.otp_secret_key = secret_key
         user.save()
         return Response(
             {'uri': uri, 'enabled_2fa': user.enabled_2fa},
             status=status.HTTP_200_OK)
 
-import qrcode
 class VerifyOTP(APIView):
     permission_classes = [AllowAny]
     serializer_class = VerifyOTPSerializer
@@ -191,7 +182,7 @@ class VerifyOTP(APIView):
         return Response({'message': '2fa Verified'}, status=status.HTTP_200_OK)
 
 class ValidateOTP(APIView):
-    permission_class = [IsAuthenticated]
+    permission_class = [AllowAny]
     serializer_class = ValidateOTPSerializer
 
     def post(self, request):
@@ -222,7 +213,8 @@ class ValidateOTP(APIView):
         return resp
 
 class DisableOTP(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny]#while testing
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
         username = request.data['username']
@@ -315,3 +307,4 @@ class UpdateUserInfos(APIView):
         return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
+# {"username":"kad","password":"asd123"}
