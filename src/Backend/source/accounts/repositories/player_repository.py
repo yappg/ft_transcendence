@@ -2,7 +2,6 @@ from ..models import *
 
 class PlayerRepository:
 
-
     @staticmethod
     def get_players(self):
         return Player.objects.all()
