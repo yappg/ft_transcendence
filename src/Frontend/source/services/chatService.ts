@@ -1,4 +1,3 @@
-// services/chatService.ts
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Chat, Message, User } from '@/constants/chat';
@@ -20,89 +19,99 @@ const setAuthToken = (config) => {
   const token = Cookies.get('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-
   }
   return config;
 };
+
 chatApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 userApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 
+class ChatService {
+  private socket: WebSocket | null = null;
+  // private currentUserId: number | null = null;
 
-export const chatService = {
   async getChatList(): Promise<Chat[]> {
     const response = await chatApi.get('/list/');
     return response.data;
-  },
+  }
 
   async getChatMessages(chatId: number): Promise<Message[]> {
     const response = await chatApi.get(`/${chatId}/messages/`);
     return response.data;
-  },
+  }
 
   async createWebSocketConnection(
     chatId: number, 
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
-    const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
-    
-    const socket = new WebSocket(socketUrl);
+    if (this.socket) {
+      console.log('WebSocket connection already exists');
+      return this.socket;
+    }
 
-    socket.onopen = () => {
+    const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
+    this.socket = new WebSocket(socketUrl);
+    // const currenttemp = await this.getCurrentUserId;
+    // this.currentUserId = currenttemp.id;
+
+    this.socket.onopen = () => {
       console.log('WebSocket connection established');
     };
 
-    socket.onmessage = (event) => {
+    this.socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        onMessage(data);
+        // if (data.sender !== this.currentUserId) {check after/
+          onMessage(data);
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
     };
 
-    socket.onerror = (error) => {
+    this.socket.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
 
-    socket.onclose = (event) => {
+    this.socket.onclose = (event) => {
       console.log('WebSocket connection closed:', event);
+      this.socket = null;
     };
 
-    return socket;
-  },
+    return this.socket;
+  }
 
   async sendMessage(chatId: number, content: string, userId: number): Promise<void> {
+    console.log('chatService.sendMessage called'); // Debug log
+    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket connection is not open');
+    }
     
-    const socket = new WebSocket(`ws://localhost:8080/ws/chat/${chatId}/`);
-    
-    return new Promise((resolve, reject) => {
-      socket.onopen = () => {
-        socket.send(JSON.stringify({
-          content: content,
-          sender: userId,
-        }));
-        socket.close();
-        resolve();
-      };
-
-      socket.onerror = (error) => {
-        reject(error);
-      };
-    });
-  },
+    try {
+      this.socket.send(JSON.stringify({
+        content: content,
+        sender: userId,
+      }));
+    } catch (error) {
+      console.error('Error sending message:', error);
+      throw new Error('Failed to send message');
+    }
+  }
 
   async getUserDetails(userId: number): Promise<User> {
     const response = await userApi.get(`/users/${userId}`);
     return response.data;
-  },
+  }
 
   async getUserDetailsByUsername(username: string): Promise<User> {
     const response = await userApi.get(`/users/${username}`);
     return response.data;
-  },
+  }
 
-   getCurrentUserId: async () => {
-    const response = await userApi.get(`${USER_BASE_URL}/users/me`);
+  async getCurrentUserId(): Promise<User> {
+    const response = await userApi.get(`/users/me/`);
     return response.data;
-  },
-};
+  }
+
+}
+
+export const chatService = new ChatService();
