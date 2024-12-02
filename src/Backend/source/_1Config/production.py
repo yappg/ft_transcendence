@@ -91,7 +91,6 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {

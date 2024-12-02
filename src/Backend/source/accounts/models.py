@@ -22,7 +22,7 @@ class Player(AbstractUser):
     # cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
 
     enabled_2fa=models.BooleanField(default=False)
-    otp_secret_key=models.CharField(max_length=16, default=None, null=True, blank=True) #, null=True, blank=True
+    otp_secret_key=models.CharField(max_length=512, default=None, null=True, blank=True) #, null=True, blank=True
     verified_otp=models.BooleanField(default=False)
 
     def __str__(self):
