@@ -144,6 +144,7 @@ const App: React.FC = () => {
             chatPartner={chatPartner} 
             messages={messages}
             setMessages={setMessages}
+            currentUserId={currentUserId}
           />
         ) : (
           <div className="col-span-2 flex items-center justify-center text-white">

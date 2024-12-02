@@ -20,20 +20,19 @@ const MessageBubble: React.FC<{ message: Message, isCurrentUser: boolean }> = ({
   isCurrentUser
 }) => {
   return (
-    <div className={`h-fit w-full text-gray-100 flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`bg-black-crd h-fit max-w-[400px] rounded-md px-3 py-2 ${isCurrentUser ? 'bg-primary' : ''}`}>
-        <h1>{message.sender.username}</h1>
+    <div className={`h-fit w-full text-gray-100 flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}>
+      <div className={`h-fit max-w-[400px] rounded-md px-3 py-2 ${isCurrentUser ? 'bg-primary text-right' : 'bg-secondary text-left'}`}>
+        <h1 className="font-bold">{message.sender.username}</h1>
         <p className="h-fit w-full font-thin">
           {message.content}
         </p>
-        <h3 className="text-end text-sm text-[rgb(255,255,255,0.5)]">
+        <h3 className="text-sm text-[rgb(255,255,255,0.5)]">
           {new Date(message.timestamp || Date.now()).toLocaleTimeString()}
         </h3>
       </div>
     </div>
   );
 };
-
 export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -81,7 +80,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
+  
   const handleWebSocketMessage = (message: any) => {
     setMessages(prevMessages => [
       ...prevMessages,
@@ -96,11 +95,11 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
       }
     ]);
   };
-
+  
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
-
+    console.log('Sending message:', newMessage); // Debug log
     try {
       await chatService.sendMessage(chatId, newMessage, currentUserId);
       setNewMessage('');
@@ -133,7 +132,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
           <MessageBubble
             key={index}
             message={message}
-            isCurrentUser={message.sender.id === parseInt(currentUserId || '0')}
+            isCurrentUser={message.sender.id === currentUserId}
           />
         ))}
         <div ref={messagesEndRef} />
