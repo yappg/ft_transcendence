@@ -8,6 +8,16 @@ from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 
 
+
+class PlayerListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        print(f"request.user: {request.user}")
+        players = Player.objects.exclude(id=request.user.id)
+        serializer = PlayerSerializer(players, many=True)
+        return Response(serializer.data)
+
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
     
