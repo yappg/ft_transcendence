@@ -23,6 +23,7 @@
 **/*.pyd
 **/__pycache__/
 
+
 # Django
 **/*.log
 **/*.pot
