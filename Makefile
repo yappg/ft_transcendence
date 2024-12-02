@@ -33,6 +33,9 @@ list:
 	docker compose -p $(PROJECT) images  && \
 
 clean:
+	@docker compose -p $(PROJECT) down --volumes --remove-orphans
+
+fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
 
 re: clean build
