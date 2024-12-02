@@ -31,4 +31,5 @@ urlpatterns = [
 
     path('users/me', PlayerProfileView.as_view(), name='playerDetails'),
     path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
+    path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
 ]

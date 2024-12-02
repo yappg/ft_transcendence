@@ -48,7 +48,7 @@ Content-Type: application/json
 ##########-----LIST----############ 
 
 GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDY5ODgyLCJpYXQiOjE3MzMwNjgwODIsImp0aSI6ImNlOTQyNWQxZGFhNzQ4NWZiMDYyZDc5OTIwYzRiYmQ3IiwidXNlcl9pZCI6NX0.UJWsgfC4MoK8CJL_wMCiKbFDSk54dTPUBZd_pfmMk1U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 
 ########
 
@@ -112,26 +112,26 @@ POST http://localhost:8080/api/JWT/token/refresh
 ############--------------CHAT-------###############
 
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcwNDg1LCJpYXQiOjE3MzMwNjg2ODUsImp0aSI6IjY1YzYxOGUzYTEyNDRjYzU4NGFlNTBmOWEzMDk5YjkxIiwidXNlcl9pZCI6NX0.njthXe5ZdAMp9_W1WgIfnbwWZj1tI04O9hq3uJ1Jai4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 
 ####
 POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDc3ODUxLCJpYXQiOjE3MzMwNzYwNTEsImp0aSI6IjRmZjlmZDBlMjkzYzQ5ZGZhNWYwYWE0MzljMjAxMzIxIiwidXNlcl9pZCI6MX0.5Gixphrd0rPhQsNXLbfZsmMh23ml1G7FjFWYLGb8JGE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 Content-Type: application/json
 
 {
-    "senders":"opa123"
+    "senders":"ali"
     
 }
 
 ######
-POST  http://localhost:8080/chat/2/messages/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDc3ODUxLCJpYXQiOjE3MzMwNzYwNTEsImp0aSI6IjRmZjlmZDBlMjkzYzQ5ZGZhNWYwYWE0MzljMjAxMzIxIiwidXNlcl9pZCI6MX0.5Gixphrd0rPhQsNXLbfZsmMh23ml1G7FjFWYLGb8JGE
+POST  http://localhost:8080/chat/1/messages/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 Content-Type: application/json
 
 {
-    "receiver":"opa123",
-    "content":"WA ZAAAML"
+    "receiver":"ali",
+    "content":"WA llalala"
 }
 
 ########
