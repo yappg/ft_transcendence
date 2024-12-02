@@ -15,12 +15,23 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "Teereeechoxoxx",
-    "email": "Teereeechoxoxx@gmail.com",
+    "username": "Teereeechoo",
+    "email": "Teereeechoo@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
 ######
+
+POST http://localhost:8080/api/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "opa123",
+    "email": "opa123@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
+}
+######################
 
 POST http://localhost:8080/api/token/
 Content-Type: application/json
@@ -29,7 +40,6 @@ Content-Type: application/json
     "username": "opa",
     "password": "csfdsgbcvbdfgdfg"
 }
-
 ######################
 
 POST http://localhost:8080/api/signup/
@@ -48,13 +58,8 @@ GET http://localhost:8080/api/oauth/login/42
 
     # "email": "tokenjdid@gmail.com",
     # "password2": "csfdsgbcvbdfgdfg",
+
 ########
-
-
-
-
-
-
 
 # POST http://localhost:8080/api/JWT/token/refresh
 

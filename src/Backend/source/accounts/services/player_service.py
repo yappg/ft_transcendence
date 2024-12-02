@@ -1,6 +1,5 @@
-from ..repositories import *
+from ..repositories.player_repository import *
 
-class accountServices:
+# class accountServices:
 
-    @staticmethod
-    
+#     @staticmethod

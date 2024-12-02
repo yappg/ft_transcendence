@@ -1,10 +1,60 @@
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework.views import APIView, Response
+from rest_framework import status
 from ..serializers import *
 from ..permissions import *
+from rest_framework import request
+
+# from rest_framework import generics
+
+
+
 
 #--------------------------Players RESTFUL API ------------------------------
 
-class UserViewSet:
+class accountView(APIView):
+    permission_classes = [AllowAny]
+    serializers_class = PlayerSerializer
+    model = Player
+
+    def get(self, request):
+        # print(f"         DEBUG ======> {request.headers}\n")
+        accounts = self.model.objects.all()
+        # print("profile for id 10=============>", accounts.get(pk=10))
+        serlize = self.serializers_class(accounts, many=True)
+        return (Response(data=serlize.data, status=status.HTTP_200_OK))
+
+    def post(self, request):
+        serlizer = self.serializers_class(data=request.data)
+        if serlizer.is_valid():
+            serlizer.save()
+            return (Response(data=serlizer.data, status=status.HTTP_201_CREATED))
+        return (Response(data=serlizer.error_messages, status=status.HTTP_400_BAD_REQUEST))
+
+
+class accountProfileView(APIView):
+    permission_classes = [AllowAny]
+    serializers_classes = PlayerProfileSerializer
+    model = PlayerProfile
+
+    def get(self, request):
+        profiles = self.model.objects.all()
+        serlize = self.serializers_classes(profiles, many=True)
+        return (Response(data=serlize.data, status=status.HTTP_200_OK))
+
+    def post(self, request):
+        serlize = self.serializers_classes(data=request.data)
+        if serlize.is_valid():
+            serlize.save()
+            return (Response(data=serlize.data, status=status.HTTP_201_CREATED))
+        return (Response(data=serlize.error_messages, status=status.HTTP_400_BAD_REQUEST))
+
+
+#only for if user is same as
+class accoutSettingView(APIView):
+    permission_classes = [AllowAny]
+    serializers_classes = PlayerSettings
+
 
 
 # dont send 400 in front if there is nothing just send empty json
