@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.chat_group_name,
             self.channel_name
         )
-
+        print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
         await self.accept()
 
         await self.send(text_data=json.dumps({
