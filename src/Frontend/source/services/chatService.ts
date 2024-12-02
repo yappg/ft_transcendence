@@ -28,6 +28,7 @@ const setAuthToken = (config) => {
 chatApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 userApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 
+
 export const chatService = {
   async getChatList(): Promise<Chat[]> {
     const response = await chatApi.get('/list/');
@@ -43,7 +44,6 @@ export const chatService = {
     chatId: number, 
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
-    const userId = Cookies.get('user_id');
     const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
     
     const socket = new WebSocket(socketUrl);
