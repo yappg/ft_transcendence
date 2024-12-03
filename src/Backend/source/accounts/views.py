@@ -17,14 +17,22 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 class PlayerProfileView(APIView):
-    permission_classes = [AllowAny]
     
     def get(self, request):
+        permission_classes = [IsAuthenticated]
         userInfo = request.user
         serializer = PlayerSerializer(userInfo)
         return Response(serializer.data, status=200)
 
 
+class PlayerProfileViewWithUserName(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, username):
+        userInfo = get_object_or_404(Player, username=username)
+        serializer = PlayerSerializer(userInfo)
+        return Response(serializer.data, status=200)
 # -----
 
 
@@ -88,8 +96,8 @@ class SignInView(APIView):
     @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
 
-        if request.user.is_authenticated:
-            return Response({'error': 'You are already authenticated'}, status=200)
+        # if request.user.is_authenticated:
+        #     return Response({'error': 'You are already authenticated'}, status=200)
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
