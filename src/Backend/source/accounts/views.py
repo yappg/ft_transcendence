@@ -12,11 +12,11 @@ from .serializers import *
 from .utils import *
 from drf_yasg.utils import swagger_auto_schema
 
-class PlayersViewList(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    model = Player
-    serializer_class=PlayerSerializer
-    queryset=Player.objects.all()
+# class PlayersViewList(ListAPIView):
+#     permission_classes = [IsAuthenticated]
+#     model = Player
+#     serializer_class=PlayerSerializer
+#     queryset=Player.objects.all()
 
 #------------------------------------ Auth ------------------------------------
 class SignUpView(APIView):
@@ -297,4 +297,3 @@ class UpdateUserInfos(APIView):
         #     'win_rate': user.win_rate,
         #     'last_game': user.last_game,
         # }, status=200)
-
