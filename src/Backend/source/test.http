@@ -36,7 +36,7 @@ POST http://localhost:8080/api/signup/
 Content-Type: application/json
 
 {
-    "username": "opa12345",
+    "username": "opas12345",
     "email": "opa12345@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"

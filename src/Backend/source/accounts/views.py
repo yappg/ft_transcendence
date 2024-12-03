@@ -280,20 +280,3 @@ class UpdateUserInfos(APIView):
             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# class PlayerStats(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-        # return Response({
-        #     'username': user.username,
-        #     'email': user.email,
-        #     'score': user.score,
-        #     'games_played': user.games_played,
-        #     'games_won': user.games_won,
-        #     'games_lost': user.games_lost,
-        #     'games_draw': user.games_draw,
-        #     'win_rate': user.win_rate,
-        #     'last_game': user.last_game,
-        # }, status=200)

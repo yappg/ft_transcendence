@@ -119,11 +119,11 @@ class MatchHistory(models.Model):
         ('Draw', 'Draw'),
     ]
 
+    result = models.CharField(max_length=10, choices=RESULT_CHOICES)
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches')
     opponent = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='opponent_matches')
     player_score = models.IntegerField(default=0)
     opponent_score = models.IntegerField(default=0)
-    result = models.CharField(max_length=10, choices=RESULT_CHOICES)
 
     date = models.DateTimeField(auto_now_add=True)
 
