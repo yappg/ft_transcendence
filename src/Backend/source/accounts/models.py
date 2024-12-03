@@ -1,81 +1,148 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+import string
+import random
 
-#USER MODEL
-class Player(AbstractUser):
-
-    # display_name=models.CharField(max_length=50, blank=True)
-    # is_online=models.BooleanField(default=False)
-    # wins=models.IntegerField(default=0)
-    # losses=models.IntegerField(default=0)
-
-    # pending_friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pending_friends', blank=True)
-    # friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='friends', blank=True)
-    # avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
-    # cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
-    # avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
-    # cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
-
-    enabled_2fa=models.BooleanField(default=False)
-    otp_secret_key=models.CharField(max_length=16, default=None, null=True, blank=True) #, null=True, blank=True
-    verified_otp=models.BooleanField(default=False)
+class Player(AbstractUser): # auth user
 
     def __str__(self):
         return self.username
 
+    class Meta:
+        verbose_name = 'Player'
+        verbose_name_plural = 'Players'
+
 
     def save(self, *args, **kwargs):
-    # If the player is being created, also create a PlayerProfile and PlayerSettings
-        if not self.pk:  # Check if the object is being created (not updated)
-            super().save(*args, **kwargs)  # Save the Player instance first to get the player id
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
             PlayerProfile.objects.create(player=self)
-            PlayerSettings.objects.create(player_profile=self)
-        else:
-            super().save(*args, **kwargs)  # For updates, just save the Player normally
+            PlayerSettings.objects.create(player_profile=self.profile)
 
-    # last_login=models.DateTimeField()
 
-import string
-import random
 
-# PROFILE MODEL
+
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
     is_online=models.BooleanField(default=False)
 
-    display_name = models.CharField(max_length=50, unique=True, default="Player")
+    display_name = models.CharField(max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
-    avatar=models.ImageField(upload_to='Avatars/', default='Avatars/.defaultAvatar.jpeg')
-    cover=models.ImageField(upload_to='Covers/', default='Covers/.defaultCover.jpeg')
 
-    rank_points = models.IntegerField(default=0)
-    games_played = models.IntegerField(default=0)
-    games_won = models.IntegerField(default=0)
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        default='avatars/.defaultAvatar.jpeg'
+    )
+    cover = models.ImageField(
+        upload_to='covers/',
+        default='covers/.defaultCover.jpeg'
+    )
 
+    # pending_friends = models.ManyToManyField(
+    #     'self',
+    #     symmetrical=False,
+    #     related_name='pending_friends_received',
+    #     blank=True
+    # )
+    # friends = models.ManyToManyField(
+    #     'self',
+    #     symmetrical=True,
+    #     related_name='friends_set',
+    #     blank=True
+    # )
+
+    rank_points = models.PositiveIntegerField(default=0)
+    games_played = models.PositiveIntegerField(default=0)
+    games_won = models.PositiveIntegerField(default=0)
+    games_loss = models.PositiveIntegerField(default=0)
+    win_ratio = models.FloatField(default=0.0)
+
+    last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.display_name} (Rank: {self.rank_points})"
 
+    class Meta:
+        ordering = ['-rank_points']
+        verbose_name = 'Player Profile'
+        verbose_name_plural = 'Player Profiles'
+
     def save(self, *args, **kwargs):
         if not self.display_name:
-            random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
-            self.display_name = f"{random_suffix}"
+            max_attempts = 10
+            for attempt in range(max_attempts):
+                random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+                potential_name = f"Player_{random_suffix}"
+                if not PlayerProfile.objects.filter(display_name=potential_name).exists():
+                    self.display_name = potential_name
+                    break
+            else:
+                raise ValueError("Unable to generate a unique display name after multiple attempts.")
+
+        # Calculate win ratio
+        if self.games_played > 0:
+            self.win_ratio = self.games_won / self.games_played
+        else:
+            self.win_ratio = 0.0
 
         super().save(*args, **kwargs)
 
-    class Meta:
-        ordering = ['-rank_points']
 
 
 class PlayerSettings(models.Model):
-    player_profile = models.OneToOneField(Player, on_delete=models.CASCADE, related_name="settings")
+    player_profile = models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name="settings")
+
     private_profile = models.BooleanField(default=False)
     notifications_enabled = models.BooleanField(default=True)
+    enabled_2fa=models.BooleanField(default=False)
+    verified_otp=models.BooleanField(default=False)
+    otp_secret_key=models.CharField(max_length=16, default=None, null=True, blank=True)
 
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Settings for {self.user_profile.user.username}"
+        return f"Settings for {self.player_profile.display_name}"
+
+    class Meta:
+        verbose_name = 'Player Settings'
+        verbose_name_plural = 'Player Settings'
+
+
+class MatchHistory(models.Model):
+    RESULT_CHOICES = [
+        ('Win', 'Win'),
+        ('Loss', 'Loss'),
+        ('Draw', 'Draw'),
+    ]
+
+    player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches')
+    opponent = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='opponent_matches')
+    player_score = models.IntegerField(default=0)
+    opponent_score = models.IntegerField(default=0)
+    result = models.CharField(max_length=10, choices=RESULT_CHOICES)
+
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.player.display_name} vs {self.opponent.display_name} on {self.date.strftime('%Y-%m-%d')}"
+    class Meta:
+        ordering = ['-date']
+        verbose_name = 'Match History'
+        verbose_name_plural = 'Match Histories'
+
+
+
+
+# SIGNALS TO CREATE PlayerProfile and PlayerSettings upon Player creation
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+
+# @receiver(post_save, sender=Player)
+# def create_player_related_models(sender, instance, created, **kwargs):
+#     if created:
+#         profile = PlayerProfile.objects.create(player=instance)
+#         PlayerSettings.objects.create(player_profile=profile)

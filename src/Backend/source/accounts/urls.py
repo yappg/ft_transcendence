@@ -26,7 +26,7 @@ urlpatterns = [
     path('upload/update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
 
 #list users
-    path('list/all/', PlayersViewList.as_view(), name='playersList'),
+    # path('list/all/', PlayersViewList.as_view(), name='playersList'),
 
     path('accountREST/', include('accounts.urlss.player_urls')),
 ]

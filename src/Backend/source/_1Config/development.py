@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
+
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -98,6 +98,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'accounts.authenticate.CotumAuthentication',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [],
+    'DEFAULT_THROTTLE_RATES': {},
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
     }
@@ -256,5 +258,3 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
 MEDIA_URL='/media/'
-
-
