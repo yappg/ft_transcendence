@@ -197,12 +197,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #env
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': os.getenv("42_CLIENT_ID"),
-    'CLIENT_SECRET': os.getenv("42_CLIENT_SECRET"),
+    'CLIENT_ID': "u-s4t2ud-9a789e497d800c5a443dceb37c2238734264a05f5208354f0a20b8eecb94e72f",
+    'CLIENT_SECRET': "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",
+    # 'CLIENT_ID': os.getenv("CLIENT_ID_42"),
+    # 'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/42',
+    'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
     'SCOPE': 'public',
 }
 
@@ -213,8 +215,8 @@ OAUTH2_PROVIDER_GOOGLE = {
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://127.0.0.1:8080/oauth/callback/google',
-    'SCOPE': 'https://www.googleapis.com/auth/update-user-infosinfo.profile https://www.googleapis.com/auth/update-user-infosinfo.email',
+    'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/google',
+    'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
 
 # Internationalization
