@@ -123,7 +123,8 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({'message': 'Logged Out Successfuly'}, status=status.HTTP_200_OK)
+        return Response({'message': 'AM here'}, status=status.HTTP_200_OK)
+
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get('refresh_token')
@@ -132,7 +133,7 @@ class LogoutView(APIView):
             response = Response({'message': 'Logged Out Successfuly'}, status=status.HTTP_200_OK)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
-            print('logged out')
+            response.delete_cookie('csrftoken')
         except Exception as e:
             return Response({'error': str(e)}, status=200)
         return response
@@ -167,6 +168,8 @@ class GenerateURI(APIView):
 class VerifyOTP(APIView):
     permission_classes = [AllowAny]
     serializer_class = VerifyOTPSerializer
+    authentication_classes = []
+
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -189,6 +192,7 @@ class VerifyOTP(APIView):
 class ValidateOTP(APIView):
     permission_classes = [AllowAny]
     serializer_class = ValidateOTPSerializer
+    authentication_classes = []
 
     def post(self, request):
         serializer = self.serializer_class(request.data)
@@ -251,19 +255,14 @@ class OAuth42LoginView(APIView):
 
     def get(self, request, provider):
 
-        print(settings.OAUTH2_PROVIDER_42['CLIENT_ID'])
-        print(settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL'])
-        print('--------------------------------------')
-        print(settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'])
-        print(settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL'])
-        print(settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'])
-        print(settings.OAUTH2_PROVIDER_GOOGLE['SCOPE'])
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
             client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
             authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Foauth%2Fcallback%2F42&response_type=code"
+            #trans 2-----------------------------------------
+            # authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fhome&response_type=code"
         elif provider == 'google':
             Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
             client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
