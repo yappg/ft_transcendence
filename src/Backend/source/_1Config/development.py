@@ -86,7 +86,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
-
+ 
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
 
