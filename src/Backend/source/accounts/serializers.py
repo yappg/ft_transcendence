@@ -1,36 +1,69 @@
 from rest_framework import serializers
-from .models import Player , PlayerProfile , PlayerSettings
+from .models import *
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
+    # {
+    #     "id": 1,
+    #     "profile": {
+    #         "id": 1,
+    #         "is_online": false,
+    #         "display_name": "Player_tlcw302b",
+    #         "bio": "",
+    #         "avatar": "http://localhost:8080/media/avatars/.defaultAvatar.jpeg",
+    #         "cover": "http://localhost:8080/media/covers/.defaultCover.jpeg",
+    #         "rank_points": 0,
+    #         "games_played": 0,
+    #         "games_won": 0,
+    #         "games_loss": 0,
+    #         "win_ratio": 0.0,
+    #         "created_at": "2024-12-02T23:06:56.514028Z",
+    #         "player": 1
+    #     },
 
+    #     "last_login": null,
 
+    #     "enabled_2fa": false,
+    #     "otp_secret_key": null,
+    #     "verified_otp": false,
+    # }
 
-
-class PlayerSerializer(serializers.ModelSerializer):
+class MatchHistorySerializer(serializers.ModelSerializer):
     class Meta:
-        model=Player
-        fields = ['id', 'username','email', 'profile', 'settings']
-        # fields = '__all__'
-
-class PlayerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=PlayerProfile
+        model = MatchHistory
         fields = '__all__'
-
+        read_only_fields = ['id', 'date']
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
         fields = '__all__'
+        exclude = ['player_profile']
+        read_only_fields = ['id', 'updated_at']
 
 
+class PlayerProfileSerializer(serializers.ModelSerializer):
+    settings = PlayerSettingsSerializer()
+
+    class Meta:
+        model=PlayerProfile
+        fields = '__all__'
+        exclude = ['player']
+        read_only_fields = ['id', 'created_at']
 
 
+## add a api endpoint to trigger password reset and username change or email > posibly trigger 2fa or email verif
+# class PlayerSerializer(serializers.ModelSerializer): # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
+#     profile = PlayerProfileSerializer(read_only=True)
+#     settings = PlayerSettingsSerializer(read_only=True)
 
-#########################
+#     class Meta:
+#         model = Player
+#         # fields = '__all__'
+#         fields = ['profile', 'enabled_2fa', 'otp_secret_key', 'verified_otp']
+#         read_only_fields = ['username' ,'email' ,'date_joined']
 
-
+############################################
 
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField()

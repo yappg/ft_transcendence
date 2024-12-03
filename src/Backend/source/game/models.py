@@ -36,6 +36,9 @@ class GameMove(models.Model):
     class Meta:
         ordering = ['timestamp']
 
+
+#game history
+
 class LeaderboardEntry(models.Model):
     player = models.OneToOneField(PlayerProfile, on_delete=models.CASCADE)
     rank = models.IntegerField()
