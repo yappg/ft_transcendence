@@ -17,7 +17,7 @@ from ..viewss.player_views import (
 
 router = DefaultRouter()
 # base my self on the settings and player model for quarying profiles
-router.register(r'profiles', PlayerProfileViewSet)
+router.register(r'profiles', PlayerProfileViewSet) # get options head for auth users / {id} put patch only for request user else get
 
 #for that user requesting it all read only we take id of profile for profile history
 #match history for the user it self and {id} for profile id match history
@@ -43,9 +43,9 @@ UserHistoryView = UserHistoryViewSet.as_view({
 })
 
 urlpatterns = [
-    path('user-profile/', UserProfileView , name='user_profile'),
-    path('user-settings/', UserSettingsView , name='user_settings'),
-    path('user-history/', UserHistoryView , name='user_game_history'),
+    path('user-profile/', UserProfileView , name='user_profile'), # get put patch options head
+    path('user-settings/', UserSettingsView , name='user_settings'), # get put patch options head
+    path('user-history/', UserHistoryView , name='user_game_history'), # get options head
 
     path('', include(router.urls)),
 
@@ -61,4 +61,4 @@ urlpatterns = [
 ### test that the display name is unique and confirm changes and test errors
 ]
 
-##### 
+#####
