@@ -29,39 +29,37 @@ from django.contrib.auth import authenticate
     # }
 
 class MatchHistorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MatchHistory
         fields = '__all__'
-        read_only_fields = ['id', 'date']
+        read_only_fields = ['__all__']
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
-        fields = '__all__'
         exclude = ['player_profile']
-        read_only_fields = ['id', 'updated_at']
+        read_only_fields = ['id']
 
 
-class PlayerProfileSerializer(serializers.ModelSerializer):
-    settings = PlayerSettingsSerializer()
+class PlayerProfileSerializer(serializers.ModelSerializer): # fix private profile only give back display name
 
     class Meta:
         model=PlayerProfile
-        fields = '__all__'
         exclude = ['player']
-        read_only_fields = ['id', 'created_at']
-
+        read_only_fields = ['id', 'is_online','rank_points' ,'games_played' ,'games_won' ,'games_loss' ,'win_ratio' ,'last_login' ,'created_at']
+        # backend_emplemt= ['TT', 'FFFFFFFFF','FFFFFFFFFFF' ,'FFFFFFFFFFFF' ,'FFFFFFFFF' ,'FFFFFFFFFF' ,'TTTTTTTTT' ,'FFFFFFFFFF' ,'TTTTTTTTTT']
 
 ## add a api endpoint to trigger password reset and username change or email > posibly trigger 2fa or email verif
-# class PlayerSerializer(serializers.ModelSerializer): # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
-#     profile = PlayerProfileSerializer(read_only=True)
-#     settings = PlayerSettingsSerializer(read_only=True)
+class PlayerSerializer(serializers.ModelSerializer): # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
+    profile = PlayerProfileSerializer(read_only=True)
+    settings = PlayerSettingsSerializer(read_only=True)
 
-#     class Meta:
-#         model = Player
-#         # fields = '__all__'
-#         fields = ['profile', 'enabled_2fa', 'otp_secret_key', 'verified_otp']
-#         read_only_fields = ['username' ,'email' ,'date_joined']
+    class Meta:
+        model = Player
+        # fields = '__all__'
+        fields = ['profile', 'enabled_2fa', 'otp_secret_key', 'verified_otp', 'date_joined']
+        read_only_fields = ['date_joined']
 
 ############################################
 
