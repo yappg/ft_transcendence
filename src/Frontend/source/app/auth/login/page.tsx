@@ -5,7 +5,7 @@ import Title from '@/components/auth/title';
 import { Form, MyLink } from '@/components/auth/form';
 import { useState } from 'react';
 import { getFields } from './fields';
-import Card from '@/components/generalUi/Card';
+import withAuth from '@/context/requireAhuth';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -21,10 +21,10 @@ function Login() {
   return (
     <div className="flex h-auto flex-col gap-4">
       <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={false} redirPath={'/Home'} />
+      <Form fields={fields} buttonProps={buttonProps} isSignup={false} />
       <MyLink text="Have no account yet? " href="signup" />
     </div>
   );
 }
 
-export default Login;
+export default withAuth(Login, false);
