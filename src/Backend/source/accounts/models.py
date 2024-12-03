@@ -7,8 +7,17 @@ from django.conf import settings
 #USER MODEL
 class Player(AbstractUser):
 
+<<<<<<< HEAD
     avatar=models.ImageField(upload_to='Avatars/', default='Avatars/.defaultAvatar.jpeg')
     cover=models.ImageField(upload_to='Covers/', default='Covers/.defaultCover.jpeg')
+=======
+    # display_name=models.CharField(max_length=50, blank=True)
+    # is_online=models.BooleanField(default=False)
+    # wins=models.IntegerField(default=0)
+    # losses=models.IntegerField(default=0)
+    avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
+    cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
+>>>>>>> 1046887f4aa9fbfa5c364ee7cdb0a5aa7633a6ea
 
     enabled_2fa=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=512, default=None, null=True, blank=True) #, null=True, blank=True

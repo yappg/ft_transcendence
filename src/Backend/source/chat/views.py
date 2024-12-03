@@ -103,3 +103,4 @@ class ChatMessagesView(APIView):
 
         serializer = MessageSerializer(message)
         return Response(serializer.data, status=201)
+
