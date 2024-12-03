@@ -22,7 +22,7 @@ export const SideBar = ({
 }) => {
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const arr = [
-    { Icon: IconConeFilled, id: 1, path: '/Home' },
+    { Icon: IconConeFilled, id: 1, path: '/home' },
     { Icon: IconDeviceGamepad3Filled, id: 2, path: '/games' },
     { Icon: IconCarambolaFilled, id: 3, path: '/stars' },
     { Icon: FaTrophy, id: 4, path: '/trophies' },
