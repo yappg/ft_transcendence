@@ -1,50 +1,25 @@
 'use client';
+
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import { MyButton } from '@/components/generalUi/Button';
 import { useQRCode } from 'next-qrcode';
-import axios from 'axios';
+import { fetchQrCode, sendOtp } from '@/hooks/fetch-otp';
+import withAuth from '@/context/requireAhuth';
+import { useAuth } from '@/context/AuthContext';
 
-export default function LoginTFA() {
+const Signup2fa = () => {
   const myString = 'Submit';
+  const { user } = useAuth();
   const [value, setValue] = React.useState('');
   const [isValid, setIsValid] = React.useState(true);
   const [QRcode, setQRcode] = React.useState('e');
   const [isLoading, setIsLoading] = React.useState(false);
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        setIsLoading(true);
-        const data = await axios.post('http://backend:8080/api/2fa/generate-uri/', {
-          username: 'mmesbahi',
-        });
-        console.log(data.data.uri);
-        setQRcode(data.data.uri);
-        setIsLoading(false);
-      };
-      fetchData();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }, []);
 
-  const sendOtp = async () => {
-    try {
-      const result = await axios.post('http://backend:8080/api/2fa/verifiy-otp/', {
-        username: 'mmesbahi',
-        otp_token: value,
-      });
-      console.log(result);
-      if (result.data.status) {
-        alert('OTP verified');
-      } else {
-        alert('Invalid OTP');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  useEffect(() => {
+    fetchQrCode(setIsLoading, setQRcode, user);
+  }, []);
 
   const { Canvas } = useQRCode();
   const handleClick = () => {
@@ -52,7 +27,7 @@ export default function LoginTFA() {
       setIsValid(false);
       return;
     } else {
-      sendOtp();
+      sendOtp('verifiy-otp/', value);
     }
   };
   return (
@@ -60,7 +35,11 @@ export default function LoginTFA() {
       <h1 className=" font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300 md:text-[70px]">
         activate 2FA
       </h1>
-      {!isLoading && (
+      {isLoading ? (
+        <h1 className="size-[250px] flex justify-center items-center font-dayson border border-white-crd rounded-md text-[30px] text-gray-600">
+          Loading...
+        </h1>
+      ) : (
         <Canvas
           text={QRcode}
           options={{
@@ -75,7 +54,6 @@ export default function LoginTFA() {
           }}
         />
       )}
-      {isLoading && <h1 className="font-dayson text-[30px] text-gray-600">Loading...</h1>}
       <InputOTPDemo value={value} setValue={setValue} />
       <div className="mt-20 flex flex-col items-center justify-center gap-[20px] md:mt-0 md:w-full md:gap-[40px]">
         <MyButton
@@ -85,10 +63,12 @@ export default function LoginTFA() {
         >
           {myString}
         </MyButton>
-        <Link href="/Home" className="font-poppins text-[#284F50]">
+        <Link href="/home" className="font-poppins text-[#284F50]">
           Skip this step
         </Link>
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(Signup2fa, true, true);
