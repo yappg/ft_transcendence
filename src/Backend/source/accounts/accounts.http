@@ -9,40 +9,18 @@ Content-Type: application/json
     "password2": "csfdsgopxabcvbdfgdfg"
 }
 
-######################
-
+##########
 POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "Teereeechoo",
-    "email": "Teereeechoo@gmail.com",
+    "username": "Teereeechoox",
+    "email": "Teereeechoox@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
-######
 
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "opa123",
-    "email": "opa123@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-######################
-
-POST http://localhost:8080/api/token/
-Content-Type: application/json
-
-{
-    "username": "opa",
-    "password": "csfdsgbcvbdfgdfg"
-}
-######################
-
-POST http://localhost:8080/api/signup/
+P##########OST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
@@ -52,70 +30,145 @@ Content-Type: application/json
     "password2": "csfdsgbcvbdfgdfg"
 }
 
-########
-
-GET http://localhost:8080/api/oauth/login/42
-
-    # "email": "tokenjdid@gmail.com",
-    # "password2": "csfdsgbcvbdfgdfg",
-
-########
-
-# POST http://localhost:8080/api/JWT/token/refresh
-
-GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-########
-########
-
-POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-########
-POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+##########
+POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "receiver": "ola"
+    "username": "opa123",
+    "email": "opa123@gmail.com",
+    "password": "csfdsgbcvbdfgdfg",
+    "password2": "csfdsgbcvbdfgdfg"
 }
-########
 
-GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+###################### GET TOKEN ################################################################################################################################################################
 
-########
-GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
-
-########
-
-
-POST  http://localhost:8080/chat/1/messages
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNTU0MTM3LCJpYXQiOjE3MzI1NTIzMzcsImp0aSI6IjY2NzQ3MjliNGE4YTQ0NTc4MWExODVhODBmYTUyM2NjIiwidXNlcl9pZCI6M30.oyDOk7ZR_PmUqUughPjLsHdsOKJ_n1Af-pyM6Us4G3U
+##########
+POST http://localhost:8080/api/JWT/token/
 Content-Type: application/json
 
 {
-    "receiver":"zb",
-    "content":"hey body"
+    "username": "opxaopxXa",
+    "password": "csfdsgopxabcvbdfgdfg"
+}
+##########
+POST http://localhost:8080/api/JWT/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjU1NjE0LCJpYXQiOjE3MzMyNTM4MTQsImp0aSI6ImMwNDExYmNlYTE4YjRiMjE5ZmJjYzBjYjQ1YWU2OWY2IiwidXNlcl9pZCI6NH0.Wb1PBtTFoB8NIwavs2vv1R4LedmjTgzZ4RXpbzyiDcI"
 }
 
-########
+######## RESTFULL PROFILES === GET PUT PATCH === ONLY ################################################################################
 
-### WebSocket Connection Test
-WEBSOCKET ws://127.0.0.1:8080/ws/chat/1/
+GET http://localhost:8080/api/accountREST/profiles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
 
-# # Send a message
-# > websocket-send
-# {
-#     "type": "websocket.send",
-#     "message": "Hello, WebSocket!"
-# }
+#########
+GET http://localhost:8080/api/accountREST/profiles/3/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
 
+#########
+PUT http://localhost:8080/api/accountREST/profiles/3/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
 
-# /
-# # Optional: multiple sends
-# > websocket-send
-# {
-#     "type": "websocket.send",
-#     "message": "Another test message"
-# }
+{
+  "id": 6,
+  "is_online": true,
+  "display_name": "droizt1223123123",
+  "bio": "bsdadsad",
+  "rank_points": 2,
+  "games_played": 3,
+  "games_won": 4,
+  "games_loss": 5,
+  "win_ratio": 2.0,
+  "last_login": "2024-12-03T17:58:31.115781Z",
+  "created_at": "2025-12-03T17:58:31.115781Z"
+}
+
+#########
+PATCH http://localhost:8080/api/accountREST/profiles/3/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
+
+{"bio":"droitx"}
+
+####################################################################################################################################
+
+#########
+GET http://localhost:8080/api/accountREST/history/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+
+#########
+GET http://localhost:8080/api/accountREST/history/3/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+
+######## USER SPECS === GET PUT PATCH === ONLY ################################################################################
+
+#########
+GET http://localhost:8080/api/accountREST/user-profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+
+#########
+PUT http://localhost:8080/api/accountREST/user-profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
+
+{
+  "id": 6,
+  "is_online": true,
+  "display_name": "droit1223123123",
+  "bio": "bsdadsad",
+  "rank_points": 2,
+  "games_played": 3,
+  "games_won": 4,
+  "games_loss": 5,
+  "win_ratio": 2.0,
+  "last_login": "2024-12-03T17:58:31.115781Z",
+  "created_at": "2025-12-03T17:58:31.115781Z"
+}
+
+#########
+PATCH http://localhost:8080/api/accountREST/user-profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
+
+{"bio":"droitx"}
+
+####################################################################################################################################
+=
+#########
+GET http://localhost:8080/api/accountREST/user-settings/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+
+#########
+PUT http://localhost:8080/api/accountREST/user-settings/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
+
+{
+  "id": "2",
+  "private_profile": true,
+  "notifications_enabled": false,
+  "enabled_2fa": true,
+  "verified_otp": true,
+  "otp_secret_key": "",
+  "updated_at": "2024-12-03T23:10:07.942787Z"
+}
+
+#########
+
+PATCH http://localhost:8080/api/accountREST/user-settings/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
+Content-Type: application/json
+
+{
+    "verified_otp": false
+}
+
+####################################################################################################################################
+
+#########
+GET http://localhost:8080/api/accountREST/user-history/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1MzUxLCJpYXQiOjE3MzMyNzM1NTEsImp0aSI6IjhkNzNlMzc4NDkyYjRmNTliYzMxMjNhZjEyMTA4YTU2IiwidXNlcl9pZCI6M30.5m36R_q_UwRXDtRkentxRI154wpF88-ETQv2balRS6M
