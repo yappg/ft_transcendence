@@ -19,12 +19,12 @@ from drf_yasg.utils import swagger_auto_schema
 #     queryset=Player.objects.all()
 
 #------------------------------------ Auth ------------------------------------
+@swagger_auto_schema(request_body=SignUpSerializer)
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
-    @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
 
         serializer = self.serializer_class(data=request.data)
@@ -50,12 +50,13 @@ class SignUpView(APIView):
 
         return Response(serializer.errors, status=400)
 
+
+@swagger_auto_schema(request_body=SignInSerializer)
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
     throttle_classes = [AnonRateLimitThrottling]
 
-    @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
         Serializer = self.Serializer_class(data=request.data)
 
@@ -279,4 +280,3 @@ class UpdateUserInfos(APIView):
             serializer.save()
             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

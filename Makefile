@@ -53,6 +53,10 @@ restart:
 
 ##########################################   UTILITIES  ##########################################
 
+data-reset:
+	@echo "$(GREEN)>$(YELLOW) removing all backend migrations files ...$(RESET)"
+	@find . -path "./src/Backend/source/*/migrations/*.py" -not -name "__init__.py" -delete
+
 prune:
 	@echo "$(GREEN)>$(YELLOW) removing all docker resources: CONTRL + C to cancel...$(RESET)"
 	@sleep 2

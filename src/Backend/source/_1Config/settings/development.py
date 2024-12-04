@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
+
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -91,13 +91,13 @@ SWAGGER_SETTINGS = {
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES':[
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
         # 'accounts.authenticate.CotumAuthentication',
-    ],
+    ),
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
     }
@@ -256,5 +256,3 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'  # or 'mandatory'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'UsersMedia/')
 MEDIA_URL='/media/'
-
-
