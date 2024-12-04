@@ -24,19 +24,15 @@ export const SideBar = ({
   const arr = [
     { Icon: IconConeFilled, id: 1, path: '/Home' },
     { Icon: IconDeviceGamepad3Filled, id: 2, path: '/games' },
-    { Icon: IconCarambolaFilled, id: 3, path: '/stars' },
-    { Icon: FaTrophy, id: 4, path: '/trophies' },
-    { Icon: IconChartDonutFilled, id: 5, path: '/achievement' },
+    { Icon: IconCarambolaFilled, id: 3, path: '/achievement' },
+    { Icon: FaTrophy, id: 4, path: '/LeaderBoard' },
+    { Icon: IconChartDonutFilled, id: 5, path: '/MatchHistory' },
   ];
 
   const smallScreenIcons = [
     { Icon: FaUsers, id: 6, path: '/friends' },
     { Icon: FaComments, id: 7, path: '/messages' },
   ];
-
-  function handleClick(id: number) {
-    setIsActivated(id);
-  }
 
   const showIcon = (Icon: any, id: number, selectedId: number, path: string) => (
     <Link href={path} key={id}>
@@ -80,7 +76,7 @@ export const SideBar = ({
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        {(pathname === '/friends' || pathname === '/messages') &&
+        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory') &&
           smallScreenIcons.map((item) => {
             return showIcon(item.Icon, item.id, isActivated, item.path);
           })}
