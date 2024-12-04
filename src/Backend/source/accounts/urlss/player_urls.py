@@ -51,7 +51,11 @@ urlpatterns = [
     # path('delete_account/', UserHistoryView , name='user_game_history'), # DELETE
 
 
-### TODO add loging for last time logged in and online status
+
+####### TODO add search functionalitty for the front with slugs
+####### TODO add loging for last time logged in and online status
+
+
 ### make signals to detect post save for game model to create a match history object for it
 ### test that the display name is unique and confirm changes and test errors
 ]
