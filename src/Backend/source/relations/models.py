@@ -1,7 +1,6 @@
 from django.db import models
 from accounts.models import Player
 
-# Create your models here.
 class Friends(models.Model):
     friend_requester = models.ForeignKey(Player, related_name='friend_requests_sent', on_delete=models.CASCADE)
     friend_responder = models.ForeignKey(Player, related_name='friend_requests_received', on_delete=models.CASCADE)
@@ -19,6 +18,8 @@ class FriendInvitation(models.Model):
     class Meta:
         unique_together = ('sender', 'receiver')
 
+
+
 class BlockedFriends(models.Model):
     blocker = models.ForeignKey(Player, related_name='blocked_users', on_delete=models.CASCADE)
     blocked = models.ForeignKey(Player, related_name='blocked_by', on_delete=models.CASCADE)
@@ -26,3 +27,14 @@ class BlockedFriends(models.Model):
 
     class Meta:
         unique_together = ('blocker', 'blocked')
+
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
+    sender = models.ForeignKey(Player, related_name='sent_notifications', on_delete=models.CASCADE)
+    message = models.TextField(max_length=255, default='Default notification')
+    read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Notification for {self.recipient.username}'

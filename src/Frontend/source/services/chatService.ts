@@ -90,6 +90,7 @@ class ChatService {
       this.socket.send(JSON.stringify({
         content: content,
         sender: userId,
+        chatId: chatId,
       }));
     } catch (error) {
       console.error('Error sending message:', error);
