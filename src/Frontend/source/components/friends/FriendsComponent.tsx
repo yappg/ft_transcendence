@@ -1,6 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { FaCommentDots } from 'react-icons/fa';
-import Link from 'next/link';
 const FriendsComponent = ({
   name,
   ProfilePhoto,
@@ -37,7 +35,8 @@ const FriendsComponent = ({
       ...customStyles,
     }}
   >
-      <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-8 xl:gap-10">
+    <div className="md:w-[80%] xl:min-w-[900px] flex flex-row justify-between items-center ">
+    <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-8 xl:gap-10">
         <Avatar className="size-[65px] transition-all duration-300 md:size-[70px] lg:size-[75px]">
           <AvatarImage src={ProfilePhoto} />
           <AvatarFallback>CN</AvatarFallback>
@@ -62,12 +61,13 @@ const FriendsComponent = ({
           </Avatar>
         ))}
       </div>
-      <div className="w-fit ">
+      <div className="w-fit">
         <h1 className="font-coustard text-[#28AFB0] transition-all duration-300 md:text-[17px] lg:text-[23px] xl:text-[26px] 2xl:text-[30px] dark:text-[#E43222]">
           Wins {wins}/70
         </h1>
       </div>
-      <div className="flex items-center justify-center">
+    </div>
+      <div className="flex items-center justify-end w-[20%] -mr-[20px]">
       {messagesLink}
       </div>
     </div>
