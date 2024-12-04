@@ -11,10 +11,6 @@ from ..viewss.player_views import (
 
 )
 
-# documentation todos
-# .list(), .retrieve(), .create(), .update(), .partial_update(), and .destroy
-
-
 router = DefaultRouter()
 # base my self on the settings and player model for quarying profiles
 router.register(r'profiles', PlayerProfileViewSet) # get options head for auth users / {id} put patch only for request user else get
@@ -28,32 +24,31 @@ UserProfileView = UserProfileViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
+    'options': 'options',
 })
 
 UserSettingsView = UserSettingsViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
+    'options': 'options',
 })
 
 UserHistoryView = UserHistoryViewSet.as_view({
-    'get': 'retrieve',
-    'put': 'update',
-    'patch': 'partial_update',
+    'get': 'list',
+    'options': 'options',
 })
 
 urlpatterns = [
-    path('user-profile/', UserProfileView , name='user_profile'), # get put patch options head
-    path('user-settings/', UserSettingsView , name='user_settings'), # get put patch options head
-    path('user-history/', UserHistoryView , name='user_game_history'), # get options head
-
     path('', include(router.urls)),
+    path('user-profile/', UserProfileView , name='user_profile'),
+    path('user-settings/', UserSettingsView , name='user_settings'),
+    path('user-history/', UserHistoryView , name='user_game_history'),
 
-    # path('disable_account/', UserHistoryView , name='user_game_history'),
-    # path('delete_account/', UserHistoryView , name='user_game_history'),
-    # path('change_username/', UserHistoryView , name='user_game_history'),
-    # path('change_password/', UserHistoryView , name='user_game_history'),
-    # path('change_email/', UserHistoryView , name='user_game_history'),
+    # path('change_password/', UserHistoryView , name='user_game_history'), # PATCH verficiation from front
+    # path('change_email/', UserHistoryView , name='user_game_history'), # PATCH and verification confirm mail maybe in future
+    # path('disable_account/', UserHistoryView , name='user_game_history'), # PATCH and quaryset
+    # path('delete_account/', UserHistoryView , name='user_game_history'), # DELETE
 
 
 ### TODO add loging for last time logged in and online status

@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 import string
 import random
+from django.db.models import Q
 
 class Player(AbstractUser): # auth user
 
@@ -21,9 +22,6 @@ class Player(AbstractUser): # auth user
             PlayerProfile.objects.create(player=self)
             PlayerSettings.objects.create(player_profile=self.profile)
 
-
-
-
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
@@ -40,19 +38,6 @@ class PlayerProfile(models.Model):
         upload_to='covers/',
         default='covers/.defaultCover.jpeg'
     )
-
-    # pending_friends = models.ManyToManyField(
-    #     'self',
-    #     symmetrical=False,
-    #     related_name='pending_friends_received',
-    #     blank=True
-    # )
-    # friends = models.ManyToManyField(
-    #     'self',
-    #     symmetrical=True,
-    #     related_name='friends_set',
-    #     blank=True
-    # )
 
     rank_points = models.PositiveIntegerField(default=0)
     games_played = models.PositiveIntegerField(default=0)
@@ -90,6 +75,9 @@ class PlayerProfile(models.Model):
             self.win_ratio = 0.0
 
         super().save(*args, **kwargs)
+
+    def all_matches(self):
+        return MatchHistory.objects.filter(Q(player=self) | Q(opponent=self)).order_by('-date')
 
 
 
