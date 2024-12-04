@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.serializers import PlayerSerializer
-from .models import FriendInvitation, BlockedFriends ,Friends
+from .models import *
 
 class FriendInvitationSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
@@ -25,3 +25,9 @@ class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friends
         fields = ['id', 'friend_requester', 'friend_responder', 'created_at']
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'sender', 'message', 'read', 'created_at']

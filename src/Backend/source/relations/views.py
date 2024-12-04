@@ -1,14 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from rest_framework import status
-from .models import Player, Friends, FriendInvitation, BlockedFriends
-from .serializers import PlayerSerializer, FriendInvitationSerializer, BlockedFriendsSerializer, FriendsSerializer
+from .models import *
+from .serializers import *
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 
-from drf_yasg.utils import swagger_auto_schema
-from django.db.models import Q
+
+
+
+class NotificationListView(ListAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
 
 
 
