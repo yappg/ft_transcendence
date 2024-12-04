@@ -3,9 +3,6 @@
 import Form from 'react-bootstrap/Form';
 import FriendRequestCard from './FriendRequestCard';
 import { IconPlus } from '@tabler/icons-react';
-
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import {useEffect, useState} from 'react';
 import FriendServices from '@/services/friendServices';
 
@@ -75,9 +72,8 @@ const AddFriends = () => {
         />
       </Form>
       <div className="custom-scrollbar-container h-[calc(100%-200px)] w-full overflow-y-scroll">
-        {FiltredUsers.length === 0 ? (
-          <div className="text-center font-bold text-white">No results found for {searchUser} </div>
-        ) : (
+        {FiltredUsers.length <= 0 ? (
+          
           FiltredUsers.map((user) => (
             <FriendRequestCard
               key={user.id}
@@ -94,6 +90,8 @@ const AddFriends = () => {
               customStyles={{ backgroundColor: 'transparent' }}
             />
           ))
+        ) : (
+          <div className="text-center font-bold text-white h-full flex items-center justify-center">No results found for {searchUser} </div>
         )}
       </div>
       {message && <div className="text-center font-bold text-white">{message}</div>}
