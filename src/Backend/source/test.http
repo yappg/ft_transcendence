@@ -1,4 +1,13 @@
+############--------_JTW_--------------############
 
+
+POST http://localhost:8080/api/JWT/token/
+Content-Type: application/json
+
+{
+    "username": "hamid",
+    "password": "csfdsgopxabcvbdfgdfg"
+}
 
 ########---------signup------_#########
 
@@ -6,8 +15,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "ali",
-    "email": "ali@gmail.com",
+    "username": "hamid",
+    "email": "hamid@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -17,8 +26,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "meryem",
-    "email": "meryem@gmail.com",
+    "username": "pipo",
+    "email": "pipo@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -36,7 +45,7 @@ Content-Type: application/json
 }
 ###  ####   ###  ### ## ####  ###
 
-POST http://localhost:8080/api/signup/
+POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
@@ -48,8 +57,7 @@ Content-Type: application/json
 ##########-----LIST----############ 
 
 GET http://localhost:8080/api/list/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
 ########
 
 GET http://localhost:8080/api/users/5
@@ -72,37 +80,54 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###-----------FRIENDS------##############
 GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzU2MTkxLCJpYXQiOjE3MzI3NTQzOTEsImp0aSI6ImE1MWE3ZGU2YjdlMjQ4MzQ4MjE3MWZhMjgwNTgxZWMwIiwidXNlcl9pZCI6M30.lomaKh-0_TUc1jUXnnvp2DP3_e_05U29rSAjw41Q-qs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc2NTg3LCJpYXQiOjE3MzMyNzQ3ODcsImp0aSI6IjRiYTI0MjNhMGRkZTQyNzFhYzM5NDdlNjY4ZmFlYTg0IiwidXNlcl9pZCI6NX0.FDpLjR5KCKuX5dDfZalN8b8dvIzUpsN0sf34DLzw9j4
 
 ## ### ## ### # ##### #####
 
+
+
+#
+###
+
+OPTIONS http://localhost:8080/relations/notifications/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
+#
+
+
+## ### ## ### # ##### #####
+
+#########
+
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAyOTIwLCJpYXQiOjE3MzMxMDExMjAsImp0aSI6Ijc2YWM3ODExMWQwNDQ5ZDhiMzRmYTlhMzJiZGU0MzJjIiwidXNlcl9pZCI6Nn0.9KS_nyX8MWL6uRYdqZzHWvJtIYXWVDpDXJcmtlrWR3g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc2NTg3LCJpYXQiOjE3MzMyNzQ3ODcsImp0aSI6IjRiYTI0MjNhMGRkZTQyNzFhYzM5NDdlNjY4ZmFlYTg0IiwidXNlcl9pZCI6NX0.FDpLjR5KCKuX5dDfZalN8b8dvIzUpsN0sf34DLzw9j4
 Content-Type: application/json
 
 {
-    "receiver":"mery"
+    "receiver":"pipo"
 }
 ### #  ## ##
 
 POST http://localhost:8080/relations/friends/accept/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTAyOTIwLCJpYXQiOjE3MzMxMDExMjAsImp0aSI6Ijc2YWM3ODExMWQwNDQ5ZDhiMzRmYTlhMzJiZGU0MzJjIiwidXNlcl9pZCI6Nn0.9KS_nyX8MWL6uRYdqZzHWvJtIYXWVDpDXJcmtlrWR3g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
 Content-Type: application/json
 
 {
-    "sender":"test"
+    "sender":"ali"
 }
 ### ## # 
 
-############--------_JTW_--------------############
 
-POST http://localhost:8080/api/JWT/token/
-Content-Type: application/json
 
-{
-    "username": "ali",
-    "password": "csfdsgopxabcvbdfgdfg"
-}
+
+
+
+
+
+
+
+
+
+
 
 ###
 
@@ -116,21 +141,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ####
 POST http://localhost:8080/chat/ch/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjczNjU0LCJpYXQiOjE3MzMyNzE4NTQsImp0aSI6IjM0ZDFiZDY1NWFhMDQ3MTdiY2Y4ZmI4MWU4ZDkzZDc4IiwidXNlcl9pZCI6Mn0.ysI-r8GNDRNdQXbAk4rne6L-Nv67SooEc4paKUsf7Xk
 Content-Type: application/json
 
 {
-    "senders":"ali"
-    
+    "senders":"pipo"
 }
 
 ######
-POST  http://localhost:8080/chat/1/messages/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
+POST  http://localhost:8080/chat/2/messages/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjczNjU0LCJpYXQiOjE3MzMyNzE4NTQsImp0aSI6IjM0ZDFiZDY1NWFhMDQ3MTdiY2Y4ZmI4MWU4ZDkzZDc4IiwidXNlcl9pZCI6Mn0.ysI-r8GNDRNdQXbAk4rne6L-Nv67SooEc4paKUsf7Xk
 Content-Type: application/json
 
 {
-    "receiver":"ali",
+    "receiver":"opa123",
     "content":"WA llalala"
 }
 
