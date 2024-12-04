@@ -72,9 +72,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
+    'accounts.middleware.AccessTokenMiddleware',
 ]
-
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -103,7 +102,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=12),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
@@ -197,19 +196,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #env
 OAUTH2_PROVIDER_42 = {
-    # 'CLIENT_ID': "u-s4t2ud-9a789e497d800c5a443dceb37c2238734264a05f5208354f0a20b8eecb94e72f",
-    # 'CLIENT_SECRET': "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",
+    'CLIENT_ID': "u-s4t2ud-9a789e497d800c5a443dceb37c2238734264a05f5208354f0a20b8eecb94e72f",
+    'CLIENT_SECRET': "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",
     #TRANS2-----------------------------------------
-    'CLIENT_ID': "u-s4t2ud-4aedcd9bbfe99586bd8aab9967a260dd24e4a1459620fe008ae457eae916624c",
-    'CLIENT_SECRET': "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",
+    # 'CLIENT_ID': "u-s4t2ud-4aedcd9bbfe99586bd8aab9967a260dd24e4a1459620fe008ae457eae916624c",
+    # 'CLIENT_SECRET': "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",
     # -----------------END--------------------------
     # 'CLIENT_ID': os.getenv("CLIENT_ID_42"),
     # 'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://127.0.0.1:3000/home',
-    # 'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
+    # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
+    'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
     'SCOPE': 'public',
 }
 
