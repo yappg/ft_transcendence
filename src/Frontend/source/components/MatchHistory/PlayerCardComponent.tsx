@@ -37,7 +37,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ profilePhoto, playerName, level
         </h1>
       </div>
       </div>
-      <h1 className={`font-poppins md:text-[25px] lg:text-[25px] xl:text-[30px] 2xl:text-[45px] ${
+      <h1 className={`font-poppins font-bold md:text-[25px] lg:text-[25px] xl:text-[30px] 2xl:text-[45px] ${
           isHighScore ? 'text-[#28AFB0]' : 'text-[#E43222]'
         }`}>
         {score}
