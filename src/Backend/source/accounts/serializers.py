@@ -38,9 +38,9 @@ class SignInSerializer(serializers.Serializer):
         if usernm and passwd:
             user = authenticate(username=usernm, password=passwd)
             if not user:
-                raise serializers.ValidationError("Invalid Credentials")
+                raise serializers.ValidationError({"error":"Invalid Credentials"})
         else :
-            serializers.ValidationError("Both Username and password required")
+            serializers.ValidationError({"error":"Both Username and password required"})
 
         attrs['user'] = user
         return attrs

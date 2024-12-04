@@ -335,4 +335,3 @@ class UpdateUserInfos(APIView):
         return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
-# {"username":"kad","password":"asd123"}
