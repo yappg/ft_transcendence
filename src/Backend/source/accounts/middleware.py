@@ -20,7 +20,7 @@ class AccessTokenMiddleware:
         if exp_time:
             exp_time = datetime.datetime.fromtimestamp(exp_time, tz=datetime.timezone.utc)
             remain_time = exp_time - now()
-            if remain_time.total_seconds() < 300:
+            if remain_time.total_seconds() < 300 #and remain_time.total_seconds() > 0:
                 refresh_token = request.COOKIES.get('refresh_token')
                 if refresh_token:
                     try:
