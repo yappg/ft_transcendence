@@ -1,4 +1,4 @@
-export const friends = [
+export const LeaderBoard = [
   {
     name: 'Noureddine Akebli',
     profilePhoto: '/Avatar.svg',

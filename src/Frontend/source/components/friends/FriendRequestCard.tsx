@@ -38,7 +38,6 @@ const FriendRequestCard = ({
     },
   ];
   async function acceptRequest() {
-    console.log('Accepting friend request...', name);
     try {
       const response = await FriendServices.acceptFriendRequest(name);
       console.log('Friend request accepted successfully:', response);
