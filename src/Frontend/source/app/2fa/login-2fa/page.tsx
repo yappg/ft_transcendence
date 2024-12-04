@@ -1,28 +1,14 @@
 'use client';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
-import axios from 'axios';
+import { sendOtp } from '@/hooks/fetch-otp';
+
 export default function SignupTFA() {
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
   const handleClick = () => {
-    sendOtp();
-  };
-  const sendOtp = async () => {
-    try {
-      const result = await axios.post('http://backend:8080/api/2fa/validate-otp/', {
-        username: 'mmesbahi',
-        otp_token: value,
-      });
-      if (result.data.status) {
-        alert('OTP verified');
-      } else {
-        alert('Invalid OTP');
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    sendOtp('verifiy-otp', value);
   };
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
