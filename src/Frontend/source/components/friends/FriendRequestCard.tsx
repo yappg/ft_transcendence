@@ -1,6 +1,4 @@
 import { GoCheckCircle } from 'react-icons/go';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendServices from '@/services/friendServices';
