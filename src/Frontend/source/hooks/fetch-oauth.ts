@@ -23,7 +23,7 @@ export class OAuthClient {
     } catch (error: any) {
       toast({
         title: 'error',
-        description: 'error.messagedfzffz',
+        description: error.detail,
         className: 'bg-primary-dark border-none text-white bg-opacity-20',
       });
     }
