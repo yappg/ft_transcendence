@@ -26,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           isActivated === 7 ||
           isActivated === 6 ||
           pathname === '/friends' ||
+          pathname === '/Profile' ||
           pathname === '/messages'
             ? 'hidden'
             : 'flex'
