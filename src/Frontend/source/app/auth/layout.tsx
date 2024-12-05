@@ -52,12 +52,12 @@ export default function RootLayout({
             </Link>
           </div> */}
           <div
-            className={`relative flex size-fit items-center transition-all duration-1000 ease-in-out ${
+            className={`relative flex size-full md:size-fit items-center transition-all duration-1000 ease-in-out ${
               !isLeft ? 'lg:mr-[120px]' : 'lg:ml-[120px]'
             }`}
           >
             <Card
-              className={`px-9 pt-16 sm:px-16 md:size-[85%] md:h-auto md:max-h-[850px]  md:min-h-[500px] md:w-[600px] md:rounded-b-[30px] lg:w-[850px] lg:max-w-[850px]  ${isLeft ? 'lg:pl-[230px]' : 'lg:pr-[230px]'} lg:pt-4`}
+              className={`size-full px-9 pt-16 sm:px-16 md:size-[85%] md:h-auto md:max-h-[850px]  md:min-h-[500px] md:w-[600px] md:rounded-b-[30px] lg:w-[850px] lg:max-w-[850px]  ${isLeft ? 'lg:pl-[230px]' : 'lg:pr-[230px]'} lg:pt-4`}
             >
               {children}
             </Card>
