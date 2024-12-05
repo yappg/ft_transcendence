@@ -89,6 +89,8 @@ const AddFriends = () => {
               customStyles={{ backgroundColor: 'transparent' }}
             />
           ))
+        ) : (
+          <div className="text-center font-bold text-white h-full flex items-center justify-center">No results found for {searchUser} </div>
         )}
       </div>
       {message && <div className="text-center font-bold text-white">{message}</div>}
