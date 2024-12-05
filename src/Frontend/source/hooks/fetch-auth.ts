@@ -1,7 +1,8 @@
 export class AuthClient {
     private static readonly BASE_URL = 'http://localhost:8080/api/auth';
     private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
-      delete data.password2
+      delete data.password2;
+      console.log(data);
       try {
         const response = await fetch(`${AuthClient.BASE_URL}/${endpoint}/`, {
           method: 'POST',
@@ -16,11 +17,11 @@ export class AuthClient {
         if (error instanceof Error) {
           throw new Error(`Authentication error: ${error.message}`);
         }
-  
+
         throw new Error('Authentication failed');
       }
     }
-  
+
     static async signup(data: Record<string, any>) {
       return this.fetchWithAuth('signup', data);
     }

@@ -7,7 +7,7 @@ import { MyButton } from '@/components/generalUi/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthClient } from '@/hooks/fetch-auth';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, User } from '@/context/AuthContext';
 
 type FieldType = 'input' | 'password' | 'email' | 'text' | 'number' | 'date';
 
@@ -59,6 +59,7 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
 };
 
 export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => {
+  const user = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
@@ -124,24 +125,26 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
     try {
       const response = await (isSignup ? AuthClient.signup(formData) : AuthClient.signin(formData));
-      
+
       console.log('response: ', response);
-      
+
       if (response.message) {
         toast({
           title: 'Success',
           description: isSignup ? 'Account created successfully' : 'Logged in successfully',
           className: 'bg-primary border-none text-white bg-opacity-20',
         });
+        auth.login({
+          username: formData.username,
+          is2FAEnabled: (response.enabled_2fa === 'True'),
+        } as User);
         if (isSignup) {
-          auth.login(formData.username);
-          // router.push('/2fa/signup-2fa');
+          router.push('/2fa/signup-2fa');
+        } else if (response.enabled_2fa === 'True') {
+          router.push('/2fa/login-2fa/');
           return;
-        }
-        if (response.enabled_2fa === 'True') {
-          router.push('/2fa/login-2fa');
         } else {
-          auth.login(formData.username);
+          router.push('/home');
         }
         return;
       }
@@ -149,7 +152,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         toast({
           title: 'Authentication failed',
           description: response.error,
-          variant: 'destructive', 
+          variant: 'destructive',
           className: 'bg-primary-dark border-none text-white bg-opacity-20',
         });
     } catch (error) {
