@@ -161,7 +161,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         variant: 'destructive',
         className: 'bg-primary-dark border-none text-white',
       });
-      console.log('helloooooooooo2\n', error);
     } finally {
       setIsSubmitting(false);
     }

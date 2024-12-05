@@ -6,7 +6,7 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
-
+import { toast } from '@/hooks/use-toast';
 
 const UserFriendsNav = (): JSX.Element => {
   const player = {
@@ -16,33 +16,56 @@ const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
 
+  useEffect(() => {
+    const displayFriends = async () => {
+      
+      try {
+        const response = await FriendServices.getFriends();
+        console.log('Friends:',response.data);
+        if (response.message){
+          setFriends(response.data);
+        }
+        else if (response.error) { 
+          console.log(response.error)
+        }
+      } catch (error) {
+        toast({
+          title: 'Authentication failed',
+          description: 'Oups Somthing went wrong !',
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white',
+        });
+      }
+    }
+    displayFriends();
+  }, []);
    
   useEffect(() => {
     const displayInvit = async () => {
       
       try {
         const response = await FriendServices.getFriendRequests();
-        setRequests(response);
-        console.log('Friend request sent successfully:', response);
+        console.log('Friends Requests\n', response.data);
+        if (response.message)
+        {
+          setRequests(response.data);
+        }
+        else if (response.error){
+          console.log(response.error)
+        }
       } catch (error) {
-        console.error('Error sending friend request:', error);
+        toast({
+          title: 'Authentication failed',
+          description: 'Oups Somthing went wrong !',
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white',
+        });
       }
     }
     displayInvit();
   }, []);
-  useEffect(() => {
-    const displayFriends = async () => {
-      
-      try {
-        const response = await FriendServices.getFriends();
-        setFriends(response);
-        console.log('Friends displayed successfully:', response);
-      } catch (error) {
-        console.error('Error displaying friends:', error);
-      }
-    }
-    displayFriends();
-  }, []);
+
+
   // const { name, level } = player;
   
   const [activeIndex, setActiveIndex] = useState(0);
