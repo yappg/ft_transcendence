@@ -1,7 +1,7 @@
 'use client'
 
 import axios from 'axios';
-import { toast } from './use-toast';
+import { toast } from '@/hooks/use-toast';
 import { Dispatch, SetStateAction } from 'react';
 
 
