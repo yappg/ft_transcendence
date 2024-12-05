@@ -2,7 +2,7 @@
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
-import { sendOtp } from '@/hooks/fetch-otp';
+import { sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
 import withAuth from '@/context/requireAhuth';
 

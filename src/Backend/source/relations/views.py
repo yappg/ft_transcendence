@@ -17,7 +17,12 @@ class PlayerListView(APIView):
 
     def get(self, request):
         print(f"request.user: {request.user}")
-        players = Player.objects.exclude(id=request.user.id)
+
+        friends = request.user.friend_requests_received.values_list('id', flat=True)
+        players = Player.objects.exclude(Q(id=request.user.id) | Q(id__in=friends))
+
+
+        players
         if not players:
             Response({"error": "No Players Found"}, status=200);
         serializer = PlayerSerializer(players, many=True)
