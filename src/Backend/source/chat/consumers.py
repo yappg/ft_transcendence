@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.chat_group_name,
             self.channel_name
         )
-
+        print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
         await self.accept()
 
         await self.send(text_data=json.dumps({
@@ -43,18 +43,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         text_data_json = json.loads(text_data)
         content = text_data_json.get('content')
-        sender_id = text_data_json.get('sender')
+        sender_id = text_data_json.get('sender') 
 
         print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}")
 
         try:
             sender = await sync_to_async(Player.objects.get)(id=sender_id)
             # reciever = await Player.objects.get(id=reciever_id)
-            chat = await sync_to_async(Chat.objects.get)(id=self.chatId)
+            chat = await sync_to_async(ChatRoom.objects.get)(id=self.chatId)
         except Player.DoesNotExist:
             print(f"-----------------[DEBUG] Sender or Reciever with ID {sender_id} does not exist")
             return
-        except Chat.DoesNotExist:
+        except ChatRoom.DoesNotExist:
             print(f"-----------------[DEBUG] Chat with ID {self.chatId} does not exist")
             return
 
@@ -62,7 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Save the message to the database
         new_message = await sync_to_async(Message.objects.create)(
-            chat=chat, sender=sender, content=content
+            chatroom=chat, sender=sender, content=content
         )
 
         # Debug: Print after the message is saved
