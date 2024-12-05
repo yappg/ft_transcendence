@@ -40,13 +40,13 @@ re: clean build
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	@docker-compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
 
 it:
 	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
 
 restart:
-	@docker-compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
 
 ##########################################   UTILITIES  ##########################################
 
