@@ -6,7 +6,7 @@ import InputBar from './input-bar';
 import { MyButton } from '@/components/generalUi/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthClient } from '@/hooks/fetch-auth';
+import { AuthClient } from '@/services/fetch-auth';
 import { useAuth, User } from '@/context/AuthContext';
 
 type FieldType = 'input' | 'password' | 'email' | 'text' | 'number' | 'date';
@@ -161,7 +161,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         variant: 'destructive',
         className: 'bg-primary-dark border-none text-white',
       });
-      console.log('helloooooooooo2\n', error);
     } finally {
       setIsSubmitting(false);
     }
