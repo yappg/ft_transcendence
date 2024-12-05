@@ -8,8 +8,11 @@ import { useQRCode } from 'next-qrcode';
 import { fetchQrCode, sendOtp } from '@/hooks/fetch-otp';
 import withAuth from '@/context/requireAhuth';
 import { useAuth } from '@/context/AuthContext';
+import { Router } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const Signup2fa = () => {
+  const router = useRouter();
   const myString = 'Submit';
   const { user } = useAuth();
   const [value, setValue] = React.useState('');
@@ -18,7 +21,7 @@ const Signup2fa = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
-    fetchQrCode(setIsLoading, setQRcode, user);
+    fetchQrCode(setIsLoading, setQRcode, user?.username || null);
   }, []);
 
   const { Canvas } = useQRCode();
@@ -27,16 +30,23 @@ const Signup2fa = () => {
       setIsValid(false);
       return;
     } else {
-      sendOtp('verifiy-otp/', value);
+      const valid = async () => {
+        const response = await sendOtp('verifiy-otp', value, user?.username || null);
+        console.log(response);
+        if (response) {
+          return router.push('/home');
+        }
+      };
+      valid()
     }
   };
   return (
-    <div className="relative flex size-auto flex-col items-center justify-center gap-10 md:h-[90%] md:w-[85%]">
-      <h1 className=" font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300 md:text-[70px]">
+    <div className="relative flex size-auto flex-col items-center justify-center gap-4 md:h-[90%] md:w-[85%]">
+      <h1 className=" font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300">
         activate 2FA
       </h1>
       {isLoading ? (
-        <h1 className="size-[250px] flex justify-center items-center font-dayson border border-white-crd rounded-md text-[30px] text-gray-600">
+        <h1 className="size-[200px] flex justify-center items-center font-dayson border border-white-crd rounded-md text-[30px] text-gray-600">
           Loading...
         </h1>
       ) : (
@@ -46,7 +56,7 @@ const Signup2fa = () => {
             errorCorrectionLevel: 'M',
             margin: 3,
             scale: 4,
-            width: 250,
+            width: 200,
             color: {
               dark: '#000',
               light: '#fff',
@@ -55,15 +65,14 @@ const Signup2fa = () => {
         />
       )}
       <InputOTPDemo value={value} setValue={setValue} />
-      <div className="mt-20 flex flex-col items-center justify-center gap-[20px] md:mt-0 md:w-full md:gap-[40px]">
+      <div className="flex flex-col items-center justify-center gap-[20px] md:w-full md:gap-[40px]">
         <MyButton
           onClick={handleClick}
-          className="font-dayson h-[68px] w-[201px] rounded-lg text-[24px] font-black
-       transition-all duration-300 md:h-[88px] md:w-[301px] md:text-[36px]"
+          className="min-w-[120px] disabled:opacity-50"
         >
           {myString}
         </MyButton>
-        <Link href="/home" className="font-poppins text-[#284F50]">
+        <Link href="/home" className="font-poppins text-[#284F50] text-[10px]">
           Skip this step
         </Link>
       </div>
@@ -71,4 +80,4 @@ const Signup2fa = () => {
   );
 };
 
-export default withAuth(Signup2fa, true, true);
+export default withAuth(Signup2fa, true, 'signup');
