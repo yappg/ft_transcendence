@@ -1,17 +1,50 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { friends } from '@/constants/friendsList';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import FriendRequestCard from './FriendRequestCard';
-import { invitations } from '@/constants/InvitationsList';
 import AddFriends from './AddFriendsComponent';
+import {useEffect} from 'react';
+import FriendServices from '@/services/friendServices';
+
+
 const UserFriendsNav = (): JSX.Element => {
   const player = {
     name: 'Noureddine Akebli',
     level: 22,
   };
+  const [Requests, setRequests] = useState([]);
+  const [Friends, setFriends] = useState([]);
+
+   
+  useEffect(() => {
+    const displayInvit = async () => {
+      
+      try {
+        const response = await FriendServices.getFriendRequests();
+        setRequests(response);
+        console.log('Friend request sent successfully:', response);
+      } catch (error) {
+        console.error('Error sending friend request:', error);
+      }
+    }
+    displayInvit();
+  }, []);
+  useEffect(() => {
+    const displayFriends = async () => {
+      
+      try {
+        const response = await FriendServices.getFriends();
+        setFriends(response);
+        console.log('Friends displayed successfully:', response);
+      } catch (error) {
+        console.error('Error displaying friends:', error);
+      }
+    }
+    displayFriends();
+  }, []);
   // const { name, level } = player;
+  
   const [activeIndex, setActiveIndex] = useState(0);
   // const { activeIndex, setActiveIndex } = useContext(TabContext);
 
@@ -24,29 +57,46 @@ const UserFriendsNav = (): JSX.Element => {
     if (activeIndex === 0) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {friends.map((friend, index) => (
+          {Friends.length > 0 ? (
+          Friends.map((friend, index) => (
             <FriendsComponent
               key={index}
               index={index}
-              name={friend.name}
+              name={friend.friend_requester}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
               wins={friend.wins}
+              messagesLink={
+                <div className="flex items-center justify-center">
+                  <Link href="/messages">
+                    <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
+                  </Link>
+                </div>
+              }
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+  )}
         </div>
       );
     } else if (activeIndex === 1) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {invitations.map((invitation, index) => (
+          {Requests.length > 0 ? (
+          Requests.map((invitation, index) => (
             <FriendRequestCard
               key={index}
-              name={invitation.senderName}
-              ProfilePhoto={invitation.senderProfilePhoto}
-              vari={invitation.sentAt}
+              index={index}
+              name={invitation.friend_requester}
+              ProfilePhoto={invitation.profilePhoto}
+              level={invitation.level}
+              wins={invitation.wins}
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
+  )}
         </div>
       );
     } else if (activeIndex === 2) {
@@ -58,7 +108,8 @@ const UserFriendsNav = (): JSX.Element => {
       <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between md:px-2 md:pr-4 lg:px-10">
         <div className="flex h-fit flex-row items-center justify-between">
           <Avatar className="max-w-[120px] md:size-auto ">
-            <AvatarImage src="/ProfilePhoto.svg" />
+            //
+            <AvatarImage src="" />
             <AvatarFallback className="font-dayson m-2 size-[80px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
               CN
             </AvatarFallback>
@@ -88,7 +139,7 @@ const UserFriendsNav = (): JSX.Element => {
           ))}
         </div>
       </div>
-      <div className="h-[90%] w-full ">{renderContent()}</div>
+      <div className="h-[90%] w-full">{renderContent()}</div>
     </div>
   );
 };
