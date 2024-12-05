@@ -1,17 +1,16 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import { OAuthClient } from '@/hooks/fetch-oauth';
+import { OAuthClient } from '@/services/fetch-oauth';
 
 function Title() {
-
   const handleGoogle = () => {
-    OAuthClient.google()
-  }
+    OAuthClient.google();
+  };
 
   const handleIntra42 = () => {
-    OAuthClient.intra42()
-  }
+    OAuthClient.intra42();
+  };
 
   return (
     <div className="flex h-auto w-3/4 flex-col justify-center lg:w-5/6">

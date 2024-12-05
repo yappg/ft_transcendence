@@ -5,10 +5,9 @@ import React, { useEffect } from 'react';
 import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import { MyButton } from '@/components/generalUi/Button';
 import { useQRCode } from 'next-qrcode';
-import { fetchQrCode, sendOtp } from '@/hooks/fetch-otp';
+import { fetchQrCode, sendOtp } from '@/services/fetch-otp';
 import withAuth from '@/context/requireAhuth';
 import { useAuth } from '@/context/AuthContext';
-import { Router } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const Signup2fa = () => {
