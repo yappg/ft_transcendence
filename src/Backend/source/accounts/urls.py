@@ -22,9 +22,11 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
-#upload media UpdateUserInfos0
-    path('upload/update-user-infos/',UpdateUserInfos.as_view(), name='update_infos'),
-
 #list users
     path('list/all/', PlayersViewList.as_view(), name='playersList'),
+# get user details
+
+    path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
+    path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
+    path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
 ]
