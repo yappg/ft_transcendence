@@ -5,6 +5,7 @@ import FriendRequestCard from './FriendRequestCard';
 import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
+import { toast } from '@/hooks/use-toast';
 
 const AddFriends = () => {
   const [message, setMessage] = useState('');
@@ -22,10 +23,16 @@ const AddFriends = () => {
     const fetchUsers = async () => {
       try {
         const response = await FriendServices.getPlayers();
-        setUserList(response);
+        if (response.message){
+          setUserList(response.data);
+        }
       } catch (error) {
-        console.log(error);
-        setMessage(`Error sending friend request to  `);
+        toast({
+          title: 'Authentication failed',
+          description: 'Oups Somthing went wrong !',
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white',
+        });
       }
     };
     fetchUsers();
@@ -34,16 +41,24 @@ const AddFriends = () => {
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
       const response = await FriendServices.sendFriendRequest(receiverUsername);
+      
 
-      if (response.status === 201) {
+      if (response.message) {
+        console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`);
-      } else {
+    
+        //need to add data of invitation in the usecontext
+      } else if (response.error) {
+        console.log(response.error);
         setMessage(`Error sending friend request to ${receiverUsername}`);
       }
     } catch (error: any) {
-      setMessage(
-        `Error sending friend request to ${receiverUsername}: ${error.response ? error.response.data : error.message}`
-      );
+      toast({
+        title: 'Authentication failed',
+        description: 'Oups Somthing went wrong !',
+        variant: 'destructive',
+        className: 'bg-primary-dark border-none text-white',
+      });
     }
   };
 
@@ -70,9 +85,7 @@ const AddFriends = () => {
         />
       </Form>
       <div className="custom-scrollbar-container h-[calc(100%-200px)] w-full overflow-y-scroll">
-        {FiltredUsers.length === 0 ? (
-          <div className="text-center font-bold text-white">No results found for {searchUser} </div>
-        ) : (
+        {FiltredUsers.length > 0 ? (
           FiltredUsers.map((user: any) => (
             <FriendRequestCard
               key={user.id}
@@ -81,17 +94,18 @@ const AddFriends = () => {
               vari={user.level}
               actions={[
                 <IconPlus
-                  key={user.id}
-                  className="ml-[100px] size-[40px] text-white cursor-pointer"
-                  onClick={() => sendFriendRequest(user.username)}
+                key={user.id}
+                className="ml-[100px] size-[40px] text-white cursor-pointer"
+                onClick={() => sendFriendRequest(user.username)}
                 />,
               ]}
               customStyles={{ backgroundColor: 'transparent' }}
-            />
-          ))
-        ) : (
-          <div className="text-center font-bold text-white h-full flex items-center justify-center">No results found for {searchUser} </div>
-        )}
+              />
+            ))
+          ) : (
+          <div className="text-center font-bold text-white">No results found for {searchUser} </div>
+        )
+        }
       </div>
       {message && <div className="text-center font-bold text-white">{message}</div>}
     </div>

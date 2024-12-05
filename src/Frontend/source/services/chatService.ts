@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { Chat, Message, User } from '@/constants/chat';
 
 const CHAT_BASE_URL = 'http://localhost:8080/chat';
@@ -14,17 +13,6 @@ const userApi = axios.create({
   baseURL: USER_BASE_URL,
   withCredentials: true,
 });
-
-const setAuthToken = (config) => {
-  const token = Cookies.get('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-};
-
-chatApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
-userApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 
 class ChatService {
   private socket: WebSocket | null = null;

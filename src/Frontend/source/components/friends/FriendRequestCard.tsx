@@ -1,6 +1,4 @@
 import { GoCheckCircle } from 'react-icons/go';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendServices from '@/services/friendServices';
@@ -40,9 +38,20 @@ const FriendRequestCard = ({
   async function acceptRequest() {
     try {
       const response = await FriendServices.acceptFriendRequest(name);
-      console.log('Friend request accepted successfully:', response);
+      console.log("accepted Friends",response.message, "kakka", name);
+      if(response.message){
+        console.log(response.message);
+      }
+      else if(response.error) {
+          console.log('accpet',response.error);
+      }
     } catch (error) {
-      console.error('Error sending friend request:', error);
+      toast({
+        title: 'Authentication failed',
+        description: 'Oups Somthing went wrong !',
+        variant: 'destructive',
+        className: 'bg-primary-dark border-none text-white',
+      });
     }
   }
 
@@ -99,3 +108,7 @@ const FriendRequestCard = ({
 };
 
 export default FriendRequestCard;
+function toast(arg0: { title: string; description: any; variant: string; className: string; }) {
+  throw new Error('Function not implemented.');
+}
+
