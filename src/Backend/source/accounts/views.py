@@ -96,16 +96,20 @@ class SignInView(APIView):
     @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
 
-        # if request.user.is_authenticated:
-        #     return Response({'error': 'You are already authenticated'}, status=200)
+        print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk')
+        if request.user.is_authenticated:
+            return Response({'error': 'You are already authenticated'}, status=200)
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
+            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk')
             if (user.enabled_2fa == True):
                 return Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
 
+            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk22222222222')
             access_token, refresh_token = generate_tokens(user)
             resp = Response({'message':'logged in Successfuly','enabled_2fa':'False'}, status=status.HTTP_200_OK)
+            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk222222222223333')
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
@@ -165,7 +169,7 @@ class GenerateURI(APIView):
 
         secret_key = pyotp.random_base32()
         totp = pyotp.TOTP(secret_key)
-        uri = totp.provisioning_uri(name='transcendence', issuer_name='kadigh') # issuer_name=username
+        uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
 
         user.otp_secret_key = secret_key
         user.save()
@@ -279,7 +283,8 @@ class OAuth42LoginView(APIView):
             authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
-        return redirect(authorization_url)
+        return Response({'url': authorization_url}, status=status.HTTP_200_OK)
+        # return redirect(authorization_url)
 
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
@@ -290,7 +295,8 @@ class OAuth42CallbackView(APIView):
         if (provider != '42' and provider != 'google'):
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
-        code = request.GET.get('code')
+        # code = request.GET.get('code')
+        code = request.get('code')
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 
