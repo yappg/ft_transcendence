@@ -125,7 +125,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
     try {
       const response = await (isSignup ? AuthClient.signup(formData) : AuthClient.signin(formData));
-
       console.log('response: ', response);
 
       if (response.message) {

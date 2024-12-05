@@ -9,9 +9,9 @@ export const Header = () => {
   const paths = [
     { id: 1, path: 'Welcome' },
     { id: 2, path: 'Games' },
-    { id: 3, path: 'Stars' },
-    { id: 4, path: 'Trophies' },
-    { id: 5, path: 'Achievement' },
+    { id: 3, path: 'Achievement' },
+    { id: 4, path: 'Leader Board' },
+    { id: 5, path: 'Match History' },
     { id: 6, path: 'Friends' },
     { id: 7, path: 'Live chat' },
   ];

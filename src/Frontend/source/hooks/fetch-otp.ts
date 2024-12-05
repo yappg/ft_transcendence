@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from './use-toast';
 import { Dispatch, SetStateAction } from 'react';
 
+
 export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
   const BASE_URL = 'http://localhost:8080/api/2fa/';
   try {
@@ -33,6 +34,7 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
       className: 'bg-primary-dark border-none text-white bg-opacity-20',
     });
   }
+
   return false;
 };
 

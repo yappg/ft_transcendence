@@ -57,7 +57,8 @@ const UserFriendsNav = (): JSX.Element => {
     if (activeIndex === 0) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Friends.map((friend, index) => (
+          {Friends.length > 0 ? (
+          Friends.map((friend, index) => (
             <FriendsComponent
               key={index}
               index={index}
@@ -65,21 +66,37 @@ const UserFriendsNav = (): JSX.Element => {
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
               wins={friend.wins}
+              messagesLink={
+                <div className="flex items-center justify-center">
+                  <Link href="/messages">
+                    <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
+                  </Link>
+                </div>
+              }
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+  )}
         </div>
       );
     } else if (activeIndex === 1) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Requests.map((invitation, index) => (
+          {Requests.length > 0 ? (
+          Requests.map((invitation, index) => (
             <FriendRequestCard
               key={index}
-              name={invitation.sender}
-              ProfilePhoto={invitation.senderProfilePhoto}
-              vari={invitation.created_at}
+              index={index}
+              name={invitation.friend_requester}
+              ProfilePhoto={invitation.profilePhoto}
+              level={invitation.level}
+              wins={invitation.wins}
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
+  )}
         </div>
       );
     } else if (activeIndex === 2) {
@@ -122,7 +139,7 @@ const UserFriendsNav = (): JSX.Element => {
           ))}
         </div>
       </div>
-      <div className="h-[90%] w-full ">{renderContent()}</div>
+      <div className="h-[90%] w-full">{renderContent()}</div>
     </div>
   );
 };
