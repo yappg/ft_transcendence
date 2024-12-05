@@ -3,12 +3,16 @@ import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/hooks/fetch-otp';
+import { useAuth } from '@/context/AuthContext';
+import withAuth from '@/context/requireAhuth';
 
-export default function SignupTFA() {
+const Login2fa = () => {
+  const { user } = useAuth();
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
   const handleClick = () => {
-    sendOtp('verifiy-otp', value);
+    console.log('hada user: ', user);
+    sendOtp('verifiy-otp', value, user?.username || null);
   };
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
@@ -29,4 +33,6 @@ export default function SignupTFA() {
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(Login2fa, true);

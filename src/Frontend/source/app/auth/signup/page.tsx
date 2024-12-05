@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Title from '@/components/auth/title';
 import { Form, MyLink } from '@/components/auth/form';
 import { getFields } from './fieldes';
-import Card from '@/components/generalUi/Card';
 import withAuth from '@/context/requireAhuth';
 
 function Signup() {
@@ -43,4 +42,5 @@ function Signup() {
   );
 }
 
-export default withAuth(Signup, false, true);
+export default withAuth(Signup, false, 'signup');
+
