@@ -27,6 +27,8 @@ CORS_ALLOWED_ORIGINS = [
 
 # Application definition
 INSTALLED_APPS = [
+    #swagger api documentation
+    'drf_yasg',
     # prometheus
     'django_prometheus',
     # asgi app
@@ -42,20 +44,21 @@ INSTALLED_APPS = [
     # needed for the allauth
     'django.contrib.sites',
     # django-rest-framework
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
-    #swagger api documentation
-    'drf_yasg',
     # local apps
     'accounts',
     'chat',
-    'relations',
     'game',
+    'relations',
 ]
 
 MIDDLEWARE = [
+    # for user activity monitoring
+    'accounts.middleware.UpdateLastSeenMiddleware',
+
     #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -64,6 +67,7 @@ MIDDLEWARE = [
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
+
     # django middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     # 'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -98,9 +103,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         # 'accounts.authenticate.CotumAuthentication',
     ),
-    'DEFAULT_THROTTLE_RATES' : {
-        'anon' : '3/min',
-    }
+    # 'DEFAULT_THROTTLE_RATES' : {
+    #     'anon' : '3/min',
+    # }
 }
 
 SIMPLE_JWT = {

@@ -12,6 +12,16 @@ from .serializers import *
 from .utils import *
 from drf_yasg.utils import swagger_auto_schema
 
+
+
+from django.contrib.auth.signals import user_logged_in
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from .serializers import SignInSerializer
+# from .throttling import AnonRateLimitThrottling
+from .utils import generate_tokens  # Assuming you have a utility for token generation
+
+
 # class PlayersViewList(ListAPIView):
 #     permission_classes = [IsAuthenticated]
 #     model = Player
@@ -63,7 +73,7 @@ class SignInView(APIView):
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
             # maybe it would be implemented as follow  or it could be validated on the serializer
-            if (user.enabled_2fa == True):
+            if (user.enabled_2fa == True): ####### ERR
                 redirect('validate_otp')
 
             access_token, refresh_token = generate_tokens(user)
@@ -86,6 +96,7 @@ class SignInView(APIView):
             #     value=csrf_token,
             #     samesite='Lax'
             # )
+            user_logged_in.send(sender=User, request=request, user=user)
             return resp
         else :
             return Response(Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
