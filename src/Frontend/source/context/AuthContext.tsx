@@ -15,7 +15,7 @@ interface AuthContextType {
     user: User | null;
     login: (userData: User) => void;
     logout: () => void;
-    updateUser: (updates: Partial<User>) => void; // For updating specific fields
+    updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -71,4 +71,3 @@ export const useAuth = () => {
     }
     return context;
 };
-

@@ -6,7 +6,8 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
-
+import { toast } from '@/hooks/use-toast';
+import { FaCommentDots } from 'react-icons/fa';
 
 const UserFriendsNav = (): JSX.Element => {
   const player = {
@@ -16,33 +17,57 @@ const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
 
-   
   useEffect(() => {
     const displayInvit = async () => {
       
       try {
         const response = await FriendServices.getFriendRequests();
-        setRequests(response);
-        console.log('Friend request sent successfully:', response);
+        console.log('Friends Requests\n', response.data);
+        if (response.message)
+        {
+          setRequests(response.data);
+        }
+        else if (response.error){
+          console.log(response.error)
+        }
       } catch (error) {
-        console.error('Error sending friend request:', error);
+        toast({
+          title: 'Authentication failed',
+          description: 'Oups Somthing went wrong !',
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white',
+        });
       }
     }
     displayInvit();
   }, []);
+  
   useEffect(() => {
     const displayFriends = async () => {
       
       try {
         const response = await FriendServices.getFriends();
-        setFriends(response);
-        console.log('Friends displayed successfully:', response);
+        console.log('Friends:',response.data);
+        if (response.message){
+          setFriends(response.data);
+        }
+        else if (response.error) { 
+          console.log(response.error)
+        }
       } catch (error) {
-        console.error('Error displaying friends:', error);
+        toast({
+          title: 'Authentication failed',
+          description: 'Oups Somthing went wrong !',
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white',
+        });
       }
     }
     displayFriends();
   }, []);
+   
+
+
   // const { name, level } = player;
   
   const [activeIndex, setActiveIndex] = useState(0);
@@ -57,29 +82,43 @@ const UserFriendsNav = (): JSX.Element => {
     if (activeIndex === 0) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Friends.map((friend, index) => (
+          {Friends.length > 0 ? (
+          Friends.map((friend: any, index) => (
             <FriendsComponent
               key={index}
-              index={index}
               name={friend.friend_requester}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
               wins={friend.wins}
+              messagesLink={
+                <div className="flex items-center justify-center">
+                  <Link href="/messages">
+                    <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
+                  </Link>
+                </div>
+              }
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+  )}
         </div>
       );
     } else if (activeIndex === 1) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Requests.map((invitation, index) => (
+          {Requests.length > 0 ? (
+          Requests.map((invitation: any, index) => (
             <FriendRequestCard
               key={index}
               name={invitation.sender}
               ProfilePhoto={invitation.senderProfilePhoto}
               vari={invitation.created_at}
             />
-          ))}
+          ))
+  ) : (
+    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
+  )}
         </div>
       );
     } else if (activeIndex === 2) {
@@ -122,7 +161,7 @@ const UserFriendsNav = (): JSX.Element => {
           ))}
         </div>
       </div>
-      <div className="h-[90%] w-full ">{renderContent()}</div>
+      <div className="h-[90%] w-full">{renderContent()}</div>
     </div>
   );
 };
