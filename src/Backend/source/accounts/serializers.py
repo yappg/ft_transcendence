@@ -51,33 +51,34 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
-            'username':{"error_messages": {"": ""}},
         }
 
+    def validate_username(self, value):
+        if Player.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username is already in use")
+        return value
+    def validate_email(self, value):
+        if Player.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email is already in use")
+        return value
+
     def validate(self, attrs):
-        if Player.objects.filter(email=attrs['email']).exists():
-            raise serializers.ValidationError(
-                {"error": "Email is already in use"})
-        if Player.objects.filter(username=attrs['username']).exists():
-            raise serializers.ValidationError(
-                {"error": "Username is already in use"}
-            )
-        #this must be checken in the frontend
-        # try:
-        #     Validate_email(attrs['email'])
-        # except:
-        #     raise serializers.ValidationError({"email": "Email is invalid"})
+        if not attrs.get('username') or not attrs.get('password') or not attrs.get('email'):
+            raise serializers.ValidationError({"error":"Fields are required: email, username and password"})
+
         return attrs
-
+    
     def create(self, validated_data):
-        user = Player.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-
-        return user
+        try:
+            user = Player.objects.create(
+                username=validated_data['username'],
+                email=validated_data['email'],
+            )
+            user.set_password(validated_data['password'])
+            user.save()
+            return user
+        except IntegrityError:
+            raise serializers.ValidationError("User Could not be created")
 
 class GenerateOTPSerializer(serializers.Serializer):
         username = serializers.CharField()
@@ -90,18 +91,32 @@ class ValidateOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
-    # def validate(self, attrs):
-    #     if not attrs.get('otp_token') or not attrs.get('username'):
-    #         raise serializers.ValidationError({"error":"OTP Token required"})
+    def validate(self, attrs):
+        if not attrs.get('otp_token') or not attrs.get('username'):
+            raise serializers.ValidationError({"error":"OTP Token required"})
 
-class UpdateUserInfosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Player
-        fields=('username','avatar','cover',)
+###################### [.] It needs To be Optimized 
+class UpdateUserInfosSerializer(serializers.Serializer):
+    username = serializers.CharField(required=False)
+    avatar = serializers.ImageField(required=False)
+    cover = serializers.ImageField(required=False)
+
+    def validate(self, attrs):
+        if not attrs.get('username') and not attrs.get('avatar') and not attrs.get('cover'):
+            raise serializers.ValidationError({"error":"At least one field is required"})
+        try:
+            player = Player.objects.get(username=attrs['username'])
+        except Player.DoesNotExist:
+            return attrs
+        raise serializers.ValidationError({"error":"A user with this username already exists"})
 
     def save(self, **kwargs):
         user = self.context['user']
         player = Player.objects.get(username=user.username)
+        if player is None:
+            raise serializers.ValidationError({"error":"User not found"})
+        
+
         if 'username' in self.validated_data:
             player.username = self.validated_data['username']
         if 'avatar' in self.validated_data:
