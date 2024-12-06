@@ -56,13 +56,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    #take off bellow line for production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     # for user activity monitoring
     'accounts.middleware.UpdateLastSeenMiddleware',
 
-    #take off bellow line for production
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # cors header middlewar
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
