@@ -9,6 +9,7 @@ export interface User {
     roles: string[];
     token: string;
     is2FAEnabled: boolean;
+    is2FAvalidated: boolean;
 }
 
 interface AuthContextType {
@@ -25,19 +26,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        const tfa = localStorage.getItem('otp-enabled');
+        const tfae = localStorage.getItem('otp-enabled');
+        const tfav = localStorage.getItem('otp-validated');
         if (storedUser) {
             updateUser({username: storedUser});
         }
-        if (tfa) {
-            console.log(tfa);
-            updateUser ({is2FAEnabled: (tfa === 'True'? true : false)});
+        if (tfae) {
+            console.log(tfae);
+            if (tfae === 'True') {
+                updateUser ({is2FAEnabled: true});
+                localStorage.setItem('otp-enabled', 'True')
+            }
+            else {
+                updateUser ({is2FAEnabled: false});
+                localStorage.setItem('otp-enabled', 'False')
+            }
+        }
+        if (tfav) {
+            console.log(tfav);
+            if (tfae === 'True') {
+                updateUser ({is2FAvalidated: true});
+                localStorage.setItem('otp-enabled', 'True')
+            }
+            else {
+                updateUser ({is2FAvalidated: false});
+                localStorage.setItem('otp-enabled', 'False')
+            }
         }
     }, []);
 
     const login = (userData: User) => {
         localStorage.setItem('user', userData.username);
-        localStorage.setItem('otp-enabled', (userData.is2FAEnabled? 'True' : ''));
+        localStorage.setItem('otp-enabled', (userData.is2FAEnabled? 'True' : 'False'));
+        localStorage.setItem('otp-validated', 'False');
         setUser(userData);
     };
 
@@ -48,12 +69,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         const updatedUser = { ...user, ...updates };
         setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+        localStorage.setItem('user', JSON.stringify(updatedUser.username));
     };
 
     const logout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('otp-enabled');
+        localStorage.removeItem('otp-validated');
         setUser(null);
     };
 

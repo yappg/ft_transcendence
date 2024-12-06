@@ -5,14 +5,33 @@ import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
 import withAuth from '@/context/requireAhuth';
+import { toast } from '@/hooks/use-toast';
 
 const Login2fa = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
   const handleClick = () => {
-    console.log('hada user: ', user);
-    sendOtp('verifiy-otp', value, user?.username || null);
+    try {
+      const response = sendOtp('verifiy-otp', value, user?.username || null) as any;
+
+      console.log(response);
+      if (response.data.message) {
+        toast({
+          title: 'success',
+          description: response.data.message,
+          className: 'bg-primary border-none text-white bg-opacity-20',
+        });
+        updateUser({ is2FAvalidated: true });
+        return;
+      } else if (response.data.error) {
+        toast({
+          title: 'error',
+          description: response.data.error,
+          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+        });
+      }
+    } catch {}
   };
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
@@ -35,4 +54,4 @@ const Login2fa = () => {
   );
 };
 
-export default withAuth(Login2fa, true);
+export default withAuth(Login2fa, false);
