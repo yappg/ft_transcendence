@@ -13,7 +13,6 @@ const withAuth = (
     const { user } = useAuth();
     const router = useRouter();
 
-
     useEffect(() => {
       if (user?.is2FAEnabled) {
         router.push(`/2fa/login-2fa`);
@@ -35,7 +34,7 @@ const withAuth = (
     if (user?.is2FAEnabled) {
       return null;
     }
-    
+
     if (requiresAuth && !user) {
       return null;
     }

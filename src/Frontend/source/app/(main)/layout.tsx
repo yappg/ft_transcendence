@@ -25,7 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${
           isActivated === 7 ||
           isActivated === 6 ||
+          isActivated === 4 ||
+          isActivated === 6 ||
           pathname === '/friends' ||
+          pathname === '/LeaderBoard' ||
+          pathname === '/MatchHistory' ||
           pathname === '/messages'
             ? 'hidden'
             : 'flex'
