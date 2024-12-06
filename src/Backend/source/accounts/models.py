@@ -1,11 +1,15 @@
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+# from django.conf import settings
 from django.db import models
-from django.conf import settings
+from django.db.models import Q
 import string
 import random
-from django.db.models import Q
 
 class Player(AbstractUser): # auth user
+    enabled_2fa=models.BooleanField(default=False)
+    verified_otp=models.BooleanField(default=False)
+    otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.username
@@ -28,6 +32,7 @@ class PlayerProfile(models.Model):
     is_online=models.BooleanField(default=False)
 
     display_name = models.CharField(max_length=50, unique=True, blank=False)
+
     bio = models.TextField(max_length=500, blank=True)
 
     avatar = models.ImageField(
@@ -76,6 +81,15 @@ class PlayerProfile(models.Model):
 
         super().save(*args, **kwargs)
 
+    def update_last_seen(self):
+        self.last_login = timezone.now()
+        self.is_online = ((timezone.now() - self.last_login).seconds < 20)
+        print(f"===================> DEBUG <================== called update last seen {self.is_online} user {self.player.username} last seen {self.last_login} ")
+        self.save()
+
+        # TODO still need work it dosnt go offline
+        # online if active within 10 minutes
+
     def all_matches(self):
         return MatchHistory.objects.filter(Q(player=self) | Q(opponent=self)).order_by('-date')
 
@@ -86,9 +100,6 @@ class PlayerSettings(models.Model):
 
     private_profile = models.BooleanField(default=False)
     notifications_enabled = models.BooleanField(default=True)
-    enabled_2fa=models.BooleanField(default=False)
-    verified_otp=models.BooleanField(default=False)
-    otp_secret_key=models.CharField(max_length=16, default=None, null=True, blank=True)
 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -108,6 +119,7 @@ class MatchHistory(models.Model):
     ]
 
     result = models.CharField(max_length=10, choices=RESULT_CHOICES)
+
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches')
     opponent = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='opponent_matches')
     player_score = models.IntegerField(default=0)
@@ -121,8 +133,6 @@ class MatchHistory(models.Model):
         ordering = ['-date']
         verbose_name = 'Match History'
         verbose_name_plural = 'Match Histories'
-
-
 
 
 # SIGNALS TO CREATE PlayerProfile and PlayerSettings upon Player creation

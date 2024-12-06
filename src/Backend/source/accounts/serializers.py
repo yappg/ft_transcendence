@@ -3,32 +3,6 @@ from .models import *
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
-    # {
-    #     "id": 1,
-    #     "profile": {
-    #         "id": 1,
-    #         "is_online": false,
-    #         "display_name": "Player_tlcw302b",
-    #         "bio": "",
-    #         "avatar": "http://localhost:8080/media/avatars/.defaultAvatar.jpeg",
-    #         "cover": "http://localhost:8080/media/covers/.defaultCover.jpeg",
-    #         "rank_points": 0,
-    #         "games_played": 0,
-    #         "games_won": 0,
-    #         "games_loss": 0,
-    #         "win_ratio": 0.0,
-    #         "created_at": "2024-12-02T23:06:56.514028Z",
-    #         "player": 1
-    #     },
-
-    #     "last_login": null,
-
-    #     "enabled_2fa": false,
-    #     "otp_secret_key": null,
-    #     "verified_otp": false,
-    # }
-
-
 class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
