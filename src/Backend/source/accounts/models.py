@@ -83,8 +83,6 @@ class PlayerProfile(models.Model):
 
     def update_last_seen(self):
         self.last_login = timezone.now()
-        self.is_online = ((timezone.now() - self.last_login).seconds < 20)
-        print(f"===================> DEBUG <================== called update last seen {self.is_online} user {self.player.username} last seen {self.last_login} ")
         self.save()
 
         # TODO still need work it dosnt go offline
@@ -111,6 +109,7 @@ class PlayerSettings(models.Model):
         verbose_name_plural = 'Player Settings'
 
 
+#  TODO  rereview this model
 class MatchHistory(models.Model):
     RESULT_CHOICES = [
         ('Win', 'Win'),
@@ -129,6 +128,7 @@ class MatchHistory(models.Model):
 
     def __str__(self):
         return f"{self.player.display_name} vs {self.opponent.display_name} on {self.date.strftime('%Y-%m-%d')}"
+
     class Meta:
         ordering = ['-date']
         verbose_name = 'Match History'

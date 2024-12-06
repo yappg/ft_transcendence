@@ -1,32 +1,30 @@
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from django.core.cache import cache
-from .permissions import AnonRateLimitThrottling
-from .models import Player
-from .serializers import *
-from .utils import *
-from drf_yasg.utils import swagger_auto_schema
-
-
-
-from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth.models import User
+import pyotp
+import requests
+from django.conf import settings
 from django.shortcuts import redirect
-from .serializers import SignInSerializer
-# from .throttling import AnonRateLimitThrottling
-from .utils import generate_tokens  # Assuming you have a utility for token generation
-
-
-# class PlayersViewList(ListAPIView):
-#     permission_classes = [IsAuthenticated]
-#     model = Player
-#     serializer_class=PlayerSerializer
-#     queryset=Player.objects.all()
+from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from drf_yasg.utils import swagger_auto_schema
+from ..utils import * #import generate_tokens  # Assuming you have a utility for token generation
+from ..permissions import (
+    AnonRateLimitThrottling
+)
+from ..models import (
+    Player
+)
+from ..serializers import (
+    SignUpSerializer,
+    SignInSerializer,
+    GenerateOTPSerializer,
+    VerifyOTPSerializer,
+    ValidateOTPSerializer,
+    UpdateUserInfosSerializer,
+)
 
 #------------------------------------ Auth ------------------------------------
 @swagger_auto_schema(request_body=SignUpSerializer)
@@ -118,8 +116,7 @@ class LogoutView(APIView):
             return Response({'error': str(e)}, status=400)
         return response
 
-#------------------------------------- 2FA ------------------------------------19788791
-import pyotp
+#------------------------------------- 2FA ------------------------------------#
 
 class GenerateURI(APIView):
     permission_classes = [AllowAny]
@@ -150,7 +147,6 @@ class GenerateURI(APIView):
         # qrcode.make(uri).save(f"/Users/aaoutem-/Desktop/qr_2fa.png")
         return Response({'uri': uri}, status=200)
 
-import qrcode
 class VerifyOTP(APIView):
     permission_classes = [AllowAny]
     serializer_class = VerifyOTPSerializer
@@ -221,13 +217,6 @@ class DisableOTP(APIView):
         return Response({'message':'2fa Disabled'})
 
 #---------------------------------- OAuth2.0 ----------------------------------
-import requests
-from django.conf import settings
-from django.contrib.auth import login
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
-from rest_framework.response import Response
 
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
@@ -276,18 +265,3 @@ class OAuth42CallbackView(APIView):
             'username': user.username,
             'tokens' : jwt_tokens,
         }, status=status.HTTP_200_OK)
-
-#--------------------------User Infos Update ------------------------------
-
-class UpdateUserInfos(APIView):
-    serializer_class = UpdateUserInfosSerializer
-
-    def post(self, request):
-        serializer = UpdateUserInfosSerializer(
-            data=request.data,
-            context={'user':request.user}
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
