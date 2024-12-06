@@ -14,7 +14,6 @@ RESET := \033[0m
 
 build: down
 	@docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
-	@docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
 	$(MAKE) logs
 
 up: down
