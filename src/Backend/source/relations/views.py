@@ -25,7 +25,11 @@ class PlayerListView(APIView):
 
     def get(self, request):
         print(f"request.user: {request.user}")
-        players = Player.objects.exclude(id=request.user.id)
+        players = Player.objects.exclude(
+            Q(id=request.user.id) |
+            Q(id__in=request.user.friend_requester) |
+            Q(id__in=request.user.friend_responder)
+        )
         serializer = PlayerSerializer(players, many=True)
         return Response(serializer.data)
 
