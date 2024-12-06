@@ -136,12 +136,13 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         auth.login({
           username: formData.username,
           is2FAEnabled: (response.enabled_2fa === 'True'),
+          is2FAvalidated: false,
         } as User);
+        console.log(auth)
         if (isSignup) {
           router.push('/2fa/signup-2fa');
         } else if (response.enabled_2fa === 'True') {
           router.push('/2fa/login-2fa/');
-          return;
         } else {
           router.push('/home');
         }

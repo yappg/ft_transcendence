@@ -12,36 +12,26 @@ const withAuth = (
   return (props: any) => {
     const { user } = useAuth();
     const router = useRouter();
-
+    console.log('RA', requiresAuth, 'UN', user?.username, 'etfa', user?.is2FAEnabled, 'vtfa', user?.is2FAvalidated);
     useEffect(() => {
-      if (user?.is2FAEnabled) {
-        router.push(`/2fa/login-2fa`);
-        return;
-      }
-      if (requiresAuth && !user) {
-        console.log('dkhelhna1');
-        router.push('/auth/login');
-      } else if (!requiresAuth && user) {
-        if (otp === 'signup') {
-            router.push(`/2fa/${otp}-2fa`);
-            return;
-        }
-        console.log('dkhelhna2');
-        router.push('/home');
+      // RA false UN nourdine etfa true vtfa false
+      if (!requiresAuth) {
+        if ((user?.username && (!(user?.is2FAEnabled) || user?.is2FAvalidated) ))
+          router.push('/home');
+        return ;
+      } else {
+        if (!(user?.username) || (user?.is2FAEnabled && !(user?.is2FAvalidated)))
+          router.push('/auth/login');
+        return ;
       }
     }, [user, requiresAuth, otp]);
 
-    if (user?.is2FAEnabled) {
-      return null;
+    if ((!requiresAuth && user?.username && (!(user?.is2FAEnabled) || user?.is2FAvalidated) ) ) {
+      return ;
+    } else if (requiresAuth && (!(user?.username) || (user?.is2FAEnabled && !(user?.is2FAvalidated)))) {
+      return ;
     }
 
-    if (requiresAuth && !user) {
-      return null;
-    }
-
-    if (!requiresAuth && user) {
-      return null;
-    }
 
     return <WrappedComponent {...props} />;
   };

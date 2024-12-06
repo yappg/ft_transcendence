@@ -79,4 +79,6 @@ const Signup2fa = () => {
   );
 };
 
-export default withAuth(Signup2fa, true, 'signup');
+// export default Signup2fa;
+
+export default withAuth(Signup2fa, true);
