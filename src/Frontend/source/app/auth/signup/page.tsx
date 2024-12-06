@@ -43,3 +43,4 @@ function Signup() {
 }
 
 export default withAuth(Signup, false, 'signup');
+

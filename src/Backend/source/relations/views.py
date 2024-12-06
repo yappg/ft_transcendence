@@ -31,7 +31,7 @@ class PlayerListView(APIView):
             Q(id__in=request.user.friend_responder)
         )
         serializer = PlayerSerializer(players, many=True)
-        return Response(serializer.data)
+        return Response({'message': 'Success', 'data':serializer.data})
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -40,8 +40,10 @@ class FriendsListView(APIView):
     def get(self, request):
         user = request.user
         friends = Friends.objects.filter(Q(friend_requester=user) | Q(friend_responder=user))
+        if not friends:
+            Response({"error": "No Friends Found"}, status=200);
         serializer = FriendsSerializer(friends, many=True)
-        return Response(serializer.data)
+        return Response({'message': 'Success', 'data':serializer.data})
 
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -49,8 +51,10 @@ class PendingInvitationsView(APIView):
     def get(self, request):
         user = request.user
         pending_invitations = FriendInvitation.objects.filter(receiver=user, status='pending')
+        if not pending_invitations:
+            Response({"error": "No Invitaions Found"}, status=200);
         serializer = FriendInvitationSerializer(pending_invitations, many=True)
-        return Response(serializer.data)
+        return Response({'message': 'Success', 'data': serializer.data})
 
 class BlockedFriendsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -93,17 +97,17 @@ class FriendInvitationView(APIView):
         try:
             receiver = Player.objects.get(username=receiver_username)
         except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "User not found"}, status=200)
 
         if sender == receiver:
-            return Response({"error": "You cannot send a friend request to yourself"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "You cannot send a friend request to yourself"}, status=200)
 
         invitation, created = FriendInvitation.objects.get_or_create(sender=sender, receiver=receiver)
         if not created:
-            return Response({"error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Friend request already sent"}, status=200)
 
         serializer = FriendInvitationSerializer(invitation)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"message":"Invitation sent","data":serializer.data}, status=status.HTTP_201_CREATED)
 
 
 class AcceptInvitationView(APIView):
@@ -119,11 +123,11 @@ class AcceptInvitationView(APIView):
         try:
             sender = Player.objects.get(username=sender_username)
         except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "User not found"}, status=200)
 
         invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver, status='pending').first()
         if not invitation:
-            return Response({"error": "Invitation not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invitation not found or already accepted"}, status=200)
 
         invitation.status = 'accepted'
         invitation.save()
