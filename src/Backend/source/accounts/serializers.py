@@ -38,9 +38,9 @@ class SignInSerializer(serializers.Serializer):
         if usernm and passwd:
             user = authenticate(username=usernm, password=passwd)
             if not user:
-                raise serializers.ValidationError("Invalid Credentials")
+                raise serializers.ValidationError({"error":"Invalid Credentials"})
         else :
-            serializers.ValidationError("Both Username and password required")
+            serializers.ValidationError({"error":"Both Username and password required"})
 
         attrs['user'] = user
         return attrs
@@ -90,9 +90,9 @@ class ValidateOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
-    def validate(self, attrs):
-        if not attrs.get('otp_token') or not attrs.get('username'):
-            raise serializers.ValidationError({"error":"OTP Token required"})
+    # def validate(self, attrs):
+    #     if not attrs.get('otp_token') or not attrs.get('username'):
+    #         raise serializers.ValidationError({"error":"OTP Token required"})
 
 class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
