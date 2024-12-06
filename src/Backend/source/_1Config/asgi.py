@@ -16,7 +16,7 @@ from django.urls import path
 from channels.security.websocket import AllowedHostsOriginValidator
 
 # Set the default settings module for the 'django' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings.developments')
 
 # Initialize Django
 django.setup()  # Ensure Django is set up before accessing any models

@@ -45,11 +45,12 @@ urlpatterns = [
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
 
+    # path ('search')
+    # path ('searchfriends')
     # path('change_password/', UserHistoryView , name='user_game_history'), # PATCH verficiation from front
     # path('change_email/', UserHistoryView , name='user_game_history'), # PATCH and verification confirm mail maybe in future
     # path('disable_account/', UserHistoryView , name='user_game_history'), # PATCH and quaryset
     # path('delete_account/', UserHistoryView , name='user_game_history'), # DELETE
-
 
 
 ####### TODO add search functionalitty for the front with slugs

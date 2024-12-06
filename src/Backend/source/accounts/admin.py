@@ -13,7 +13,7 @@ class PlayerProfileAdmin(admin.ModelAdmin):
 
 @admin.register(PlayerSettings)
 class PlayerSettingsAdmin(admin.ModelAdmin):
-    list_display = ('player_profile', 'private_profile', 'notifications_enabled', 'enabled_2fa')
+    list_display = ('player_profile', 'private_profile', 'notifications_enabled')
     search_fields = ('player_profile__display_name',)
 
 @admin.register(MatchHistory)
