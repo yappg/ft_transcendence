@@ -1,13 +1,14 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import React from 'react';
 import { z } from 'zod';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import InputBar from './input-bar';
 import { MyButton } from '@/components/generalUi/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AuthClient } from '@/hooks/fetch-auth';
+import { useAuth, User } from '@/context/AuthContext';
 
-// Type definitions
 type FieldType = 'input' | 'password' | 'email' | 'text' | 'number' | 'date';
 
 interface FormField {
@@ -41,46 +42,6 @@ const emailSchema = z.string().email('Invalid email format');
 const passwordSchema = z.string().min(8, 'Password must be at least 8 characters');
 const usernameSchema = z.string().min(3, 'Username must be at least 3 characters');
 
-// API client
-class AuthClient {
-  private static readonly BASE_URL = 'http://localhost:8080/api/auth';
-  private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
-    try {
-      console.log(JSON.stringify(data))
-      const response = await fetch(`${AuthClient.BASE_URL}/${endpoint}/`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error response data:', errorData);
-        throw new Error(errorData.non_field_errors || 'Authentication failed');
-      }
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Authentication error:', error.message);
-        throw new Error(`Authentication error: ${error.message}`);
-      }
-      throw new Error('Authentication failed');
-    }
-  }
-
-  static async signup(data: Record<string, any>) {
-    return this.fetchWithAuth('signup', data);
-  }
-
-  static async signin(data: Record<string, any>) {
-    return this.fetchWithAuth('signin', data);
-  }
-}
-
-// Components
 export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
   return (
     <div className="flex h-16 w-full items-center justify-center">
@@ -97,9 +58,11 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
   );
 };
 
-export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup, redirPath }) => {
+export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => {
+  const user = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const auth = useAuth();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
@@ -163,22 +126,43 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup, redir
     try {
       const response = await (isSignup ? AuthClient.signup(formData) : AuthClient.signin(formData));
 
-      toast({
-        title: 'Success',
-        description: isSignup ? 'Account created successfully' : 'Logged in successfully',
-        className: 'bg-primary border-none text-white',
-      });
+      console.log('response: ', response);
 
-      // Redirect to dashboard or home page
-      router.push(redirPath || '/');
+      if (response.message) {
+        toast({
+          title: 'Success',
+          description: isSignup ? 'Account created successfully' : 'Logged in successfully',
+          className: 'bg-primary border-none text-white bg-opacity-20',
+        });
+        auth.login({
+          username: formData.username,
+          is2FAEnabled: (response.enabled_2fa === 'True'),
+        } as User);
+        if (isSignup) {
+          router.push('/2fa/signup-2fa');
+        } else if (response.enabled_2fa === 'True') {
+          router.push('/2fa/login-2fa/');
+          return;
+        } else {
+          router.push('/home');
+        }
+        return;
+      }
+      if (response.error)
+        toast({
+          title: 'Authentication failed',
+          description: response.error,
+          variant: 'destructive',
+          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+        });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Authentication failed',
+        title: 'Authentication failed',
+        description: 'Oups Somthing went wrong !',
         variant: 'destructive',
         className: 'bg-primary-dark border-none text-white',
       });
-      router.push(redirPath || '/');
+      console.log('helloooooooooo2\n', error);
     } finally {
       setIsSubmitting(false);
     }

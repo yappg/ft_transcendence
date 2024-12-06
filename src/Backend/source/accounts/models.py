@@ -14,13 +14,6 @@ class Player(AbstractUser):
     avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
     cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
 
-
-    # pending_friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pending_friends', blank=True)
-    # friends=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='friends', blank=True)
-
-    # avatar=models.ImageField(upload_to='Avatars/', default='Avatars/defaultAvatar.jpeg')
-    # cover=models.ImageField(upload_to='Covers/', default='Covers/defaultCover.jpeg')
-
     enabled_2fa=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=512, default=None, null=True, blank=True) #, null=True, blank=True
     verified_otp=models.BooleanField(default=False)
@@ -47,7 +40,6 @@ class PlayerProfile(models.Model):
 
     class Meta:
         ordering = ['-rank_points']
-
 
 class PlayerSettings(models.Model):
     player_profile = models.OneToOneField(PlayerProfile, on_delete=models.CASCADE)
