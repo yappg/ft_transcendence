@@ -50,7 +50,7 @@ const AddFriends = () => {
         //need to add data of invitation in the usecontext
       } else if (response.error) {
         console.log(response.error);
-        setMessage(`Error sending friend request to ${receiverUsername}`);
+        setMessage(`Error sending friend request to ${receiverUsername}: ${response.error}`);
       }
     } catch (error: any) {
       toast({
