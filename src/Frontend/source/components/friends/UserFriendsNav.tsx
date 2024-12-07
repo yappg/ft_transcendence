@@ -6,6 +6,7 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
+import {chatService} from '@/services/chatService';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
 
@@ -16,7 +17,23 @@ const UserFriendsNav = (): JSX.Element => {
   };
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
+  const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
 
+
+  useEffect(() => {
+    // Fetch the current user's ID
+    const fetchCurrentUserId = async () => {
+      try {
+        const response = await chatService.getCurrentUserId();
+        setCurrentUserName(response.username);
+        console.log(response.username)
+      } catch (error) {
+        console.error('Failed to fetch current user ID', error);
+      }
+    };
+
+    fetchCurrentUserId();
+  }, []);
   useEffect(() => {
     const displayInvit = async () => {
       
@@ -86,7 +103,7 @@ const UserFriendsNav = (): JSX.Element => {
           Friends.map((friend: any, index) => (
             <FriendsComponent
               key={index}
-              name={friend.friend_requester}
+              name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
               wins={friend.wins}

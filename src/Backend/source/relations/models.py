@@ -31,7 +31,8 @@ class BlockedFriends(models.Model):
 
 class Notification(models.Model):
     recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
-    sender = models.ForeignKey(Player, related_name='sent_notifications', on_delete=models.CASCADE)
+    Type = models.TextField(max_length=25, default='')
+    # sender = models.ForeignKey(Player, related_name='sent_notifications', on_delete=models.CASCADE)
     message = models.TextField(max_length=255, default='Default notification')
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

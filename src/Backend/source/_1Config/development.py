@@ -87,7 +87,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
- 
+
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
 
@@ -96,7 +96,7 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authenticate.CotumAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES' : {
         'anon' : '3/min',
@@ -104,7 +104,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
