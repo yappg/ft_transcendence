@@ -14,6 +14,7 @@ export const Header = () => {
     { id: 5, path: 'Match History' },
     { id: 6, path: 'Friends' },
     { id: 7, path: 'Live chat' },
+    { id: 9, path: 'Profile' },
   ];
   const profile = {
     name: 'Meryeme',
