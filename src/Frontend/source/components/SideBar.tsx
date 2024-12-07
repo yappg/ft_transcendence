@@ -22,7 +22,7 @@ export const SideBar = ({
 }) => {
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const arr = [
-    { Icon: IconConeFilled, id: 1, path: '/home' },
+    { Icon: IconConeFilled, id: 0, path: '/home' },
     { Icon: IconDeviceGamepad3Filled, id: 2, path: '/games' },
     { Icon: IconCarambolaFilled, id: 3, path: '/achievement' },
     { Icon: FaTrophy, id: 4, path: '/LeaderBoard' },
@@ -66,7 +66,11 @@ export const SideBar = ({
         className={`flex w-full flex-col items-center ${
           isActivated === 7 ||
           isActivated === 6 ||
+          isActivated === 9 ||
           pathname === '/friends' ||
+          pathname === '/Profile' ||
+          pathname === '/LeaderBoard' ||
+          pathname === '/MatchHistory' ||
           pathname === '/messages'
             ? 'gap-3'
             : 'gap-6'
