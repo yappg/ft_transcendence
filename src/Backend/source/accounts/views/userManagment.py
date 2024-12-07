@@ -92,18 +92,18 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
-#--------------------------User Infos Update ------------------------------
+# #--------------------------User Infos Update ------------------------------
 
-class UpdateUserInfos(APIView):
-    serializer_class = UpdateUserInfosSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+# class UpdateUserInfos(APIView):
+#     serializer_class = UpdateUserInfosSerializer
+#     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
-    def post(self, request):
-        serializer = UpdateUserInfosSerializer(
-            data=request.data,
-            context={'user':request.user}
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = UpdateUserInfosSerializer(
+#             data=request.data,
+#             context={'user':request.user}
+#             )
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
