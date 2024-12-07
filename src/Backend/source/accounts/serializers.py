@@ -104,11 +104,9 @@ class UpdateUserInfosSerializer(serializers.Serializer):
     def validate(self, attrs):
         if not attrs.get('username') and not attrs.get('avatar') and not attrs.get('cover'):
             raise serializers.ValidationError({"error":"At least one field is required"})
-        try:
-            player = Player.objects.get(username=attrs['username'])
-        except Player.DoesNotExist:
-            return attrs
-        raise serializers.ValidationError({"error":"A user with this username already exists"})
+        if Player.objects.filter(username=attrs.get('username')).exists():
+                raise serializers.ValidationError({"error":"Username is already in use"})
+        return attrs
 
     def save(self, **kwargs):
         user = self.context['user']
