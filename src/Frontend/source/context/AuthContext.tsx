@@ -13,8 +13,6 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  roles: string[];
-  token: string;
   is2FAEnabled: boolean;
   is2FAvalidated: boolean;
 }
@@ -36,42 +34,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const tfae = localStorage.getItem('otp-enabled');
     const tfav = localStorage.getItem('otp-validated');
     if (storedUser) {
-      updateUser({ username: storedUser });
+      updateUser({ username: storedUser, is2FAEnabled: tfae === 'True', is2FAvalidated: tfav === 'True'});
     }
-    if (tfae) {
-      console.log(tfae);
-      if (tfae === 'True') {
-        updateUser({ is2FAEnabled: true });
-        localStorage.setItem('otp-enabled', 'True');
-      } else {
-        updateUser({ is2FAEnabled: false });
-        localStorage.setItem('otp-enabled', 'False');
-      }
-    }
-    if (tfav) {
-      console.log(tfav);
-      if (tfav === 'True') {
-        updateUser({ is2FAvalidated: true });
-        localStorage.setItem('otp-enabled', 'True');
-      } else {
-        updateUser({ is2FAvalidated: false });
-        localStorage.setItem('otp-enabled', 'False');
-      }
-    }
+    // if (tfae) {
+    //   console.log(tfae);
+    //   if (tfae === 'True') {
+    //     updateUser({ is2FAEnabled: true });
+    //   } else {
+    //     updateUser({ is2FAEnabled: false });
+    //   }
+    // }
+    // if (tfav) {
+    //   console.log(tfav);
+    //   if (tfav === 'True') {
+    //     updateUser({ is2FAvalidated: true });
+    //   } else {
+    //     updateUser({ is2FAvalidated: false });
+    //   }
+    // }
   }, []);
 
-  const login = (userData: User) => {
-    localStorage.setItem('user', userData.username);
-    localStorage.setItem('otp-enabled', userData.is2FAEnabled ? 'True' : 'False');
-    localStorage.setItem('otp-validated', 'False');
-    setUser(userData);
+  const login = (userData: User): Promise<User> => {
+    return new Promise<User>((resolve) => {
+      localStorage.setItem('user', userData.username);
+      localStorage.setItem('otp-enabled', userData.is2FAEnabled ? 'True' : 'False');
+      localStorage.setItem('otp-validated', 'False');
+      setUser(userData);
+      resolve(userData);
+    });
   };
 
   const updateUser = (updates: Partial<User>) => {
     setUser((userData: any) => {
       const updatedUser = { ...userData, ...updates };
       localStorage.setItem('user', updatedUser.username);
-      // localStorage.setItem('otp-enabled', 'True');
+      localStorage.setItem('otp-enabled', updatedUser.is2FAEnabled? 'True' : 'False');
+      localStorage.setItem('otp-validated', updatedUser.is2FAvalidated? 'True' : 'False');
       return updatedUser;
     });
   };

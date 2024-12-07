@@ -2,7 +2,7 @@ import Card from '@/components/generalUi/Card';
 import withAuth from '@/context/requireAhuth';
 import React, { ComponentType } from 'react';
 
-export function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -15,7 +15,5 @@ export function RootLayout({
     </div>
   );
 }
-
-export default withAuth(RootLayout as ComponentType<{}>, true);
 
 // /2fa/signup-2fa

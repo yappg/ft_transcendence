@@ -5,6 +5,7 @@ import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import withAuth from '@/context/requireAhuth';
 
 const Login2fa = () => {
   const { user, updateUser } = useAuth();
@@ -53,4 +54,4 @@ const Login2fa = () => {
   );
 };
 
-export default Login2fa;
+export default withAuth(Login2fa, false);
