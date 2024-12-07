@@ -14,11 +14,7 @@ const AddFriends = () => {
   const [searchUser, setsearchUser] = useState('');
   const [FiltredUsers, setFiltredUsers] = useState([]);
 
-  useEffect(() => {
-    setFiltredUsers(UsersList);
-    return () => {};
-  }, [UsersList]);
-
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -38,6 +34,11 @@ const AddFriends = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    setFiltredUsers(UsersList);
+    return () => {};
+  }, [UsersList]);
+  
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
       const response = await FriendServices.sendFriendRequest(receiverUsername);
@@ -46,8 +47,10 @@ const AddFriends = () => {
       if (response.message) {
         console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`);
-    
-        //need to add data of invitation in the usecontext
+        // I need to delete or update the userList to exclude the cuurent one
+        const updatedUsersList = UsersList.filter((user: any) => user.username !== receiverUsername);
+        setUserList(updatedUsersList);
+        setFiltredUsers(updatedUsersList);
       } else if (response.error) {
         console.log(response.error);
         setMessage(`Error sending friend request to ${receiverUsername}: ${response.error}`);
@@ -74,6 +77,16 @@ const AddFriends = () => {
     }
     setsearchUser(username);
   };
+  
+  
+  // const addUser = (newUser: any) => {
+  //   setUserList((prevUsers) => {
+  //     const updatedUsers = [...prevUsers, newUser];
+  //     setFiltredUsers(updatedUsers);
+  //     return updatedUsers;
+  //   });
+  // };
+
 
   return (
     <div className="bg-black-crd flex size-full flex-col items-center justify-between gap-10 overflow-visible rounded-lg pt-10">
