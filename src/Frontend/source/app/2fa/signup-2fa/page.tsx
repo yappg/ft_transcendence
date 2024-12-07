@@ -8,6 +8,7 @@ import { useQRCode } from 'next-qrcode';
 import { fetchQrCode, sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import withAuth from '@/context/requireAhuth';
 
 const Signup2fa = () => {
   const router = useRouter();
@@ -75,4 +76,4 @@ const Signup2fa = () => {
   );
 };
 
-export default Signup2fa;
+export default withAuth(Signup2fa, false);
