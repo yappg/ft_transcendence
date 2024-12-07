@@ -3,6 +3,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.routers import DefaultRouter
 from .views.auth import *
 from .views.userManagment import *
+from .views.functionViews import *
 
 router = DefaultRouter()
 router.register(r'profiles', PlayerProfileViewSet)
@@ -60,7 +61,7 @@ urlpatterns = [
     # path('delete_account/', UserHistoryView , name='user_game_history'), # DELETE
 
 # search views
-    # path ('search')
+    path ('search-users/', SearchUsersView.as_view(), name='search_users')
     # path ('search-friends')
 
 

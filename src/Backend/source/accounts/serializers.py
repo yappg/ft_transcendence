@@ -3,6 +3,108 @@ from .models import *
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
+class PlayerSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Player
+        fields = [
+            'id',
+            'username',
+            'profile',
+        ]
+        read_only_fields = [
+            'id',
+            'username',
+            'profile',
+        ]
+
+    def get_profile(self, obj):
+        from .serializers import PlayerProfileSerializer
+        return PlayerProfileSerializer(obj.profile, read_only=True).data
+
+
+class PlayerProfileSerializer(serializers.ModelSerializer):
+    player = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PlayerProfile
+        fields = [
+            'id',
+            'is_online',
+            'display_name',
+            'bio',
+            'avatar',
+            'rank_points',
+            'games_played',
+            'games_won',
+            'games_loss',
+            'win_ratio',
+            'last_login',
+            'created_at',
+            'player_username',
+        ]
+        read_only_fields = [
+            'id',
+            'is_online',
+            'rank_points',
+            'games_played',
+            'games_won',
+            'games_loss',
+            'win_ratio',
+            'last_login',
+            'created_at',
+        ]
+
+    # Custom validator for display_name to ensure uniqueness
+    def validate_display_name(self, value):
+        if PlayerProfile.objects.filter(display_name=value).exists():
+            raise serializers.ValidationError("Display name must be unique.")
+        return value
+
+    def get_player(self, obj):
+        from .serializers import PlayerSerializer
+        return PlayerSerializer(obj.player, read_only=True).data
+
+
+
+# # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
+# class PlayerSerializer(serializers.ModelSerializer):
+#     profile = PlayerProfileSerializer(read_only=True)
+
+#     class Meta:
+#         model = Player
+#         fields = [
+#             'id',
+#             'username'
+#          ]
+#         read_only_fields = [
+#             'id',
+#             'username'
+#         ]
+
+# ### make sure that the display name field is always unic un every put and patch method return error display_name exists
+# # fix private profile only give back display name
+# class PlayerProfileSerializer(serializers.ModelSerializer):
+#     Player = PlayerSerializer(read_only=True)
+
+#     class Meta:
+#         model=PlayerProfile
+#         exclude = [
+#             '__all__'
+#         ]
+#         read_only_fields = [
+#             'id',
+#              'is_online',
+#             'rank_points' ,
+#             'games_played' ,
+#             'games_won' ,
+#             'games_loss' ,
+#             'win_ratio' ,
+#             'last_login' ,
+#             'created_at'
+#         ]
+
 class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
@@ -10,34 +112,33 @@ class PlayerSettingsSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
-class PlayerProfileSerializer(serializers.ModelSerializer): # fix private profile only give back display name
-### make sure that the display name field is always unic un every put and patch method return error display_name exists
-    class Meta:
-        model=PlayerProfile
-        exclude = ['player']
-        read_only_fields = ['id', 'is_online','rank_points' ,'games_played' ,'games_won' ,'games_loss' ,'win_ratio' ,'last_login' ,'created_at']
-        # backend_emplemt= ['TT', 'FFFFFFFFF','FFFFFFFFFFF' ,'FFFFFFFFFFFF' ,'FFFFFFFFF' ,'FFFFFFFFFF' ,'TTTTTTTTT' ,'FFFFFFFFFF' ,'TTTTTTTTTT']
-
-## add a api endpoint to trigger password reset and username change or email > posibly trigger 2fa or email verif
-
+# Corrected field name
 class MatchHistorySerializer(serializers.ModelSerializer):
     player = PlayerProfileSerializer(read_only=True)
-    opponent = PlayerProfileSerializer(read_only=True)  # Corrected field name
+    opponent = PlayerProfileSerializer(read_only=True)
 
     class Meta:
         model = MatchHistory
         fields = '__all__'
 
-class PlayerSerializer(serializers.ModelSerializer): # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
-    profile = PlayerProfileSerializer(read_only=True)
-    settings = PlayerSettingsSerializer(read_only=True)
+
+class SearchUsersSerializer(serializers.ModelSerializer):
+    Player = PlayerSerializer(read_only=True)
 
     class Meta:
-        model = Player
-        fields = '__all__'
-        # fields = ['profile', '']
-        read_only_fields = ['date_joined']
-
+        model = PlayerProfile
+        fields = [
+            'id' ,
+            'display_name',
+            'avatar',
+             'is_online'
+        ]
+        read_only_fields = [
+            'id' ,
+            'display_name' ,
+            'avatar',
+            'is_online'
+        ]
 
 ########################################################################################
 
@@ -123,7 +224,7 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
         model=Player
         fields=['username']
-        # fields=('username','avatar','cover',)
+        # fields=('username','email','password',)
 
     def save(self, **kwargs):
         user = self.context['user']
