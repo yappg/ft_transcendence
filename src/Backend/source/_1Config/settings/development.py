@@ -56,19 +56,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    #take off bellow line for production
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    # for user activity monitoring
-    'accounts.middleware.UpdateLastSeenMiddleware',
-
-    # cors header middlewar
-    'corsheaders.middleware.CorsMiddleware',
-
     # prometheus middleware
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
-
     # django middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -77,8 +67,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     # 'allauth.account.middleware.AccountMiddleware',
+
+    # cors header middlewar
+    'corsheaders.middleware.CorsMiddleware',
+
+    #take off bellow line for production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
+    # for user activity monitoring
+    'accounts.middleware.UpdateLastSeenMiddleware',
 ]
 
 
@@ -106,7 +104,7 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_THROTTLE_RATES' : {
     #     'anon' : '3/min',
-    # }
+    # },
 }
 
 SIMPLE_JWT = {
