@@ -56,7 +56,7 @@ urlpatterns = [
     path('user-history/', UserHistoryView , name='user_game_history'),
 
     # change_password , change_email , change_username , disable_account, delete_account
-    # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'), 
+    # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
     # path('change_email/', UserHistoryView , name='user_game_history'), # verification confirm mail maybe in future
     # path('change_password/', UserHistoryView , name='user_game_history'), # verficiation from front
     # path('disable_account/', UserHistoryView , name='user_game_history'), #
@@ -71,6 +71,3 @@ urlpatterns = [
 ####### TODO add loging for last time logged in and online status
 
 ### make signals to detect post save for game model to create a match history object for it
-### test that the display name is unique and confirm changes and test errors
-
-#####

@@ -5,8 +5,10 @@ from django.db import models
 from django.db.models import Q
 import string
 import random
+from django.core.exceptions import ValidationError
 
-class Player(AbstractUser): # auth user
+# auth user
+class Player(AbstractUser):
     enabled_2fa=models.BooleanField(default=False)
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
@@ -18,13 +20,14 @@ class Player(AbstractUser): # auth user
         verbose_name = 'Player'
         verbose_name_plural = 'Players'
 
-
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         super().save(*args, **kwargs)
         if is_new:
             PlayerProfile.objects.create(player=self)
             PlayerSettings.objects.create(player_profile=self.profile)
+
+
 
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
@@ -81,7 +84,7 @@ class PlayerProfile(models.Model):
 
         super().save(*args, **kwargs)
 
-    def update_last_seen(self):
+    def update_last_login(self):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login'])
 
@@ -106,6 +109,8 @@ class PlayerSettings(models.Model):
         verbose_name_plural = 'Player Settings'
 
 
+
+# user shouldnt play agains it self
 class MatchHistory(models.Model):
     RESULT_CHOICES = [
         ('player1', 'player1'),
@@ -124,7 +129,12 @@ class MatchHistory(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.player.display_name} vs {self.opponent.display_name} on {self.date.strftime('%Y-%m-%d')}"
+        return f"{self.player1.display_name} vs {self.player2.display_name} on {self.date.strftime('%Y-%m-%d')}"
+
+    def save(self, *args, **kwargs):
+        if self.player1 == self.player2:
+            raise ValidationError("A player cannot play against themselves.")
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-date']

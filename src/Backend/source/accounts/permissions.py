@@ -18,7 +18,6 @@ class IsOwnerOrAdmin(permissions.BasePermission):
         # print(f"===== DEBUG ==== : (|{obj.display_name}| == |{request.user.profile.display_name}|) is staff or user : {(request.user == obj.player or request.user.is_staff)}")
         return (request.user == obj.player or request.user.is_staff)
 
-
 class IsOwnerOrAdminReadOnly(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
