@@ -1,13 +1,15 @@
 export interface User {
   id: number;
   username: string;
-  profile_picture?: string;
+  email: string;
+  avatar?: string;
 }
 
 export interface Message {
   id?: number;
   chat: number;
-  sender: User;
+  sender: string;
+  receiver: string;
   content: string;
   timestamp?: string;
 }

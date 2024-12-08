@@ -31,10 +31,10 @@ def create_friend_invitation_notification(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Message)
 def incoming_messages(sender, instance, created, **kwargs):
-    # print('instance dzbi:  ---------',instance.sender.id)
+    print('instance dzbi:  ---------',instance.receiver.id)
     if created:
         Notification.objects.create(
-            recipient=instance.sender,
+            recipient=instance.receiver,
             message=f'You have a New message from {instance.sender.username}',
             Type=Notification_Type.MESSAGE.value
         )

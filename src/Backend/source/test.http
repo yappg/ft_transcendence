@@ -5,7 +5,7 @@ POST http://localhost:8080/api/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "hamid",
+    "username": "xxx",
     "password": "csfdsgopxabcvbdfgdfg"
 }
 
@@ -15,8 +15,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "omar",
-    "email": "omar@gmail.com",
+    "username": "xxx",
+    "email": "xxx@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -26,8 +26,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "mery",
-    "email": "mery@gmail.com",
+    "username": "yasserAziz",
+    "email": "yasserAziz@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -49,15 +49,15 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bennix",
-    "email": "bennix@gmail.com",
+    "username": "SadUser",
+    "email": "SadUser@gmail.com",
     "password": "csfdsgbcvbdfgdfg",
     "password2": "csfdsgbcvbdfgdfg"
 }
 ##########-----LIST----############ 
 
-GET http://localhost:8080/api/list/all
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE4NTcyLCJpYXQiOjE3MzM1MzIxNzIsImp0aSI6Ijk3MjY2MWU2NTVjYTQ0NzQ5NDJlZDdmODM2MTY4Yjc3IiwidXNlcl9pZCI6MTB9.IagiTDNLJpJwbvSuH7ZhscKYJtF7w7NoIP6K7lkXdhs
+GET http://localhost:8080/relations/notifications/
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjg1MDI0LCJpYXQiOjE3MzM1OTg2MjQsImp0aSI6IjczMDQwYWE2ZTU2MTQ4YTJhMGY5M2Q1YjQ2OTk3NjFiIiwidXNlcl9pZCI6NH0.PzR58hnXJmIFW0vNFqFW9TJXGapkZLdR8Ffla0WIVsQ
 
 ########
 
@@ -81,7 +81,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###-----------FRIENDS------##############
 GET http://localhost:8080/relations/players/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE4NTcyLCJpYXQiOjE3MzM1MzIxNzIsImp0aSI6Ijk3MjY2MWU2NTVjYTQ0NzQ5NDJlZDdmODM2MTY4Yjc3IiwidXNlcl9pZCI6MTB9.IagiTDNLJpJwbvSuH7ZhscKYJtF7w7NoIP6K7lkXdhs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzcxODQxLCJpYXQiOjE3MzM2ODU0NDEsImp0aSI6IjJkY2ExYzFhNWM0NzQwODE4MWM4Yzk4MDRiMGUyNjMxIiwidXNlcl9pZCI6MTF9.BmkYIbkXwWlvNQ5K7p7juHl4Ke0Nj0r3NyjvFGOqNzs
 
 ## ### ## ### # ##### #####
 
@@ -91,8 +91,8 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 ###
 
 OPTIONS http://localhost:8080/relations/notifications/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
-#
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzcxODQxLCJpYXQiOjE3MzM2ODU0NDEsImp0aSI6IjJkY2ExYzFhNWM0NzQwODE4MWM4Yzk4MDRiMGUyNjMxIiwidXNlcl9pZCI6MTF9.BmkYIbkXwWlvNQ5K7p7juHl4Ke0Nj0r3NyjvFGOqNzs
+
 
 
 ## ### ## ### # ##### #####
@@ -142,20 +142,20 @@ Cookie eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhw
 
 ####
 POST http://localhost:8080/chat/ch/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTE2Mzc1LCJpYXQiOjE3MzM1MTM5NzUsImp0aSI6IjQzOWExNjJkYjU3ZDQwYWM4MjhiM2JhNjJlNTg2MGVjIiwidXNlcl9pZCI6MX0.sgDldah80NA3o6FhM0MC0yW321myoyfn510mlY58JHs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
 Content-Type: application/json
 
 {
-    "senders":"pipo"
+    "senders":"mery"
 }
 
 ######
 POST  http://localhost:8080/chat/1/messages/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTE2Mzc1LCJpYXQiOjE3MzM1MTM5NzUsImp0aSI6IjQzOWExNjJkYjU3ZDQwYWM4MjhiM2JhNjJlNTg2MGVjIiwidXNlcl9pZCI6MX0.sgDldah80NA3o6FhM0MC0yW321myoyfn510mlY58JHs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
 Content-Type: application/json
 
 {
-    "receiver":"pipo",
+    "receiver":"mery",
     "content":"WA llalala"
 }
 

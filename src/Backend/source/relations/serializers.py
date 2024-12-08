@@ -28,6 +28,7 @@ class FriendsSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    recipient = serializers.StringRelatedField()
     class Meta:
         model = Notification
-        fields = ['id', 'sender', 'message', 'read', 'created_at']
+        fields = ['id', 'recipient', 'message', 'read', 'created_at']
