@@ -29,4 +29,7 @@ urlpatterns = [
     path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
     path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
     path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
+# update user details    
+    path('users/me/update/', UpdateUserInfos.as_view(), name='playerUpdate'),
 ]
+####### auth with Oauth username And Vice #########
