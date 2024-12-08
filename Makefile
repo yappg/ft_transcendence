@@ -69,7 +69,7 @@ prune:
 	@docker rmi $$(docker images -aq) 2>/dev/null || true
 	@echo "$(GREEN)>$(YELLOW) done.$(RESET)"
 
-push:
+push: data-reset
 	@echo "$(GREEN)>$(YELLOW) Adding changes to git...$(RESET)"
 	git add .
 	git status
