@@ -14,6 +14,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from channels.security.websocket import AllowedHostsOriginValidator
+from .middleware import TokenAuthMiddleware
 
 # Set the default settings module for the 'django' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
@@ -27,25 +28,20 @@ django_asgi_app = get_asgi_application()
 # # Define the ASGI application routing
 from chat import routing
 
-application = ProtocolTypeRouter({
-    'http': django_asgi_app,
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            routing.websocket_urlpatterns
-        )
-    ),
-})
-# from channels.routing import ProtocolTypeRouter, URLRouter
-# from django.core.asgi import get_asgi_application
-# from .middleware import TokenAuthMiddleware
-# from django.urls import path
-# from your_app import consumers
-
 # application = ProtocolTypeRouter({
-#     'http': get_asgi_application(),
-#     'websocket': TokenAuthMiddleware(
-#         URLRouter([
-#             path('ws/path/', consumers.YourConsumer.as_asgi()),
-#         ])
+#     'http': django_asgi_app,
+#     'websocket': AuthMiddlewareStack(
+#         URLRouter(
+#             routing.websocket_urlpatterns
+#         )
 #     ),
 # })
+
+application = ProtocolTypeRouter({
+    'http': django_asgi_app,
+    'websocket': TokenAuthMiddleware(
+        URLRouter([
+            routing.websocket_urlpatterns,
+        ])
+    ),
+})
