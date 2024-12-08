@@ -16,7 +16,7 @@ const userApi = axios.create({
 
 class ChatService {
   private socket: WebSocket | null = null;
-  // private currentUserId: number | null = null;
+  private currentChatId: number | null = null;
 
   async getChatList(): Promise<Chat[]> {
     const response = await chatApi.get('/list/');
@@ -32,25 +32,29 @@ class ChatService {
     chatId: number, 
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
-    if (this.socket) {
-      console.log('WebSocket connection already exists');
+    if (this.socket && this.currentChatId === chatId) {
+      console.log('WebSocket connection already exists for chatId:', chatId);
       return this.socket;
+    }
+
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+      this.currentChatId = null;
     }
 
     const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
     this.socket = new WebSocket(socketUrl);
-    // const currenttemp = await this.getCurrentUserId;
-    // this.currentUserId = currenttemp.id;
+    this.currentChatId = chatId;
 
     this.socket.onopen = () => {
-      console.log('WebSocket connection established');
+      console.log('WebSocket connection established for chatId:', chatId);
     };
 
     this.socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // if (data.sender !== this.currentUserId) {check after/
-          onMessage(data);
+        onMessage(data);
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
@@ -63,21 +67,23 @@ class ChatService {
     this.socket.onclose = (event) => {
       console.log('WebSocket connection closed:', event);
       this.socket = null;
+      this.currentChatId = null;
     };
 
     return this.socket;
   }
 
-  async sendMessage(chatId: number, content: string, userId: number): Promise<void> {
+  async sendMessage(chatId: number, content: string, userId: number, receiverId: number): Promise<void> {
     console.log('chatService.sendMessage called'); // Debug log
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+    if (!this.socket ){
       throw new Error('WebSocket connection is not open');
     }
-    
+    console.log('are you here-------<<<')
     try {
       this.socket.send(JSON.stringify({
         content: content,
         sender: userId,
+        receiver: receiverId,
         chatId: chatId,
       }));
     } catch (error) {

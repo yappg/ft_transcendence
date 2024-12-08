@@ -90,7 +90,7 @@ SWAGGER_SETTINGS = {
 
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
-
+   
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
     'rest_framework.permissions.IsAuthenticated',

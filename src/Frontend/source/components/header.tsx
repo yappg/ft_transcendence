@@ -1,11 +1,10 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { IoMdNotifications } from 'react-icons/io';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
-import NotificationsService from '@/services/notificationsService';
-import { chatService} from '@/services/chatService';
-
+import { notificationsService } from '@/services/notificationsService';
+import { Notification } from '@/constants/notifications'; // Import the Notification type from the correct location
 export const Header = () => {
   const paths = [
     { id: 1, path: 'Welcome' },
@@ -26,60 +25,74 @@ export const Header = () => {
         avatar: '/images/avatar.jpg',
       },
     },
+
   };
 
   const { isActivated } = useContext(SideBarContext);
   // const { userId } = useContext(AuthContext); // Fetch the user ID from AuthContext
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [notifications, setNotifications] = useState([]);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifclicked, setnotifclicked] = useState(false);
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Fetch the current user's ID
     const fetchCurrentUserId = async () => {
       try {
-        const response = await chatService.getCurrentUserId();
-        setCurrentUserId(response.id);
-        console.log(response.id)
+        const user = await notificationsService.getCurrentUserId();
+        setCurrentUserId(user.id);
       } catch (error) {
-        console.error('Failed to fetch current user ID', error);
+        console.error('Error fetching current user ID:', error);
       }
     };
 
     fetchCurrentUserId();
   }, []);
 
+  useEffect(() => {
+    if (currentUserId !== null) {
+      const fetchNotifications = async () => {
+        try {
+          const notifications = await notificationsService.getNotifications();
+          setNotifications(notifications);
+          setNotificationCount(notifications.filter((n: any) => !n.read).length);
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+        }
+      };
+
+      fetchNotifications();
+
+      const handleWebSocketMessage = (notification: Notification) => {
+        setNotifications(prevNotifications => [notification, ...prevNotifications]);
+        setNotificationCount(prevCount => prevCount + 1);
+      };
+
+      const setupWebSocket = async () => {
+        try {
+          socketRef.current = await notificationsService.createWebSocketConnection(
+            currentUserId,
+            handleWebSocketMessage
+          );
+        } catch (error) {
+          console.error('WebSocket connection failed', error);
+        }
+      };
+
+      setupWebSocket();
+
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.close();
+        }
+      };
+    }
+  }, [currentUserId]);
 
   function handleClick() {
     setShowSearchBar(true);
   }
-
-
-  // useEffect(() => {
-  //   if (!currentUserId) return;
-
-  //   notificationsService.setOnMessageHandler((event) => {
-  //     console.log('WebSocket message received:', event.data);
-  //     const data = JSON.parse(event.data);
-  //     if (data.type === 'new_notification') {
-  //       setNotifications((prevNotifications) => [...prevNotifications, data.notification]);
-  //       setNotificationCount((prevCount) => prevCount + 1);
-  //     } else if (data.status === 'success' && data.message === 'Notification marked as read') {
-  //       console.log('Notification marked as read');
-  //     } else if (data.status === 'error') {
-  //       console.error(data.message);
-  //     }
-  //   });
-
-  //   return () => {
-  //     notificationsService.close();
-  //   };
-  // }, [currentUserId]);
-
-  // const markAsRead = (notificationId) => {
-  //   notificationsService.markAsRead(notificationId);
-  // };
 
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
@@ -115,7 +128,7 @@ export const Header = () => {
           <CommandList />
         </Command>
         <div className="relative flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
-          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
+          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" onClick={()=>setnotifclicked(!notifclicked)}/>
           {notificationCount > 0 && (
             <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs">
               {notificationCount}
@@ -123,13 +136,14 @@ export const Header = () => {
           )}
         </div>
       </div>
-      <div className="absolute top-16 right-4 w-80 bg-white shadow-lg rounded-lg">
-        {notifications.map((notification) => (
-          <div key={notification.id} className="p-4 border-b border-gray-200">
-            <p>{notification.message}</p>
-            <button onClick={() => markAsRead(notification.id)}>Mark as read</button>
-          </div>
-        ))}
+      <div className="z-10 absolute top-24 right-4 w-80 bg-white shadow-lg rounded-lg">
+        {notifclicked ? (
+          notifications.map((notification) => (
+            <div key={notification.id} className="p-4 border-b border-gray-200">
+              <p>{notification.message}</p>
+            </div>
+          ))
+        ) : null}
       </div>
     </div>
   );

@@ -19,8 +19,9 @@ const AddFriends = () => {
     const fetchUsers = async () => {
       try {
         const response = await FriendServices.getPlayers();
-        if (response.message){
+        if (response.message) {
           setUserList(response.data);
+          setFiltredUsers(response.data);
         }
       } catch (error) {
         toast({
@@ -31,23 +32,18 @@ const AddFriends = () => {
         });
       }
     };
+
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    setFiltredUsers(UsersList);
-    return () => {};
-  }, [UsersList]);
-  
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
       const response = await FriendServices.sendFriendRequest(receiverUsername);
-      
 
       if (response.message) {
         console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`);
-        // I need to delete or update the userList to exclude the cuurent one
+        // Update the user list to exclude the current one
         const updatedUsersList = UsersList.filter((user: any) => user.username !== receiverUsername);
         setUserList(updatedUsersList);
         setFiltredUsers(updatedUsersList);
@@ -66,7 +62,7 @@ const AddFriends = () => {
   };
 
   const setsearchQuery = (username: string) => {
-    if (username == '') {
+    if (username === '') {
       setFiltredUsers(UsersList);
     } else {
       setFiltredUsers(
@@ -77,15 +73,7 @@ const AddFriends = () => {
     }
     setsearchUser(username);
   };
-  
-  
-  // const addUser = (newUser: any) => {
-  //   setUserList((prevUsers) => {
-  //     const updatedUsers = [...prevUsers, newUser];
-  //     setFiltredUsers(updatedUsers);
-  //     return updatedUsers;
-  //   });
-  // };
+
 
 
   return (

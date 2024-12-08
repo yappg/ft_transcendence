@@ -16,6 +16,7 @@ const UserFriendsNav = (): JSX.Element => {
   const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
   
   
+  // need a fetch from the parent component... this is tmp fetch
   useEffect(() => {
     // Fetch the current user's ID
     const fetchCurrentUserId = async () => {
@@ -30,7 +31,6 @@ const UserFriendsNav = (): JSX.Element => {
     
     fetchCurrentUserId();
   }, []);
-  
   const player = {
     name: currentUserUserName,
     level: 22,
