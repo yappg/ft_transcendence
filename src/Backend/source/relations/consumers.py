@@ -14,7 +14,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.group_name,
             self.channel_name
         )
-
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -31,6 +30,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             notification_id = text_data_json.get('notification_id')
             await self.mark_notification_as_read(notification_id)
 
+    async def send_notification(self, event):
+        await self.send(text_data=json.dumps(event['notification']))
+        
     @database_sync_to_async
     def get_notification(self, notification_id):
         return Notification.objects.get(id=notification_id, recipient=self.user)
@@ -38,21 +40,19 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_notification(self, notification):
         notification.save()
+    # async def mark_notification_as_read(self, notification_id):
+    #     try:
+    #         notification = await self.get_notification(notification_id)
+    #         notification.read = True
+    #         await self.save_notification(notification)
+    #         await self.send(text_data=json.dumps({
+    #             'status': 'success',
+    #             'message': 'Notification marked as read'
+    #         }))
+    #     except Notification.DoesNotExist:
+    #         await self.send(text_data=json.dumps({
+    #             'status': 'error',
+    #             'message': 'Notification not found'
+    #         }))
 
-    async def mark_notification_as_read(self, notification_id):
-        try:
-            notification = await self.get_notification(notification_id)
-            notification.read = True
-            await self.save_notification(notification)
-            await self.send(text_data=json.dumps({
-                'status': 'success',
-                'message': 'Notification marked as read'
-            }))
-        except Notification.DoesNotExist:
-            await self.send(text_data=json.dumps({
-                'status': 'error',
-                'message': 'Notification not found'
-            }))
 
-    async def send_notification(self, event):
-        await self.send(text_data=json.dumps(event['notification']))

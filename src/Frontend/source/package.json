@@ -43,7 +43,7 @@
     "@shadcn/ui": "^0.0.4",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^19.0.1",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",

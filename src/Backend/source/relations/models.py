@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import Player
+from chat.models import ChatRoom
 
 class Friends(models.Model):
     friend_requester = models.ForeignKey(Player, related_name='friend_requests_sent', on_delete=models.CASCADE)
@@ -8,6 +9,17 @@ class Friends(models.Model):
 
     class Meta:
         unique_together = ('friend_requester', 'friend_responder')
+        
+    def save(self, *args, **kwargs):
+        chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
+        chat_exists = ChatRoom.objects.filter(name=chat_name).exists()
+
+        if not chat_exists:
+            chat = ChatRoom.objects.create(name=chat_name)
+            chat.senders.add(self.friend_requester, self.friend_responder) 
+        
+        super().save(*args, **kwargs)
+    
 
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
@@ -17,6 +29,9 @@ class FriendInvitation(models.Model):
 
     class Meta:
         unique_together = ('sender', 'receiver')
+    
+    # def save():
+        
 
 
 
@@ -32,7 +47,6 @@ class BlockedFriends(models.Model):
 class Notification(models.Model):
     recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
     Type = models.TextField(max_length=25, default='')
-    # sender = models.ForeignKey(Player, related_name='sent_notifications', on_delete=models.CASCADE)
     message = models.TextField(max_length=255, default='Default notification')
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

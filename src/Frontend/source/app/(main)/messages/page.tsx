@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'react';
-import Cookies from 'js-cookie';
 import { Messages } from '@/components/chat/Messages';
 import { ChatList } from '@/components/chat/chatList';
 import { SideBarContext } from '@/context/SideBarContext';
@@ -15,15 +14,16 @@ const App: React.FC = () => {
   const {} = useContext(SideBarContext);
 
 
-
+  // 
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [chatPartner, setChatPartner] = useState<User | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
   const [users, setUsers] = useState<{ [key: number]: User }>({});
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<number>(0);
+  const [receiverId, setReceiverId] = useState<number | null>(null);
 
-
+// -----------User Id--------------///
   useEffect(() => {
     // Fetch the current user's ID
     const fetchCurrentUserId = async () => {
@@ -39,7 +39,7 @@ const App: React.FC = () => {
     fetchCurrentUserId();
   }, []);
 
-  
+// -------fetch chat list, get User object-----------//
   useEffect(() => {
     if (currentUserId === null) return;
     // Fetch the list of chats
@@ -50,16 +50,8 @@ const App: React.FC = () => {
         setChats(fetchedChats);
 
         // Fetch user details for all participants except the current user
-        const userIds = new Set<number>();
-        fetchedChats.forEach(chat => {
-          chat.senders.forEach(sender => {
-            if (sender.id !== currentUserId) {
-              userIds.add(sender.id);
-            }
-          });
-        });
-
-        const userDetails = await chatService.getUserDetails(currentUserId);
+        if (currentUserId){
+        const userDetails = await chatService.getUserDetails(currentUserId)
         const usersMap = {
           [userDetails.id]: {
             id: userDetails.id,
@@ -67,7 +59,7 @@ const App: React.FC = () => {
             email: userDetails.email,
             avatar: userDetails.avatar,
           }
-        };
+        }
 
         // Fetch details for all users involved in the chats
         for (const chat of fetchedChats) {
@@ -83,17 +75,16 @@ const App: React.FC = () => {
             }
           }
         }
-        
-        console.log(usersMap);
         setUsers(usersMap);
-      } catch (error) {
+      }} catch (error) {
         console.error('Failed to fetch chats or user details', error);
       }
     };
-
     fetchChats();
   }, [currentUserId]);
 
+
+  // -------------select a chat----------------------------//
   const handleChatSelect = async (chat: Chat) => {
     console.log('Selected chat:', chat);
     setSelectedChat(chat);
@@ -122,6 +113,7 @@ const App: React.FC = () => {
     console.log('Chat partner:', chatPartner);
     if (chatPartner) {
       setChatPartner(chatPartner);
+      setReceiverId(chatPartner.id); // Update receiverId here
     } else {
       console.log('Chat partner not found');
     }
@@ -135,6 +127,12 @@ const App: React.FC = () => {
       console.error('Failed to fetch messages', error);
     }
   };
+
+
+  // ------------divs------------------------
+  // fix the reciever
+  // const receiverObject = Object.values(users).find(user => user.id !== currentUserId)
+  // console.log('loool',receiverObject?.id);
   return (
     <div className="col-span-10 col-start-2 row-span-8 row-start-2 w-full pl-4">
       <div className="grid size-full grid-cols-3 gap-6 overflow-hidden p-[12px]">
@@ -144,7 +142,7 @@ const App: React.FC = () => {
             chatPartner={chatPartner} 
             messages={messages}
             setMessages={setMessages}
-            currentUserId={currentUserId}
+            receiverId={receiverId}
           />
         ) : (
           <div className="col-span-2 flex items-center justify-center text-white">

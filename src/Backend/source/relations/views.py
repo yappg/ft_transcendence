@@ -25,7 +25,7 @@ class PlayerListView(APIView):
 
     def get(self, request):
         user = request.user
-        print(f"request.user: {user}")
+        print(f"request.user---->: {user}")
         # Exclude the current user, users who have sent friend requests to the current user,
         # users who have received friend requests from the current user, and users who are already friends
 
@@ -163,10 +163,17 @@ class AcceptInvitationView(APIView):
         invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver, status='pending').first()
         if not invitation:
             return Response({"error": "Invitation not found or already accepted"}, status=200)
-
+        
+        
         invitation.status = 'accepted'
         invitation.save()
         
+        # chat_name = f"{current_user}_{friend}_room"
+        # chat = ChatRoom.objects.filter(name=chat_name).first()
+
+        # if chat is None:
+        #     chat = ChatRoom.objects.create(name=chat_name)
+        #     chat.senders.add(current_user, friend)
 
         # Create a new Friends object to establish the friendship
         Friends.objects.create(friend_requester=sender, friend_responder=receiver)
