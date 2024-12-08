@@ -74,9 +74,6 @@ MIDDLEWARE = [
 
     #take off bellow line for production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    # for user activity monitoring
-    'accounts.middleware.UpdateLastSeenMiddleware',
 ]
 
 
