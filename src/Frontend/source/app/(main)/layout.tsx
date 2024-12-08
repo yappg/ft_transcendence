@@ -4,15 +4,29 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
+import { useAuth } from '@/context/AuthContext';
 import { SideBarContext } from '@/context/SideBarContext';
+import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { ComponentType, useContext } from 'react';
+
+export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user, updateUser } = useAuth();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
     setIsActivated(id);
   };
+  // const usename = localStorage.getItem('user');
+  // const otp_enabled = localStorage.getItem('otp-enabled');
+  // const otp_validated = localStorage.getItem('otp-validated');
+
+  // updateUser({
+  //   username: usename && usename !== '' ? usename : '',
+  //   is2FAEnabled: otp_enabled === 'True',
+  //   is2FAvalidated: otp_validated === 'True',
+  // });
+
   return (
     <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
       <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
@@ -43,3 +57,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </div>
   );
 }
+
+export default withAuth(RootLayout as ComponentType<{}>, true);
