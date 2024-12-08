@@ -3,10 +3,10 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "opxaopxXa",
-    "email": "opxaxopxXa@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
+    "username": "client1",
+    "email": "client1@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
 }
 
 ##########
@@ -14,10 +14,10 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "Teereeechoox",
-    "email": "Teereeechoox@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "client2",
+    "email": "client2@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
 }
 
 ##########
@@ -25,10 +25,10 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "opa12345",
-    "email": "opa12345@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "client3",
+    "email": "client3@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
 }
 
 ##########
@@ -36,10 +36,10 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "opa123",
-    "email": "opa123@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "client4",
+    "email": "client4@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
 }
 
 ##########
@@ -47,10 +47,10 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "jadid",
-    "email": "jadid@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
+    "username": "client5",
+    "email": "client5@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
 }
 
 ###################### LOGIN ################################################################################################################################################################
@@ -60,8 +60,8 @@ POST http://localhost:8080/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "opa123",
-    "password": "csfdsgbcvbdfgdfg"
+    "username": "client1",
+    "password": "thisisapassword"
 }
 
 ###################### GET TOKEN ################################################################################################################################################################
@@ -71,8 +71,8 @@ POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "Teereeechoox",
-    "password": "csfdsgbcvbdfgdfg"
+    "username": "client1",
+    "password": "thisisapassword"
 }
 ##########
 POST http://localhost:8080/accounts/JWT/token/refresh/
@@ -85,15 +85,15 @@ Content-Type: application/json
 ######## RESTFULL PROFILES === GET PUT PATCH === ONLY ################################################################################
 
 GET http://localhost:8080/accounts/rest-profiles
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 #########
 GET http://localhost:8080/accounts/rest-profiles/1/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 #########
 PUT http://localhost:8080/accounts/rest-profiles/2/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {
@@ -112,7 +112,7 @@ Content-Type: application/json
 
 #########
 PATCH http://localhost:8080/accounts/rest-profiles/2/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {"bio":"droitx"}
@@ -121,21 +121,21 @@ Content-Type: application/json
 
 #########
 GET http://localhost:8080/accounts/rest-historys/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 #########
 GET http://localhost:8080/accounts/rest-historys/2/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 ######## USER SPECS === GET PUT PATCH === ONLY ################################################################################
 
 #########
 GET http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 #########
 PUT http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {
@@ -154,7 +154,7 @@ Content-Type: application/json
 
 #########
 PATCH http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {"bio":"droitx"}
@@ -163,11 +163,11 @@ Content-Type: application/json
 =
 #########
 GET http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 #########
 PUT http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {
@@ -182,7 +182,7 @@ Content-Type: application/json
 
 #########
 PATCH http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 Content-Type: application/json
 
 {
@@ -193,10 +193,10 @@ Content-Type: application/json
 
 #########
 GET http://localhost:8080/accounts/user-history/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
 
 ####################################################################################################################################
 
 #########
 GET http://localhost:8080/accounts/search-users/?search=t
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjE5ODYwLCJpYXQiOjE3MzM2MTgwNjAsImp0aSI6ImFmMGFhYWM4YzQ0NTQwNDliMTBlZTEyYzdlZjI2YzBmIiwidXNlcl9pZCI6Mn0.Nz_nwLt6dEI_1O4a66O-xe-8p0YHisb6Uzk9O0o4HSM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjIzMTcyLCJpYXQiOjE3MzM2MjEzNzIsImp0aSI6ImUxNDg1ZjE0N2Q4MzRmNjA5MDU5YjdjMjhlNjJhNzQyIiwidXNlcl9pZCI6MX0.HXxKdn2NM8HemqC9_frgwa4NmljJYNh811Gham8y8nA
