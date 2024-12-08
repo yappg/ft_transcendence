@@ -32,11 +32,13 @@ list:
 	echo "$(YELLOW)\n<=========   images   =========>\n$(RESET)"  && \
 	docker compose -p $(PROJECT) images  && \
 
-clean: data-reset
+clean:
 	@docker compose -p $(PROJECT) down --volumes --remove-orphans
+	$(MAKE) data-reset
 
-fclean: data-reset
+fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
+	$(MAKE) data-reset
 
 re: clean build
 
