@@ -3,7 +3,10 @@ from .models import *
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
-# # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
+
+########################################################################################
+
+# KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
 class PlayerSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
@@ -30,9 +33,7 @@ class PlayerSerializer(serializers.ModelSerializer):
         return value
 
 
-
-# ### make sure that the display name field is always unic un every put and patch method return error display_name exists
-# # fix private profile only give back display name
+# fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
 
@@ -56,8 +57,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return obj.player.username
 
     def validate_display_name(self, value):
-        # if value == self.obj:
-        #     raise serializers.ValidationError("Cant change name with the same value")
         if PlayerProfile.objects.filter(display_name=value).exists():
             raise serializers.ValidationError("Display name already exists.")
         return value
@@ -121,6 +120,7 @@ class SearchUsersSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.player.username
+
 
 ########################################################################################
 

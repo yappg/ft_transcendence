@@ -84,4 +84,4 @@ push: data-reset
 
 #################################################################################################
 
-.PHONEY: up down logs list clean re compose it restart prune push
+.PHONEY: build up down logs list clean  fclean re compose it restart data-reset prune push
