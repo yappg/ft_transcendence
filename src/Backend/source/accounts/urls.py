@@ -67,7 +67,6 @@ urlpatterns = [
     # path ('search-friends', Search)
 ]
 
-####### TODO add search functionalitty for the front with slugs
 ####### TODO add loging for last time logged in and online status
 
 ### make signals to detect post save for game model to create a match history object for it
