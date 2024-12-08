@@ -1,6 +1,5 @@
 'use client';
 import { useAuth } from '@/context/AuthContext';
-import withAuth from '@/context/requireAhuth';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext } from 'react';
 import { useEffect } from 'react';
@@ -32,12 +31,12 @@ const Home = () => {
     setIsActivated(1);
   }, [setIsActivated]);
   return (
-    <div className="size-full flex items-center justify-center">
-      <button onClick={handleClick} className="bg-blue-400 rounded-md w-14 h-6">
+    <div className="flex size-full items-center justify-center">
+      <button onClick={handleClick} className="h-6 w-14 rounded-md bg-blue-400">
         logout
       </button>
     </div>
   );
 };
 
-export default withAuth(Home, true);
+export default Home;

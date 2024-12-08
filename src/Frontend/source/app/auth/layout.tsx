@@ -1,12 +1,16 @@
 /* eslint-disable tailwindcss/enforces-negative-arbitrary-values */
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @next/next/no-img-element */
+
 'use client';
+
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ComponentType } from 'react';
 import { usePathname } from 'next/navigation';
 import Card from '@/components/generalUi/Card';
-export default function RootLayout({
+import withAuth from '@/context/requireAhuth';
+
+export function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -16,43 +20,35 @@ export default function RootLayout({
   const [isAnimating, setIsAnimating] = useState(false); // Controls animation state
 
   useEffect(() => {
-    // Trigger animation
     setIsAnimating(true);
 
-    // Wait for animation to complete before updating position
     const timer = setTimeout(() => {
       setIsLeft(pathname === '/auth/signup');
       setIsAnimating(false);
-    }, 10); // Match the animation duration (2s)
+    }, 10);
 
-    return () => clearTimeout(timer); // Cleanup timeout on unmount
+    return () => clearTimeout(timer);
   }, [pathname]);
   return (
-    <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full items-end justify-start overflow-auto">
+    <div className="flex h-screen w-full items-end justify-start overflow-auto bg-linear-gradient dark:bg-linear-gradient-dark">
       <div className="z-0 flex h-[95%] w-full min-w-[350px] flex-col items-start">
         <div className="z-10 mb-[-75px] flex h-[150px] w-full items-center justify-center md:mb-[-80px] lg:hidden">
           <Link href="/">
             <img
               src="/landing-page-logo.svg"
               alt="logo"
-              className="size-[150px] md:size-[200px] dark:hidden"
+              className="size-[150px] dark:hidden md:size-[200px]"
             />
             <img
               src="/landing-page-dark-logo.svg"
               alt="logo"
-              className="hidden size-[150px] md:size-[200px] dark:block"
+              className="hidden size-[150px] dark:block md:size-[200px]"
             />
           </Link>
         </div>
         <div className="flex w-full grow items-start justify-center md:justify-center lg:items-start lg:py-[12vh]">
-          {/* <div className="flex size-full justify-start md:size-[85%] md:h-auto md:max-h-[850px] md:min-h-[500px] md:max-w-[1100px]">
-            {children}
-            <Link href="/" className="z-[1] order-2 hidden w-[550px] lg:flex lg:items-center">
-              <img src="/logo.svg" alt="logo-shadow.svg" />
-            </Link>
-          </div> */}
           <div
-            className={`relative flex size-full md:size-fit items-center transition-all duration-1000 ease-in-out ${
+            className={`relative flex size-full items-center transition-all duration-1000 ease-in-out md:size-fit ${
               !isLeft ? 'lg:mr-[120px]' : 'lg:ml-[120px]'
             }`}
           >
@@ -74,3 +70,5 @@ export default function RootLayout({
     </div>
   );
 }
+
+export default withAuth(RootLayout as ComponentType<{}>, false);

@@ -6,7 +6,7 @@ import { Form, MyLink } from '@/components/auth/form';
 import { getFields } from './fieldes';
 import withAuth from '@/context/requireAhuth';
 
-function Signup() {
+const Signup = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -40,7 +40,6 @@ function Signup() {
       <MyLink text="Already have an account? " href="login" />
     </div>
   );
-}
+};
 
-export default withAuth(Signup, false, 'signup');
-
+export default Signup;
