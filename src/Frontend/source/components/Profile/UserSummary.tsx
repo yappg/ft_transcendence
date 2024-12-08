@@ -5,6 +5,8 @@ import { UsersList } from '@/constants/UsersList';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
+import { Graph } from './Graph';
+import { statistics } from './statistics';
 import { toast } from '@/hooks/use-toast';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
@@ -100,9 +102,14 @@ const UserSummary = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="h-full w-[35%] flex items-center justify-center border-2 rounded-[50px] bg-[#4C4D4E]">
-        <div className='w-full h-[50%]'></div>
-        <div className='w-full h-[50%]'></div>
+      <div className="h-full w-[35%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-col">
+        <div className='w-full h-[50%] flex items-start'>
+          {statistics()}
+        </div>
+        <div className='w-full h-[50%]'>
+          <Graph />
+
+        </div>
       </div>
     </div>
   );
