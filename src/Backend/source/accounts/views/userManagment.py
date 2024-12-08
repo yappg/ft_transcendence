@@ -4,7 +4,7 @@ from rest_framework import status , viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from ..permissions import (
@@ -21,7 +21,6 @@ from ..serializers import *
 #     permission_classes = [IsAuthenticated]
 #     queryset = Player.objects.all()
 #     serializer_class = PlayerSerializer
-#     permission_classes = [AllowAny]
 
 class PlayerProfileViewSet(viewsets.ModelViewSet):
     # exlude disabled profiles with is_active from the account return to front that the profile is private
@@ -29,6 +28,7 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
     serializer_class = PlayerProfileSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrAdminReadOnly]
     http_method_names = ['get', 'put', 'patch', 'options']
+
 
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
@@ -85,8 +85,8 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
         try:
+            user = self.request.user
             player_profile = user.profile
             return player_profile.all_matches()
         except PlayerProfile.DoesNotExist:

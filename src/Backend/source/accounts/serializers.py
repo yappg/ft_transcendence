@@ -3,6 +3,7 @@ from .models import *
 from django.contrib.auth import authenticate
 # from django.core.exceptions import Validate_email
 
+# # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
 class PlayerSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
@@ -23,122 +24,103 @@ class PlayerSerializer(serializers.ModelSerializer):
         from .serializers import PlayerProfileSerializer
         return PlayerProfileSerializer(obj.profile, read_only=True).data
 
-
-class PlayerProfileSerializer(serializers.ModelSerializer):
-    player = serializers.SerializerMethodField()
-
-    class Meta:
-        model = PlayerProfile
-        fields = [
-            'id',
-            'is_online',
-            'display_name',
-            'bio',
-            'avatar',
-            'rank_points',
-            'games_played',
-            'games_won',
-            'games_loss',
-            'win_ratio',
-            'last_login',
-            'created_at',
-            'player_username',
-        ]
-        read_only_fields = [
-            'id',
-            'is_online',
-            'rank_points',
-            'games_played',
-            'games_won',
-            'games_loss',
-            'win_ratio',
-            'last_login',
-            'created_at',
-        ]
-
-    # Custom validator for display_name to ensure uniqueness
-    def validate_display_name(self, value):
-        if PlayerProfile.objects.filter(display_name=value).exists():
-            raise serializers.ValidationError("Display name must be unique.")
+    def validate_username(self, value):
+        if Player.objects.filter(username=value).exists():
+            raise serializers.ValidationError("username must be unique.")
         return value
 
-    def get_player(self, obj):
-        from .serializers import PlayerSerializer
-        return PlayerSerializer(obj.player, read_only=True).data
 
-
-
-# # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
-# class PlayerSerializer(serializers.ModelSerializer):
-#     profile = PlayerProfileSerializer(read_only=True)
-
-#     class Meta:
-#         model = Player
-#         fields = [
-#             'id',
-#             'username'
-#          ]
-#         read_only_fields = [
-#             'id',
-#             'username'
-#         ]
 
 # ### make sure that the display name field is always unic un every put and patch method return error display_name exists
 # # fix private profile only give back display name
-# class PlayerProfileSerializer(serializers.ModelSerializer):
-#     Player = PlayerSerializer(read_only=True)
+class PlayerProfileSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
 
-#     class Meta:
-#         model=PlayerProfile
-#         exclude = [
-#             '__all__'
-#         ]
-#         read_only_fields = [
-#             'id',
-#              'is_online',
-#             'rank_points' ,
-#             'games_played' ,
-#             'games_won' ,
-#             'games_loss' ,
-#             'win_ratio' ,
-#             'last_login' ,
-#             'created_at'
-#         ]
+    class Meta:
+        model = PlayerProfile
+        exclude = ['player']
+        read_only_fields = [
+            'id',
+            'is_online',
+            'username',
+            'rank_points',
+            'games_played',
+            'games_won',
+            'games_loss',
+            'win_ratio',
+            'last_login',
+            'created_at',
+        ]
+
+    def get_username(self, obj):
+        return obj.player.username
+
+    def validate_display_name(self, value):
+        # if value == self.obj:
+        #     raise serializers.ValidationError("Cant change name with the same value")
+        if PlayerProfile.objects.filter(display_name=value).exists():
+            raise serializers.ValidationError("Display name already exists.")
+        return value
+
+    def validate_avatar(self, value):
+        size_max = 2 * 1024 * 1024  # 2MB for max size of the avatar
+        allowed_types = ['image/jpeg', 'image/png']
+
+        if (value.size > size_max):
+            raise serializers.ValidationError("Avatar image size should not exceed 2MB.")
+
+        if (value.content_type not in allowed_types):
+            raise serializers.ValidationError("Avatar must be a JPEG or PNG image.")
+
+        return value
+
+    def validate_cover(self, value):
+        size_max = 5 * 1024 * 1024  # 5MB for max size of the cover
+        allowed_types = ['image/jpeg', 'image/png']
+
+        if (value.size > size_max):
+            raise serializers.ValidationError("Cover image size should not exceed 5MB.")
+
+        if (value.content_type not in allowed_types):
+            raise serializers.ValidationError("Cover must be a JPEG or PNG image.")
+
+        return value
+
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=PlayerSettings
         exclude = ['player_profile']
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'updated_at']
 
 
 # Corrected field name
 class MatchHistorySerializer(serializers.ModelSerializer):
-    player = PlayerProfileSerializer(read_only=True)
-    opponent = PlayerProfileSerializer(read_only=True)
+    player1 = PlayerProfileSerializer(read_only=True)
+    player2 = PlayerProfileSerializer(read_only=True)
 
     class Meta:
         model = MatchHistory
-        fields = '__all__'
+        fields = ['__all__']
+        read_only_fields = ['__all__']
 
 
 class SearchUsersSerializer(serializers.ModelSerializer):
-    Player = PlayerSerializer(read_only=True)
+    username = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
         fields = [
             'id' ,
+            'username',
             'display_name',
-            'avatar',
-             'is_online'
-        ]
-        read_only_fields = [
-            'id' ,
-            'display_name' ,
             'avatar',
             'is_online'
         ]
+        read_only_fields = [ '__all__']
+
+    def get_username(self, obj):
+        return obj.player.username
 
 ########################################################################################
 
@@ -220,19 +202,19 @@ class ValidateOTPSerializer(serializers.Serializer):
             raise serializers.ValidationError("OTP Token required")
 
 
-class UpdateUserInfosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Player
-        fields=['username']
-        # fields=('username','email','password',)
+# class UpdateUserInfosSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=Player
+#         fields=['username']
+#         # fields=('username','email','password',)
 
-    def save(self, **kwargs):
-        user = self.context['user']
-        player = Player.objects.get(username=user.username)
-        if 'username' in self.validated_data:
-            player.username = self.validated_data['username']
-        # if 'avatar' in self.validated_data:
-        #     player.avatar = self.validated_data['avatar']
-        # if 'cover' in self.validated_data:
-        #     player.cover = self.validated_data['cover']
-        player.save()
+#     def save(self, **kwargs):
+#         user = self.context['user']
+#         player = Player.objects.get(username=user.username)
+#         if 'username' in self.validated_data:
+#             player.username = self.validated_data['username']
+#         # if 'avatar' in self.validated_data:
+#         #     player.avatar = self.validated_data['avatar']
+#         # if 'cover' in self.validated_data:
+#         #     player.cover = self.validated_data['cover']
+#         player.save()
