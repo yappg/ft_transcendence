@@ -18,15 +18,12 @@ build: down
 
 up: down
 	@docker compose -p $(PROJECT) -f $(COMPOSE) up -d  && \
-	@docker compose -p $(PROJECT) -f $(COMPOSE) up -d  && \
 	$(MAKE) logs
 
 down:
 	@docker compose -p $(PROJECT) down --remove-orphans
-	@docker compose -p $(PROJECT) down --remove-orphans
 
 logs:
-	@docker compose -p $(PROJECT) logs -f
 	@docker compose -p $(PROJECT) logs -f
 
 list:
@@ -44,14 +41,11 @@ re: clean build
 
 compose:
 	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
-	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
 
 it:
 	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
-	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
 
 restart:
-	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
 	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
 
 ##########################################   UTILITIES  ##########################################
