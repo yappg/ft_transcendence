@@ -24,13 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <div
         className={`${
           isActivated === 7 ||
-          isActivated === 6 ||
+          isActivated === 8 ||
           isActivated === 4 ||
           isActivated === 6 ||
           pathname === '/friends' ||
           pathname === '/LeaderBoard' ||
           pathname === '/MatchHistory' ||
-          pathname === '/messages'
+          pathname === '/messages' ||
+          pathname === '/settings'
             ? 'hidden'
             : 'flex'
         } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
