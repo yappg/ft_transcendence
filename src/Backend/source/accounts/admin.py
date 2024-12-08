@@ -18,6 +18,6 @@ class PlayerSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(MatchHistory)
 class MatchHistoryAdmin(admin.ModelAdmin):
-    list_display = ('result', 'player', 'opponent', 'player_score', 'opponent_score', 'date')
+    list_display = ('result', 'player1', 'player2', 'player1_score', 'player2_score', 'date')
     list_filter = ('result', 'date')
-    search_fields = ('player__display_name', 'opponent__display_name')
+    search_fields = ('player1__display_name', 'player2__display_name')

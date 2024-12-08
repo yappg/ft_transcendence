@@ -83,13 +83,10 @@ class PlayerProfile(models.Model):
 
     def update_last_seen(self):
         self.last_login = timezone.now()
-        self.save()
-
-        # TODO still need work it dosnt go offline
-        # online if active within 10 minutes
+        self.save(update_fields=['last_login'])
 
     def all_matches(self):
-        return MatchHistory.objects.filter(Q(player=self) | Q(opponent=self)).order_by('-date')
+        return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
 
 
 
@@ -109,20 +106,20 @@ class PlayerSettings(models.Model):
         verbose_name_plural = 'Player Settings'
 
 
-#  TODO  rereview this model
 class MatchHistory(models.Model):
     RESULT_CHOICES = [
-        ('Win', 'Win'),
-        ('Loss', 'Loss'),
+        ('player1', 'player1'),
+        ('player2', 'player2'),
         ('Draw', 'Draw'),
     ]
 
     result = models.CharField(max_length=10, choices=RESULT_CHOICES)
 
-    player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches')
-    opponent = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='opponent_matches')
-    player_score = models.IntegerField(default=0)
-    opponent_score = models.IntegerField(default=0)
+    player1 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches_as_player1')
+    player2 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches_as_player2')
+
+    player1_score = models.IntegerField(default=0)
+    player2_score = models.IntegerField(default=0)
 
     date = models.DateTimeField(auto_now_add=True)
 
@@ -133,14 +130,3 @@ class MatchHistory(models.Model):
         ordering = ['-date']
         verbose_name = 'Match History'
         verbose_name_plural = 'Match Histories'
-
-
-# SIGNALS TO CREATE PlayerProfile and PlayerSettings upon Player creation
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
-
-# @receiver(post_save, sender=Player)
-# def create_player_related_models(sender, instance, created, **kwargs):
-#     if created:
-#         profile = PlayerProfile.objects.create(player=instance)
-#         PlayerSettings.objects.create(player_profile=profile)

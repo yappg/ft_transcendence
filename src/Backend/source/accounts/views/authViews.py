@@ -23,7 +23,6 @@ from ..serializers import (
     GenerateOTPSerializer,
     VerifyOTPSerializer,
     ValidateOTPSerializer,
-    UpdateUserInfosSerializer,
 )
 
 #------------------------------------ Auth ------------------------------------
