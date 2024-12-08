@@ -8,7 +8,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         user = self.scope["user"]
-        print(f" the user auth status is {user.is_authenticated}")
+        # print(f" the user auth status is {user.is_authenticated}")
         if user.is_authenticated:
             await self.set_online_status(user, True)
             await self.accept()
@@ -17,7 +17,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         user = self.scope["user"]
-        print(f" the user auth status is {user.is_authenticated}")
+        # print(f" the user auth status is {user.is_authenticated}")
         if user.is_authenticated:
             await self.set_online_status(user, False)
 
