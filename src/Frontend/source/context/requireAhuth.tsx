@@ -33,7 +33,7 @@ function withAuth(WrappedComponent: React.ComponentType, requiresAuth: boolean, 
         }
       }
     }, [user, requiresAuth, router]);
-////////////
+
     if (user?.username && (!user?.is2FAEnabled && user?.is2FAvalidated)) {
       return <WrappedComponent {...props} />;
     }
