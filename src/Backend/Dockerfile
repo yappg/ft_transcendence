@@ -6,7 +6,7 @@ FROM python:alpine AS development
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV DJANGO_SETTINGS_MODULE=_1Config.development
+ENV DJANGO_SETTINGS_MODULE=_1Config.settings.development
 
 WORKDIR /app/source
 
@@ -30,7 +30,7 @@ FROM python:alpine AS production
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV DJANGO_SETTINGS_MODULE=_1Config.production
+ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
 
 COPY . .
 
