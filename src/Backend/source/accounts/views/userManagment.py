@@ -12,7 +12,11 @@ from ..permissions import (
     IsOwnerOrAdmin,
 )
 from ..models import *
-from ..serializers import *
+from ..serializers import (
+    PlayerProfileSerializer,
+    MatchHistorySerializer,
+    PlayerSettingsSerializer,
+)
 
 #--------------------------Players RESTFUL API ------------------------------
 
