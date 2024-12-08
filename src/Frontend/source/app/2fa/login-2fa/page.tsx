@@ -11,18 +11,18 @@ const Login2fa = () => {
   const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
-  const handleClick = () => {
+  const handleClick = async () => {
     try {
-      const response = sendOtp('verifiy-otp', value, user?.username || null) as any;
+      const response = await sendOtp('verifiy-otp', value, user?.username || null) as any;
 
-      console.log(response);
+      console.log(response.data);
       if (response.data.message) {
+        updateUser({ is2FAvalidated: true });
         toast({
           title: 'success',
           description: response.data.message,
           className: 'bg-primary border-none text-white bg-opacity-20',
         });
-        updateUser({ is2FAvalidated: true });
         return;
       } else if (response.data.error) {
         toast({

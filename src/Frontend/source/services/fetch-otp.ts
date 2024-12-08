@@ -12,7 +12,7 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
       username: name,
       otp_token: value,
     });
-    return await response;
+    return response;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Authentication error: ${error.message}`);

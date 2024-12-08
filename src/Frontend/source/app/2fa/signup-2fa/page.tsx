@@ -9,11 +9,12 @@ import { fetchQrCode, sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import withAuth from '@/context/requireAhuth';
+import { toast } from '@/hooks/use-toast';
 
 const Signup2fa = () => {
   const router = useRouter();
   const myString = 'Submit';
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
   const [isValid, setIsValid] = React.useState(true);
   const [QRcode, setQRcode] = React.useState('e');
@@ -32,9 +33,22 @@ const Signup2fa = () => {
       const valid = async () => {
         const response = await sendOtp('verifiy-otp', value, user?.username || null);
         console.log(response);
-        if (response) {
-          return router.push('/home');
-        }
+      if (response.data.message) {
+        toast({
+          title: 'success',
+          description: response.data.message,
+          className: 'bg-primary border-none text-white bg-opacity-20',
+        });
+        updateUser({ is2FAEnabled: true, is2FAvalidated: true });
+        console.log('hjdfshjfhjsb', user?.is2FAEnabled, user?.is2FAvalidated)
+        return;
+      } else if (response.data.error) {
+        toast({
+          title: 'error',
+          description: response.data.error,
+          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+        });
+      }
       };
       valid();
     }
@@ -76,4 +90,4 @@ const Signup2fa = () => {
   );
 };
 
-export default withAuth(Signup2fa, false);
+export default withAuth(Signup2fa, true);
