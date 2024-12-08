@@ -49,7 +49,7 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
         {text}
         <Link
           href={`/auth/${href}`}
-          className="text-primary dark:text-primary-dark font-bold hover:underline"
+          className="font-bold text-primary hover:underline dark:text-primary-dark"
         >
           {href}
         </Link>
@@ -136,8 +136,8 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         console.log('response: ', response);
         const loggeduser = await auth.login({
           username: formData.username,
-          is2FAEnabled: (response.enabled_2fa === 'True'),
-          is2FAvalidated: (isSignup? true: false), // this been edited to fit signup case
+          is2FAEnabled: response.enabled_2fa === 'True',
+          is2FAvalidated: isSignup ? true : false, // this been edited to fit signup case
         } as User);
         console.log('auth: ', loggeduser, auth.user);
         console.log('isSignup: ', isSignup);

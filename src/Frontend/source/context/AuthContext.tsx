@@ -24,20 +24,24 @@ const AuthContext = createContext<AuthContextType | null>(null);
 const parseBoolean = (value: string | null) => value === 'True';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Only run this code on the client side (when component mounts)
     const storedUser = localStorage.getItem('user');
     const is2FAEnabled = parseBoolean(localStorage.getItem('otp-enabled'));
     const is2FAvalidated = parseBoolean(localStorage.getItem('otp-validated'));
-    return storedUser
-      ? {
-          username: storedUser,
-          email: '', // Initialize email if not stored in localStorage
-          id: '', // Initialize id if not stored
-          is2FAEnabled,
-          is2FAvalidated,
-        }
-      : null;
-  });
+
+    if (storedUser) {
+      setUser({
+        username: storedUser,
+        email: '', // Initialize email if not stored in localStorage
+        id: '', // Initialize id if not stored
+        is2FAEnabled,
+        is2FAvalidated,
+      });
+    }
+  }, []);
 
   // Handle user login
   const login = (userData: User): Promise<User> => {
