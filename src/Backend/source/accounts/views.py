@@ -52,25 +52,26 @@ class PlayersViewList(ListAPIView):
     serializer_class=PlayerSerializer
     queryset=Player.objects.all()
 
-# class PlayerView(APIView):
 #------------------------------------ Auth ------------------------------------
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
     @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
-
         if request.user.is_authenticated:
-            return Response({'error': 'You are already authenticated'}, status=200)
+            return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
+
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+        try:
+            serializer.is_valid(raise_exception=True)
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
-                resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+                resp = Response({'message': 'Logged in Successfully'}, 
+                              status=status.HTTP_201_CREATED)
                 resp.set_cookie(
                     key='access_token',
                     value=access_token,
@@ -82,9 +83,15 @@ class SignUpView(APIView):
                     httponly=False
                 )
                 return resp
-            else :
-                return Response({'error': 'user not created'}, status=200)
-        return Response(serializer.errors, status=200)
+        except serializers.ValidationError as e:
+            if isinstance(e.detail, dict):
+                error_message = next(iter(e.detail.values()))
+                if isinstance(error_message, list):
+                    error_message = error_message[0]
+                return Response({'error': error_message}, status=status.HTTP_200_OK)
+            return Response({'error': str(e.detail)}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'User not created'}, status=status.HTTP_200_OK)
 
 class SignInView(APIView):
     permission_classes = [AllowAny]
@@ -96,20 +103,16 @@ class SignInView(APIView):
     @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
 
-        print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk')
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=200)
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
-            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk')
             if (user.enabled_2fa == True):
                 return Response({'message':'logged in Successfuly','enabled_2fa':'True'}, status=status.HTTP_200_OK)
 
-            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk22222222222')
             access_token, refresh_token = generate_tokens(user)
             resp = Response({'message':'logged in Successfuly','enabled_2fa':'False'}, status=status.HTTP_200_OK)
-            print('ooaoaaooaaoommmmmmmmsdksmdksmdksmdsk222222222223333')
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
@@ -130,12 +133,11 @@ class SignInView(APIView):
         else :
             return Response(Serializer.errors, status=status.HTTP_200_OK)
 
-
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({'message': 'AM here'}, status=status.HTTP_200_OK)
+        return Response({'message': 'this methode is only for the DRF web interface to avoid HTTP_400_Bad_Request'}, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
@@ -208,8 +210,8 @@ class ValidateOTP(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=status.HTTP_200_OK)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_200_OK)
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
@@ -328,6 +330,7 @@ class OAuth42CallbackView(APIView):
 #--------------------------User Infos Update ------------------------------
 
 class UpdateUserInfos(APIView):
+    # permission_classes = [Allow]
     serializer_class = UpdateUserInfosSerializer
 
     def post(self, request):
@@ -337,7 +340,7 @@ class UpdateUserInfos(APIView):
             )
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
+            return Response({'message': 'You Updated your informations'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
