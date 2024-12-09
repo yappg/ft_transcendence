@@ -53,7 +53,6 @@ class NotificationsService {
 
     this.socket.onclose = (event) => {
       console.log('WebSocket connection closed:', event);
-      this.socket = null;
     };
 
     return this.socket;

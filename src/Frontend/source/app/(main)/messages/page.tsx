@@ -25,7 +25,6 @@ const App: React.FC = () => {
 
 // -----------User Id--------------///
   useEffect(() => {
-    // Fetch the current user's ID
     const fetchCurrentUserId = async () => {
       try {
         const response = await chatService.getCurrentUserId();
@@ -42,14 +41,14 @@ const App: React.FC = () => {
 // -------fetch chat list, get User object-----------//
   useEffect(() => {
     if (currentUserId === null) return;
-    // Fetch the list of chats
     const fetchChats = async () => {
       try {
         const fetchedChats = await chatService.getChatList();
         console.log('this is the fetched chat: ', fetchedChats);
         setChats(fetchedChats);
 
-        // Fetch user details for all participants except the current user
+        
+        // fetch user details for all participants except the current user //
         if (currentUserId){
         const userDetails = await chatService.getUserDetails(currentUserId)
         const usersMap = {
@@ -60,8 +59,7 @@ const App: React.FC = () => {
             avatar: userDetails.avatar,
           }
         }
-
-        // Fetch details for all users involved in the chats
+        // fetch details for all users involved in the chats //
         for (const chat of fetchedChats) {
           for (const sender of chat.senders) {
             if (!Object.values(usersMap).some(user => user.username === sender)) {
@@ -86,39 +84,23 @@ const App: React.FC = () => {
 
   // -------------select a chat----------------------------//
   const handleChatSelect = async (chat: Chat) => {
-    console.log('Selected chat:', chat);
     setSelectedChat(chat);
-  
-    // Debugging: Check the current user ID and chat senders
-
-    console.log('Current user ID:', currentUserId);
-    console.log('Chat senders:', chat.senders);
-  
-    // Ensure the chat has exactly two senders
     if (chat.senders.length !== 2) {
       console.error('Chat must have exactly two senders');
       return;
     }
-  
-    // Debugging: Log the users object
     console.log('Users object:', users);
-  
-    // Fetch chat partner details
     const currentUser = users[currentUserId];
     const chatPartnerUsername = chat.senders.find(sender => sender !== currentUser?.username);
-    
-    console.log('Chat partner username:', chatPartnerUsername);
-    
     const chatPartner = Object.values(users).find(user => user.username === chatPartnerUsername);
     console.log('Chat partner:', chatPartner);
     if (chatPartner) {
       setChatPartner(chatPartner);
-      setReceiverId(chatPartner.id); // Update receiverId here
+      setReceiverId(chatPartner.id); // Update receiverId here //
     } else {
       console.log('Chat partner not found');
     }
-  
-    // Fetch existing messages
+    // fetch existing messages //
     try {
       const fetchedMessages = await chatService.getChatMessages(chat.id);
       console.log('Fetched messages:', fetchedMessages);
@@ -127,12 +109,6 @@ const App: React.FC = () => {
       console.error('Failed to fetch messages', error);
     }
   };
-
-
-  // ------------divs------------------------
-  // fix the reciever
-  // const receiverObject = Object.values(users).find(user => user.id !== currentUserId)
-  // console.log('loool',receiverObject?.id);
   return (
     <div className="col-span-10 col-start-2 row-span-8 row-start-2 w-full pl-4">
       <div className="grid size-full grid-cols-3 gap-6 overflow-hidden p-[12px]">
