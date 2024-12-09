@@ -14,3 +14,6 @@ class SearchUsersSerializer(serializers.ModelSerializer):
             'is_online'
         ]
         read_only_fields = [ '__all__']
+
+    def get_username(self, obj):
+        return obj.player.username
