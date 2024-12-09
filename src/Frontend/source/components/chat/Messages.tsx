@@ -56,7 +56,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     fetchCurrentUserId();
   }, []);
 
-  // ----- here I create the websocket connection
   useEffect(() => {
     const setupWebSocket = async () => {
       if (socketRef.current && currentChatIdRef.current === chatId) {
@@ -66,7 +65,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
 
       if (socketRef.current) {
         socketRef.current.close();
-        socketRef.current = null;
       }
 
       try {
@@ -75,7 +73,6 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
           handleWebSocketMessage
         );
         currentChatIdRef.current = chatId;
-
       } catch (error) {
         console.error('WebSocket connection failed', error);
       }
@@ -86,20 +83,17 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     return () => {
       if (socketRef.current) {
         socketRef.current.close();
-        socketRef.current = null;
-        currentChatIdRef.current = null;
         console.log('WebSocket connection closed for chatId:', chatId);
       }
     };
   }, [chatId]);
 
-
-  // ---- for scroliling in messages-----//
+  // Scroll to the bottom of the messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-  
-  // ---------------------------------sending messages--------//
+
+  // Handle incoming WebSocket messages
   const handleWebSocketMessage = (message: any) => {
     setMessages(prevMessages => [
       ...prevMessages,
@@ -112,7 +106,8 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
       }
     ]);
   };
-  
+
+  // Handle sending a new message
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
