@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+# from django.contrib.auth.admin import UserAdmin
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
@@ -21,3 +22,12 @@ class MatchHistoryAdmin(admin.ModelAdmin):
     list_display = ('result', 'player1', 'player2', 'player1_score', 'player2_score', 'date')
     list_filter = ('result', 'date')
     search_fields = ('player1__display_name', 'player2__display_name', 'player1__player__username' ,'player2__player__username')
+
+# class GameAdmin(UserAdmin):
+#     model = Player
+#     fieldsets = UserAdmin.fieldsets + (
+#         (None, {'fields': ('avatar', 'cover', 'enabled_2fa', 'otp_secret_key', 'verified_otp')}),
+#     )
+
+# admin.site.register(Player, GameAdmin)
+# admin.site.register(PlayerProfile)

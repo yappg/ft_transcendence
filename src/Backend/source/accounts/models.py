@@ -92,7 +92,6 @@ class PlayerProfile(models.Model):
         return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
 
 
-
 class PlayerSettings(models.Model):
     player_profile = models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name="settings")
 

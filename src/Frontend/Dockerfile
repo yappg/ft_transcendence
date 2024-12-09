@@ -14,6 +14,7 @@ RUN yarn install
 EXPOSE 3000
 
 CMD ["yarn", "dev"]
+# CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
 # Stage 2: Build stage
@@ -49,3 +50,5 @@ EXPOSE 3000
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["yarn", "start"]
+# CMD [ "tail", "-f", "/dev/null" ]
+

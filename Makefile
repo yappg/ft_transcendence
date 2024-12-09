@@ -34,24 +34,24 @@ list:
 
 clean:
 	@docker compose -p $(PROJECT) down --volumes --remove-orphans
-	$(MAKE) data-reset
+	@$(MAKE) data-reset
 
 fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
-	$(MAKE) data-reset
+	@$(MAKE) data-reset
 
 re: clean build
 
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	@docker-compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
 
 it:
 	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
 
 restart:
-	@docker-compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
 
 ##########################################   UTILITIES  ##########################################
 
@@ -86,4 +86,4 @@ push: data-reset
 
 #################################################################################################
 
-.PHONEY: build up down logs list clean  fclean re compose it restart data-reset prune push
+.PHONEY: build up down logs list clean fclean re compose it restart data-reset prune push

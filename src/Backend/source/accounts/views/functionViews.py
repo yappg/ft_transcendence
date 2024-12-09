@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from ..models import PlayerProfile
-from ..serializers import SearchUsersSerializer
+from ..serializers.functionSerlizers import *
 
 class SearchUsersView(APIView):
     permission_classes = [IsAuthenticated]
