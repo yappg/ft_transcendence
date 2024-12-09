@@ -50,33 +50,33 @@ services:
     #   restart: unless-stopped
 
 
-#     frontend:
-#       container_name: frontend
-#       build:
-#         context: ./Frontend
-#         target: ${ENV:-development}
-#         dockerfile: Dockerfile
-#       image: frontend
-# # DEV ==============>
-#       volumes:
-#         - ./Frontend/source:/app:rw
-#         - /app/.next
-#         - /app/node_modules
-# # ==================>
-#       networks:
-#         - transcendence
-#       ports:
-#         - 3000:3000
-#       # depends_on:
-#       #     backend:
-#       #         condition: service_healthy
-#       # healthcheck:
-#       #     test: ["CMD", ""]
-#       #     interval: 1m30s
-#       #     timeout: 30s
-#       #     retries: 5
-#       #     start_period: 30s
-#       restart: always
+    frontend:
+      container_name: frontend
+      build:
+        context: ./Frontend
+        target: ${ENV:-development}
+        dockerfile: Dockerfile
+      image: frontend
+# DEV ==============>
+      volumes:
+        - ./Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
+      networks:
+        - transcendence
+      ports:
+        - 3000:3000
+      # depends_on:
+      #     backend:
+      #         condition: service_healthy
+      # healthcheck:
+      #     test: ["CMD", ""]
+      #     interval: 1m30s
+      #     timeout: 30s
+      #     retries: 5
+      #     start_period: 30s
+      restart: always
 
 
     backend:
@@ -88,8 +88,8 @@ services:
       image: backend
       environment:
         JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-        42_CLIENT_ID: $${42_CLIENT_ID}
-        42_CLIENT_SECRET: $${42_CLIENT_SECRET}
+        CLIENT_ID_42: $${CLIENT_ID_42}
+        CLIENT_SECRET_42: $${CLIENT_SECRET_42}
         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
         GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
         POSTGRES_DB: ${POSTGRES_DB}

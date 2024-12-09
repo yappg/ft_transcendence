@@ -35,7 +35,6 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('game/', include('game.urls')),
     path('relations/', include('relations.urls')),
-
 ]
 
     # structering api endpoints

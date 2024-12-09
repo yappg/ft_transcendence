@@ -50,12 +50,11 @@ urlpatterns = [
 
 # user-management
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
-
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
 
-    # change_password , change_email , change_username , disable_account, delete_account
+# TODO implemetation may differ change_password , change_email , change_username , disable_account, delete_account
     # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
     # path('change_email/', UserHistoryView , name='user_game_history'), # verification confirm mail maybe in future
     # path('change_password/', UserHistoryView , name='user_game_history'), # verficiation from front
@@ -63,10 +62,23 @@ urlpatterns = [
     # path('delete_account/', UserHistoryView , name='user_game_history'), #
 
 # search views
-    path ('search-users/', SearchUsersView.as_view(), name='search_users') #?search=....
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
     # path ('search-friends', Search)
+
+
+#list users
+    # path('list/all/', PlayersViewList.as_view(), name='playersList'),
+# get user details
+    # path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
+    # path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
+    # path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
+
+# update user details
+    # path('users/me/update/', UpdateUserInfos.as_view(), name='playerUpdate'),
+
 ]
 
-####### TODO add loging for last time logged in and online status
+####### TODO add logging for last time logged in and online status from the frontend with account consummers
+### make signals or overide save method in game model if it exists to save match history model out of it
 
-### make signals to detect post save for game model to create a match history object for it
+####### auth with Oauth username And Vice #########

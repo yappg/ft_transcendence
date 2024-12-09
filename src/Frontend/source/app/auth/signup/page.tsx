@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Title from '@/components/auth/title';
 import { Form, MyLink } from '@/components/auth/form';
 import { getFields } from './fieldes';
-import Card from '@/components/generalUi/Card';
+import withAuth from '@/context/requireAhuth';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -36,10 +36,10 @@ function Signup() {
   return (
     <div className="flex h-fit flex-col gap-2">
       <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={true} redirPath={'/Home'} />
+      <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
       <MyLink text="Already have an account? " href="login" />
     </div>
   );
 }
 
-export default Signup;
+export default withAuth(Signup, false, 'signup');

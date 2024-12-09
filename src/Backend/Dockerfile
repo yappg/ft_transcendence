@@ -44,3 +44,5 @@ EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
+# CMD [ "tail", "-f", "/dev/null" ]
+
