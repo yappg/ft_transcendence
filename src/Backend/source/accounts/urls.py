@@ -6,8 +6,8 @@ from .views.userManagment import *
 from .views.functionViews import *
 
 router = DefaultRouter()
-router.register(r'profiles', PlayerProfileViewSet)
-router.register(r'historys', MatchHistoryViewSet) # history/{id} as for (profile id)  for user game history
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles")
+router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
 
 UserProfileView = UserProfileViewSet.as_view({
     'get': 'retrieve',
