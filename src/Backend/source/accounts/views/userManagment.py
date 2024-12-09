@@ -12,11 +12,7 @@ from ..permissions import (
     IsOwnerOrAdmin,
 )
 from ..models import *
-from ..serializers import (
-    PlayerProfileSerializer,
-    MatchHistorySerializer,
-    PlayerSettingsSerializer,
-)
+from ..serializers.userManagmentSerlizers import *
 
 #--------------------------Players RESTFUL API ------------------------------
 
@@ -100,8 +96,8 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
 # #--------------------------User Infos Update ------------------------------
 
 # class UpdateUserInfos(APIView):
+#     # permission_classes = [Allow]
 #     serializer_class = UpdateUserInfosSerializer
-#     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
 #     def post(self, request):
 #         serializer = UpdateUserInfosSerializer(
@@ -110,5 +106,44 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
 #             )
 #         if serializer.is_valid():
 #             serializer.save()
-#             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             return Response({'message': 'You Updated your informations'}, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_200_OK)
+
+# {"username":"kad","password":"asd123"}
+
+
+# class PlayerProfileView(APIView):
+
+#     def get(self, request):
+#         permission_classes = [IsAuthenticated]
+#         userInfo = request.user
+#         serializer = PlayerSerializer(userInfo)
+#         return Response(serializer.data, status=200)
+
+
+# class PlayerProfileViewWithUserName(APIView):
+
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, username):
+#         userInfo = get_object_or_404(Player, username=username)
+#         serializer = PlayerSerializer(userInfo)
+#         return Response(serializer.data, status=200)
+# # -----
+
+
+# class PlayerProfileViewWithId(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, userId):
+#         userInfo = get_object_or_404(Player, id=userId)
+#         serializer = PlayerSerializer(userInfo)
+#         return Response(serializer.data, status=200)
+
+# # ----
+
+# class PlayersViewList(ListAPIView):
+#     permission_classes = [IsAuthenticated]
+#     model = Player
+#     serializer_class=PlayerSerializer
+#     queryset=Player.objects.all()

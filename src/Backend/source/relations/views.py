@@ -3,14 +3,28 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Player, Friends, FriendInvitation, BlockedFriends
-from .serializers import PlayerSerializer, FriendInvitationSerializer, BlockedFriendsSerializer, FriendsSerializer
+from .serializers import FriendInvitationSerializer, BlockedFriendsSerializer, FriendsSerializer
+from accounts.serializers.functionSerlizers import SearchUsersSerializer
+from drf_yasg.utils import swagger_auto_schema
+from django.db.models import Q
+
+
+class PlayerListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        print(f"request.user: {request.user}")
+        players = Player.objects.exclude(id=request.user.id)
+        serializer = SearchUsersSerializer(players, many=True)
+        return Response(serializer.data)
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
 
+
     def get(self, request):
         user = request.user
-        friends = Friends.objects.filter(friend_requester=user) | Friends.objects.filter(friend_responder=user)
+        friends = Friends.objects.filter(Q(friend_requester=user) | Q(friend_responder=user))
         serializer = FriendsSerializer(friends, many=True)
         return Response(serializer.data)
 
@@ -30,7 +44,7 @@ class BlockedFriendsView(APIView):
         user = request.user
         blocked_users = BlockedFriends.objects.filter(blocker=user)
         blocked_list = [block.blocked for block in blocked_users]
-        serializer = PlayerSerializer(blocked_list, many=True)
+        serializer = SearchUsersSerializer(blocked_list, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -54,6 +68,10 @@ class BlockedFriendsView(APIView):
 class FriendInvitationView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        request_body=FriendInvitationSerializer,
+        responses={200: 'Success', 400: 'Invalid input'}
+    )
     def post(self, request):
         sender = request.user
         receiver_username = request.data.get('receiver')
@@ -76,6 +94,10 @@ class FriendInvitationView(APIView):
 class AcceptInvitationView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        request_body=FriendInvitationSerializer,
+        responses={200: 'Success', 400: 'Invalid input'}
+    )
     def post(self, request):
         receiver = request.user
         sender_username = request.data.get('sender')
