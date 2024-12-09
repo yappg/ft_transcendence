@@ -48,7 +48,7 @@ class PlayerProfile(models.Model):
     )
 
     rank_points = models.PositiveIntegerField(default=0)
-    games_played = models.PositiveIntegerField(default=0)
+    games_played = models.PositiveIntegerField(default=0) # TODO make bioms where the game was played
     games_won = models.PositiveIntegerField(default=0)
     games_loss = models.PositiveIntegerField(default=0)
     win_ratio = models.FloatField(default=0.0)
@@ -117,6 +117,8 @@ class MatchHistory(models.Model):
         ('Draw', 'Draw'),
     ]
 
+    # add biom where the game was played
+
     result = models.CharField(max_length=10, choices=RESULT_CHOICES)
 
     player1 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='matches_as_player1')
@@ -139,3 +141,17 @@ class MatchHistory(models.Model):
         ordering = ['-date']
         verbose_name = 'Match History'
         verbose_name_plural = 'Match Histories'
+
+    def save(self, *args, **kwargs):
+
+        self.player1.games_played += 1
+        self.player2.games_played += 1
+
+        if (self.result == "player1"):
+           self.player1.games_won += 1
+           self.player2.games_loss += 1
+        else:
+            self.player2.games_won += 1
+            self.player1.games_loss += 1
+
+        super().save(*args, **kwargs)
