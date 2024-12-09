@@ -65,6 +65,7 @@ urlpatterns = [
     path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
     # path ('search-friends', Search)
 
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
 #list users
     # path('list/all/', PlayersViewList.as_view(), name='playersList'),
