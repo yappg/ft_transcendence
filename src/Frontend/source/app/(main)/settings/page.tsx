@@ -7,13 +7,12 @@ import { MdLanguage } from 'react-icons/md';
 import { Card } from '@/components/settings/Card';
 import { useSearchParams } from 'next/navigation';
 import Notifications from '@/components/settings/Notifications';
-import Profile from '@/components/settings/Profile';
 import Theme from '@/components/settings/Theme';
 import Language from '@/components/settings/Language';
 import Security from '@/components/settings/Security';
 import Logout from '@/components/settings/Logout';
-import { useParams } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
+import Profile from '@/components/settings/Profile';
 export default function Settings() {
   const fields = [
     {
@@ -49,12 +48,22 @@ export default function Settings() {
   ];
   let param = useSearchParams();
   const current = param.get('field');
+  const [profile, setProfile] = useState({
+    username: 'Meryem22',
+    email: 'test.ts@gmail.com',
+    oldPassword: '123',
+  });
+  useEffect(
+    () => {
+      console.log('profile', profile);
+    }, [profile]
+  )
   const renderContent = () => {
     switch (current) {
       case 'notifications':
         return <Notifications />;
       case 'profile':
-        return <Profile />;
+        return <Profile Profile={profile} setProfile={setProfile} />;
       case 'theme':
         return <Theme />;
       case 'language':
