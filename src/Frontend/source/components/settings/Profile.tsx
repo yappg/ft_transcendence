@@ -1,13 +1,16 @@
 import React from 'react';
 import Content from '@/components/settings/Content';
 import { Input } from '@/components/ui/input';
-import { IconBrandCampaignmonitor } from '@tabler/icons-react';
-import { IconUsersMinus } from '@tabler/icons-react';
-import { IconLock } from '@tabler/icons-react';
 import { IconEdit } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Button } from '../ui/button';
-import { set } from 'zod';
+import { z } from 'zod';
+
+const ProfileShema = z.object({
+  email: z.string().email('Invalid email'),
+  username: z.string().min(3, 'Username is too short'),
+  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+})
 const Profile = ({
   Profile,
   setProfile,
@@ -26,6 +29,32 @@ const Profile = ({
     oldPass: '',
     newPass: '',
   });
+  const [errors, setErrors] = useState({});
+  function handleSave() {
+    try {
+      ProfileShema.parse({
+        email: newProfile.email,
+        username: newProfile.username,
+        newPassword: newProfile.newPass,
+      });
+      setErrors({});
+      setProfile({
+        username: newProfile.username,
+        email: newProfile.email,
+        oldPassword: newProfile.oldPass,
+      });
+      setNewProfile({...newProfile, oldPass: '', newPass: ''});
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = error.errors.reduce((acc, curr) => {
+          acc[curr.path[0]] = curr.message;
+          return acc;
+        }, {});
+        setErrors(fieldErrors);
+      }
+  }
+};
 
   return (
     <Content>
@@ -49,6 +78,7 @@ const Profile = ({
               placeholder="New mail..."
               className="bg-[#0000003D] rounded-[50px] w-[400px] text-white  placeholder:opacity-55"
             />
+            {errors.email && <p className="mt-1 text-sm text-red-500 font-coustard">{errors.email}</p>}
           </div>
           <div className="w-full h-fit flex flex-col items-start justify-center gap-6">
             <h1 className="text-white text-xl font-dayson">Username</h1>
@@ -60,6 +90,7 @@ const Profile = ({
               placeholder="New mail..."
               className="bg-[#0000003D] rounded-[50px] w-[400px] text-white  placeholder:opacity-55"
             />
+            {errors.username && <p className="mt-1 text-sm text-red-500 font-coustard">{errors.username}</p>}
           </div>
           <div className="w-full h-fit flex flex-col items-start justify-center gap-6">
             <h1 className="text-white text-xl font-dayson">Password</h1>
@@ -93,15 +124,7 @@ const Profile = ({
             </div>
           </div>
           <Button
-            onClick={() => {
-              if (newProfile.oldPass != Profile.oldPassword) {
-                console.log('Old password is wrong');
-              } else 
-              {
-                setProfile({ ...Profile, oldPassword: newProfile.newPass, email: newProfile.email, username: newProfile.username });
-                setNewProfile({ ...newProfile, oldPass: '', newPass: '' });
-              }
-            }}
+            onClick={handleSave}
             className="bg-[#fff] rounded-[13px] w-[400px] text-black placeholder:opacity-55"
           >
             Save
@@ -113,7 +136,7 @@ const Profile = ({
 };
 export default Profile;
 
-{
+
   /* <div className="h-[90%] w-full ">
           <div className="h-1/4 w-full ">
             <div
@@ -200,4 +223,3 @@ export default Profile;
           </div>
           <div className="h-1/4 w-full"></div>
         </div> */
-}
