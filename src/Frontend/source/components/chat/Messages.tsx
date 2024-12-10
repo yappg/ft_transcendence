@@ -6,6 +6,7 @@ import { IoSend } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { chatService  } from '@/services/chatService';
 import { Message, User } from '@/constants/chat';
+import { useUser } from '@/context/GlobalContext';
 
 interface MessagesProps {
   chatId: number;
@@ -19,15 +20,17 @@ const MessageBubble: React.FC<{ message: Message, isCurrentUser: boolean }> = ({
   message,
   isCurrentUser
 }) => {
+  const sendAt = message.send_at ? new Date(message.send_at) : new Date();
+  const formattedTime = sendAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
     <div className={`h-fit w-full text-gray-100 flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}>
       <div className={`bg-black-crd h-fit max-w-[400px] rounded-md px-3 py-2 ${isCurrentUser ? 'bg-primary' : 'bg-secondary'}`}>
         <h1>{message.sender}</h1>
-        <p className="h-fit w-full font-thin">
+        <p className="h-fit w-full font-thin break-words">
           {message.content}
         </p>
         <h3 className="text-end text-sm text-[rgb(255,255,255,0.5)]">
-          {new Date(message.timestamp || Date.now()).toLocaleTimeString()}
+          {formattedTime}
         </h3>
       </div>
     </div>
@@ -41,21 +44,13 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
   const currentChatIdRef = useRef<number | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
-  //  I could optimise here and get it as a prop from the parent  ---- to fix later
-  useEffect(() => {
-    // Fetch the current user's ID
-    const fetchCurrentUserId = async () => {
-      try {
-        const response = await chatService.getCurrentUserId();
-        setCurrentUserId(response.id);
-      } catch (error) {
-        console.error('Failed to fetch current user ID', error);
-      }
-    };
 
-    fetchCurrentUserId();
-  }, []);
-
+  const {user} = useUser();
+  useEffect(()=>{
+    if (user)
+      setCurrentUserId(user.id)
+  }, [user])
+  
   useEffect(() => {
     const setupWebSocket = async () => {
       if (socketRef.current && currentChatIdRef.current === chatId) {
@@ -79,6 +74,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     };
 
     setupWebSocket();
+    setNewMessage('');
 
     return () => {
       if (socketRef.current) {
@@ -88,7 +84,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     };
   }, [chatId]);
 
-  // Scroll to the bottom of the messages
+  // Scroll messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
