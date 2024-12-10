@@ -50,7 +50,7 @@ const App: React.FC = () => {
           for (const sender of chat.senders) {
             if (!Object.values(usersMap).some(user => user.username === sender)) {
               const senderDetails = await chatService.getUserDetailsByUsername(sender);
-              console.log(senderDetails);
+              // console.log(senderDetails);
               usersMap[senderDetails.username] = {
                 id: senderDetails.id,
                 username: senderDetails.username,
