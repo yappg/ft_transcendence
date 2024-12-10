@@ -3,8 +3,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Notification
 from channels.db import database_sync_to_async
 
-
-
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
@@ -54,5 +52,3 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     #             'status': 'error',
     #             'message': 'Notification not found'
     #         }))
-
-
