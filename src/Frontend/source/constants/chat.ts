@@ -11,7 +11,7 @@ export interface Message {
   sender: string;
   receiver: string;
   content: string;
-  timestamp?: string;
+  send_at?: string;
 }
 
 export interface Chat {
