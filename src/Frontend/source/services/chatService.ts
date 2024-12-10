@@ -4,15 +4,15 @@ import { Chat, Message, User } from '@/constants/chat';
 const CHAT_BASE_URL = 'http://localhost:8080/chat';
 const USER_BASE_URL = 'http://localhost:8080/api';
 
+const userApi = axios.create({
+  baseURL: USER_BASE_URL,
+  withCredentials: true,
+});
 const chatApi = axios.create({
   baseURL: CHAT_BASE_URL,
   withCredentials: true,
 });
 
-const userApi = axios.create({
-  baseURL: USER_BASE_URL,
-  withCredentials: true,
-});
 
 class ChatService {
   private sockets: Map<number, WebSocket> = new Map();

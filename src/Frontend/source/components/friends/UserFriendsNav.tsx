@@ -31,10 +31,13 @@ const UserFriendsNav = (): JSX.Element => {
     
     fetchCurrentUserId();
   }, []);
+
+
   const player = {
     name: currentUserUserName,
     level: 22,
   };
+
   useEffect(() => {
     const displayInvit = async () => {
       

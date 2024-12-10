@@ -9,6 +9,7 @@ import { ChatList } from '@/components/chat/chatList';
 import { SideBarContext } from '@/context/SideBarContext';
 import { chatService } from '@/services/chatService';
 import { Message, User, Chat } from '@/constants/chat';
+import { useUser } from '@/context/GlobalContext';
 
 const App: React.FC = () => {
   const {} = useContext(SideBarContext);
@@ -19,28 +20,20 @@ const App: React.FC = () => {
   const [chatPartner, setChatPartner] = useState<User | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
-  const [users, setUsers] = useState<{ [key: number]: User }>({});
+  const [users, setUsers] = useState<{ [key: string]: User }>({});
   const [currentUserId, setCurrentUserId] = useState<number>(0);
   const [receiverId, setReceiverId] = useState<number | null>(null);
 
 // -----------User Id--------------///
-  useEffect(() => {
-    const fetchCurrentUserId = async () => {
-      try {
-        const response = await chatService.getCurrentUserId();
-        setCurrentUserId(response.id);
-        console.log(response.id)
-      } catch (error) {
-        console.error('Failed to fetch current user ID', error);
-      }
-    };
-
-    fetchCurrentUserId();
-  }, []);
+  const {user} = useUser();
+  useEffect(()=>{
+    if (user)
+      setCurrentUserId(user.id)
+  }, [user])
 
 // -------fetch chat list, get User object-----------//
   useEffect(() => {
-    if (currentUserId === null) return;
+    if (currentUserId === null || !user) return;
     const fetchChats = async () => {
       try {
         const fetchedChats = await chatService.getChatList();
@@ -49,22 +42,16 @@ const App: React.FC = () => {
 
         
         // fetch user details for all participants except the current user //
-        if (currentUserId){
-        const userDetails = await chatService.getUserDetails(currentUserId)
         const usersMap = {
-          [userDetails.id]: {
-            id: userDetails.id,
-            username: userDetails.username,
-            email: userDetails.email,
-            avatar: userDetails.avatar,
-          }
+          [user.username]: user
         }
         // fetch details for all users involved in the chats //
         for (const chat of fetchedChats) {
           for (const sender of chat.senders) {
             if (!Object.values(usersMap).some(user => user.username === sender)) {
               const senderDetails = await chatService.getUserDetailsByUsername(sender);
-              usersMap[senderDetails.id] = {
+              console.log(senderDetails);
+              usersMap[senderDetails.username] = {
                 id: senderDetails.id,
                 username: senderDetails.username,
                 email: senderDetails.email,
@@ -74,13 +61,12 @@ const App: React.FC = () => {
           }
         }
         setUsers(usersMap);
-      }} catch (error) {
+      } catch (error) {
         console.error('Failed to fetch chats or user details', error);
       }
     };
     fetchChats();
   }, [currentUserId]);
-
 
   // -------------select a chat----------------------------//
   const handleChatSelect = async (chat: Chat) => {
@@ -90,7 +76,7 @@ const App: React.FC = () => {
       return;
     }
     console.log('Users object:', users);
-    const currentUser = users[currentUserId];
+    const currentUser = user
     const chatPartnerUsername = chat.senders.find(sender => sender !== currentUser?.username);
     const chatPartner = Object.values(users).find(user => user.username === chatPartnerUsername);
     console.log('Chat partner:', chatPartner);

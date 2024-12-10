@@ -45,7 +45,7 @@ class PlayerListView(APIView):
             Q(id__in=friends_ids)|
             Q(id__in=friend_invitation_ids)
         )
-        serializer = PlayerSerializer(players, many=True)
+        serializer = PlayerSerializer(players, many=True) ##############
         return Response({'message': 'Success', 'data': serializer.data})
 
 class FriendsListView(APIView):
@@ -91,7 +91,7 @@ class BlockedFriendsView(APIView):
         user = request.user
         blocked_users = BlockedFriends.objects.filter(blocker=user)
         blocked_list = [block.blocked for block in blocked_users]
-        serializer = PlayerSerializer(blocked_list, many=True)
+        serializer = PlayerSerializer(blocked_list, many=True) ##############
         return Response(serializer.data)
 
     def post(self, request):

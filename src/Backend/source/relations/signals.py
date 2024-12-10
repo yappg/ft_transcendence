@@ -29,15 +29,15 @@ def create_friend_invitation_notification(sender, instance, created, **kwargs):
 #             Type=Notification_Type.FRIEND_REQUEST.value
 #         )
 
-@receiver(post_save, sender=Message)
-def incoming_messages(sender, instance, created, **kwargs):
-    print('instance dzbi:  ---------',instance.receiver.id)
-    if created:
-        Notification.objects.create(
-            recipient=instance.receiver,
-            message=f'You have a New message from {instance.sender.username}',
-            Type=Notification_Type.MESSAGE.value
-        )
+# @receiver(post_save, sender=Message)
+# def incoming_messages(sender, instance, created, **kwargs):
+#     print('instance dzbi:  ---------',instance.receiver.id)
+#     if created:
+#         Notification.objects.create(
+#             recipient=instance.receiver,
+#             message=f'You have a New message from {instance.sender.username}',
+#             Type=Notification_Type.MESSAGE.value
+#         )
 
 
 @receiver(post_save, sender=Notification)
@@ -45,7 +45,12 @@ def send_notification_via_websocket(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     group_name = f'notifications_{instance.recipient.id}'
 
-    print(f'DEBUG_______________________HERE{group_name}')
+
+    print(f'DEBUG: Sending notification to group {group_name}')
+    print(f'DEBUG: Notification message: {instance.message}')
+    print(f'DEBUG: Notification type: {instance.Type}')
+    print(f'DEBUG: Notification created_at: {instance.created_at}')
+    print(f'DEBUG: Notification read status: {instance.read}')
     async_to_sync(channel_layer.group_send)(
         group_name,
         {
