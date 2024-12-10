@@ -15,14 +15,17 @@ class TokenAuthMiddleware:
     def get_user(self, user_id):
         from accounts.models import Player
         try:
-            return Player.objects.get(id=user_id)
+            return Player.objects.get(id=user_id) 
         except Player.DoesNotExist:
+            # in this case actually it must not accept the connection
+            #Q: alternative for this instead of returning AnonymousUser() is to not accept the connection
             return AnonymousUser()
 
     async def __call__(self, scope, receive, send):
         # Am not sure if this is necessary, but it's here to be safe
         close_old_connections()
 
+        scope = dict(scope)
         headers = dict(scope['headers'])
         cookies = headers.get(b'cookie', b'').decode()
         token = None
@@ -36,7 +39,14 @@ class TokenAuthMiddleware:
             token = cookie_dict.get('access_token')
 
         if token:
-            # Decode the token to get user information
+            # try:
+            #     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            #     user = await self.get_user(payload['user_id'])
+            #     scope['user'] = user
+            # except jwt.ExpiredSignatureError:
+            #     scope['user'] = AnonymousUser()
+            # except jwt.DecodeError:
+            #     scope['user'] = AnonymousUser()            # Decode the token to get user information
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             user = await self.get_user(payload['user_id'])
 
