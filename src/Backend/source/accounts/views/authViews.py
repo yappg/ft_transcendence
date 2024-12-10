@@ -32,15 +32,15 @@ from .utils import *
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
     def post(self, request):
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
 
-        serializer = self.serializer_class(data=request.data)
         try:
+            serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
             if user:
@@ -73,7 +73,7 @@ class SignUpView(APIView):
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
     def post(self, request):
