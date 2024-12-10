@@ -35,16 +35,16 @@ class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
     is_online=models.BooleanField(default=False)
-    display_name = models.CharField(validators=[MinLengthValidator(3)] ,max_length=50, unique=True, blank=False)
+    display_name = models.CharField(validators=[MinLengthValidator(3)], max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
 
     avatar = models.ImageField(
-        upload_to='avatars/',
-        default='avatars/.defaultAvatar.jpeg'
+        upload_to='Avatars/',
+        default='Avatars/.defaultAvatar.jpeg'
     )
     cover = models.ImageField(
-        upload_to='covers/',
-        default='covers/.defaultCover.jpeg'
+        upload_to='Covers/',
+        default='Covers/.defaultCover.jpeg'
     )
 
 
@@ -82,12 +82,13 @@ class PlayerProfile(models.Model):
 
 
     # calculate level and xp
-    def calculate_level_up_xp(self):
-        return 100 * (self.level + 1)
 
     def level_up(self):
-        self.level += 1
         self.xp -= self.calculate_level_up_xp()
+        self.level += 1
+
+    def calculate_level_up_xp(self):
+        return 50 * (self.level + 1)
 
     def check_level_up(self):
         level_up_xp = self.calculate_level_up_xp()
@@ -104,14 +105,15 @@ class PlayerProfile(models.Model):
         if not self.display_name:
             max_attempts = 10
             for attempt in range(max_attempts):
-                potential_name = self.player.username.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+                suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+                potential_name = self.player.username + '_' + suffix
                 if not PlayerProfile.objects.filter(display_name=potential_name).exists():
                     self.display_name = potential_name
                     break
             else:
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
         if self.total_games != 0:
-            self.win_ratio = self.total_wins / self.total_games
+            self.win_ratio = self.games_won / self.total_games
         else:
             self.win_ratio = 0.0
 
@@ -134,9 +136,9 @@ class PlayerSettings(models.Model):
         verbose_name_plural = 'Player Settings'
 
 class MatchHistory(models.Model):
-    XP_WIN = 10  # XP for winning
-    XP_LOSS = 5  # XP for losing
-    XP_DRAW = 7  # XP for a draw
+    XP_WIN = 30  # XP for winning
+    XP_DRAW = 20 # XP for a draw
+    XP_LOSS = 15  # XP for losing
 
     RESULT_CHOICES = [
         ('player1', 'player1'),
@@ -176,12 +178,12 @@ class MatchHistory(models.Model):
         self.player1.total_games += 1
         self.player2.total_games += 1
 
-        if self.results == 'player1':
+        if self.result == 'player1':
             self.player1.games_won += 1
             self.player2.games_loss += 1
             self.player1.add_xp_points(self.XP_WIN)
             self.player2.add_xp_points(self.XP_LOSS)
-        elif self.results == 'player2':
+        elif self.result == 'player2':
             self.player2.games_won += 1
             self.player1.games_loss += 1
             self.player1.add_xp_points(self.XP_WIN)
@@ -190,13 +192,13 @@ class MatchHistory(models.Model):
             self.player1.add_xp_points(self.XP_DRAW)
             self.player2.add_xp_points(self.XP_DRAW)
 
-        if self.map_player == 'ice':
+        if self.map_played == 'ice':
             self.player1.ice_games += 1
             self.player2.ice_games += 1
-        elif self.map_player == 'water':
+        elif self.map_played == 'water':
             self.player1.water_games += 1
             self.player2.water_games += 1
-        elif self.map_player == 'fire':
+        elif self.map_played == 'fire':
             self.player1.fire_games += 1
             self.player2.fire_games += 1
         else:

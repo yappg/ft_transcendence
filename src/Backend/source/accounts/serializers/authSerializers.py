@@ -17,7 +17,10 @@ class SignUpSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if Player.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username is already in use")
+        if len(value) < 3 or len(value) > 30:
+            raise serializers.ValidationError("Username should be between 3 and 30 characters long")
         return value
+
     def validate_email(self, value):
         if Player.objects.filter(email=value).exists():
             raise serializers.ValidationError("Email is already in use")
@@ -26,7 +29,6 @@ class SignUpSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if not attrs.get('username') or not attrs.get('password') or not attrs.get('email'):
             raise serializers.ValidationError({"error":"Fields are required: email, username and password"})
-
         return attrs
 
     def create(self, validated_data):
