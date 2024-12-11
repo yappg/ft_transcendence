@@ -19,7 +19,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat,
   const user = users[participant];
   // console.log(users);
   // console.log(senders[0]);
-  const sendAt = last_message.send_at ? new Date(last_message.send_at) : new Date();
+  const sendAt = (last_message && last_message.send_at) ? new Date(last_message.send_at) : new Date();
   const formattedTime = sendAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
     <div

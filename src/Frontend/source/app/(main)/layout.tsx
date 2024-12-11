@@ -4,19 +4,21 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
-import { AuthContext } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { UserProvider } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
+import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { ComponentType, useContext } from 'react';
+
+export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user } = useContext(AuthContext);
-  console.log('user: ' , user);
+  const { user, updateUser } = useAuth();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
     setIsActivated(id);                                                                                              
   };
+
 
 
   return (
@@ -50,7 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </UserProvider>
   );
 }
+
+// to be reviewed
 function useEffect(arg0: () => () => void, arg1: never[]) {
   throw new Error('Function not implemented.');
 }
 
+
+export default withAuth(RootLayout as ComponentType<{}>, true);
