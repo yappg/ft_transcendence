@@ -98,7 +98,6 @@ body {
   overflow: auto;
 }
 
-
 .custom-scrollbar-container::-webkit-scrollbar {
   display: none;
 }
@@ -136,6 +135,27 @@ body {
 
 .animate-move-right {
   animation: moveToRight 0.5s ease-in-out forwards;
+}
+
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  animation: infinite-scroll 40s linear infinite;
+}
+
+.custom-inner-shadow {
+  box-shadow: 2px 0px 22px 11px rgba(0, 0, 0, 0.75) inset;
+  -webkit-box-shadow: 2px 0px 22px 11px rgba(0, 0, 0, 0.75) inset;
+  -moz-box-shadow: 2px 0px 22px 11px rgba(0, 0, 0, 0.75) inset;
 }
 
 /* my changes ends here */
