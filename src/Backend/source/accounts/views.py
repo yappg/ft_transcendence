@@ -13,9 +13,6 @@ from .serializers import *
 from .utils import *
 from drf_yasg.utils import swagger_auto_schema
 
-
-
-
 class PlayerProfileView(APIView):
     
     def get(self, request):
@@ -257,6 +254,20 @@ from django.urls import reverse
 from django.views import View
 from rest_framework.response import Response
 
+providers_data = {
+    "42":{
+        "client_id":settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
+        "Auth_url":settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL'],
+        "redirect_uri":,"http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Foauth%2Fcallback%2F42"
+    },
+    "google":{
+        "client_id":settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
+        "Auth_url":settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL'],
+        "redirect_uri":settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
+        "scope":settings.OAUTH2_PROVIDER_GOOGLE['SCOPE'],
+    },
+}
+
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -265,18 +276,19 @@ class OAuth42LoginView(APIView):
 
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
+        authorization_url = ''
         if provider == '42':
-            Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
-            client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
-            authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Foauth%2Fcallback%2F42&response_type=code"
+            # Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
+            # client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
+            authorization_url = f"{providers_data[provider]['Auth_url']}?client_id={providers_data[provider]['clientt_id']}&redirect_uri={providers_data[provider]['redirect_uri']}&response_type=code"
             #trans 2-----------------------------------------
             # authorization_url = f"{Auth_url}?client_id={client_id_42}&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fhome&response_type=code"
         elif provider == 'google':
-            Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
-            client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
-            redirect_uri = settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL']
-            scope = settings.OAUTH2_PROVIDER_GOOGLE['SCOPE']
-            authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
+            # Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
+            # client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
+            # redirect_uri = settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL']
+            # scope = settings.OAUTH2_PROVIDER_GOOGLE['SCOPE']
+            authorization_url = f"{providers_data[provider]['Auth_url']}?client_id={providers_data[provider]['clientt_id']}\&redirect_uri={providers_data[provider]['redirect_uri']}&scope={scope}&response_type=code"
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
         return redirect(authorization_url)
@@ -333,5 +345,3 @@ class UpdateUserInfos(APIView):
             serializer.save()
             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_200_OK)
-
-

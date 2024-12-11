@@ -46,7 +46,7 @@ def store_user_data(user_data, provider):
         email = user_data['email']
         f_name = user_data['given_name']
         l_name = user_data['family_name']
-        username =  str(f_name)+str(l_name)
+        username =  str(f_name)+str(l_name) #add a random number to make it unique
         img_url = user_data['picture'] if 'picture' in user_data else None 
 
     user, created = Player.objects.get_or_create(
@@ -76,3 +76,5 @@ def store_user_data(user_data, provider):
 def generate_tokens(user):
         refresh_token = RefreshToken.for_user(user)
         return (str(refresh_token.access_token), str(refresh_token))
+
+# for Oauth2 username must check if theres a user with the same username, if so add a random number to make it unique
