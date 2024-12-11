@@ -17,15 +17,6 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   const handleRightClick = (id: number) => {
     setIsActivated(id);
   };
-  // const usename = localStorage.getItem('user');
-  // const otp_enabled = localStorage.getItem('otp-enabled');
-  // const otp_validated = localStorage.getItem('otp-validated');
-
-  // updateUser({
-  //   username: usename && usename !== '' ? usename : '',
-  //   is2FAEnabled: otp_enabled === 'True',
-  //   is2FAvalidated: otp_validated === 'True',
-  // });
 
   return (
     <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
