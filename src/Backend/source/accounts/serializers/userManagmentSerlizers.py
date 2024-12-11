@@ -34,6 +34,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 # fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
+    xp_cap = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
@@ -42,19 +43,34 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'id',
             'is_online',
             'username',
-            'rank_points',
-            'games_played',
+
+            'xp',
+            'xp_cap',
+            'level',
+
+            'total_games',
             'games_won',
             'games_loss',
             'win_ratio',
+
+            'ice_games',
+            'water_games',
+            'fire_games',
+            'earth_games',
+
             'last_login',
             'created_at',
         ]
+
+    def get_xp_cap(self, obj):
+        return obj.calculate_level_up_xp()
 
     def get_username(self, obj):
         return obj.player.username
 
     def validate_display_name(self, value):
+        if len(value) < 3 or len(value) > 40:
+            raise serializers.ValidationError("display name must be between 3 and 40 characters long")
         if PlayerProfile.objects.filter(display_name=value).exists():
             raise serializers.ValidationError("Display name already exists.")
         return value
@@ -85,18 +101,31 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model=PlayerSettings
         exclude = ['player_profile']
         read_only_fields = ['id', 'updated_at']
 
 
-# Corrected field name
+class MatchHistoryProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlayerProfile
+        fields = ['id', 'display_name', 'level', 'avatar']
+        read_only_fields = ['id', 'display_name', 'level', 'avatar']
+
+
 class MatchHistorySerializer(serializers.ModelSerializer):
-    player1 = PlayerProfileSerializer(read_only=True)
-    player2 = PlayerProfileSerializer(read_only=True)
+    player1 = MatchHistoryProfileSerializer(read_only=True)
+    player2 = MatchHistoryProfileSerializer(read_only=True)
 
     class Meta:
         model = MatchHistory
-        fields = ['__all__']
-        read_only_fields = ['__all__']
+        fields = [
+            'id', 'result', 'map_played', 'player1', 'player2',
+            'player1_score', 'player2_score', 'date'
+        ]
+        read_only_fields = [
+            'id', 'result', 'map_played', 'player1', 'player2',
+            'player1_score', 'player2_score', 'date'
+        ]
