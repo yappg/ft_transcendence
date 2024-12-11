@@ -62,7 +62,7 @@ class SignUpSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "Username is already in use"}
             )
-        #this must be checken in the frontend
+        #check the validation of email, i real or fake one 
         # try:
         #     Validate_email(attrs['email'])
         # except:
@@ -98,6 +98,14 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
         model=Player
         fields=('username','avatar','cover',)
+
+    def validate(self, attrs):
+        if 'username' in attrs:
+            if Player.objects.filter(username=attrs['username']).exists():
+                raise serializers.ValidationError(
+                    {"error": "Username is already in use"}
+                )
+        return attrs
 
     def save(self, **kwargs):
         user = self.context['user']
