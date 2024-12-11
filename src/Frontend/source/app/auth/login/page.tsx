@@ -5,9 +5,8 @@ import Title from '@/components/auth/title';
 import { Form, MyLink } from '@/components/auth/form';
 import { useState } from 'react';
 import { getFields } from './fields';
-import withAuth from '@/context/requireAhuth';
 
-function Login() {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const buttonAction = () => {
@@ -25,6 +24,6 @@ function Login() {
       <MyLink text="Have no account yet? " href="signup" />
     </div>
   );
-}
+};
 
-export default withAuth(Login, false);
+export default Login;

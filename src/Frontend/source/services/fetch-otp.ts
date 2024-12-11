@@ -1,40 +1,26 @@
 'use client'
 
 import axios from 'axios';
-import { toast } from './use-toast';
+import { toast } from '@/hooks/use-toast';
 import { Dispatch, SetStateAction } from 'react';
+
 
 export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
   const BASE_URL = 'http://localhost:8080/api/2fa/';
   try {
-    const result = await axios.post(`${BASE_URL}${endpoint}/`, {
+    const response = await axios.post(`${BASE_URL}${endpoint}/`, {
       username: name,
       otp_token: value,
     });
-    console.log(result);
-    if (result.data.message) {
-      toast({
-        title: 'success',
-        description: result.data.message,
-        className: 'bg-primary border-none text-white bg-opacity-20',
-      });
-      return true;
-    } else if (result.data.error) {
-      toast({
-        title: 'error',
-        description: result.data.error,
-        className: 'bg-primary-dark border-none text-white bg-opacity-20',
-      });
-    }
+    return response;
   } catch (error) {
-    toast({
-      title: 'error',
-      description: 'Oups somthing went wrong !! please try again',
-      className: 'bg-primary-dark border-none text-white bg-opacity-20',
-    });
+    if (error instanceof Error) {
+      throw new Error(`Authentication error: ${error.message}`);
+    }
+
+    throw new Error('Authentication failed');
   }
-  return false;
-};
+}
 
 export const fetchQrCode = async (
   setIsLoading: Dispatch<SetStateAction<boolean>>,
