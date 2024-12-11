@@ -6,6 +6,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
 import { toast } from '@/hooks/use-toast';
+import { useUser } from '@/context/GlobalContext';
 
 const AddFriends = () => {
   const [message, setMessage] = useState('');
@@ -13,44 +14,29 @@ const AddFriends = () => {
   const [UsersList, setUserList] = useState([]);
   const [searchUser, setsearchUser] = useState('');
   const [FiltredUsers, setFiltredUsers] = useState([]);
+  const {players, fetchPlayers}= useUser();
 
+  
   useEffect(() => {
-    setFiltredUsers(UsersList);
-    return () => {};
-  }, [UsersList]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await FriendServices.getPlayers();
-        if (response.message){
-          setUserList(response.data);
-        }
-      } catch (error) {
-        toast({
-          title: 'Authentication failed',
-          description: 'Oups Somthing went wrong !',
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white',
-        });
-      }
-    };
-    fetchUsers();
+    fetchPlayers().then((data)=>{
+      setFiltredUsers(data)
+    });
   }, []);
 
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
       const response = await FriendServices.sendFriendRequest(receiverUsername);
-      
 
       if (response.message) {
         console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`);
-    
-        //need to add data of invitation in the usecontext
+        // Update the user list to exclude the current one
+        fetchPlayers().then((data)=>{
+          setFiltredUsers(data)
+        });
       } else if (response.error) {
         console.log(response.error);
-        setMessage(`Error sending friend request to ${receiverUsername}`);
+        setMessage(`Error sending friend request to ${receiverUsername}: ${response.error}`);
       }
     } catch (error: any) {
       toast({
@@ -63,17 +49,21 @@ const AddFriends = () => {
   };
 
   const setsearchQuery = (username: string) => {
-    if (username == '') {
-      setFiltredUsers(UsersList);
+    if (username === '') {
+      setFiltredUsers(players);
     } else {
       setFiltredUsers(
-        UsersList.filter((User: any) =>
+        players.filter((User: any) =>
           User.username.toLowerCase().includes(username.toLowerCase())
         )
       );
     }
     setsearchUser(username);
   };
+
+  useEffect(()=>{
+
+  }, [players, FiltredUsers])
 
   return (
     <div className="bg-black-crd flex size-full flex-col items-center justify-between gap-10 overflow-visible rounded-lg pt-10">

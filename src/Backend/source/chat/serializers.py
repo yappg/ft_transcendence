@@ -3,10 +3,11 @@ from .models import ChatRoom, Message
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField(read_only=True)
+    receiver = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Message
-        fields = ['id', 'chatroom', 'sender', 'content', 'send_at']
+        fields = ['id', 'chatroom', 'sender', 'receiver', 'content', 'send_at']
 
 
 class ChatRoomSerializer(serializers.ModelSerializer):
