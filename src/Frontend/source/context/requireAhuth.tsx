@@ -1,51 +1,54 @@
 'use client';
-
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from './AuthContext';
 
-const withAuth = (
-  WrappedComponent: React.ComponentType,
-  requiresAuth: boolean,
-  otp?: string,
-) => {
-  return (props: any) => {
+function withAuth(WrappedComponent: React.ComponentType, requiresAuth: boolean, otp?: string) {
+  return function AuthWrapper(props: any) {
     const { user } = useAuth();
     const router = useRouter();
 
+    console.log(
+      'RA',
+      requiresAuth,
+      'UN',
+      user?.username,
+      'etfa',
+      user?.is2FAEnabled,
+      'vtfa',
+      user?.is2FAvalidated
+    );
 
     useEffect(() => {
-      if (user?.is2FAEnabled) {
-        router.push(`/2fa/login-2fa`);
-        return;
-      }
-      if (requiresAuth && !user) {
-        console.log('dkhelhna1');
-        router.push('/auth/login');
-      } else if (!requiresAuth && user) {
-        if (otp === 'signup') {
-            router.push(`/2fa/${otp}-2fa`);
-            return;
+      if (!requiresAuth) {
+        if (user?.username && !user?.is2FAEnabled && user?.is2FAvalidated) {
+          return;
         }
-        console.log('dkhelhna2');
-        router.push('/home');
+        if (user?.username && (!user?.is2FAEnabled || user?.is2FAvalidated)) {
+          router.push('/home');
+        }
+      } else {
+        if (!user?.username || (user?.is2FAEnabled && !user?.is2FAvalidated)) {
+          router.push('/auth/login');
+        }
       }
-    }, [user, requiresAuth, otp]);
+    }, [user, requiresAuth, router]);
 
-    if (user?.is2FAEnabled) {
-      return null;
+    if (user?.username && !user?.is2FAEnabled && user?.is2FAvalidated) {
+      return <WrappedComponent {...props} />;
     }
-    
-    if (requiresAuth && !user) {
+    if (!requiresAuth && user?.username && (!user?.is2FAEnabled || user?.is2FAvalidated)) {
       return null;
-    }
-
-    if (!requiresAuth && user) {
+    } else if (requiresAuth && (!user?.username || (user?.is2FAEnabled && !user?.is2FAvalidated))) {
       return null;
     }
 
     return <WrappedComponent {...props} />;
   };
-};
+}
 
 export default withAuth;
+
+// 2 cumon issues user not been updated in use context
+// and also conditions needs to fit signup in require auth and alse 2fa-validated var been set
+// problem now only in a rendring before redirection that is not neccessary in login and signup when requesting them

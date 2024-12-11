@@ -25,13 +25,17 @@ django.setup()  # Ensure Django is set up before accessing any models
 django_asgi_app = get_asgi_application()
 
 # # Define the ASGI application routing
-from chat import routing
+import chat.routing
+import relations.routing
+
+# Combine WebSocket URL patterns from different apps
+websocket_urlpatterns = chat.routing.websocket_urlpatterns + relations.routing.websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket': AuthMiddlewareStack(
         URLRouter(
-            routing.websocket_urlpatterns
+            websocket_urlpatterns
         )
     ),
 })
