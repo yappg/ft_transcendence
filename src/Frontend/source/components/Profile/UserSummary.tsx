@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
 import { Graph } from './Graph';
-import { statistics } from './statistics';
+import { RChart, statistics } from './statistics';
 import { toast } from '@/hooks/use-toast';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
@@ -103,10 +103,10 @@ const UserSummary = (): JSX.Element => {
         </div>
       </div>
       <div className="h-full w-[35%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-col">
-        <div className='w-full h-[50%] flex items-start'>
-          {statistics()}
+        <div className='w-full h-[45%]  flex items-start'>
+          <RChart />
         </div>
-        <div className='w-full h-[50%]'>
+        <div className='w-full h-[55%] flex items-center justify-center'>
           <Graph />
 
         </div>
