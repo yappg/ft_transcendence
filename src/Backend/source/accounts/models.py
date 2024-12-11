@@ -38,6 +38,7 @@ class PlayerProfile(models.Model):
     display_name = models.CharField(validators=[MinLengthValidator(3)], max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
 
+
     avatar = models.ImageField(
         upload_to='Avatars/',
         default='Avatars/.defaultAvatar.jpeg'
@@ -76,9 +77,9 @@ class PlayerProfile(models.Model):
     def all_matches(self):
         return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
 
-    def update_last_login(self):
-        self.last_login = timezone.now()
-        self.save(update_fields=['last_login'])
+    # def update_last_login(self):
+    #     self.last_login = timezone.now()
+    #     self.save(update_fields=['last_login'])
 
 
     # calculate level and xp
@@ -112,6 +113,7 @@ class PlayerProfile(models.Model):
                     break
             else:
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
+
         if self.total_games != 0:
             self.win_ratio = self.games_won / self.total_games
         else:
@@ -134,6 +136,8 @@ class PlayerSettings(models.Model):
     class Meta:
         verbose_name = 'Player Settings'
         verbose_name_plural = 'Player Settings'
+
+
 
 class MatchHistory(models.Model):
     XP_WIN = 30  # XP for winning
@@ -186,8 +190,8 @@ class MatchHistory(models.Model):
         elif self.result == 'player2':
             self.player2.games_won += 1
             self.player1.games_loss += 1
-            self.player1.add_xp_points(self.XP_WIN)
-            self.player2.add_xp_points(self.XP_LOSS)
+            self.player2.add_xp_points(self.XP_WIN)
+            self.player1.add_xp_points(self.XP_LOSS)
         else:
             self.player1.add_xp_points(self.XP_DRAW)
             self.player2.add_xp_points(self.XP_DRAW)
