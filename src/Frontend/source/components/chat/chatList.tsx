@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RiCheckDoubleLine } from 'react-icons/ri';
 import { User, Chat } from '@/constants/chat';
+import { useUser } from '@/context/GlobalContext';
 
 
 interface ChatItemProps {
@@ -12,11 +13,14 @@ interface ChatItemProps {
   selectedChat: Chat | null;
 }
 
-const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat }) => {
+const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat, currentUser }) => {
   const { senders, last_message } = chat;
-  const participant = senders[0]; // Assuming the first participant is the one to display
-  const user = users[participant.id];
-
+  const participant = (currentUser.username == senders[0] ? senders[1] : senders[0]); 
+  const user = users[participant];
+  // console.log(users);
+  // console.log(senders[0]);
+  const sendAt = (last_message && last_message.send_at) ? new Date(last_message.send_at) : new Date();
+  const formattedTime = sendAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
     <div
       onClick={onClick}
@@ -39,7 +43,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat 
       </div>
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-sm text-[rgb(255,255,255,0.5)]">
-          {last_message ? new Date(last_message.timestamp).toLocaleTimeString() : ''}
+          {formattedTime}
         </h3>
         <div
           className={`${chat.unreadMessagesCount > 0 ? 'dark:bg-primary-dark bg-green-300' : 'border border-[rgb(255,255,255,0.5)] bg-transparent text-[rgb(255,255,255,0.5)]'} flex size-[20px] items-center justify-center rounded-full text-xs`}
@@ -59,17 +63,25 @@ const ChatItem: React.FC<ChatItemProps> = ({ chat, onClick, users, selectedChat 
   }
   
   export const ChatList: React.FC<ChatListProps> = ({ onChatSelect, selectedChat, chats, users }) => {
+    const {user} = useUser();
+    useEffect(()=>{},[user]);
     return (
-      <div className="chat-list">
-        {chats.map(chat => (
-          <ChatItem
-            key={chat.id}
-            chat={chat}
-            onClick={() => onChatSelect(chat)}
-            users={users}
-            selectedChat={selectedChat}
-          />
-        ))}
+      <div>
+        <div className="costum-little-shadow font-dayson flex h-[80px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 text-white">
+          <h2>Chat List</h2>
+        </div>
+        <div className="chat-list">
+          {chats.map(chat => (
+            <ChatItem
+              key={chat.id}
+              chat={chat}
+              currentUser={user}
+              onClick={() => onChatSelect(chat)}
+              users={users}
+              selectedChat={selectedChat}
+            />
+          ))}
+        </div>
       </div>
     );
   };

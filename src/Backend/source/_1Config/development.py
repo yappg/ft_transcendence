@@ -25,7 +25,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 ]
-
+  
 # Application definition
 INSTALLED_APPS = [
     # prometheus
@@ -87,10 +87,10 @@ SWAGGER_SETTINGS = {
     }
 }
 
- 
+
 # CSRF_TRUSTED_ORIGINS = ['https://read-and-write.example.com']
 
-
+   
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
     'rest_framework.permissions.IsAuthenticated',
@@ -104,7 +104,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
@@ -137,22 +137,15 @@ CHANNEL_LAYERS = {
     },
 }
 
+
+
 WSGI_APPLICATION = '_1Config.wsgi.application'
 ASGI_APPLICATION = '_1Config.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv("POSTGRES_DB"),
-#         'USER': os.getenv("POSTGRES_USER"),
-#         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
-#         'HOST': 'database',
-#         'PORT': '5432',
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

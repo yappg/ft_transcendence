@@ -7,14 +7,6 @@ const frindsApi = axios.create({
     withCredentials: true,
 });
 
-// const achivementsApi = axios.create({
-//     baseURL: 'http://localhost:8080/api/relations/achivments',
-//     headers: {
-//         'Content-Type': 'application',
-//         'Authorization': `Bearer ${Cookies.get('access_token')}`
-
-//     }
-// });
 
 const FriendServices = {
     async getPlayers() {
