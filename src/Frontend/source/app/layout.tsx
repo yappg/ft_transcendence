@@ -4,8 +4,7 @@ import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 import { SideBarProvider } from '@/context/SideBarContext';
-import { TabProvider } from '@/context/TabContext';
-import { AuthProvider, useAuth, User } from '@/context/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 const dayson = Days_One({
   subsets: ['latin'],
@@ -33,11 +32,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
         <AuthProvider>
-          <SideBarProvider>
-            <TabProvider>
+          <SideBarProvider>          
               <Providers>{children}</Providers>
               <Toaster />
-            </TabProvider>
           </SideBarProvider>
         </AuthProvider>
       </body>
