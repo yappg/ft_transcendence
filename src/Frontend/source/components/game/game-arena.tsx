@@ -259,6 +259,7 @@ import React, { useRef, useEffect } from 'react';
 import PixiManager from './pixi-manager';
 import SocketManager from './socket-manager';
 import { useAuth } from '@/context/AuthContext';
+import achievements from '@/app/Test/page';
 
 const GameArena = () => {
   const auth = useAuth();

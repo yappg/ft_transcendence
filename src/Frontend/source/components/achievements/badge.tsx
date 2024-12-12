@@ -1,16 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 
+interface AchievementBadgeProps {
+  title: string;
+  description: string;
+  points: number;
+  progress: number;
+  xpReward: number;
+  iconUrl: string;
+}
+
 const AchievementBadge = ({
-  title = 'First Achievement',
-  description = 'play first game and win with',
-  points = 10,
-  progress = 75,
-  xpReward = 1000,
-  iconUrl = '/api/placeholder/80/80',
-}) => {
+  title,
+  description,
+  points,
+  progress,
+  xpReward,
+  iconUrl,
+}: AchievementBadgeProps) => {
   return (
-    <div className="relative flex h-[132px] w-[423px] items-center rounded-3xl bg-gray-500 p-4">
+    <div className="costum-little-shadow relative flex h-[150px] w-full items-center rounded-3xl bg-black-crd p-4">
       {/* Icon Container */}
       <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-blue-500">
         <img src={iconUrl} alt="Icon" className="size-16 object-cover" />
