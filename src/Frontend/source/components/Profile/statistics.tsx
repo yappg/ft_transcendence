@@ -41,14 +41,20 @@ const chartConfig = {
     label: "Firefox",
     color: "hsl(var(--chart-3))",
   },
-
+  edge: {
+    label: "Edge",
+    color: "hsl(var(--chart-4))",
+  },
+  other: {
+    label: "Other",
+    color: "hsl(var(--chart-5))",
+  },
 } satisfies ChartConfig
 
-export function statistics() {
+export function RChart() {
   return (
-    <Card className="flex flex-col bg-transparent">
-      <CardContent className="flex-1 pb-0 bg-transparent" >
-      <div className="w-full">
+    <Card className="flex flex-col w-full h-full bg-transparent">
+      <CardContent className="flex-1 p-0">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
@@ -61,7 +67,6 @@ export function statistics() {
             <RadialBar dataKey="visitors" background />
           </RadialBarChart>
         </ChartContainer>
-        </div>
       </CardContent>
     </Card>
   )
