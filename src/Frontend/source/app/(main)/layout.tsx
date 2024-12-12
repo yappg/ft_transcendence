@@ -15,10 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
   return (
     <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
-      <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
+      <div className="row-[span_9_/_span_9] min-h-0 grow items-start justify-center hidden lg:flex">
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
       </div>
-      <div className="col-span-10 col-start-2 row-start-1 flex items-start justify-start pt-2 transition-all duration-300 ">
+      <div className="lg:col-span-10 lg:col-start-2 col-span-full col-start-1 row-start-1 flex items-start justify-start pt-2 transition-all duration-300">
         <Header />
       </div>
       <div
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           pathname === '/settings'
             ? 'hidden'
             : 'flex'
-        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
+        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300 lg:flex hidden`}
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
