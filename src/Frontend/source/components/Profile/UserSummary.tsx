@@ -1,13 +1,14 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserActivityBoard from './UserActivityBoard';
-import { UsersList } from '@/constants/UsersList';
+import { MatchHistory } from '@/constants/MatchHistory';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
 import { Graph } from './Graph';
 import { RChart, statistics } from './statistics';
 import { toast } from '@/hooks/use-toast';
+import MatchHistoryBoard from './MatchHistoryBoard';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
   useEffect(() => {
@@ -63,19 +64,18 @@ const UserSummary = (): JSX.Element => {
         </div>
         <div className="h-[80%] w-full flex items-center justify-between 2xl:px-12 xl:px-5">
           <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll w-[48%] bg-[#4C4D4E] rounded-[50px] shadow-2xl">
-            {UsersList.map((user, index) => (
-              <UserActivityBoard
+            {MatchHistory.map((user, index) => (
+              <MatchHistoryBoard
                 key={index}
-                name={user.name}
-                level={user.level}
-                Profile={user.ProfilePhoto}
-                scoresHistory={user.scoreHistory}
-                scores={user.score}
+                name={user.player1}
+                Profile={user.player1Photo}
+                Player1score={user.player1Score}
+                Player2score={user.player2Score}
               />
             ))
             }
             <div className="w-full sticky bottom-0 bg-[#4C4D4E] z-10 h-[50px] border-t-2 border-[#B8B8B8] flex items-center justify-end gap-4 px-10">
-              <h1 className="text-[20px] font-dayson text-[#B8B8B8]">Score</h1>
+              <h1 className="text-[20px] font-dayson text-[#B8B8B8]">Match History</h1>
               <h1 className="text-[25px] font-dayson text-[#B8B8B8]">{">"}</h1>
             </div>
           </div>

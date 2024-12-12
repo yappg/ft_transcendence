@@ -9,7 +9,7 @@ export const UsersList = [
   },
   {
     id: 2,
-    name: 'nouredine akebli',
+    name: 'nouredine',
     ProfilePhoto: '/Avatar.svg',
     level: 'Level 22',
     scoreHistory: "+10",
