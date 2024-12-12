@@ -4,6 +4,7 @@ import { IoMdNotifications } from 'react-icons/io';
 import { useContext } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useState } from 'react';
+import { RiMenu2Fill } from "react-icons/ri";
 
 export const Header = () => {
   const paths = [
@@ -33,7 +34,10 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
-    <div className="flex h-fit w-full items-center justify-between px-4">
+    <div className="flex h-fit w-full items-center justify-between lg:px-4">
+      <button className="flex items-center justify-center lg:hidden">
+        <RiMenu2Fill className='size-[40px]' />
+        </button>
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
@@ -48,19 +52,19 @@ export const Header = () => {
             )}
           </div>
         ))}
-      <div className="flex  w-fit items-center justify-center gap-12">
+      <div className="flex  w-fit items-center justify-center xl:gap-12 gap-1">
         <button
-          className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 lg:hidden`}
+          className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 xl:hidden items-center justify-center`}
         >
           <div
-            className="size-[30px] items-center justify-center  md:size-[40px]"
+            className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]"
             onClick={handleClick}
           >
-            <IconSearch className="size-[35px] text-gray-400" />
+            <IconSearch className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
           </div>
         </button>
         <Command
-          className={`${showSearchBar ? 'flex' : 'hidden'} transition-all duration-300 lg:flex lg:w-[340px] xl:w-[400px]`}
+          className={`${showSearchBar ? 'md:w-[300px]' : 'md:w-[0px]'} transition-all duration-300 xl:flex  xl:w-[400px]`}
         >
           <CommandInput placeholder="Search..." />
           <CommandList />
