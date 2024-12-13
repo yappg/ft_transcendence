@@ -1,21 +1,31 @@
-'use client';
+// 'use client';
 
 import React from 'react';
 import GameTable from '@/components/game/game-arena';
+// import { useRouter } from 'next/naviation';
 
-const GameArena = () => {
+interface GameArenaProps {
+  params: {
+    mode: string;
+  };
+}
+
+const GameArena: React.FC<GameArenaProps> = async ({ params }) => {
+  const { mode } = await params;
+
   return (
-    <div className="w-full h-screen bg-linear-gradient p-8 dark:bg-linear-gradient-dark grid grid-cols-7 gap-4">
+    <div className="grid h-screen w-full grid-cols-7 gap-4 bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
       {/* chat section */}
-      <div className="hidden lg:block col-start-1 col-end-4 bg-slate-400"></div>
+      <div className="col-start-1 col-end-4 hidden bg-slate-400 lg:block"></div>
       {/* game table */}
-      <div className="col-start-4 col-end-7 bg-slate-400 rounded-[20px] overflow-hidden border-[10px] border-black" id="table">
-        <GameTable />
+      <div
+        className="col-start-4 col-end-7 overflow-hidden rounded-[20px] border-[10px] border-black bg-slate-400"
+        id="table"
+      >
+        <GameTable mode={mode} />
       </div>
-      {/* gameplay abilities */}
-      <div className="col-start-7 col-end-8 bg-slate-400">
-
-      </div>
+      {/* abilities */}
+      <div className="col-start-7 col-end-8 bg-slate-400"></div>
     </div>
   );
 };
