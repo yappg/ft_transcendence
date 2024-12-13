@@ -1,73 +1,87 @@
-'use client'
-import React, { createContext, useReducer, useContext, useEffect, ReactNode, useState } from 'react';
+'use client';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-
+// User interface definition
 export interface User {
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-    token: string;
-    is2FAEnabled: boolean;
+  id: string;
+  username: string;
+  email: string;
+  is2FAEnabled: boolean;
+  is2FAvalidated: boolean;
 }
 
 interface AuthContextType {
-    user: User | null;
-    login: (userData: User) => void;
-    logout: () => void;
-    updateUser: (updates: Partial<User>) => void;
+  user: User | null;
+  login: (userData: User) => Promise<User>;
+  logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
 }
 
+// Create AuthContext
 const AuthContext = createContext<AuthContextType | null>(null);
 
+// Helper function to safely parse booleans from localStorage
+const parseBoolean = (value: string | null) => value === 'True';
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        const tfa = localStorage.getItem('otp-enabled');
-        if (storedUser) {
-            updateUser({username: storedUser});
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    const is2FAEnabled = parseBoolean(localStorage.getItem('otp-enabled'));
+    const is2FAvalidated = parseBoolean(localStorage.getItem('otp-validated'));
+    return storedUser
+      ? {
+          username: storedUser,
+          email: '', // Initialize email if not stored in localStorage
+          id: '', // Initialize id if not stored
+          is2FAEnabled,
+          is2FAvalidated,
         }
-        if (tfa) {
-            console.log(tfa);
-            updateUser ({is2FAEnabled: (tfa === 'True'? true : false)});
-        }
-    }, []);
+      : null;
+  });
 
-    const login = (userData: User) => {
-        localStorage.setItem('user', userData.username);
-        localStorage.setItem('otp-enabled', (userData.is2FAEnabled? 'True' : ''));
-        setUser(userData);
-    };
+  // Handle user login
+  const login = (userData: User): Promise<User> => {
+    return new Promise<User>((resolve) => {
+      localStorage.setItem('user', userData.username);
+      localStorage.setItem('otp-enabled', userData.is2FAEnabled ? 'True' : 'False');
+      localStorage.setItem('otp-validated', 'False');
+      setUser(userData);
+      resolve(userData);
+    });
+  };
 
-    const updateUser = (updates: Partial<User>) => {
-        if (!user) {
-            setUser({} as User);
-            return;
-        }
-        const updatedUser = { ...user, ...updates };
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-    };
+  // Update user details
+  const updateUser = (updates: Partial<User>) => {
+    setUser((prevUser: any) => {
+      if (!prevUser) return null; // No update if user is null
+      const updatedUser = { ...prevUser, ...updates };
+      localStorage.setItem('user', updatedUser.username);
+      localStorage.setItem('otp-enabled', updatedUser.is2FAEnabled ? 'True' : 'False');
+      localStorage.setItem('otp-validated', updatedUser.is2FAvalidated ? 'True' : 'False');
+      return updatedUser;
+    });
+  };
 
-    const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('otp-enabled');
-        setUser(null);
-    };
+  // Handle user logout
+  const logout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('otp-enabled');
+    localStorage.removeItem('otp-validated');
+    setUser(null);
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout, updateUser }} >
-            {children}
-        </AuthContext.Provider>
-    );
-}
+  return (
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
+// Custom hook to use AuthContext
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
