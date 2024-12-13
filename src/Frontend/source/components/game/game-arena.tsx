@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // 'use client';
 
 // import React, { useEffect, useRef } from 'react';
@@ -254,19 +255,24 @@
 //       background.width = app.screen.width;
 //       background.height = app.screen.height;
 //       background.alpha = 0.3;
+'use client';
 
 import React, { useRef, useEffect } from 'react';
 import PixiManager from './pixi-manager';
 import SocketManager from './socket-manager';
 
-const GameArena = () => {
+const GameTable = ({ mode }: { mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const pixiManagerRef = useRef<PixiManager | null>(null);
   const socketManagerRef = useRef<SocketManager | null>(null);
 
   useEffect(() => {
     if (canvasContainerRef.current) {
-      pixiManagerRef.current = new PixiManager(canvasContainerRef.current, auth.user?.username);
+      pixiManagerRef.current = new PixiManager(
+        canvasContainerRef.current,
+        'nakebli',
+        `/${mode}.png`
+      );
       socketManagerRef.current = new SocketManager(
         'ws://your-backend-url/ws/game/',
         pixiManagerRef.current
@@ -296,4 +302,4 @@ const GameArena = () => {
   return <div ref={canvasContainerRef} id="table" />;
 };
 
-export default GameArena;
+export default GameTable;
