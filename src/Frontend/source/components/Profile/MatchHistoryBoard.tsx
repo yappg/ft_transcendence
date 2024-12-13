@@ -21,7 +21,7 @@ const MatchHistoryBoard = ({
       </div>
       <div className="2xl:w-[300px] md:w-[150px] h-full flex items-center justify-center">
         <p
-          className={`2xl:text-[20px] md:text-[14px] font-dayson ${
+          className={`2xl:text-[17px] md:text-[14px] font-dayson ${
             Player1score > Player2score ? 'text-[#C1382C]' : 'text-[#5FB2AD]'
           }`}
         >

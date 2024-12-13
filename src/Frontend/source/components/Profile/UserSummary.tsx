@@ -73,18 +73,18 @@ const UserSummary = (): JSX.Element => {
   return (
     <div className="size-full bg-[#242627]/90 shadow-[-4px_-22px_31px_2px_rgba(36,_38,_39,_1)] pb-4 overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12">
       <div className="h-full w-full xl:w-[65%] flex items-start justify-start flex-col lg:gap-2">
-        <div className="w-full h-[20%] flex flex-row gap-3 px-8 py-3 scroll-auto overflow-hidden">
+        <div className="w-full h-[20%] flex flex-row gap-3 px-8 py-3 scroll-auto overflow-hidden border-2">
           {achievements.map((achievement, index) => (
             <Avatar
               key={index}
-              className="lg:size-[65px] transition-all duration-300 xl:size-[80px] md:size-[50px] bg-[#00A6FF]"
+              className="lg:size-[65px] transition-all duration-300 xl:size-[80px] md:size-[60px] bg-[#00A6FF]"
             >
               <AvatarImage src={achievement.icon} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
         </div>
-        <div className="h-[80%] w-full flex items-center justify-between 2xl:px-12 xl:px-5">
+        <div className="h-[80%] w-full flex items-center justify-between xl:px-5">
           <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll w-[48%] bg-[#4C4D4E] rounded-[50px] shadow-2xl">
             {MatchHistory.map((user, index) => (
               <MatchHistoryBoard
