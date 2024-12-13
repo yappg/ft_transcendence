@@ -24,7 +24,7 @@ class Player(AbstractUser):
     # last_login=models.DateTimeField()
 
 
-# PROFILE MODEL
+# PROFILE MODEL 
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='player_profile')
     is_online=models.BooleanField(default=False)
