@@ -65,7 +65,7 @@ export const Header = () => {
           </div>
         </button>
         <Command
-          className={`${showSearchBar ? 'md:w-[300px]' : 'md:w-[0px]'} transition-all duration-300 xl:flex  xl:w-[400px]`}
+          className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px]' : 'sm:w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
         >
           <CommandInput placeholder="Search..." />
           <CommandList />
