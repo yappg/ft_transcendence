@@ -9,7 +9,16 @@ import { SideBarContext } from '@/context/SideBarContext';
 import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
 import { ComponentType, useContext } from 'react';
-
+import { SidebarLeft } from '@/components/sidebar-left';
+import { SidebarRight } from '@/components/sidebar-right';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, updateUser } = useAuth();
