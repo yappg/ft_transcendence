@@ -1,11 +1,5 @@
 'use client';
-import React, { 
-    createContext, 
-    useContext, 
-    useState, 
-    useEffect, 
-    ReactNode 
-} from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 import FriendServices from '@/services/friendServices';
 
@@ -35,7 +29,6 @@ interface UserContextType {
 
 // User Service
 const userService = {
-
   async getUserDetailsByUsername(username: string): Promise<User> {
     const response = await userApi.get(`/users/${username}`);
     return response.data;
@@ -44,7 +37,7 @@ const userService = {
   async getCurrentUserId(): Promise<User> {
     const response = await userApi.get(`/users/me/`);
     return response.data;
-  }
+  },
 };
 
 // Create the context
@@ -54,7 +47,7 @@ const UserContext = createContext<UserContextType>({
   isLoading: false,
   error: null,
   fetchCurrentUserDetails: async () => {},
-  fetchPlayers: async () => {}
+  fetchPlayers: async () => {},
 });
 
 // Provider component
@@ -64,7 +57,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -88,18 +80,18 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const data = await FriendServices.getPlayers();
       if (data.message) {
-          setplayers(data.data);
-          setIsLoading(false);
-        }
-        return data.data
+        setplayers(data.data);
+        setIsLoading(false);
+      }
+      return data.data;
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
       setplayers(null);
     } finally {
       setIsLoading(false);
     }
-    return []
-  }
+    return [];
+  };
 
   // Optional: Auto-fetch current user on provider mount
   useEffect(() => {
@@ -108,15 +100,17 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   return (
-    <UserContext.Provider value={{
-      user,
-      userId,
-      isLoading,
-      players,
-      error,
-      fetchCurrentUserDetails,
-      fetchPlayers
-    }}>
+    <UserContext.Provider
+      value={{
+        user,
+        userId,
+        isLoading,
+        players,
+        error,
+        fetchCurrentUserDetails,
+        fetchPlayers,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
@@ -125,11 +119,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 // Custom hook to use the user context
 export const useUser = () => {
   const context = useContext(UserContext);
-  
+
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
-  
+
   return context;
 };
 
