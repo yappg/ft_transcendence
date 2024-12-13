@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import Card from '@/components/generalUi/Card';
 import withAuth from '@/context/requireAhuth';
 
-export function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -71,4 +71,4 @@ export function RootLayout({
   );
 }
 
-export default withAuth(RootLayout as ComponentType<{}>, false);
+// export default withAuth(RootLayout as ComponentType<{}>, false);

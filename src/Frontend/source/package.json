@@ -38,6 +38,7 @@
     "shadcn": "^2.1.6",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "swiper": "^11.1.15",
     "tailwind-merge": "^2.5.5",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
