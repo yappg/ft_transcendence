@@ -47,7 +47,6 @@ const AddFriends = () => {
         console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`);
     
-        //need to add data of invitation in the usecontext
       } else if (response.error) {
         console.log(response.error);
         setMessage(`Error sending friend request to ${receiverUsername}`);
