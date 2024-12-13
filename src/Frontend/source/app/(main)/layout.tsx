@@ -28,7 +28,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   // });
 
   return (
-    <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
+    <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient lg:p-8 pt-8 dark:bg-linear-gradient-dark">
       <div className="row-[span_9_/_span_9] min-h-0 grow items-start justify-center hidden lg:flex">
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
       </div>
@@ -44,12 +44,13 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
           isActivated === 9 ||
           pathname === '/friends' ||
           pathname === '/LeaderBoard' ||
+          pathname === '/Profile' ||
           pathname === '/MatchHistory' ||
           pathname === '/messages' ||
           pathname === '/settings'
             ? 'hidden'
             : 'flex'
-        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300 lg:flex hidden`}
+        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300 `}
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>

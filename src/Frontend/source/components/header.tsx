@@ -35,7 +35,7 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
-    <div className="flex h-fit w-full items-center justify-between lg:px-4">
+    <div className="flex h-fit w-full items-center justify-between px-4">
       <button className="flex items-center justify-center lg:hidden">
         <RiMenu2Fill className='size-[40px]' />
         </button>
