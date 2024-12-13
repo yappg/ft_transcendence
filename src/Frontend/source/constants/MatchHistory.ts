@@ -1,6 +1,6 @@
 export const MatchHistory = [
     {
-        player1: 'noureddin akebli',
+        player1: 'noureddin',
         player2: 'Player 2',
         player1Score: 3,
         player2Score: 7,
