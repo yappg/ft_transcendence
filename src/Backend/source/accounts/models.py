@@ -31,7 +31,6 @@ class Player(AbstractUser):
 
 
 class PlayerProfile(models.Model):
-
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
     is_online=models.BooleanField(default=False)
@@ -215,4 +214,33 @@ class MatchHistory(models.Model):
         super().save(*args, **kwargs)
 
 
-# class Achivments(models.model):
+class achivement(models.Model):
+    name = models.CharField(_(""), max_length=50)
+    desciption = models.TextField(_(""))
+    condition = models.IntegerField(_(""))
+
+    class Meta:
+        verbose_name = _("achivement")
+        verbose_name_plural = _("achivements")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("achivement_detail", kwargs={"pk": self.pk})
+
+
+class PlayerAchievement(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+
+    gained = models.BooleanField(_("Gained"), default=False)
+    progress = models.IntegerField(_("Progress"), default=0)
+
+    date_earned = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('player', 'achievement')
+
+    def __str__(self):
+        return f"{self.player} - {self.achievement}"
