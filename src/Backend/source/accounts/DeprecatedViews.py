@@ -10,7 +10,7 @@ from django.core.cache import cache
 from .permissions import AnonRateLimitThrottling
 from .models import *
 from .serializers import *
-from .utils import *
+from .DeprecatedUtils import *
 from drf_yasg.utils import swagger_auto_schema
 
 class PlayerProfileView(APIView):
@@ -332,7 +332,6 @@ class OAuth42CallbackView(APIView):
         return resp
 
 #--------------------------User Infos Update ------------------------------
-
 class UpdateUserInfos(APIView):
     serializer_class = UpdateUserInfosSerializer
 
