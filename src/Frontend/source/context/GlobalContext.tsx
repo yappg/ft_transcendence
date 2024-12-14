@@ -10,24 +10,24 @@ const userApi = axios.create({
   withCredentials: true,
 });
 
-// Define the User interface based on your requirements
 interface User {
   id: number;
   username: string;
-  // Add other user properties as needed
-  [key: string]: any;
+  email: string;
+  avatar?: string;
+  cover?: string;
 }
 
-// Context type definition
 interface UserContextType {
   user: User | null;
   userId: number | null;
   isLoading: boolean;
   error: Error | null;
+  players: User[] | null;
   fetchCurrentUserDetails: () => Promise<void>;
+  fetchPlayers: () => Promise<User[]>;
 }
 
-// User Service
 const userService = {
   async getUserDetailsByUsername(username: string): Promise<User> {
     const response = await userApi.get(`/users/${username}`);
@@ -40,20 +40,19 @@ const userService = {
   },
 };
 
-// Create the context
 const UserContext = createContext<UserContextType>({
   user: null,
   userId: null,
   isLoading: false,
   error: null,
+  players: null,
   fetchCurrentUserDetails: async () => {},
-  fetchPlayers: async () => {},
+  fetchPlayers: async () => [],
 });
 
-// Provider component
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [players, setplayers] = useState<User | null>(null);
+  const [players, setplayers] = useState<User[] | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -93,7 +92,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return [];
   };
 
-  // Optional: Auto-fetch current user on provider mount
   useEffect(() => {
     fetchCurrentUserDetails();
     fetchPlayers();
@@ -116,7 +114,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Custom hook to use the user context
 export const useUser = () => {
   const context = useContext(UserContext);
 
@@ -127,5 +124,4 @@ export const useUser = () => {
   return context;
 };
 
-// Export the userApi and userService for use in other parts of the application
 export { userApi, userService };

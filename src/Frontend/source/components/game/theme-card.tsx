@@ -28,7 +28,7 @@ const MapsCard = ({
           <h2 className="mb-4 text-4xl font-bold text-white">{title}</h2>
           <p className="mb-6 text-lg text-gray-300">{description}</p>
           <div className="flex w-full justify-center lg:justify-start lg:pl-8">
-            <MyButton className="min-w-[120px]" onClick={() => {router.push(`/Game-Arena/${url}`)}}>Select Map</MyButton>
+            <MyButton className="min-w-[120px]" onClick={() => {router.push(`${url}`)}}>Select Map</MyButton>
           </div>
         </div>
       </div>
