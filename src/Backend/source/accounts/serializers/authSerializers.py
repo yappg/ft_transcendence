@@ -138,7 +138,7 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
         player = Player.objects.get(username=user.username)
         if 'username' in self.validated_data:
             player.username = self.validated_data['username']
-        if 'email' self.validated_data:
+        if 'email' in self.validated_data:
             player.email = self.validated_data['email']
         if 'avatar' in self.validated_data:
             player.avatar = self.validated_data['avatar']
