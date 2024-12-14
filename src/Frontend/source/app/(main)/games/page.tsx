@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext, useEffect } from 'react';
@@ -8,18 +10,24 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-// import { Pagination, Navigation, EffectCoverflow } from 'swiper/core';
+
 import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-const MapsSwiper = () => {
+const MapsSwiper = ({ mode }: { mode: string }) => {
+  // const getrout = (mode: string) => {
+  //   const newSearchParams = new URLSearchParams(searchParams.toString());
+  //   newSearchParams.set('mode', mode);
+  //   router.push(`/games?${searchParams.toString()}`);
+  // };
+
   return (
     <Swiper
       effect={'coverflow'}
       grabCursor={true}
       centeredSlides={true}
       loop={true}
-      slidesPerView={2} // Show multiple slides
-      spaceBetween={60} // Add space between slides
+      slidesPerView={2}
+      spaceBetween={60}
       coverflowEffect={{
         rotate: 0,
         stretch: 0,
@@ -29,7 +37,7 @@ const MapsSwiper = () => {
       autoplay={true}
       pagination={{ el: '.swiper-pagination', clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="h-[70%] py-4 swiper-container w-full flex items-center justify-center"
+      className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
       <SwiperSlide>
         <MapsCard
@@ -74,12 +82,7 @@ const MapsSwiper = () => {
 const GameModeSwiper = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
-  const handleCardClick = (mode: string) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('mode', mode);
-    router.push(`/?${searchParams.toString()}`);
-  };
+
   return (
     <Swiper
       effect={'coverflow'}
@@ -97,42 +100,33 @@ const GameModeSwiper = () => {
       autoplay={true}
       pagination={{ el: '.swiper-pagination', clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="h-[70%] py-4 swiper-container w-full flex items-center justify-center"
+      className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
       <SwiperSlide>
         <MapsCard
           height="100px"
           imageUrl=""
-          title="Earth"
-          description="earth could shake or make or fake"
-          url="earth"
-        />
-      </SwiperSlide>
-      <SwiperSlide>
-        <MapsCard
-          height="100px"
-          imageUrl=""
-          title="Air"
+          title="Play costum toutnement"
           description="Air: The invisible killer we can not live without"
-          url="/air"
+          url={`/games?mode=tournoment`}
         />
       </SwiperSlide>
       <SwiperSlide>
         <MapsCard
           height="100px"
           imageUrl=""
-          title="Fire"
+          title="simple match One Vs One"
           description="Because sometimes, you just need to watch the world burn."
-          url="fire"
+          url={`/games?mode=one-vson`}
         />
       </SwiperSlide>
       <SwiperSlide>
         <MapsCard
           height="100px"
           imageUrl=""
-          title="Water"
+          title="play vs our ai"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url="water"
+          url={`/games?mode=ai`}
         />
       </SwiperSlide>
     </Swiper>
@@ -143,7 +137,7 @@ const Game_modes = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode');
-  console.log(mode);
+  console.log(`mode`, mode);
   useEffect(() => {
     setIsActivated(2);
   }, [setIsActivated]);
@@ -154,8 +148,8 @@ const Game_modes = () => {
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>
       <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
-        <div className="flex w-full items-center h-full">
-          {mode ? MapsSwiper() : GameModeSwiper()}
+        <div className="flex size-full items-center">
+          {mode ? <MapsSwiper mode={mode} /> : <GameModeSwiper />}
         </div>
       </div>
     </div>
