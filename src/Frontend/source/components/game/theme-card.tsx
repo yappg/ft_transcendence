@@ -44,18 +44,25 @@ const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) 
   );
 };
 
-const ModesCard = ({ title = '', description = '', url = '/game/earth', height = '480' }) => {
+interface ModesCardProps {
+  title: string;
+  description: string;
+  url: string;
+  height: string;
+}
+
+const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
   const router = useRouter();
   return (
     <div
-      className="costum-little-shadow group relative h-full w-[400px] overflow-hidden rounded-3xl"
+      className="costum-little-shadow group relative size-full overflow-hidden rounded-3xl"
       style={{
         height: `${height}px`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute inset-0 overflow-hidden bg-[rgba(0,0,0,0.5)] transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.7)]">
+      <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.7)]">
         <div className="absolute inset-0 flex h-full flex-col justify-center p-8 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
           <h2 className="mb-4 text-4xl font-bold text-white">{title}</h2>
           <p className="mb-6 text-lg text-gray-300">{description}</p>
@@ -63,7 +70,7 @@ const ModesCard = ({ title = '', description = '', url = '/game/earth', height =
             <MyButton
               className="min-w-[120px]"
               onClick={() => {
-                router.push(`/Game-Arena/${url}`);
+                router.push(`${url}`);
               }}
             >
               Select Map

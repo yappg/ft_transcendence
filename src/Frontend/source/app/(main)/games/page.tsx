@@ -3,7 +3,7 @@
 'use client';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext, useEffect } from 'react';
-import { MapsCard } from '@/components/game/theme-card';
+import { MapsCard, ModesCard } from '@/components/game/theme-card';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import 'swiper/css';
@@ -45,7 +45,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/earth.png"
           title="Earth"
           description="earth could shake or make or fake"
-          url="/Game-Arena/earth"
+          url={`/Game-Arena?mode=${mode}&map=earth`}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -54,7 +54,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/air.png"
           title="Air"
           description="Air: The invisible killer we can not live without"
-          url="/Game-Arena/air"
+          url={`/Game-Arena?mode=${mode}&map=air`}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -63,7 +63,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/fire.png"
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
-          url="/Game-Arena/fire"
+          url={`/Game-Arena?mode=${mode}&map=fire`}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -72,7 +72,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/water.png"
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url="/Game-Arena/water"
+          url={`/Game-Arena?mode=${mode}&map=water`}
         />
       </SwiperSlide>
     </Swiper>
@@ -103,27 +103,24 @@ const GameModeSwiper = () => {
       className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
       <SwiperSlide>
-        <MapsCard
+        <ModesCard
           height="100px"
-          imageUrl=""
           title="Play costum toutnement"
           description="Air: The invisible killer we can not live without"
           url={`/games?mode=tournoment`}
         />
       </SwiperSlide>
       <SwiperSlide>
-        <MapsCard
+        <ModesCard
           height="100px"
-          imageUrl=""
           title="simple match One Vs One"
           description="Because sometimes, you just need to watch the world burn."
           url={`/games?mode=one-vson`}
         />
       </SwiperSlide>
       <SwiperSlide>
-        <MapsCard
+        <ModesCard
           height="100px"
-          imageUrl=""
           title="play vs our ai"
           description="The slippery element that makes sure your Pong ball never stays on course."
           url={`/games?mode=ai`}
