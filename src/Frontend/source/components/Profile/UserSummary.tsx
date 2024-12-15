@@ -72,20 +72,20 @@ const UserSummary = (): JSX.Element => {
   ];
   return (
     <div className="size-full bg-[#242627]/90 shadow-[0px_-28px_17px_0px_rgba(36,_38,_39,_1)] pb-4 overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12">
-      <div className="h-full w-full xl:w-[65%] flex items-start justify-start flex-col lg:gap-2">
+      <div className="w-full h-screen md:size-full xl:w-[65%] flex items-start justify-start flex-col lg:gap-2">
         <div className="w-full h-[20%] flex flex-row gap-3 scroll-auto overflow-hidden sm:p-5 xl:p-2">
           {achievements.map((achievement, index) => (
             <Avatar
               key={index}
-              className="lg:size-[65px] transition-all duration-300 xl:size-[80px] sm:size-[70px] size-[50px] bg-[#00A6FF]"
+              className="lg:size-[65px] transition-all duration-300 xl:size-[80px] sm:size-[80px] size-[50px] bg-[#00A6FF]"
             >
               <AvatarImage src={achievement.icon} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
         </div>
-        <div className="h-[80%] w-full flex items-center justify-between xl:px-5 overflow-y-scroll">
-          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll sm:w-[48%] w-full bg-[#4C4D4E] rounded-[50px] shadow-2xl">
+        <div className="md:h-[80%] size-full flex items-center justify-between xl:px-5 md:flex-row flex-col gap-8">
+          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll md:w-[48%] size-full bg-[#4C4D4E] rounded-[50px] shadow-2xl">
             {MatchHistory.map((user, index) => (
               <MatchHistoryBoard
                 key={index}
@@ -102,7 +102,7 @@ const UserSummary = (): JSX.Element => {
               <h1 className="2xl:text-[25px] lg:text-[20px] font-dayson text-[#B8B8B8]">{'>'}</h1>
             </div>
           </div>
-          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll sm:w-[48%] w-full bg-[#4C4D4E] rounded-[50px] shadow-2xl flex flex-col">
+          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll md:w-[48%] size-full bg-[#4C4D4E] rounded-[50px] shadow-2xl flex flex-col">
             <div className="flex-grow">
               {Friends.map((user, index) => (
                 <UserActivityBoard
@@ -125,7 +125,7 @@ const UserSummary = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="h-full w-full xl:w-[35%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row xl:flex-col">
+      <div className="size-full xl:w-[35%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row xl:flex-col">
         <div className="w-1/2 h-full xl:w-full xl:h-[45%]  flex items-start">
           <RChart />
         </div>
