@@ -126,6 +126,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -141,7 +143,7 @@ CHANNEL_LAYERS = {
 #         'OPTIONS': {
 #             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
 #         }
-#     }
+#     },
     # 'matchmaking': {
     #     'BACKEND': 'django_redis.cache.RedisCache',
     #     'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
@@ -229,6 +231,37 @@ OAUTH2_PROVIDER_GOOGLE = {
     # 'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/google',
     'CALLBACK_URL': 'http://127.0.0.1:3000/home',
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+}
+
+Oautth2_Providers = {
+    '42' :
+    {
+        'CLIENT_ID': "u-s4t2ud-9a789e497d800c5a443dceb37c2238734264a05f5208354f0a20b8eecb94e72f",
+        'CLIENT_SECRET': "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",
+        #TRANS2-----------------------------------------
+        # 'CLIENT_ID': "u-s4t2ud-4aedcd9bbfe99586bd8aab9967a260dd24e4a1459620fe008ae457eae916624c",
+        # 'CLIENT_SECRET': "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",
+        # -----------------END--------------------------
+        # 'CLIENT_ID': os.getenv("CLIENT_ID_42"),
+        # 'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
+        'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
+        'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
+        'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
+        # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
+        'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
+        'SCOPE': 'public',
+    },
+    'google' :
+    {
+        'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
+        'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+        'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
+        'TOKEN_URL': 'https://oauth2.googleapis.com/token',
+        'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
+        # 'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/google',
+        'CALLBACK_URL': 'http://127.0.0.1:3000/home',
+        'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    },
 }
 
 # Internationalization

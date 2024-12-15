@@ -258,7 +258,7 @@ providers_data = {
     "42":{
         "client_id":settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
         "Auth_url":settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL'],
-        "redirect_uri":,"http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Foauth%2Fcallback%2F42"
+        "redirect_uri":"http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Foauth%2Fcallback%2F42"
     },
     "google":{
         "client_id":settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
