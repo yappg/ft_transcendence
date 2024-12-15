@@ -29,6 +29,7 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put', 'patch', 'options']
 
 
+
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
     serializer_class = MatchHistorySerializer
