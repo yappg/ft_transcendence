@@ -134,6 +134,22 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+    # 'matchmaking': {
+    #     'BACKEND': 'django_redis.cache.RedisCache',
+    #     'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
+    #     'OPTIONS': {
+    #         'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+    #     }
+    # }
+# }
 
 WSGI_APPLICATION = '_1Config.wsgi.application'
 ASGI_APPLICATION = '_1Config.asgi.application'
@@ -163,15 +179,6 @@ DATABASES = {
     }
 }
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions
 SESSION_CACHE_ALIAS = "default"  # Use the default cache defined above
