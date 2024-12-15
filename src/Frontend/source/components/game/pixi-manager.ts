@@ -3,6 +3,9 @@ import * as PIXI from 'pixi.js';
 import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
 
+let dx = 1;
+let dy = 1;
+
 class PixiManager {
   app: PIXI.Application;
   topRacket!: PIXI.Graphics;
@@ -10,13 +13,23 @@ class PixiManager {
   ball!: PIXI.Graphics;
   currentUserId: string | undefined;
   backgroundImage: string;
+  mode: string;
+  keysPressed: Set<string> = new Set('');
 
-  constructor(container: HTMLElement, currentUserId: string | undefined, backgroundImage: string) {
+  constructor(
+    container: HTMLElement,
+    currentUserId: string | undefined,
+    backgroundImage: string,
+    mode: string
+  ) {
     this.app = new PIXI.Application();
     this.currentUserId = currentUserId;
     this.backgroundImage = backgroundImage;
-
-    this.init(container);
+    this.mode = mode;
+    this.init(container).then(() => {
+      this.addEventListeners();
+      this.startGameLoop();
+    });
   }
 
   async init(container: HTMLElement) {
@@ -29,7 +42,7 @@ class PixiManager {
     const background = new Sprite(backgroundTexture);
     background.width = this.app.screen.width;
     background.height = this.app.screen.height;
-    background.alpha = 0.3;
+    background.alpha = 0.2;
 
     this.app.stage.addChild(background);
 
@@ -128,31 +141,102 @@ class PixiManager {
     }
   }
 
-  // Keyboard event listener
-  handleKeyDown = (event: KeyboardEvent) => {
+  addEventListeners() {
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    window.addEventListener('keyup', this.handleKeyUp.bind(this));
+    // if (mode.indexOf('multiplayer') !== -1) {
+    //   window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    //   window.addEventListener('keyup', this.handleKeyUp.bind(this));
+    // }
+    console.log('Event listeners added');
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    this.keysPressed.add(event.key);
+    console.log(`Key down: ${event.key}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+  }
+
+  handleKeyUp(event: KeyboardEvent) {
+    this.keysPressed.delete(event.key);
+    console.log(`Key up: ${event.key}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+  }
+
+  startGameLoop() {
+    this.app.ticker.add(this.update.bind(this));
+    console.log('Game loop started');
+  }
+
+  update() {
     const bottomRacket = this.bottomRacket;
     const app = this.app;
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = 10;
-    let newPosition;
-    switch (event.key) {
-      case 'ArrowLeft':
-        newPosition = Math.max(0, bottomRacket.x - movementSpeed);
-        bottomRacket.x = newPosition;
-        // sendRacketPosition('bottom', newPosition);
-        break;
-      case 'ArrowRight':
-        newPosition = Math.min(
-          app.screen.width - bottomRacket.width,
-          bottomRacket.x + movementSpeed
-        );
-        bottomRacket.x = newPosition;
-        // sendRacketPosition('bottom', newPosition);
-        break;
+    const movementSpeed = 5;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+      console.log(`Moving left: ${bottomRacket.x}`);
     }
-  };
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        app.screen.width - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+      console.log(`Moving right: ${bottomRacket.x}`);
+    }
+
+    if (this.mode.indexOf('local') !== -1) {
+      if (
+        (this.keysPressed.has('a') ||
+        this.keysPressed.has('A')) && (!this.keysPressed.has('d') && !this.keysPressed.has('D'))
+      ) {
+        this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
+        console.log(`Moving left: ${this.topRacket.x}`);
+      }
+
+      if (
+        (this.keysPressed.has('d') ||
+        this.keysPressed.has('D')) && (!this.keysPressed.has('a') && !this.keysPressed.has('A'))
+      ) {
+        this.topRacket.x = Math.min(
+          app.screen.width - this.topRacket.width,
+          this.topRacket.x + movementSpeed
+        );
+        console.log(`Moving right: ${this.topRacket.x}`);
+      }
+      this.updateBallPositionLocal();
+    }
+  }
+
+  updateBallPositionLocal() {
+    if (!this.ball || !this.app) return;
+
+    const movementSpeed = 4;
+
+
+    this.ball.x += dx * movementSpeed;
+    this.ball.y += dy * movementSpeed;
+
+    console.log(`Ball position: ${this.ball.x}, ${this.ball.y}`);
+    console.log(`App screen: ${this.app.screen.width}, ${this.app.screen.height}`);
+
+    if (this.ball.x <= 0 || this.ball.x >= this.app.screen.width) {
+      // console.log('Ball hit the wall');
+      dx *= -1;
+      this.ball.x += dx * movementSpeed;
+      // console.log(`Ball position: ${this.ball.x}, ${this.ball.y}`);
+    }
+    
+    if (this.ball.y <= 0 || this.ball.y >= this.app.screen.height) {
+      console.log('Ball hit the wall2');
+      dy *= -1;
+    }
+  }
+
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {
   //   if (socketRef.current) {
   //     socketRef.current.send(

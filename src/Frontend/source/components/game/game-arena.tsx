@@ -261,7 +261,7 @@ import React, { useRef, useEffect } from 'react';
 import PixiManager from './pixi-manager';
 import SocketManager from './socket-manager';
 
-const GameTable = ({ mode }: { mode: string }) => {
+const GameTable = ({ mode, map }: { map: string, mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const pixiManagerRef = useRef<PixiManager | null>(null);
   const socketManagerRef = useRef<SocketManager | null>(null);
@@ -271,12 +271,15 @@ const GameTable = ({ mode }: { mode: string }) => {
       pixiManagerRef.current = new PixiManager(
         canvasContainerRef.current,
         'nakebli',
-        `/${mode}.png`
+        `/${map}.png`,
+        mode
       );
-      socketManagerRef.current = new SocketManager(
-        'ws://your-backend-url/ws/game/',
-        pixiManagerRef.current
-      );
+      if (mode.indexOf('local') === -1) {
+        socketManagerRef.current = new SocketManager(
+          'ws://your-backend-url/ws/game/',
+          pixiManagerRef.current
+        );
+      }
     }
 
     return () => {
