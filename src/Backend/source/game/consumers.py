@@ -12,20 +12,39 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         # Reject connection if user is not authenticated
-        user = self.scope["user"]
-        if not user.is_authenticated:
+        self.user = self.scope["user"]
+        if not self.user.is_authenticated:
             await self.close()
             return
         try:
             await self.accept()
             self.redis = get_redis_connection("default")
-            #self.redis = get_redis_connection("matchmaking")
-            self.groupe_name = f'game_{user.username}'
+            self.groupe_name = f'game_{self.user.username}'
             self.channel_layer.group_add(self.groupe_name, self.channel_layer)
-            self.add_player_to_queue(user.id)
+            self.add_player_to_queue(self.user.id)
+            #start the matchmaking system
+            
+            
+            
         except:
             await self.close()
             return
+
+    async def receive(self, text_data):
+        pass
+
+
+        # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
+    async def disconnect(self, close_code):
+        self.channel_layer.group_discard(self.groupe_name, self.channel_name)
+        await self.close()
+
+    async def find_opponent():
+        pass
+
+    async def matchMake():
+        pass
+
 
     @database_sync_to_async
     async def add_player_to_queue(self, user_id):
@@ -35,9 +54,3 @@ class GameConsumer(AsyncWebsocketConsumer):
     # async def remove_player_from_queue(self):
     #     userID = self.redis.lpop('game_queue')
 
-    async def receive(self, text_data):
-        pass
-
-    async def disconnect(self, close_code):
-        self.channel_layer.group_discard(self.groupe_name, self.channel_name)
-        await self.close()
