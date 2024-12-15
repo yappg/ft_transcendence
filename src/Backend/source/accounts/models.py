@@ -30,6 +30,10 @@ class Player(AbstractUser):
             PlayerSettings.objects.create(player_profile=self.profile)
 
 
+# TODO
+# wins per map percent out of 100%
+# wins and loses per day
+
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
@@ -214,33 +218,30 @@ class MatchHistory(models.Model):
         super().save(*args, **kwargs)
 
 
-class achivement(models.Model):
-    name = models.CharField(_(""), max_length=50)
-    desciption = models.TextField(_(""))
-    condition = models.IntegerField(_(""))
+# class achivement(models.Model):
+#     name = models.CharField(max_length=50)
+#     desciption = models.TextField()
+#     condition = models.IntegerField()
 
-    class Meta:
-        verbose_name = _("achivement")
-        verbose_name_plural = _("achivements")
+#     class Meta:
+#         verbose_name = _("achivement")
+#         verbose_name_plural = _("achivements")
 
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("achivement_detail", kwargs={"pk": self.pk})
+#     def __str__(self):
+#         return self.name
 
 
-class PlayerAchievement(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+# class PlayerAchievement(models.Model):
+#     player = models.ForeignKey(Player, on_delete=models.CASCADE)
+#     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
 
-    gained = models.BooleanField(_("Gained"), default=False)
-    progress = models.IntegerField(_("Progress"), default=0)
+#     gained = models.BooleanField(default=False)
+#     progress = models.IntegerField(default=0)
 
-    date_earned = models.DateTimeField(auto_now=True)
+#     date_earned = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ('player', 'achievement')
+#     class Meta:
+#         unique_together = ('player', 'achievement')
 
-    def __str__(self):
-        return f"{self.player} - {self.achievement}"
+#     def __str__(self):
+#         return f"{self.player} - {self.achievement}"
