@@ -30,19 +30,16 @@ export const Header = () => {
     },
   };
   function handleClick() {
-    setShowSearchBar(true);
+    setShowSearchBar(!showSearchBar);
   }
   const { isActivated } = useContext(SideBarContext);
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
-      {/* <button className="flex items-center justify-center lg:hidden">
-        <RiMenu2Fill className='size-[40px]' />
-        </button> */}
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
-          <div key={path.id} className="flex h-full w-fit items-center justify-start  gap-4">
+          <div key={path.id} className="flex h-full w-fit items-center justify-start gap-4">
             <h1 className=" font-dayson text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
               {path.path}
             </h1>
@@ -53,7 +50,7 @@ export const Header = () => {
             )}
           </div>
         ))}
-      <div className="flex  w-fit items-center justify-center xl:gap-12 gap-1">
+      <div className="flex w-fit items-center justify-center xl:gap-12 gap-1">
         <button
           className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 xl:hidden items-center justify-center`}
         >
@@ -65,7 +62,7 @@ export const Header = () => {
           </div>
         </button>
         <Command
-          className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px]' : 'sm:w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
+          className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px] w-[120px]' : 'w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
         >
           <CommandInput placeholder="Search..." />
           <CommandList />

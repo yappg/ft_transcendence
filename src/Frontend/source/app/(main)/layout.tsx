@@ -30,8 +30,8 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   // });
 
   return (
-    <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-hidden bg-linear-gradient lg:p-8 dark:bg-linear-gradient-dark pt-4">
-      <div className="row-[span_9_/_span_9] grow items-start justify-center hidden lg:flex">
+    <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-hidden bg-linear-gradient md:p-5 lg:p-8 dark:bg-linear-gradient-dark pt-4">
+      <div className="row-[span_9_/_span_9] grow items-start justify-center hidden md:flex">
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
       </div>
       <div className="col-span-10 col-start-2 row-start-1 flex items-start justify-start pt-2 transition-all duration-300">
@@ -51,22 +51,24 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
           pathname === '/messages' ||
           pathname === '/settings'
             ? 'hidden'
-            : 'flex'
-        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300 md:hidden lg:flex`}
+            : 'lg:flex hidden'
+        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
       <SidebarProvider className="md:hidden flex overflow-hidden absolute">
-        <SidebarLeft className=" bg-transparent" />
+        <SidebarLeft className=" bg-transparent " />
         <SidebarInset className=" bg-transparent">
           <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2">
             <div className="flex flex-1 items-center gap-2 px-3">
-              <SidebarTrigger className='size-[50px]'/>
+              <SidebarTrigger className="size-[50px]" />
             </div>
           </header>
         </SidebarInset>
       </SidebarProvider>
-      {children}
+      <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr]">
+        {children}
+      </div>
     </div>
   );
 }
