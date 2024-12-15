@@ -232,6 +232,7 @@ class DisableOTP(APIView):
 
 #---------------------------------- OAuth2.0 ----------------------------------
 
+
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -255,8 +256,12 @@ class OAuth42LoginView(APIView):
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
         return Response({'url': authorization_url}, status=status.HTTP_200_OK)
-        # return redirect(authorization_url)
 
+#this must be in a settings file
+Oauth2_Providers_URLToken = {
+    '42': settings.OAUTH2_PROVIDER_42['TOKEN_URL'],
+    'google': settings.OAUTH2_PROVIDER_GOOGLE['TOKEN_URL'],
+}
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -271,8 +276,8 @@ class OAuth42CallbackView(APIView):
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 
-        token_url, data = APIdata(code, provider)
-        response = requests.post(token_url, data=data)
+        data = APIdata(code, provider)
+        response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
         token_data = response.json()
         print(token_data)
 

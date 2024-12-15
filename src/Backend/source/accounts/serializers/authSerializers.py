@@ -64,6 +64,7 @@ class SignInSerializer(serializers.Serializer):
         return attrs
 
 class GenerateOTPSerializer(serializers.Serializer):
+    pass
     # username = serializers.CharField()
 
 class VerifyOTPSerializer(serializers.Serializer):

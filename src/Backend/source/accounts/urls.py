@@ -1,5 +1,7 @@
 from django.urls import path, include
-from .views import *
+from .views.authViews import *
+from .views.userManagment import *
+
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -22,11 +24,13 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
-#list users
-    path('list/all/', PlayersViewList.as_view(), name='playersList'),
-# get user details
 
-    path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
-    path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
-    path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
+
+#list users
+#     path('list/all/', PlayersViewList.as_view(), name='playersList'),
+# # get user details
+
+#     path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
+#     path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
+#     path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
 ]
