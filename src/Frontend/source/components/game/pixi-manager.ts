@@ -15,6 +15,9 @@ class PixiManager {
   backgroundImage: string;
   mode: string;
   keysPressed: Set<string> = new Set('');
+  paddleWidth: number;
+  topPlayerScore: number;
+  bottomPlayerScore: number;
 
   constructor(
     container: HTMLElement,
@@ -26,6 +29,9 @@ class PixiManager {
     this.currentUserId = currentUserId;
     this.backgroundImage = backgroundImage;
     this.mode = mode;
+    this.paddleWidth = 0;
+    this.topPlayerScore = 0;
+    this.bottomPlayerScore = 0;
     this.init(container).then(() => {
       this.addEventListeners();
       this.startGameLoop();
@@ -42,22 +48,23 @@ class PixiManager {
     const background = new Sprite(backgroundTexture);
     background.width = this.app.screen.width;
     background.height = this.app.screen.height;
+    this.paddleWidth = this.app.screen.width / 5;
     background.alpha = 0.2;
 
     this.app.stage.addChild(background);
 
     this.topRacket = this.createRacket(
-      this.app.screen.width / 2 - 75,
+      this.app.screen.width / 2 - this.paddleWidth / 2,
       20,
-      170,
+      this.paddleWidth,
       25,
       0xff0000,
       0x000000
     );
     this.bottomRacket = this.createRacket(
-      this.app.screen.width / 2 - 75,
-      this.app.screen.height - 55,
-      170,
+      this.app.screen.width / 2 - this.paddleWidth / 2,
+      this.app.screen.height - 50,
+      this.paddleWidth,
       25,
       0x00ffff,
       0x000000
@@ -66,7 +73,7 @@ class PixiManager {
     this.ball = this.createBall(
       this.app.screen.width / 2,
       this.app.screen.height / 2,
-      17,
+      25,
       0xffffff
     );
 
@@ -178,7 +185,7 @@ class PixiManager {
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
-      console.log(`Moving left: ${bottomRacket.x}`);
+      console.log(`Moving leftB: ${bottomRacket.x}`);
     }
 
     if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
@@ -186,27 +193,29 @@ class PixiManager {
         app.screen.width - bottomRacket.width,
         bottomRacket.x + movementSpeed
       );
-      console.log(`Moving right: ${bottomRacket.x}`);
+      console.log(`Moving rightB: ${bottomRacket.x}`);
     }
 
     if (this.mode.indexOf('local') !== -1) {
       if (
-        (this.keysPressed.has('a') ||
-        this.keysPressed.has('A')) && (!this.keysPressed.has('d') && !this.keysPressed.has('D'))
+        (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
+        !this.keysPressed.has('d') &&
+        !this.keysPressed.has('D')
       ) {
         this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
-        console.log(`Moving left: ${this.topRacket.x}`);
+        console.log(`Moving leftT: ${this.topRacket.x}`);
       }
 
       if (
-        (this.keysPressed.has('d') ||
-        this.keysPressed.has('D')) && (!this.keysPressed.has('a') && !this.keysPressed.has('A'))
+        (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
+        !this.keysPressed.has('a') &&
+        !this.keysPressed.has('A')
       ) {
         this.topRacket.x = Math.min(
           app.screen.width - this.topRacket.width,
           this.topRacket.x + movementSpeed
         );
-        console.log(`Moving right: ${this.topRacket.x}`);
+        console.log(`Moving rightT: ${this.topRacket.x}`);
       }
       this.updateBallPositionLocal();
     }
@@ -217,26 +226,48 @@ class PixiManager {
 
     const movementSpeed = 4;
 
-
     this.ball.x += dx * movementSpeed;
     this.ball.y += dy * movementSpeed;
 
-    console.log(`Ball position: ${this.ball.x}, ${this.ball.y}`);
-    console.log(`App screen: ${this.app.screen.width}, ${this.app.screen.height}`);
-
     if (this.ball.x <= 0 || this.ball.x >= this.app.screen.width) {
-      // console.log('Ball hit the wall');
       dx *= -1;
       this.ball.x += dx * movementSpeed;
-      // console.log(`Ball position: ${this.ball.x}, ${this.ball.y}`);
     }
-    
-    if (this.ball.y <= 0 || this.ball.y >= this.app.screen.height) {
-      console.log('Ball hit the wall2');
+
+    if (
+      this.ball.y - 10 >= this.topRacket.y &&
+      this.ball.y <= this.topRacket.y + this.topRacket.height &&
+      this.ball.x >= this.topRacket.x &&
+      this.ball.x <= this.topRacket.x + this.paddleWidth
+    ) {
       dy *= -1;
+      this.ball.y += dy * movementSpeed;
+    }
+
+    if (
+      this.ball.y + 10 >= this.bottomRacket.y && // Ball is below the bottom racket
+      this.ball.y <= this.bottomRacket.y + this.bottomRacket.height &&
+      this.ball.x >= this.bottomRacket.x &&
+      this.ball.x <= this.bottomRacket.x + this.paddleWidth
+    ) {
+      // Ball hits the bottom racket
+      dy *= -1;
+      this.ball.y += dy * movementSpeed;
+    }
+
+    if (this.ball.y <= 0 || this.ball.y >= this.app.screen.height) {
+      this.updateBallPosition(this.app.screen.width / 2, this.app.screen.height / 2);
     }
   }
 
+  updateScoreLocal() {
+    if (this.ball.y >= this.app.screen.height) {
+      this.bottomPlayerScore += 1;
+    }
+    if (this.ball.y <= 0) {
+      this.topPlayerScore += 1;
+    }
+  }
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {
   //   if (socketRef.current) {
   //     socketRef.current.send(

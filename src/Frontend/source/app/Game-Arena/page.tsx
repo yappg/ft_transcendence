@@ -3,7 +3,7 @@
 import React from 'react';
 import GameTable from '@/components/game/game-arena';
 import { useSearchParams } from 'next/navigation';
-import { GameChat } from '@/components/game/game-chat';
+import GameChat from '@/components/game/game-chat';
 // import { useRouter } from 'next/naviation';
 
 interface GameArenaProps {

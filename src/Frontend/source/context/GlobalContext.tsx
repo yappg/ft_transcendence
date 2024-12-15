@@ -10,7 +10,7 @@ const userApi = axios.create({
   withCredentials: true,
 });
 
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
