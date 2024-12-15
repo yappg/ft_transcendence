@@ -36,9 +36,9 @@ export const Header = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
-      <button className="flex items-center justify-center lg:hidden">
+      {/* <button className="flex items-center justify-center lg:hidden">
         <RiMenu2Fill className='size-[40px]' />
-        </button>
+        </button> */}
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
