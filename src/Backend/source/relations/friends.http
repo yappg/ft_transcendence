@@ -1,52 +1,5 @@
 
 
-########---------signup------_#########
-
-POST http://localhost:8080/accounts/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "ali",
-    "email": "ali@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-###   ###   ##  ## ###  ##  ## ### ##
-POST http://localhost:8080/accounts/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "meryem",
-    "email": "meryem@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-### ### ####  ### ###  #####----  ----
-
-POST http://localhost:8080/accounts/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "opa123",
-    "email": "opa123@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-###  ####   ###  ### ## ####  ###
-
-POST http://localhost:8080/accounts/signup/
-Content-Type: application/json
-
-{
-    "username": "opas12345",
-    "email": "opa12345@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-##########-----LIST----############
-
 GET http://localhost:8080/accounts/list/all
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 
@@ -65,9 +18,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 GET http://localhost:8080/accounts/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcwNDg1LCJpYXQiOjE3MzMwNjg2ODUsImp0aSI6IjY1YzYxOGUzYTEyNDRjYzU4NGFlNTBmOWEzMDk5YjkxIiwidXNlcl9pZCI6NX0.njthXe5ZdAMp9_W1WgIfnbwWZj1tI04O9hq3uJ1Jai4
-
-
-
 
 
 ###-----------FRIENDS------##############

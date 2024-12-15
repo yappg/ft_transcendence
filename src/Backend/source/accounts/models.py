@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 
 
+# TODO admin user will not have a profile or enyting and will be created on the manage.py script
+
 # auth user
 class Player(AbstractUser):
     enabled_2fa=models.BooleanField(default=False)
@@ -28,12 +30,15 @@ class Player(AbstractUser):
         if is_new:
             PlayerProfile.objects.create(player=self)
             PlayerSettings.objects.create(player_profile=self.profile)
+            # TODO add a version of player achivements to every account created
 
 
 # TODO
 # wins per map percent out of 100%
 # wins and loses per day
 
+
+# TODO for a private profile dont serlizer all the data only full public ###
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
@@ -80,13 +85,8 @@ class PlayerProfile(models.Model):
     def all_matches(self):
         return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
 
-    # def update_last_login(self):
-    #     self.last_login = timezone.now()
-    #     self.save(update_fields=['last_login'])
-
 
     # calculate level and xp
-
     def level_up(self):
         self.xp -= self.calculate_level_up_xp()
         self.level += 1
@@ -118,7 +118,7 @@ class PlayerProfile(models.Model):
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
 
         if self.total_games != 0:
-            self.win_ratio = self.games_won / self.total_games
+            self.win_ratio = (self.games_won / self.total_games) * 100
         else:
             self.win_ratio = 0.0
 
@@ -219,9 +219,10 @@ class MatchHistory(models.Model):
 
 
 # class achivement(models.Model):
-#     name = models.CharField(max_length=50)
-#     desciption = models.TextField()
-#     condition = models.IntegerField()
+#     name = models.CharField(blank=False, max_length=50)
+#     desciption = models.TextField(blank=False, max_length=200)
+#     xp_gain = models.IntegerField(blank=False)
+#     condition = models.IntegerField(blank=False)
 
 #     class Meta:
 #         verbose_name = _("achivement")
