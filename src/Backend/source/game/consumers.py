@@ -30,7 +30,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         pass
 
-
         # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
     async def disconnect(self, close_code):
         self.channel_layer.group_discard(self.groupe_name, self.channel_name)
