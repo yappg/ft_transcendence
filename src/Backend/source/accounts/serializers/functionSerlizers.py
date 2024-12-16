@@ -25,4 +25,3 @@ class LeaderBoardSerializer(serializers.ModelSerializer):
         model = PlayerProfile
         fields = ['id', 'display_name', 'level', 'avatar', 'games_won', 'games_loss']
         read_only_fields = ['id', 'display_name', 'level', 'avatar', 'games_won', 'games_loss']
- 

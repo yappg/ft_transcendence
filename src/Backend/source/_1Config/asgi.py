@@ -17,16 +17,18 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
 from .middleware import TokenAuthMiddleware
+from .routing import websockets_urlpatterns
 
 # Set the default settings module for the 'django' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings.developments')
 
 # Initialize Django
 django.setup()  # Ensure Django is set up before accessing any models
 
 
-# # Define the ASGI application routing
-from chat import routing
+# Define the ASGI application routing
+# from chat.routing import websocket_urlpatterns as chat_routing
+# from game.routing import websocket_urlpatterns as game_routing
 
 # application = ProtocolTypeRouter({
 #     'http': django_asgi_app,
@@ -40,8 +42,8 @@ from chat import routing
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket': TokenAuthMiddleware(
-        URLRouter([
-            routing.websocket_urlpatterns,
-        ])
+        URLRouter(
+            websockets_urlpatterns
+        )
     ),
 })

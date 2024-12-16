@@ -2,12 +2,11 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
-from .services import GameService, LeaderboardService
+# from .services import GameService, LeaderboardService
 from .models import Game, PlayerProfile
 from django_redis import get_redis_connection
 
 # working with logging for tracking errors and infos realtime..
-
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -23,8 +22,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_layer.group_add(self.groupe_name, self.channel_layer)
             self.add_player_to_queue(self.user.id)
             #start the matchmaking system
-            
-            
             
         except:
             await self.close()

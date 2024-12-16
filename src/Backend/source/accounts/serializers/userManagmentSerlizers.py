@@ -1,7 +1,6 @@
 
 from rest_framework import serializers
 from ..models import *
- 
 ########################################################################################
 
 # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
@@ -34,7 +33,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 # fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
-    xp_cap = serializers.SerializerMethodField()
+    xp = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
@@ -45,7 +44,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'username',
 
             'xp',
-            'xp_cap',
             'level',
 
             'total_games',
@@ -53,17 +51,18 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'games_loss',
             'win_ratio',
 
-            'ice_games',
-            'water_games',
-            'fire_games',
-            'earth_games',
+            # 'ice_games',
+            # 'water_games',
+            # 'fire_games',
+            # 'earth_games',
 
             'last_login',
             'created_at',
         ]
 
-    def get_xp_cap(self, obj):
-        return obj.calculate_level_up_xp()
+    def get_xp(self, obj):
+        xp_percentage = (obj.xp / obj.calculate_level_up_xp()) * 100
+        return xp_percentage
 
     def get_username(self, obj):
         return obj.player.username
@@ -73,6 +72,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("display name must be between 3 and 40 characters long")
         if PlayerProfile.objects.filter(display_name=value).exists():
             raise serializers.ValidationError("Display name already exists.")
+        return value
+
+    def validate_bio(self, value):
+        if len(value) > 500:
+            raise serializers.ValidationError("max bio size is 500 characters")
         return value
 
     def validate_avatar(self, value):
@@ -129,4 +133,3 @@ class MatchHistorySerializer(serializers.ModelSerializer):
             'id', 'result', 'map_played', 'player1', 'player2',
             'player1_score', 'player2_score', 'date'
         ]
- 

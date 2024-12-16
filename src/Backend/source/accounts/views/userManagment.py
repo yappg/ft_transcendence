@@ -1,5 +1,3 @@
-
-
 from rest_framework import status , viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,7 +11,6 @@ from ..permissions import (
 )
 from ..models import *
 from ..serializers.userManagmentSerlizers import *
- 
 #--------------------------Players RESTFUL API ------------------------------
 
 ## add a point for disabling account and activating it for abstract user

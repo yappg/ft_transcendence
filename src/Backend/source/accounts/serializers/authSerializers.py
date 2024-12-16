@@ -108,11 +108,11 @@ class ValidateOTPSerializer(serializers.Serializer):
     #     player.save()
 
 class UpdateUserInfosSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
 
     class Meta:
         model=Player
-        fields=('username','avatar','cover','password', 'password2')
+        fields=('username', 'email' ,'password', 'new_password')
 
     def validate(self, attrs):
         user = self.context['user']
@@ -126,8 +126,8 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
             #     raise serializers.ValidationError(
             #         {"error": "email is already in use"}
             #     )
-        if 'password' in attrs and 'password2' in attrs:
-            #check for password2 validity 8alphaNumes and 1 special char etc
+        if 'password' in attrs and 'new_password' in attrs:
+            #check for new_password validity 8alphaNumes and 1 special char etc
             if not user.check_password(raw_password=attrs['password']):
                 raise serializers.ValidationError(
                     {"error": "Invalid password"}
@@ -141,10 +141,10 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
             player.username = self.validated_data['username']
         if 'email' in self.validated_data:
             player.email = self.validated_data['email']
-        if 'avatar' in self.validated_data:
-            player.avatar = self.validated_data['avatar']
-        if 'cover' in self.validated_data:
-            player.cover = self.validated_data['cover']
+        # if 'avatar' in self.validated_data:
+        #     player.avatar = self.validated_data['avatar']
+        # if 'cover' in self.validated_data:
+        #     player.cover = self.validated_data['cover']
         if 'password' in self.validated_data:
-            player.set_password(self.validated_data['password2'])
+            player.set_password(self.validated_data['new_password'])
         player.save()

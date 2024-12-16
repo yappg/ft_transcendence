@@ -3,40 +3,33 @@
 import Form from 'react-bootstrap/Form';
 import FriendRequestCard from './FriendRequestCard';
 import { IconPlus } from '@tabler/icons-react';
-
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
 
 const AddFriends = () => {
   const [message, setMessage] = useState('');
-  
-  const [UsersList , setUserList] = useState([]);
-  const [searchUser , setsearchUser] = useState("");
-  const [FiltredUsers , setFiltredUsers] = useState([]);
 
-  
+  const [UsersList, setUserList] = useState([]);
+  const [searchUser, setsearchUser] = useState('');
+  const [FiltredUsers, setFiltredUsers] = useState([]);
+
   useEffect(() => {
-    setFiltredUsers(UsersList)
-    return () => {
-      
-    };
+    setFiltredUsers(UsersList);
+    return () => {};
   }, [UsersList]);
 
-
   useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          const response = await FriendServices.getPlayers();
-          setUserList(response);
-        } catch (error) {
-          console.log(error)
-          setMessage(`Error sending friend request to  `);
-        }
+    const fetchUsers = async () => {
+      try {
+        const response = await FriendServices.getPlayers();
+        setUserList(response);
+      } catch (error) {
+        console.log(error);
+        setMessage(`Error sending friend request to  `);
       }
-      fetchUsers();
-    }, []);
+    };
+    fetchUsers();
+  }, []);
 
   const sendFriendRequest = async (receiverUsername: string) => {
     try {
@@ -47,24 +40,26 @@ const AddFriends = () => {
       } else {
         setMessage(`Error sending friend request to ${receiverUsername}`);
       }
-    } catch (error) {
-      setMessage(`Error sending friend request to ${receiverUsername}: ${error.response ? error.response.data : error.message}`);
+    } catch (error: any) {
+      setMessage(
+        `Error sending friend request to ${receiverUsername}: ${error.response ? error.response.data : error.message}`
+      );
     }
   };
 
-
-  const setsearchQuery = (username:string) => {
-    if (username == "")
-      {
-        setFiltredUsers(UsersList)
-      }else{
-        setFiltredUsers(UsersList.filter((User:any) =>
+  const setsearchQuery = (username: string) => {
+    if (username == '') {
+      setFiltredUsers(UsersList);
+    } else {
+      setFiltredUsers(
+        UsersList.filter((User: any) =>
           User.username.toLowerCase().includes(username.toLowerCase())
-        ))
-      }
-      setsearchUser(username)
+        )
+      );
+    }
+    setsearchUser(username);
   };
-  
+
   return (
     <div className="bg-black-crd flex size-full flex-col items-center justify-between gap-10 overflow-visible rounded-lg pt-10">
       <Form className="flex h-[70px] w-[65%] items-center justify-center rounded-[30px] bg-cyan-100 bg-opacity-20 shadow-2xl">
@@ -78,7 +73,7 @@ const AddFriends = () => {
         {FiltredUsers.length === 0 ? (
           <div className="text-center font-bold text-white">No results found for {searchUser} </div>
         ) : (
-          FiltredUsers.map((user) => (
+          FiltredUsers.map((user: any) => (
             <FriendRequestCard
               key={user.id}
               name={user.username}
@@ -89,7 +84,7 @@ const AddFriends = () => {
                   key={user.id}
                   className="ml-[100px] size-[40px] text-white cursor-pointer"
                   onClick={() => sendFriendRequest(user.username)}
-                />
+                />,
               ]}
               customStyles={{ backgroundColor: 'transparent' }}
             />
