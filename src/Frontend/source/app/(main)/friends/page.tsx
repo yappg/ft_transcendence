@@ -9,8 +9,8 @@ export default function Page() {
     setIsActivated(6);
   });
   return (
-    <div className="col-span-10 col-start-2 row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] py-4 pl-6">
-      <div className="costum-little-shadow h-full w-[95%] overflow-hidden rounded-[50px] md:w-full">
+    <div className="size-full lg:py-4 lg:pl-6 bg-black">
+      <div className="costum-little-shadow size-full overflow-hidden lg:rounded-[50px]">
         <UserFriendsNav />
       </div>
     </div>
