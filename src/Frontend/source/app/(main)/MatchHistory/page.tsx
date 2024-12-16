@@ -2,7 +2,7 @@ import { MatchHistory } from "@/constants/MatchHistory";
 import MatchHistoryComponent from "@/components/MatchHistory/HistoryComponent"
 export default function Page() {
     return(
-        <div className="col-span-10 col-start-2 row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] py-4 pl-6">
+        <div className="size-full py-4 pl-6">
             <div className="size-full overflow-hidden">
             <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll rounded-[50px]">
                 {MatchHistory.map((match, index) => (
