@@ -278,7 +278,10 @@ class PixiManager {
       this.score[0] += 1;
       // this.topPlayerScore += 1;
     }
-    await setTimeout(() => {}, 1000);
+    if (this.score[0] == 7 || this.score[1] == 7) {
+      this.score = [0, 0];
+      this.setGameScore([0, 0]);
+    }
   }
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {
   //   if (socketRef.current) {
