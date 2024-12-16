@@ -31,7 +31,7 @@ urlpatterns = [
     path('prometheus/', include('django_prometheus.urls')),
 
     #all entrys go to one point
-    path('api/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('game/', include('game.urls')),
     path('relations/', include('relations.urls')),

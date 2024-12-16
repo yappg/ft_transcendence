@@ -22,6 +22,7 @@ Oauth2_Providers = {
         'redirect_uri': settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
         },
 }
+
 def APIdata(code, provider):
     data = Oauth2_Providers[provider]
     data[provider]['code'] = code

@@ -1,9 +1,18 @@
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
+import pyotp
+import requests
+from drf_yasg.utils import swagger_auto_schema
+
+# from django.conf import settings
+# from django.shortcuts import redirect
+# from django.core.cache import cache
+# from django.contrib.auth import authenticate
+# from django.contrib.auth.models import User
+# from django.contrib.auth.signals import user_logged_in
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import serializers
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.core.cache import cache
@@ -43,31 +52,29 @@ class PlayerProfileViewWithId(APIView):
 
 # ----
 
-class PlayersViewList(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    model = Player
-    serializer_class=PlayerSerializer
-    queryset=Player.objects.all()
+from ..serializers.authSerializers import *
+from .utils import *
 
-# class PlayerView(APIView):
 #------------------------------------ Auth ------------------------------------
+@swagger_auto_schema(request_body=SignUpSerializer)
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
-    @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
-
         if request.user.is_authenticated:
-            return Response({'error': 'You are already authenticated'}, status=200)
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+            return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
+
+        try:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
-                resp = Response({'message':'logged in Successfuly'}, status=status.HTTP_200_OK)
+                resp = Response({'message': 'Logged in Successfully'},
+                              status=status.HTTP_201_CREATED)
                 resp.set_cookie(
                     key='access_token',
                     value=access_token,
@@ -79,22 +86,28 @@ class SignUpView(APIView):
                     httponly=False
                 )
                 return resp
-            else :
-                return Response({'error': 'user not created'}, status=200)
-        return Response(serializer.errors, status=200)
+        except serializers.ValidationError as e:
+            if isinstance(e.detail, dict):
+                error_message = next(iter(e.detail.values()))
+                if isinstance(error_message, list):
+                    error_message = error_message[0]
+                return Response({'error': error_message}, status=status.HTTP_200_OK)
+            return Response({'error': str(e.detail)}, status=status.HTTP_200_OK)
 
+        return Response({'error': 'User not created'}, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(request_body=SignInSerializer)
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
-
-    @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
 
-        # if request.user.is_authenticated:
-        #     return Response({'error': 'You are already authenticated'}, status=200)
+        if request.user.is_authenticated:
+            return Response({'error': 'You are already authenticated'}, status=200)
         Serializer = self.Serializer_class(data=request.data)
         if Serializer.is_valid():
             user = Serializer.validated_data['user']
@@ -123,12 +136,11 @@ class SignInView(APIView):
         else :
             return Response(Serializer.errors, status=status.HTTP_200_OK)
 
-
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({'message': 'AM here'}, status=status.HTTP_200_OK)
+        return Response({'message': 'this methode is only for the DRF web interface to avoid HTTP_400_Bad_Request'}, status=status.HTTP_200_OK)
 
     def post(self, request):
         try:
@@ -144,7 +156,6 @@ class LogoutView(APIView):
         return response
 
 #------------------------------------- 2FA ------------------------------------
-import pyotp
 
 class GenerateURI(APIView):
     permission_classes = [AllowAny]
@@ -162,7 +173,7 @@ class GenerateURI(APIView):
 
         secret_key = pyotp.random_base32()
         totp = pyotp.TOTP(secret_key)
-        uri = totp.provisioning_uri(name='transcendence', issuer_name='kadigh') # issuer_name=username
+        uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
 
         user.otp_secret_key = secret_key
         user.save()
@@ -201,8 +212,8 @@ class ValidateOTP(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=status.HTTP_200_OK)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_200_OK)
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
@@ -246,13 +257,6 @@ class DisableOTP(APIView):
             status=status.HTTP_200_OK)
 
 #---------------------------------- OAuth2.0 ----------------------------------
-import requests
-from django.conf import settings
-from django.contrib.auth import login
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
-from rest_framework.response import Response
 
 providers_data = {
     "42":{
@@ -291,7 +295,8 @@ class OAuth42LoginView(APIView):
             authorization_url = f"{providers_data[provider]['Auth_url']}?client_id={providers_data[provider]['clientt_id']}\&redirect_uri={providers_data[provider]['redirect_uri']}&scope={scope}&response_type=code"
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
-        return redirect(authorization_url)
+        return Response({'url': authorization_url}, status=status.HTTP_200_OK)
+        # return redirect(authorization_url)
 
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
@@ -302,7 +307,8 @@ class OAuth42CallbackView(APIView):
         if (provider != '42' and provider != 'google'):
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
-        code = request.GET.get('code')
+        # code = request.GET.get('code')
+        code = request.get('code')
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 

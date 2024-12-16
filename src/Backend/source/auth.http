@@ -1,0 +1,83 @@
+
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client1",
+    "email": "client1@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client2",
+    "email": "client2@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client3",
+    "email": "client3@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client4",
+    "email": "client4@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client5",
+    "email": "client5@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
+###################### LOGIN ################################################################################################################################################################
+
+##########
+POST http://localhost:8080/accounts/auth/signin/
+Content-Type: application/json
+
+{
+    "username": "client1",
+    "password": "thisisapassword"
+}
+
+###################### GET TOKEN ################################################################################################################################################################
+
+##########
+POST http://localhost:8080/accounts/JWT/token/
+Content-Type: application/json
+
+{
+    "username": "client1",
+    "password": "thisisapassword"
+}
+##########
+POST http://localhost:8080/accounts/JWT/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjU1NjE0LCJpYXQiOjE3MzMyNTM4MTQsImp0aSI6ImMwNDExYmNlYTE4YjRiMjE5ZmJjYzBjYjQ1YWU2OWY2IiwidXNlcl9pZCI6NH0.Wb1PBtTFoB8NIwavs2vv1R4LedmjTgzZ4RXpbzyiDcI"
+}
