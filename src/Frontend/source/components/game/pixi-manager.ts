@@ -16,22 +16,28 @@ class PixiManager {
   mode: string;
   keysPressed: Set<string> = new Set('');
   paddleWidth: number;
-  topPlayerScore: number;
-  bottomPlayerScore: number;
+  setGameScore: (score: [number, number]) => void;
+  score: [number, number];
+  // topPlayerScore: number;
+  // bottomPlayerScore: number;
 
   constructor(
     container: HTMLElement,
     currentUserId: string | undefined,
     backgroundImage: string,
-    mode: string
+    mode: string,
+    setGameScore: (score: [number, number]) => void,
+    score: [number, number]
   ) {
     this.app = new PIXI.Application();
     this.currentUserId = currentUserId;
     this.backgroundImage = backgroundImage;
     this.mode = mode;
     this.paddleWidth = 0;
-    this.topPlayerScore = 0;
-    this.bottomPlayerScore = 0;
+    this.setGameScore = setGameScore;
+    this.score = score;
+    // this.topPlayerScore = 0;
+    // this.bottomPlayerScore = 0;
     this.init(container).then(() => {
       this.addEventListeners();
       this.startGameLoop();
@@ -73,7 +79,7 @@ class PixiManager {
     this.ball = this.createBall(
       this.app.screen.width / 2,
       this.app.screen.height / 2,
-      25,
+      15,
       0xffffff
     );
 
@@ -224,7 +230,7 @@ class PixiManager {
   updateBallPositionLocal() {
     if (!this.ball || !this.app) return;
 
-    const movementSpeed = 4;
+    const movementSpeed = 6;
 
     this.ball.x += dx * movementSpeed;
     this.ball.y += dy * movementSpeed;
@@ -256,17 +262,23 @@ class PixiManager {
     }
 
     if (this.ball.y <= 0 || this.ball.y >= this.app.screen.height) {
+      this.updateScoreLocal();
       this.updateBallPosition(this.app.screen.width / 2, this.app.screen.height / 2);
     }
   }
 
-  updateScoreLocal() {
+  async updateScoreLocal() {
     if (this.ball.y >= this.app.screen.height) {
-      this.bottomPlayerScore += 1;
+      this.setGameScore([this.score[0], this.score[1] + 1]);
+      this.score[1] += 1;
+      // this.bottomPlayerScore += 1;
     }
     if (this.ball.y <= 0) {
-      this.topPlayerScore += 1;
+      this.setGameScore([this.score[0] + 1, this.score[1]]);
+      this.score[0] += 1;
+      // this.topPlayerScore += 1;
     }
+    await setTimeout(() => {}, 1000);
   }
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {
   //   if (socketRef.current) {
