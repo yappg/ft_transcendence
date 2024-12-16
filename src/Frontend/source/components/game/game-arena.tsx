@@ -257,15 +257,17 @@
 //       background.alpha = 0.3;
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PixiManager from './pixi-manager';
 import SocketManager from './socket-manager';
+import { useGame } from '@/context/GameContext';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
+  const {GameScore, setGameScore} = useGame()
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const pixiManagerRef = useRef<PixiManager | null>(null);
   const socketManagerRef = useRef<SocketManager | null>(null);
-  const [topScore, setTopScore] = useState(0);
+  // const [topScore, setTopScore] = useState(0);
 
   useEffect(() => {
     if (canvasContainerRef.current) {
@@ -273,7 +275,9 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         canvasContainerRef.current,
         'nakebli',
         `/${map}.png`,
-        mode
+        mode,
+        setGameScore,
+        GameScore,
       );
       if (mode.indexOf('local') === -1) {
         socketManagerRef.current = new SocketManager(
@@ -292,14 +296,6 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
       }
     };
   }, []);
-  useEffect(() => {
-    if (pixiManagerRef.current?.topPlayerScore) {
-      setTopScore(pixiManagerRef.current?.topPlayerScore);
-    }
-    if (pixiManagerRef.current?.bottomPlayerScore) {
-      setTopScore(pixiManagerRef.current?.bottomPlayerScore);
-    }
-  }, [pixiManagerRef.current?.topPlayerScore, pixiManagerRef.current?.bottomPlayerScore]);
   useEffect(() => {
     if (pixiManagerRef.current) {
       window.addEventListener('keydown', (event) => pixiManagerRef!.current!.handleKeyDown(event));
