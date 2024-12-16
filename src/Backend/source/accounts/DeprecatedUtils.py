@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from .models import Player
+from ..models import Player
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -64,7 +64,7 @@ def store_user_data(user_data, provider):
             tmpImg = NamedTemporaryFile(delete=True)
             tmpImg.write(response.content)
             tmpImg.flush()
-            # here may be a problem if all 42 images arent .jpg extension or google being .png 
+            # here may be a problem if all 42 images arent .jpg extension or google being .png
             if provider == '42':
                 user.avatar.save(f"{username}_profile.jpg", File(tmpImg), save=True)
             elif provider == 'google':

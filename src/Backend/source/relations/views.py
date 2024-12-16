@@ -3,13 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Player, Friends, FriendInvitation, BlockedFriends
-from .serializers import PlayerSerializer, FriendInvitationSerializer, BlockedFriendsSerializer, FriendsSerializer
+from .serializers import FriendInvitationSerializer, BlockedFriendsSerializer, FriendsSerializer
+from accounts.serializers.functionSerlizers import SearchUsersSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
-
-from drf_yasg.utils import swagger_auto_schema
-from django.db.models import Q
-
 
 
 class PlayerListView(APIView):
@@ -18,12 +15,12 @@ class PlayerListView(APIView):
     def get(self, request):
         print(f"request.user: {request.user}")
         players = Player.objects.exclude(id=request.user.id)
-        serializer = PlayerSerializer(players, many=True)
+        serializer = SearchUsersSerializer(players, many=True)
         return Response(serializer.data)
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
 
     def get(self, request):
         user = request.user
@@ -47,7 +44,7 @@ class BlockedFriendsView(APIView):
         user = request.user
         blocked_users = BlockedFriends.objects.filter(blocker=user)
         blocked_list = [block.blocked for block in blocked_users]
-        serializer = PlayerSerializer(blocked_list, many=True)
+        serializer = SearchUsersSerializer(blocked_list, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -70,7 +67,7 @@ class BlockedFriendsView(APIView):
 
 class FriendInvitationView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(
         request_body=FriendInvitationSerializer,
         responses={200: 'Success', 400: 'Invalid input'}
@@ -115,7 +112,6 @@ class AcceptInvitationView(APIView):
 
         invitation.status = 'accepted'
         invitation.save()
-        
 
         # Create a new Friends object to establish the friendship
         Friends.objects.create(friend_requester=sender, friend_responder=receiver)

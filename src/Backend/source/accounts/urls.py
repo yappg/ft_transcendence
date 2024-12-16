@@ -1,8 +1,32 @@
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.routers import DefaultRouter
 from .views.authViews import *
 from .views.userManagment import *
+from .views.functionViews import *
 
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+router = DefaultRouter()
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles")
+router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
+
+UserProfileView = UserProfileViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'options': 'options',
+})
+
+UserSettingsView = UserSettingsViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'options': 'options',
+})
+
+UserHistoryView = UserHistoryViewSet.as_view({
+    'get': 'list',
+    'options': 'options',
+})
 
 urlpatterns = [
 # regular auth
@@ -24,13 +48,37 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
+# user-management
+    path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
+    path('user-profile/', UserProfileView , name='user_profile'),
+    path('user-settings/', UserSettingsView , name='user_settings'),
+    path('user-history/', UserHistoryView , name='user_game_history'),
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
+
+# implemetation may differ change_password , change_email , change_username 
+    # path 
+
+# TODO disable_account, delete_account
+    # path('disable_account/', UserHistoryView , name='user_game_history'), #
+    # path('delete_account/', UserHistoryView , name='user_game_history'), #
+
+# search views
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
+    # path ('search-friends', Search)
+
+
+]
+# TODO auth with Oauth username And Vice #########
 
 
 #list users
-#     path('list/all/', PlayersViewList.as_view(), name='playersList'),
-# # get user details
+    # path('list/all/', PlayersViewList.as_view(), name='playersList'),
 
-#     path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
-#     path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
-#     path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
-]
+# get user details
+    # path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
+    # path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
+    # path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
+
+# update user details
+    # path('users/me/update/', UpdateUserInfos.as_view(), name='playerUpdate'),
+
