@@ -104,6 +104,11 @@ class PlayerProfile(models.Model):
         self.xp += amount
         self.check_level_up()
 
+    def update_win_ratio(self):
+        if self.total_games != 0:
+            self.win_ratio = (self.games_won / self.total_games) * 100
+        else:
+            self.win_ratio = 0.0
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -116,11 +121,6 @@ class PlayerProfile(models.Model):
                     break
             else:
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
-
-        if self.total_games != 0:
-            self.win_ratio = (self.games_won / self.total_games) * 100
-        else:
-            self.win_ratio = 0.0
 
         super().save(*args, **kwargs)
 
@@ -143,9 +143,9 @@ class PlayerSettings(models.Model):
 
 
 class MatchHistory(models.Model):
-    XP_WIN = 30  # XP for winning
-    XP_DRAW = 20 # XP for a draw
-    XP_LOSS = 15  # XP for losing
+    XP_WIN = 30
+    XP_DRAW = 20
+    XP_LOSS = 15
 
     RESULT_CHOICES = [
         ('player1', 'player1'),
@@ -217,32 +217,32 @@ class MatchHistory(models.Model):
 
         super().save(*args, **kwargs)
 
+class Achievement(models.Model):
+    name = models.CharField(blank=False, max_length=50)
+    description = models.TextField(blank=False, max_length=200)
+    xp_gain = models.IntegerField(blank=False)
+    condition = models.PositiveIntegerField(blank=False)
 
-# class achivement(models.Model):
-#     name = models.CharField(blank=False, max_length=50)
-#     desciption = models.TextField(blank=False, max_length=200)
-#     xp_gain = models.IntegerField(blank=False)
-#     condition = models.IntegerField(blank=False)
+    class Meta:
+        verbose_name = "achievement"
+        verbose_name_plural = "achievements"
 
-#     class Meta:
-#         verbose_name = _("achivement")
-#         verbose_name_plural = _("achivements")
-
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# class PlayerAchievement(models.Model):
-#     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-#     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+class PlayerAchievement(models.Model):
+    player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
 
-#     gained = models.BooleanField(default=False)
-#     progress = models.IntegerField(default=0)
+    gained = models.BooleanField(default=False)
+    progress = models.IntegerField(default=0)
 
-#     date_earned = models.DateTimeField(auto_now=True)
+    date_earned = models.DateTimeField(auto_now=True)
 
-#     class Meta:
-#         unique_together = ('player', 'achievement')
+    class Meta:
+        ordering = ["-gained"]
+        unique_together = ('player', 'achievement')
 
-#     def __str__(self):
-#         return f"{self.player} - {self.achievement}"
+    def __str__(self):
+        return f"{self.player} - {self.achievement}"
