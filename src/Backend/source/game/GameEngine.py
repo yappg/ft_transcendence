@@ -21,7 +21,7 @@ class Ball:
     position: Vector2D
     velocity: Vector2D
     radius: float = 1.0
-
+    
     def update(self, delta_time: float):
         self.position = self.position + (self.velocity * delta_time)
 
@@ -47,11 +47,11 @@ class Player:
     score: int = 0
 
 class PingPongGame:
-    def __init__(self, player1_id: str, player1_username: str,
-                       player2_id: str, player2_username: str):
+    def __init__(self, player1_id: str, player1_username: str, 
+                 player2_id: str, player2_username: str):
         self.game_id = str(uuid.uuid4())
         self.ball = Ball(Vector2D(50, 50), Vector2D(300, 300))
-
+        
         # Initialize players with paddles at opposite sides
         self.player1 = Player(
             player1_id,
@@ -63,7 +63,7 @@ class PingPongGame:
             player2_username,
             Paddle(Vector2D(95, 50))  # Right paddle
         )
-
+        
         self.game_width = 100
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
@@ -110,9 +110,10 @@ class PingPongGame:
         # Paddle collisions
         # Left paddle (player1)
         if self._check_paddle_collision(self.player1.paddle):
-            self.ball.velocity.x = abs(self.ball.velocity.x) # Move right
+            self.ball.velocity.x = abs(self.ball.velocity.x)  # Move right
             self._adjust_ball_angle(self.player1.paddle)
             changed = True
+            
         # Right paddle (player2)
         elif self._check_paddle_collision(self.player2.paddle):
             self.ball.velocity.x = -abs(self.ball.velocity.x)  # Move left
@@ -123,6 +124,7 @@ class PingPongGame:
     
     def _check_paddle_collision(self, paddle: Paddle) -> bool:
         """Check if ball collides with given paddle"""
+        # Simplified rectangle collision check
         return (abs(self.ball.position.x - paddle.position.x) < (paddle.width + self.ball.radius) and
                 abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius))
     
@@ -147,7 +149,7 @@ class PingPongGame:
             self.ball.reset()
             return True
         return False
-
+    
     def _check_game_end(self) -> bool:
         """Check if the game has ended"""
         if self.player1.score >= self.winning_score or \
@@ -156,7 +158,7 @@ class PingPongGame:
             self.winner = self.player1 if self.player1.score > self.player2.score else self.player2
             return True
         return False
-
+    
     def move_paddle(self, player_id: str, new_y: float) -> bool:
         """Move a player's paddle to a new y position"""
         if player_id == self.player1.id:
@@ -193,21 +195,29 @@ class PingPongGame:
             'winner': self.winner.username if self.winner else None
         }
 
+from django_redis import get_redis_connection
+from .models import Game, PlayerProfile
 class GameManager:
-    def __init__(self):
-        self.games: Dict[str, PingPongGame] = {}
-
+    def __init__(self, player1_id: str, player1_username: str,
+                   player2_id: str, player2_username: str):
+        # self.games: Dict[str, PingPongGame] = {}
+        self.games = get_redis_connection("Games")
+        self.create_game(player1_id, player1_username,
+                         player2_id, player2_username)
+    
     def create_game(self, player1_id: str, player1_username: str,
                    player2_id: str, player2_username: str) -> PingPongGame:
         """Create a new game and store it"""
         game = PingPongGame(player1_id, player1_username, player2_id, player2_username)
+        
+        self.games
         self.games[game.game_id] = game
         return game
-
+    
     def get_game(self, game_id: str) -> Optional[PingPongGame]:
         """Get a game by its ID"""
         return self.games.get(game_id)
-
+    
     def remove_game(self, game_id: str):
         """Remove a game from the manager"""
         if game_id in self.games:
