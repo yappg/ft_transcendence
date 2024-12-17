@@ -16,8 +16,9 @@ class PixiManager {
   mode: string;
   keysPressed: Set<string> = new Set('');
   paddleWidth: number;
-  setGameScore: (score: [number, number]) => void;
-  score: [number, number];
+  game: any;
+  // setGameScore: (score: [number, number]) => void;
+  // score: [number, number];
   // topPlayerScore: number;
   // bottomPlayerScore: number;
 
@@ -26,16 +27,18 @@ class PixiManager {
     currentUserId: string | undefined,
     backgroundImage: string,
     mode: string,
-    setGameScore: (score: [number, number]) => void,
-    score: [number, number]
+    game: any
+    // setGameScore: (score: [number, number]) => void,
+    // score: [number, number]
   ) {
     this.app = new PIXI.Application();
     this.currentUserId = currentUserId;
     this.backgroundImage = backgroundImage;
     this.mode = mode;
     this.paddleWidth = 0;
-    this.setGameScore = setGameScore;
-    this.score = score;
+    this.game = game;
+    // this.setGameScore = setGameScore;
+    // this.score = score;
     // this.topPlayerScore = 0;
     // this.bottomPlayerScore = 0;
     this.init(container).then(() => {
@@ -187,7 +190,7 @@ class PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = 5;
+    const movementSpeed = 15;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -251,12 +254,11 @@ class PixiManager {
     }
 
     if (
-      this.ball.y + 10 >= this.bottomRacket.y && // Ball is below the bottom racket
+      this.ball.y + 10 >= this.bottomRacket.y &&
       this.ball.y <= this.bottomRacket.y + this.bottomRacket.height &&
       this.ball.x >= this.bottomRacket.x &&
       this.ball.x <= this.bottomRacket.x + this.paddleWidth
     ) {
-      // Ball hits the bottom racket
       dy *= -1;
       this.ball.y += dy * movementSpeed;
     }
@@ -269,18 +271,16 @@ class PixiManager {
 
   async updateScoreLocal() {
     if (this.ball.y >= this.app.screen.height) {
-      this.setGameScore([this.score[0], this.score[1] + 1]);
-      this.score[1] += 1;
-      // this.bottomPlayerScore += 1;
+      this.game.setGameScore([this.game.GameScore[0], this.game.GameScore[1] + 1]);
+      this.game.GameScore[1] += 1;
     }
     if (this.ball.y <= 0) {
-      this.setGameScore([this.score[0] + 1, this.score[1]]);
-      this.score[0] += 1;
-      // this.topPlayerScore += 1;
+      this.game.setGameScore([this.game.GameScore[0] + 1, this.game.GameScore[1]]);
+      this.game.GameScore[0] += 1;
     }
-    if (this.score[0] == 7 || this.score[1] == 7) {
-      this.score = [0, 0];
-      this.setGameScore([0, 0]);
+    if (this.game.GameScore[0] > 7 || this.game.GameScore[1] > 7) {
+      this.game.GameScore = [0, 0];
+      this.game.setGameScore([0, 0]);
     }
   }
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {

@@ -8,8 +8,10 @@ export interface RoundsProps {
 export interface GameContextType {
   GameScore: [number, number];
   Rounds: RoundsProps[];
+  GameState: 'start' | 'over' | 'round' | 'pause';
   setRounds: (rounds: RoundsProps[]) => void;
   setGameScore: (score: [number, number]) => void;
+  setGameState: (state: 'start' | 'over' | 'round' | 'pause') => void;
   // GameOver: boolean,
   // setGameOver: (over: boolean) => void,
   // GameWinner: string | null,
@@ -25,6 +27,8 @@ const GameContext = createContext<GameContextType>({
   setGameScore: () => {},
   Rounds: [],
   setRounds: () => {},
+  GameState: 'start',
+  setGameState: () => {},
   // GameOver:false,
   // setGameOver: () => {},
   // GameWinner:null,
@@ -38,6 +42,7 @@ const GameContext = createContext<GameContextType>({
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [GameScore, setGameScore] = useState<[number, number]>([0, 0]);
   const [Rounds, setRounds] = useState<RoundsProps[]>([]);
+  const [GameState, setGameState] = useState<'start' | 'over' | 'round' | 'pause'>('start');
   // const [GameOver, setGameOver] = useState<boolean>(false);
   // const [GameWinner, setGameWinner] = useState<string | null>(null);
   // const [GameRound, setGameRound] = useState<number>(0);
@@ -49,6 +54,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         GameScore,
         Rounds,
         setRounds,
+        GameState,
+        setGameState,
         // setGameOver,
         // GameOver,
         // setGameWinner,
