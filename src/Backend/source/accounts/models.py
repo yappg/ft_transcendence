@@ -69,10 +69,10 @@ class PlayerProfile(models.Model):
     fire_games =  models.PositiveIntegerField(default=0)
     earth_games =  models.PositiveIntegerField(default=0)
 
-    # ice_wins =  models.PositiveIntegerField(default=0)
-    # water_wins =  models.PositiveIntegerField(default=0)
-    # fire_wins =  models.PositiveIntegerField(default=0)
-    # earth_wins =  models.PositiveIntegerField(default=0)
+    ice_wins =  models.PositiveIntegerField(default=0)
+    water_wins =  models.PositiveIntegerField(default=0)
+    fire_wins =  models.PositiveIntegerField(default=0)
+    earth_wins =  models.PositiveIntegerField(default=0)
 
 
     last_login = models.DateTimeField(null=True, blank=True)
@@ -124,6 +124,9 @@ class PlayerProfile(models.Model):
             else:
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
 
+        self.check_level_up()
+        self.update_win_ratio()
+
         super().save(*args, **kwargs)
 
 
@@ -144,6 +147,7 @@ class PlayerSettings(models.Model):
         verbose_name_plural = 'Player Settings'
 
 
+from django.db import transaction
 
 class MatchHistory(models.Model):
     XP_WIN = 30
@@ -151,15 +155,16 @@ class MatchHistory(models.Model):
     XP_LOSS = 15
 
     RESULT_CHOICES = [
-        ('player1', 'player1'),
-        ('player2', 'player2'),
-        ('Draw', 'Draw'),
+        ("player1", 'Player 1 Win'),
+        ("player2", 'Player 2 Win'),
+        ("draw", 'Draw'),
     ]
+
     MAP_CHOICES = [
-        ("ice" , "ice"),
-        ("water" , "water"),
-        ("fire" , "fire"),
-        ("earth" , "earth"),
+        ('ice', 'Ice'),
+        ('water', 'Water'),
+        ('fire', 'Fire'),
+        ('earth', 'Earth'),
     ]
 
     result = models.CharField(max_length=10, choices=RESULT_CHOICES)
@@ -181,39 +186,32 @@ class MatchHistory(models.Model):
         verbose_name = 'Match History'
         verbose_name_plural = 'Match Histories'
 
-    def save(self, *args, **kwargs):
+
+    def update_player_stats(self):
         if self.player1 == self.player2:
             raise ValidationError("A player cannot play against themselves.")
 
         self.player1.total_games += 1
         self.player2.total_games += 1
 
-        if self.result == 'player1':
+        setattr(self.player1, f"{self.map_played.lower()}_games", getattr(self.player1, f"{self.map_played.lower()}_games") + 1)
+        setattr(self.player2, f"{self.map_played.lower()}_games", getattr(self.player2, f"{self.map_played.lower()}_games") + 1)
+
+        if self.result == "player1":
             self.player1.games_won += 1
             self.player2.games_loss += 1
             self.player1.add_xp_points(self.XP_WIN)
             self.player2.add_xp_points(self.XP_LOSS)
-        elif self.result == 'player2':
+            setattr(self.player1, f"{self.map_played.lower()}_wins", getattr(self.player1, f"{self.map_played.lower()}_wins") + 1)
+        elif self.result == "player2":
             self.player2.games_won += 1
             self.player1.games_loss += 1
             self.player2.add_xp_points(self.XP_WIN)
             self.player1.add_xp_points(self.XP_LOSS)
+            setattr(self.player2, f"{self.map_played.lower()}_wins", getattr(self.player2, f"{self.map_played.lower()}_wins") + 1)
         else:
             self.player1.add_xp_points(self.XP_DRAW)
             self.player2.add_xp_points(self.XP_DRAW)
-
-        if self.map_played == 'ice':
-            self.player1.ice_games += 1
-            self.player2.ice_games += 1
-        elif self.map_played == 'water':
-            self.player1.water_games += 1
-            self.player2.water_games += 1
-        elif self.map_played == 'fire':
-            self.player1.fire_games += 1
-            self.player2.fire_games += 1
-        else:
-            self.player1.earth_games += 1
-            self.player2.earth_games += 1
 
         self.player1.update_win_ratio()
         self.player2.update_win_ratio()
@@ -221,8 +219,67 @@ class MatchHistory(models.Model):
         self.player1.save()
         self.player2.save()
 
-        super().save(*args, **kwargs)
+    def check_achievements2(self):
+        score_achievement_map = {
+            10: "khriz man 1",
+            20: "khriz man 2",
+            30: "khriz man 3",
+        }
 
+        players = [
+            {'player': self.player1, 'score': self.player1_score, 'opponent_score': self.player2_score},
+            {'player': self.player2, 'score': self.player2_score, 'opponent_score': self.player1_score},
+        ]
+
+        for entry in players:
+            player = entry['player']
+            score = entry['score']
+            opponent_score = entry['opponent_score']
+
+            if opponent_score in score_achievement_map and score == 0:
+                achievement_name = score_achievement_map[score]
+
+                achievement = Achievement.objects.get(name=achievement_name)
+                player_achievement = PlayerAchievement.objects.get(player=player, achievement=achievement)
+                if player_achievement.gained == False:
+                    player_achievement += 1
+                    player_achievement.save()
+
+
+    def check_achievements1(self):
+        score_achievement_map = {
+            10: "Flawless Victory",
+            20: "Perfect Run",
+            30: "Unstoppable",
+        }
+
+        players = [
+            {'player': self.player1, 'score': self.player1_score, 'opponent_score': self.player2_score},
+            {'player': self.player2, 'score': self.player2_score, 'opponent_score': self.player1_score},
+        ]
+
+        for entry in players:
+            player = entry['player']
+            score = entry['score']
+            opponent_score = entry['opponent_score']
+
+            if score in score_achievement_map and opponent_score == 0:
+                achievement_name = score_achievement_map[score]
+
+                achievement = Achievement.objects.get(name=achievement_name)
+                player_achievement = PlayerAchievement.objects.get(player=player, achievement=achievement)
+                player_achievement.increment_progress()
+                if player_achievement.gained == False:
+                    player_achievement += 1
+                    player_achievement.save()
+
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            self.update_player_stats()
+            super().save(*args, **kwargs)
+            self.check_achievements1()
+            self.check_achievements2()
 
 
 class Achievement(models.Model):
@@ -239,13 +296,12 @@ class Achievement(models.Model):
         return self.name
 
 
-
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
 
     gained = models.BooleanField(default=False)
-    progress = models.IntegerField(default=0) # should only update progress
+    progress = models.IntegerField(default=0)
 
     date_earned = models.DateTimeField(null=True)
 
