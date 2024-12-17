@@ -1,15 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
-# from django.conf import settings
-from django.db import models, transaction
-from django.db.models import Q
-import string
-import random
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
+from django.db.models import Q
+from django.db import models
 
+import string
+import random
 
-# TODO admin user will not have a profile or enyting and will be created on the manage.py script
 
 # auth user
 class Player(AbstractUser):
@@ -27,18 +25,17 @@ class Player(AbstractUser):
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         super().save(*args, **kwargs)
-        if is_new:
+        if is_new and not self.is_superuser:
             PlayerProfile.objects.create(player=self)
             PlayerSettings.objects.create(player_profile=self.profile)
-            # TODO add a version of player achivements to every account created
+            achievements = Achievement.objects.all()
+
+            for achievement in achievements:
+                PlayerAchievement.objects.create(player=self.profile, achievement=achievement)
 
 
-# TODO
-# wins per map percent out of 100%
-# wins and loses per day
 
-
-# TODO for a private profile dont serlizer all the data only full public ###
+# TODO for a private profile dont serlizer all the data only public one ###
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
@@ -62,14 +59,21 @@ class PlayerProfile(models.Model):
 
     total_games = models.PositiveIntegerField(default=0)
 
+    games_won = models.PositiveIntegerField(default=0)
+    games_loss = models.PositiveIntegerField(default=0)
+    win_ratio = models.FloatField(default=0.0)
+
+
     ice_games =  models.PositiveIntegerField(default=0)
     water_games =  models.PositiveIntegerField(default=0)
     fire_games =  models.PositiveIntegerField(default=0)
     earth_games =  models.PositiveIntegerField(default=0)
 
-    games_won = models.PositiveIntegerField(default=0)
-    games_loss = models.PositiveIntegerField(default=0)
-    win_ratio = models.FloatField(default=0.0)
+    # ice_wins =  models.PositiveIntegerField(default=0)
+    # water_wins =  models.PositiveIntegerField(default=0)
+    # fire_wins =  models.PositiveIntegerField(default=0)
+    # earth_wins =  models.PositiveIntegerField(default=0)
+
 
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,29 +90,27 @@ class PlayerProfile(models.Model):
         return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
 
 
-    # calculate level and xp
-    def level_up(self):
-        self.xp -= self.calculate_level_up_xp()
-        self.level += 1
-
     def calculate_level_up_xp(self):
         return 50 * (self.level + 1)
 
     def check_level_up(self):
         level_up_xp = self.calculate_level_up_xp()
         while self.xp >= level_up_xp:
-            self.level_up()
+            self.xp -= self.calculate_level_up_xp()
+            self.level += 1
             level_up_xp = self.calculate_level_up_xp()
 
     def add_xp_points(self, amount):
         self.xp += amount
         self.check_level_up()
 
+
     def update_win_ratio(self):
         if self.total_games != 0:
             self.win_ratio = (self.games_won / self.total_games) * 100
         else:
             self.win_ratio = 0.0
+
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -123,6 +125,7 @@ class PlayerProfile(models.Model):
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
 
         super().save(*args, **kwargs)
+
 
 
 class PlayerSettings(models.Model):
@@ -212,10 +215,15 @@ class MatchHistory(models.Model):
             self.player1.earth_games += 1
             self.player2.earth_games += 1
 
+        self.player1.update_win_ratio()
+        self.player2.update_win_ratio()
+
         self.player1.save()
         self.player2.save()
 
         super().save(*args, **kwargs)
+
+
 
 class Achievement(models.Model):
     name = models.CharField(blank=False, max_length=50)
@@ -231,18 +239,29 @@ class Achievement(models.Model):
         return self.name
 
 
+
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
 
     gained = models.BooleanField(default=False)
-    progress = models.IntegerField(default=0)
+    progress = models.IntegerField(default=0) # should only update progress
 
-    date_earned = models.DateTimeField(auto_now=True)
+    date_earned = models.DateTimeField(null=True)
 
     class Meta:
         ordering = ["-gained"]
-        unique_together = ('player', 'achievement')
+        verbose_name = "player achievement"
+        verbose_name_plural = "player achievements"
 
     def __str__(self):
         return f"{self.player} - {self.achievement}"
+
+    def save(self, *args, **kwargs):
+        if self.progress == self.achievement.condition or self.gained:
+            self.gained = True
+            self.date_earned = timezone.now()
+            self.player.add_xp_points(self.achievement.xp_gain)
+            self.player.save()
+
+        super().save(*args, **kwargs)

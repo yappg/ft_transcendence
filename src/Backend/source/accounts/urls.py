@@ -69,6 +69,7 @@ urlpatterns = [
 
 #list users
     # path('list/all/', PlayersViewList.as_view(), name='playersList'),
+
 # get user details
     # path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
     # path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
@@ -78,8 +79,3 @@ urlpatterns = [
     # path('users/me/update/', UpdateUserInfos.as_view(), name='playerUpdate'),
 
 ]
-
-####### TODO add logging for last time logged in and online status from the frontend with account consummers
-### make signals or overide save method in game model if it exists to save match history model out of it
-
-####### auth with Oauth username And Vice #########
