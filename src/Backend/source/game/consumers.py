@@ -22,7 +22,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_layer.group_add(self.groupe_name, self.channel_layer)
             self.add_player_to_queue(self.user.id)
             #start the matchmaking system
-            
         except:
             await self.close()
             return
