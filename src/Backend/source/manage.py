@@ -4,10 +4,11 @@ import os
 import sys
 # from django.contrib.auth.models import User
 
+
 # def create_superuser():
 #     username = 'admin'
 #     email = 'admin@example.com'
-#     password = 'adminpassword'
+#     password = 'admin'
 
 #     if not User.objects.filter(username=username).exists():
 #         User.objects.create_superuser(username=username, email=email, password=password)
