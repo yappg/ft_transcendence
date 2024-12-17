@@ -81,7 +81,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_avatar(self, value):
-        size_max = 2 * 1024 * 1024  # 2MB for max size of the avatar
+        size_max = 2 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
         if (value.size > size_max):
@@ -93,7 +93,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_cover(self, value):
-        size_max = 5 * 1024 * 1024  # 5MB for max size of the cover
+        size_max = 5 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
         if (value.size > size_max):
