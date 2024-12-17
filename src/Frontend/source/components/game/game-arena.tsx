@@ -263,7 +263,7 @@ import SocketManager from './socket-manager';
 import { useGame } from '@/context/GameContext';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
-  const { GameScore, setGameScore } = useGame();
+  const game = useGame();
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const pixiManagerRef = useRef<PixiManager | null>(null);
   const socketManagerRef = useRef<SocketManager | null>(null);
@@ -275,8 +275,9 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         'nakebli',
         `/${map}.png`,
         mode,
-        setGameScore,
-        GameScore
+        game
+        // setGameScore,
+        // GameScore
       );
       if (mode.indexOf('local') === -1) {
         socketManagerRef.current = new SocketManager(
