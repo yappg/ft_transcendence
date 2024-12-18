@@ -28,6 +28,7 @@ class ChatConsumerTestCase(TestCase):
         chat_room.senders.add(*users)
         return chat_room
 
+    # fix later to update
     @database_sync_to_async
     def get_last_message(self):
         return Message.objects.last()

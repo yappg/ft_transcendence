@@ -1,34 +1,41 @@
 from rest_framework import serializers
 from .models import ChatRoom, Message
+from accounts.models import Player
+
+class ReceiverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player 
+        fields = ['id', 'username', 'avatar']
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = serializers.StringRelatedField(read_only=True)
-    receiver = serializers.StringRelatedField(read_only=True)
-
     class Meta:
         model = Message
-        fields = ['id', 'chatroom', 'sender', 'receiver', 'content', 'send_at']
-
+        fields = ['id', 'content', 'send_at']
 
 class ChatRoomSerializer(serializers.ModelSerializer):
-    senders = serializers.SlugRelatedField(
-        many=True,
-        slug_field='username',
-        read_only=True
-    )
     last_message = serializers.SerializerMethodField()
-    
+    receiver = serializers.SerializerMethodField()
+
     class Meta:
         model = ChatRoom
-        fields = ['id', 'senders', 'created_at', 'last_message']
-    
-    
-    def get_senders(self, obj):
-        senders = obj.senders.all()
-        return [{'username': senders.username, 'avatar': senders.avatar.url} for sender in senders]
+        fields = ['id', 'created_at', 'last_message', 'receiver']
     
     def get_last_message(self, obj):
-        LastMessage = obj.messages.order_by('-send_at').first()
-        if LastMessage:
-            return MessageSerializer(LastMessage).data
+        last_message = obj.messages.order_by('-send_at').first()
+        if last_message:
+            return MessageSerializer(last_message).data
+        return None
+    
+    def get_receiver(self, obj):
+        # Assuming the chat is between two users
+        user = self.context.get('request').user
+        receivers = obj.senders.exclude(id=user.id)
+        
+        if receivers.exists():
+            receiver = receivers.first()
+            return {
+                'id': receiver.id,
+                'username': receiver.username,
+                'avatar': receiver.avatar.url if receiver.avatar else None
+            }
         return None

@@ -10,6 +10,7 @@ from accounts.models import Player
 from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from .models import ChatRoom
 
 
 
@@ -45,11 +46,13 @@ class ChatView(APIView):
 
 class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
-
+    
     def get(self, request):
         user = request.user
         chats = ChatRoom.objects.filter(senders=user)
-        serializer = ChatRoomSerializer(chats, many=True)
+        
+        # Pass request to serializer context to access current user
+        serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
 
 

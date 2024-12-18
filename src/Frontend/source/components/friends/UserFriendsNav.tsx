@@ -14,11 +14,14 @@ const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
   const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
-  
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
   
   // need a fetch from the parent component... this is tmp fetch
   useEffect(() => {
-    // Fetch the current user's ID
     const fetchCurrentUserId = async () => {
       try {
         const response = await chatService.getCurrentUserId();
@@ -122,7 +125,7 @@ const UserFriendsNav = (): JSX.Element => {
             <FriendsComponent
               key={index}
               name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
-              ProfilePhoto={friend.profilePhoto}
+              ProfilePhoto={friend.friend_requester.avatar}
               level={friend.level}
               wins={friend.wins}
               messagesLink={
@@ -147,8 +150,8 @@ const UserFriendsNav = (): JSX.Element => {
             <FriendRequestCard
               key={index}
               name={invitation.sender}
-              ProfilePhoto={invitation.senderProfilePhoto}
-              vari={invitation.created_at}
+              ProfilePhoto={invitation.sender.avatar}
+              vari={formatDate(invitation.created_at)}
               onRequestAccepted={handleRequestAccepted}
             />
           ))
