@@ -4,53 +4,57 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RiCheckDoubleLine } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
-import { chatService  } from '@/services/chatService';
-import { Message, User } from '@/constants/chat';
+import { chatService } from '@/services/chatService';
+import { Chat, Message, ReceiverData, User } from '@/constants/chat';
 import { useUser } from '@/context/GlobalContext';
 
 interface MessagesProps {
   chatId: number;
-  chatPartner: User;
+  chatPartner: Chat | null;
   receiverId: number;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-const MessageBubble: React.FC<{ message: Message, isCurrentUser: boolean }> = ({
+const MessageBubble: React.FC<{ message: Message; isCurrentUser: boolean }> = ({
   message,
-  isCurrentUser
+  isCurrentUser,
 }) => {
   const sendAt = message.send_at ? new Date(message.send_at) : new Date();
   const formattedTime = sendAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
-    <div className={`h-fit w-full text-gray-100 flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}>
-      <div className={`bg-black-crd h-fit max-w-[400px] rounded-md px-3 py-2 ${isCurrentUser ? 'bg-primary' : 'bg-secondary'}`}>
+    <div
+      className={`flex h-fit w-full text-gray-100 ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}
+    >
+      <div
+        className={`h-fit max-w-[400px] rounded-md bg-black-crd px-3 py-2 ${isCurrentUser ? 'bg-primary' : 'bg-secondary'}`}
+      >
         <h1>{message.sender}</h1>
-        <p className="h-fit w-full font-thin break-words">
-          {message.content}
-        </p>
-        <h3 className="text-end text-sm text-[rgb(255,255,255,0.5)]">
-          {formattedTime}
-        </h3>
+        <p className="h-fit w-full break-words font-thin">{message.content}</p>
+        <h3 className="text-end text-sm text-[rgb(255,255,255,0.5)]">{formattedTime}</h3>
       </div>
     </div>
   );
 };
 
-export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, messages, setMessages, receiverId}) => {
+export const Messages: React.FC<MessagesProps> = ({
+  chatId,
+  chatPartner,
+  messages,
+  setMessages,
+  receiverId,
+}) => {
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const currentChatIdRef = useRef<number | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
+  const { user } = useUser();
+  useEffect(() => {
+    if (user) setCurrentUserId(user.id);
+  }, [user]);
 
-  const {user} = useUser();
-  useEffect(()=>{
-    if (user)
-      setCurrentUserId(user.id)
-  }, [user])
-  
   useEffect(() => {
     const setupWebSocket = async () => {
       if (socketRef.current && currentChatIdRef.current === chatId) {
@@ -91,15 +95,15 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
 
   // Handle incoming WebSocket messages
   const handleWebSocketMessage = (message: any) => {
-    setMessages(prevMessages => [
+    setMessages((prevMessages) => [
       ...prevMessages,
       {
         chat: chatId,
         sender: message.sender,
         receiver: message.receiver,
         content: message.content,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     ]);
   };
 
@@ -110,7 +114,14 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     console.log('Sending message:', newMessage);
     try {
       if (currentUserId !== null) {
-        console.log('Sending message from user:', currentUserId, 'to receiver:', receiverId,'in room where chatId:', chatId);
+        console.log(
+          'Sending message from user:',
+          currentUserId,
+          'to receiver:',
+          receiverId,
+          'in room where chatId:',
+          chatId
+        );
         await chatService.sendMessage(chatId, newMessage, currentUserId, receiverId);
       }
       setNewMessage('');
@@ -119,24 +130,22 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     }
   };
 
-
-
   // -----------divs---//
   return (
-    <div className="costum-little-shadow bg-black-crd col-start-1 col-end-3 hidden items-center justify-center overflow-hidden rounded-2xl bg-[url('/chat-bg.png')] pb-4 lg:flex lg:flex-col">
+    <div className=" costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
       {/* headbar */}
-      <div className="costum-little-shadow font-dayson flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 text-white">
+      <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
-              src={chatPartner.avatar}
-              alt={`${chatPartner.username}'s profile`}
+              src={chatPartner?.receiver.avatar}
+              alt={`${chatPartner?.receiver.username}'s profile`}
               className="rounded-full"
             />
           </div>
           <div>
-            <h2>{chatPartner.username}</h2>
-            <h3 className="text-primary dark:text-primary-dark font-poppins">online</h3>
+            <h2>{chatPartner?.receiver.username}</h2>
+            <h3 className="font-poppins text-primary dark:text-primary-dark">online</h3>
           </div>
         </div>
       </div>
@@ -146,7 +155,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
           <MessageBubble
             key={index}
             message={message}
-            isCurrentUser={chatPartner.username === message.receiver}
+            isCurrentUser={chatPartner?.receiver.username == message.receiver}
           />
         ))}
         <div ref={messagesEndRef} />
@@ -167,7 +176,7 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
         </div>
         <button
           type="submit"
-          className="bg-primary dark:bg-primary-dark flex size-[40px] items-center justify-center rounded-md"
+          className="flex size-[40px] items-center justify-center rounded-md bg-primary dark:bg-primary-dark"
         >
           <IoSend className="size-[20px] text-white" />
         </button>
@@ -175,3 +184,9 @@ export const Messages: React.FC<MessagesProps> = ({ chatId, chatPartner, message
     </div>
   );
 };
+
+// ChatRoomSerializer(<QuerySet [<ChatRoom: Chat between User0 and UserX>, <ChatRoom: Chat between User0 and hind>, <ChatRoom: Chat between User0 and SadUser>, <ChatRoom: Chat between User0 and User3>, <ChatRoom: Chat between User0 and User2>]>, many=True):
+// backend   |     id = IntegerField(label='ID', read_only=True)
+// backend   |     senders = SlugRelatedField(many=True, read_only=True, slug_field='username')
+// backend   |     created_at = DateTimeField(read_only=True)
+// backend   |     last_message = SerializerMethodField()

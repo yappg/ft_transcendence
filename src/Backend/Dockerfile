@@ -19,7 +19,7 @@ RUN pip install --upgrade pip \
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8080" ]
+CMD [ "sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 && sleep 5 ;done" ]
 # CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################

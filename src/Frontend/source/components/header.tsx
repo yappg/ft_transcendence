@@ -2,11 +2,9 @@ import { IconSearch } from '@tabler/icons-react';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
-
 import { useUser } from '@/context/GlobalContext';
 
 import NotificationBell from  '@/components/notifications/notifications'
-
 
 export const Header = () => {
   const paths = [
@@ -27,7 +25,39 @@ export const Header = () => {
     setShowSearchBar(true);
   };
 
-  const {user, isLoading} = useUser();
+  const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}`);
+      console.log('WebSocket connection established');
+  
+      ws.onopen = () => {
+        console.log('WebSocket connection opened');
+      };
+  
+      ws.onmessage = (event) => {
+        console.log('WebSocket message received:', event.data);
+        const data = JSON.parse(event.data);
+        console.log("----------HERE IS THE NEW EVET", data)
+        setNotifications((prev) => [data, ...prev]);
+        setNotificationCount((prev) => prev + 1);
+      };
+  
+      ws.onerror = (error) => {
+        console.log('WebSocket error:', error);
+      };
+  
+      ws.onclose = (event) => {
+        console.log('WebSocket connection closed:', event);
+      };
+  
+      return () => {
+        ws.close();
+        console.log('WebSocket connection closed by component unmount');
+      };
+    }
+  }, [user, setNotifications, setNotificationCount]);
 
   if (!user)
     return (
@@ -36,7 +66,6 @@ export const Header = () => {
     </h1>
     );
   
-  // here we gonna build the notif logic
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
       {paths
@@ -65,7 +94,7 @@ export const Header = () => {
           <CommandInput placeholder="Search..." />
           <CommandList />
         </Command>
-        {/* <NotificationBell notifications={notifications} notificationCount={notificationCount} /> */}
+        <NotificationBell notifications={notifications} notificationCount={notificationCount} />
       </div>
     </div>
   );
