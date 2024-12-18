@@ -149,12 +149,12 @@
                 console.log('WebSocket connected with authentication');
             };
 
-            socket.onclose = () => {
+            {% comment %} socket.onclose = () => {
                 status.textContent = 'Connection lost. Reconnecting...';
                 overlay.style.display = 'flex';
                 readyBtn.style.display = 'none';
-                setTimeout(connectWebSocket, 3000);
-            };
+            }; {% endcomment %}
+            setTimeout(connectWebSocket, 3000);
 
             socket.onerror = (error) => {
                 console.error('WebSocket error:', error);

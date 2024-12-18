@@ -39,9 +39,11 @@ class TokenAuthMiddleware(BaseMiddleware):
             token = cookie_dict.get('access_token')
         if token:
             try:
+                print('-------------\n Token Exist \n--------------------')
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
                 user = await self.get_user(payload['user_id'])
                 scope['user'] = user
+                print(f'User: {user}')
             except:
                 scope['user'] = AnonymousUser()
         else:
