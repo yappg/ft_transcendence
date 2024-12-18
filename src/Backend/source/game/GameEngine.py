@@ -206,15 +206,14 @@ class GameManager:
         # self.games: Dict[str, PingPongGame] = {}
 
         self.players_queue = get_redis_connection("players_queue")
-        self.players_queue_key = "players_queue"
 
         self.games = get_redis_connection("games_pool")
 
-    def player_in_queue(self, player_id) -> bool:
-        return self.players_queue.sismember(self.players_queue_key, player_id)
 
     def add_player_to_queue(self, player_id):
-        self.players_queue.sadd(self.players_queue_key, player_id)
+        self.players_queue.rpush('players_queue', player_id)
+    def pop_player_from_queue(self, player_id):
+        self.players_queue.lpop('players_queue')#, player_id)
 
     def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
         """Create a new game and store it"""
@@ -223,11 +222,11 @@ class GameManager:
         # self.games
         # self.games[game_model_id] = game
         return game
-    
+
     def get_game(self, game_id: str) -> Optional[PingPongGame]:
         """Get a game by its ID"""
         return self.games.get(game_id)
-    
+
     def remove_game(self, game_id: str):
         """Remove a game by its ID"""
         if self.games.get(game_id):
