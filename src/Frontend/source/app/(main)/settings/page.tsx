@@ -1,25 +1,16 @@
 'use client';
 import { RiSettings5Fill } from 'react-icons/ri';
-import { IoMdNotifications } from 'react-icons/io';
 import { FaUser } from 'react-icons/fa6';
 import { BsFillBrushFill, BsKeyFill, BsBoxArrowLeft } from 'react-icons/bs';
-import { MdLanguage } from 'react-icons/md';
 import { Card } from '@/components/settings/Card';
 import { useSearchParams } from 'next/navigation';
-import Notifications from '@/components/settings/Notifications';
 import Theme from '@/components/settings/Theme';
-import Language from '@/components/settings/Language';
 import Security from '@/components/settings/Security';
 import Logout from '@/components/settings/Logout';
 import { useState, useEffect } from 'react';
 import Profile from '@/components/settings/Profile';
 export default function Settings() {
   const fields = [
-    {
-      title: 'Notifications',
-      Icon: IoMdNotifications,
-      path: 'notifications',
-    },
     {
       title: 'Profile',
       Icon: FaUser,
@@ -30,54 +21,21 @@ export default function Settings() {
       Icon: BsFillBrushFill,
       path: 'theme',
     },
-    {
-      title: 'Language',
-      Icon: MdLanguage,
-      path: 'language',
-    },
-    {
-      title: 'Security',
-      Icon: BsKeyFill,
-      path: 'security',
-    },
-    {
-      title: 'Logout',
-      Icon: BsBoxArrowLeft,
-      path: 'logout',
-    },
   ];
   let param = useSearchParams();
   const current = param.get('field');
-  const [profile, setProfile] = useState({
-    username: 'Meryem22',
-    email: 'test.ts@gmail.com',
-    oldPassword: '123',
-  });
-  useEffect(
-    () => {
-      console.log('profile', profile);
-    }, [profile]
-  )
   const renderContent = () => {
     switch (current) {
-      case 'notifications':
-        return <Notifications />;
       case 'profile':
-        return <Profile Profile={profile} setProfile={setProfile} />;
+        return <Profile />;
       case 'theme':
         return <Theme />;
-      case 'language':
-        return <Language />;
-      case 'security':
-        return <Security />;
-      case 'logout':
-        return <Logout />;
       default:
-        return <div>Select an option from the menu.</div>;
+        return <Profile />;
     }
   };
   return (
-    <div className="col-span-10 col-start-2 row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] py-4 pl-6">
+    <div className="size-full py-4 pl-6">
       <div className="size-full bg-[#00000099] rounded-[40px] [box-shadow:4px_4px_60px_0px_rgba(0,0,0,1)] overflow-hidden flex flex-row">
         <div className="w-[310px] h-full bg-[#0000008C] border-l-2 border-[#0000008C]">
           <div className="w-full h-1/3 flex items-center justify-center">
@@ -87,6 +45,9 @@ export default function Settings() {
             {fields.map((field, index) => (
               <Card key={index} title={field.title} Icon={field.Icon} path={field.path} />
             ))}
+            <div className="w-full h-[16.6%] bg-[#00000026] border-t-[2px] border-r-[2px] border-black">
+              <Logout />
+            </div>
           </div>
         </div>
         <div className="w-full h-full overflow-hidden">{renderContent()}</div>
