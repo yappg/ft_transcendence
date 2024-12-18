@@ -18,15 +18,21 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         self.game = None
         self.game_model = None
+        # self.PlayerInQueue = False
         print(f'------------\nUser Authentified {self.user}\n----------------------\n')
 
         await self.accept()
         await self.add_to_matchmaking()
 
+    def player_in_queue(self, player_id):
+        queue = game_manager.players_queue.lrange('players_queue', 0, -1)
+        BytesPlayerId = str(player_id).encode()
+        return BytesPlayerId in queue
+
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
-            action = data.get('action')
+            action = data.get('action') 
 
             if action == 'move_paddle':
                 if self.game:
@@ -44,7 +50,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def get_opponent(self):
-        player_id = game_manager.players_queue.spop('players_queue')
+        player_id = game_manager.remove_player_from_queue()
         print(f'Player ID: {player_id}')
         player2 = player_id
         # player2 = await database_sync_to_async(Player.objects.get)(id=player_id)
@@ -52,14 +58,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         # self.game_model = await database_sync_to_async(Game.objects.create)(
         #             room_name=f'{player2.username}_VS_{self.user.username}',
         #             player1=self.user, player2=player2)
-        return player2
+        return player2  
 
     async def add_to_matchmaking(self):
+        print('Adding player to matchmaking')
         #could be there an effecient way for this checks 
-        if not game_manager.player_in_queue(self.user.id): #should i make await here?? 
-            game_manager.add_player_to_queue(self.user.id) #should i make await here also ?? 
-
-        if game_manager.players_queue.slen('players_queue') > 1:
+        if self.player_in_queue(self.user.id) and game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
+            print('Player already in queue')
+            return
+  
+        # print(self.PlayerInQueue) 
+        print(game_manager.players_queue.llen('players_queue'))
+        print(game_manager.players_queue.lrange('players_queue', 0, -1))
+        if game_manager.players_queue.llen('players_queue') > 1:
+            print('Creating game')
             try:
                 player2 = await self.get_Opponent()
                 self.game = game_manager.create_game(self.user, player2, self.game_model.id)
@@ -70,10 +82,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                 )
                 await self.broadcast_game_state()
             except :
-                # TODO need to handle this
+                #TODO: handle the error
                 pass
         else:
-            return
+            print('Adding player to queue')
+            game_manager.add_player_to_queue(self.user.id)
+
+        return
 
     async def start_game_loop(self):
         while self.game and self.game.status == 'playing':
@@ -117,3 +132,5 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         # self.channel_layer.group_discard(self.groupe_name, self.channel_name)
         await self.close()
+        
+# {"username":"kadigh","password":"abdo123"}
