@@ -74,6 +74,8 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
+    win_streak = models.IntegerField(default=0)
+    loss_streak = models.IntegerField(default=0)
 
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -112,6 +114,68 @@ class PlayerProfile(models.Model):
             self.win_ratio = 0.0
 
 
+    def check_achievements3(self):
+        ACHIVEMENTS_NAME = ["Triumphant Trio" , "Sizzling Six", "Immortal", "khriz man pro max 1", "khriz man pro max 2" , "khriz man pro max 3"]
+
+        if self.player1.win_streak == 3:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[0])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+        elif self.player1.win_streak == 6:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[1])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+        elif self.player1.win_streak == 12:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[2])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+
+        if self.player1.loss_streak == 3:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[3])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+        elif self.player1.loss_streak == 6:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[4])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+        elif self.player1.loss_streak == 12:
+            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[5])
+            if achivement.gained == False:
+                achivement.progress += 1
+                achivement.save()
+
+
+    def check_achievements3(self):
+        ACHIEVEMENTS = {
+            'win_streak': {
+                3: "Triumphant Trio",
+                6: "Sizzling Six",
+                12: "Immortal"
+            },
+            'loss_streak': {
+                3: "khriz man pro max 1",
+                6: "khriz man pro max 2",
+                12: "khriz man pro max 3"
+            }
+        }
+
+        for streak_type, milestones in ACHIEVEMENTS.items():
+            current_streak = getattr(self, streak_type, 0)
+            achievement_name = milestones.get(current_streak)
+
+            if achievement_name:
+                achievement = Achievement.objects.get(name=achievement_name)
+                player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
+                if player_achievement.gained == False:
+                    player_achievement.progress += 1
+                    player_achievement.save()
+
+
     def save(self, *args, **kwargs):
         if not self.display_name:
             max_attempts = 10
@@ -125,6 +189,7 @@ class PlayerProfile(models.Model):
                 raise ValueError("Unable to generate a unique display name after multiple attempts.")
 
         self.check_level_up()
+        self.check_achievements3()
         self.update_win_ratio()
 
         super().save(*args, **kwargs)
@@ -198,26 +263,37 @@ class MatchHistory(models.Model):
         setattr(self.player2, f"{self.map_played.lower()}_games", getattr(self.player2, f"{self.map_played.lower()}_games") + 1)
 
         if self.result == "player1":
-            self.player1.games_won += 1
-            self.player2.games_loss += 1
-            self.player1.add_xp_points(self.XP_WIN)
-            self.player2.add_xp_points(self.XP_LOSS)
-            setattr(self.player1, f"{self.map_played.lower()}_wins", getattr(self.player1, f"{self.map_played.lower()}_wins") + 1)
+            winner = self.player1
+            loser = self.player2
+            winner.add_xp_points(self.XP_WIN)
+            loser.add_xp_points(self.XP_LOSS)
+            setattr(winner, f"{self.map_played.lower()}_wins", getattr(winner, f"{self.map_played.lower()}_wins") + 1)
         elif self.result == "player2":
-            self.player2.games_won += 1
-            self.player1.games_loss += 1
-            self.player2.add_xp_points(self.XP_WIN)
-            self.player1.add_xp_points(self.XP_LOSS)
-            setattr(self.player2, f"{self.map_played.lower()}_wins", getattr(self.player2, f"{self.map_played.lower()}_wins") + 1)
+            winner = self.player2
+            loser = self.player1
+            winner.add_xp_points(self.XP_WIN)
+            loser.add_xp_points(self.XP_LOSS)
+            setattr(winner, f"{self.map_played.lower()}_wins", getattr(winner, f"{self.map_played.lower()}_wins") + 1)
         else:
             self.player1.add_xp_points(self.XP_DRAW)
             self.player2.add_xp_points(self.XP_DRAW)
+
+        if winner and loser:
+            winner.games_won += 1
+            winner.win_streak += 1
+            winner.loss_streak = 0
+
+            loser.games_loss += 1
+            loser.loss_streak += 1
+            loser.win_streak = 0
+
 
         self.player1.update_win_ratio()
         self.player2.update_win_ratio()
 
         self.player1.save()
         self.player2.save()
+
 
     def check_achievements2(self):
         score_achievement_map = {
@@ -237,12 +313,12 @@ class MatchHistory(models.Model):
             opponent_score = entry['opponent_score']
 
             if opponent_score in score_achievement_map and score == 0:
-                achievement_name = score_achievement_map[score]
+                achievement_name = score_achievement_map[opponent_score]
 
                 achievement = Achievement.objects.get(name=achievement_name)
                 player_achievement = PlayerAchievement.objects.get(player=player, achievement=achievement)
                 if player_achievement.gained == False:
-                    player_achievement += 1
+                    player_achievement.progress += 1
                     player_achievement.save()
 
 
@@ -268,9 +344,8 @@ class MatchHistory(models.Model):
 
                 achievement = Achievement.objects.get(name=achievement_name)
                 player_achievement = PlayerAchievement.objects.get(player=player, achievement=achievement)
-                player_achievement.increment_progress()
                 if player_achievement.gained == False:
-                    player_achievement += 1
+                    player_achievement.progress += 1
                     player_achievement.save()
 
 
@@ -298,7 +373,7 @@ class Achievement(models.Model):
 
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.PROTECT)
 
     gained = models.BooleanField(default=False)
     progress = models.IntegerField(default=0)
