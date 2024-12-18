@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
@@ -42,7 +41,7 @@ const GameChat = () => {
 
       setGameScore([0, 0]);
 
-      if (Rounds.length === 5) {
+      if (Rounds.length >= 3) {
         console.log('Game Over');
         setGameState('over');
       }
@@ -59,11 +58,16 @@ const GameChat = () => {
       </Link>
       <div className="flex h-[170px] w-full items-end justify-between">
         <PlayerScore player={user || ({} as User)} score={GameScore[0]} isme={true} />
-        <div className="flex h-full w-fit flex-col items-center justify-center font-dayson text-[40px] dark:text-white">
-          <h1 className="">Round</h1>
-          <h3>{Rounds.length + 1}</h3>
-        </div>
-        {/* <img src="/logo.svg" alt="logo" className="h-full" /> */}
+        {Rounds.length <= 3 ? (
+          <div className="flex h-full w-fit flex-col items-center justify-center font-dayson text-[40px] dark:text-white">
+            <h1 className="">Round</h1>
+            <h3>{Rounds.length + 1}</h3>
+          </div>
+        ) : (
+          <div className="flex size-full flex-col items-center justify-center font-dayson text-[40px] dark:text-white">
+            game over
+          </div>
+        )}
         <PlayerScore player={user || ({} as User)} score={GameScore[1]} isme={false} />
       </div>
       <div className="flex h-fit w-full items-end justify-between rounded-[10px] bg-black-crd">

@@ -9,7 +9,7 @@ export interface GameContextType {
   GameScore: [number, number];
   Rounds: RoundsProps[];
   GameState: 'start' | 'over' | 'round' | 'pause';
-  setRounds: (rounds: RoundsProps[]) => void;
+  setRounds: (rounds: (prevRounds: RoundsProps[]) => RoundsProps[]) => void;
   setGameScore: (score: [number, number]) => void;
   setGameState: (state: 'start' | 'over' | 'round' | 'pause') => void;
   // GameOver: boolean,

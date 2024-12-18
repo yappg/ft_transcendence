@@ -17,10 +17,6 @@ class PixiManager {
   keysPressed: Set<string> = new Set('');
   paddleWidth: number;
   game: any;
-  // setGameScore: (score: [number, number]) => void;
-  // score: [number, number];
-  // topPlayerScore: number;
-  // bottomPlayerScore: number;
 
   constructor(
     container: HTMLElement,
@@ -28,8 +24,6 @@ class PixiManager {
     backgroundImage: string,
     mode: string,
     game: any
-    // setGameScore: (score: [number, number]) => void,
-    // score: [number, number]
   ) {
     this.app = new PIXI.Application();
     this.currentUserId = currentUserId;
@@ -37,10 +31,6 @@ class PixiManager {
     this.mode = mode;
     this.paddleWidth = 0;
     this.game = game;
-    // this.setGameScore = setGameScore;
-    // this.score = score;
-    // this.topPlayerScore = 0;
-    // this.bottomPlayerScore = 0;
     this.init(container).then(() => {
       this.addEventListeners();
       this.startGameLoop();
@@ -143,13 +133,11 @@ class PixiManager {
 
   updateScores(data: any) {
     const { topScore, bottomScore } = data;
-    // Update score display logic
   }
 
   handleGameEvent(data: any) {
     const { event } = data;
     if (event === 'gameOver') {
-      // Handle game over event
     } else if (event === 'gameStart') {
       // Handle game start event
     } else if (event === 'gamePause') {
@@ -160,10 +148,6 @@ class PixiManager {
   addEventListeners() {
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     window.addEventListener('keyup', this.handleKeyUp.bind(this));
-    // if (mode.indexOf('multiplayer') !== -1) {
-    //   window.addEventListener('keydown', this.handleKeyDown.bind(this));
-    //   window.addEventListener('keyup', this.handleKeyUp.bind(this));
-    // }
     console.log('Event listeners added');
   }
 
@@ -190,7 +174,7 @@ class PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = 15;
+    const movementSpeed = 8 + this.game.Rounds.length;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -226,7 +210,9 @@ class PixiManager {
         );
         console.log(`Moving rightT: ${this.topRacket.x}`);
       }
-      this.updateBallPositionLocal();
+      if (this.game.GameState === 'start') {
+        this.updateBallPositionLocal();
+      }
     }
   }
 
@@ -283,6 +269,7 @@ class PixiManager {
       this.game.setGameScore([0, 0]);
     }
   }
+
   // const sendRacketPosition = (player: 'top' | 'bottom', position: number) => {
   //   if (socketRef.current) {
   //     socketRef.current.send(
@@ -304,6 +291,36 @@ class PixiManager {
     } else {
       this.topRacket.position.x = x;
     }
+  }
+
+  removeGameElements() {
+    while (this.app.stage.children.length > 0) {
+      this.app.stage.removeChildAt(0);
+    }
+  }
+
+  renderGameOver() {
+    const gameOverText = new PIXI.Text('Winner', {
+      fontFamily: 'Dayson',
+      fontSize: 36,
+      fill: 0xff1010,
+      align: 'center',
+    });
+    gameOverText.anchor.set(0.5);
+    gameOverText.x = this.app.renderer.width / 2;
+    gameOverText.y = this.app.renderer.height / 2 - 50;
+    this.app.stage.addChild(gameOverText);
+
+    const winnerNameText = new PIXI.Text('player One', {
+      fontFamily: 'Arial',
+      fontSize: 24,
+      fill: 0xffffff,
+      align: 'center',
+    });
+    winnerNameText.anchor.set(0.5);
+    winnerNameText.x = this.app.renderer.width / 2;
+    winnerNameText.y = this.app.renderer.height / 2 + 10;
+    this.app.stage.addChild(winnerNameText);
   }
 
   destroy() {
