@@ -31,16 +31,23 @@ class Game(models.Model):
 
     def __str__(self):
         return f"Game {self.id}: {self.player1} vs {self.player2 or 'Waiting'}"
+    # def save(self):
+    #     if self.status == 'COMPLETED':
+    #         if self.player1_score > self.player2_score:
+    #             self.winner = self.player1
+    #         elif self.player1_score < self.player2_score:
+    #             self.winner = self.player2
+    #     super().save()
 
-class GameMove(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
-    player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
-    x_position = models.FloatField()
-    # y_position = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+# class GameMove(models.Model):
+#     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='moves')
+#     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
+#     x_position = models.FloatField()
+#     # y_position = models.FloatField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['timestamp']
+#     class Meta:
+#         ordering = ['timestamp']
 
 
 #game history

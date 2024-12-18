@@ -17,6 +17,9 @@ class Player(AbstractUser):
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
 
+    #this model needs to have a profilefield which refers to the playerprofile model
+    # profile=models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name='player')
+
     def __str__(self):
         return self.username
 
@@ -75,7 +78,7 @@ class PlayerProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.display_name} (Level: {self.level})"
+        return f"{self.player.username} Player Profile Model (Level: {self.level})"
 
     class Meta:
         ordering = ['-games_won']
@@ -84,7 +87,6 @@ class PlayerProfile(models.Model):
 
     def all_matches(self):
         return MatchHistory.objects.filter(Q(player1=self) | Q(player2=self)).order_by('-date')
-
 
     # calculate level and xp
     def level_up(self):
@@ -109,6 +111,7 @@ class PlayerProfile(models.Model):
         if not self.display_name:
             max_attempts = 10
             for attempt in range(max_attempts):
+                # if we could use the uuid4() function we would be better
                 suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
                 potential_name = self.player.username + '_' + suffix
                 if not PlayerProfile.objects.filter(display_name=potential_name).exists():

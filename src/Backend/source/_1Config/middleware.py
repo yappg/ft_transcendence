@@ -2,15 +2,13 @@ import jwt
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
+from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
 
-class TokenAuthMiddleware:
+class TokenAuthMiddleware(BaseMiddleware):
     """
     Custom middleware that authenticates WebSocket connections via JWT token stored in cookies.
     """
-    def __init__(self, inner):
-        self.inner = inner
-
     @database_sync_to_async
     def get_user(self, user_id):
         from accounts.models import Player
@@ -28,6 +26,8 @@ class TokenAuthMiddleware:
         scope = dict(scope)
         headers = dict(scope['headers'])
         cookies = headers.get(b'cookie', b'').decode()
+        if cookies:
+            print('-------------\n Cookies Exist \n--------------------')
         token = None
 
         if cookies:
@@ -37,20 +37,14 @@ class TokenAuthMiddleware:
                 key, _, value = item.strip().partition('=')
                 cookie_dict[key] = value
             token = cookie_dict.get('access_token')
-
         if token:
-            # try:
-            #     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            #     user = await self.get_user(payload['user_id'])
-            #     scope['user'] = user
-            # except jwt.ExpiredSignatureError:
-            #     scope['user'] = AnonymousUser()
-            # except jwt.DecodeError:
-            #     scope['user'] = AnonymousUser()            # Decode the token to get user information
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            user = await self.get_user(payload['user_id'])
-
-            scope['user'] = user
+            try:
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+                user = await self.get_user(payload['user_id'])
+                scope['user'] = user
+            except:
+                scope['user'] = AnonymousUser()
         else:
             scope['user'] = AnonymousUser()
-        return await self.inner(scope, receive, send)
+        return await super().__call__(scope, receive, send)
+
