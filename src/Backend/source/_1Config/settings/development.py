@@ -277,8 +277,8 @@ TEMPLATES = [
 # ===========================
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia/')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/UsersMedia/'
+MEDIA_ROOT = os.path.join(Path(__file__).resolve().parent.parent.parent, 'UsersMedia/')
 
 
 # ===========================
