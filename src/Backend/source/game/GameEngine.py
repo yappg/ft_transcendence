@@ -47,29 +47,26 @@ class Player:
     score: int = 0
 
 class PingPongGame:
-    def __init__(self, player1_id: str, player1_username: str, 
-                 player2_id: str, player2_username: str):
-        self.game_id = str(uuid.uuid4())
+    def __init__(self,player1 : Player, player2: Player, game_model_id: int):
+        self.game_id = game_model_id
         self.ball = Ball(Vector2D(50, 50), Vector2D(300, 300))
-        
         # Initialize players with paddles at opposite sides
         self.player1 = Player(
-            player1_id,
-            player1_username,
+            player1.id,
+            player1.username,
             Paddle(Vector2D(5, 50))  # Left paddle
         )
         self.player2 = Player(
-            player2_id,
-            player2_username,
+            player2.id,
+            player2.username,
             Paddle(Vector2D(95, 50))  # Right paddle
         )
-        
         self.game_width = 100
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
         self.winner = None
         self.winning_score = 11
-        
+
     def start_game(self):
         """Start the game if both players are ready"""
         self.status = 'playing'
@@ -174,18 +171,22 @@ class PingPongGame:
         return {
             'game_id': self.game_id,
             'status': self.status,
-            'ball': {
-                'x': self.ball.position.x,
-                'y': self.ball.position.y
+            'ball':
+            {
+            'x': self.ball.position.x,
+            'y': self.ball.position.y
             },
-            'players': {
-                'player1': {
+            'players': 
+            {
+                'player1':
+                {
                     'id': self.player1.id,
                     'username': self.player1.username,
                     'paddle_y': self.player1.paddle.position.y,
                     'score': self.player1.score
                 },
-                'player2': {
+                'player2':
+                {
                     'id': self.player2.id,
                     'username': self.player2.username,
                     'paddle_y': self.player2.paddle.position.y,
@@ -196,22 +197,31 @@ class PingPongGame:
         }
 
 from django_redis import get_redis_connection
-from .models import Game, PlayerProfile
+from game.models import Game
+from accounts.models import Player, PlayerProfile
+
 class GameManager:
-    def __init__(self, player1_id: str, player1_username: str,
-                   player2_id: str, player2_username: str):
+    def __init__(self):
+        print('**Game Manager Initialized**')
         # self.games: Dict[str, PingPongGame] = {}
-        self.games = get_redis_connection("Games")
-        self.create_game(player1_id, player1_username,
-                         player2_id, player2_username)
-    
-    def create_game(self, player1_id: str, player1_username: str,
-                   player2_id: str, player2_username: str) -> PingPongGame:
+
+        self.players_queue = get_redis_connection("players_queue")
+        self.players_queue_key = "players_queue"
+
+        self.games = get_redis_connection("games_pool")
+
+    def player_in_queue(self, player_id) -> bool:
+        return self.players_queue.sismember(self.players_queue_key, player_id)
+
+    def add_player_to_queue(self, player_id):
+        self.players_queue.sadd(self.players_queue_key, player_id)
+
+    def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
         """Create a new game and store it"""
-        game = PingPongGame(player1_id, player1_username, player2_id, player2_username)
-        
-        self.games
-        self.games[game.game_id] = game
+        game = PingPongGame(_player1, _player2, game_model_id)
+        self.games.set(game_model_id, game)
+        # self.games
+        # self.games[game_model_id] = game
         return game
     
     def get_game(self, game_id: str) -> Optional[PingPongGame]:
@@ -219,6 +229,6 @@ class GameManager:
         return self.games.get(game_id)
     
     def remove_game(self, game_id: str):
-        """Remove a game from the manager"""
-        if game_id in self.games:
-            del self.games[game_id]
+        """Remove a game by its ID"""
+        if self.games.get(game_id):
+            self.games.delete(game_id)

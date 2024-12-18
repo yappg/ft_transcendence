@@ -25,25 +25,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings.developments'
 # Initialize Django
 django.setup()  # Ensure Django is set up before accessing any models
 
-
-# Define the ASGI application routing
-# from chat.routing import websocket_urlpatterns as chat_routing
-# from game.routing import websocket_urlpatterns as game_routing
-
-# application = ProtocolTypeRouter({
-#     'http': django_asgi_app,
-#     'websocket': AuthMiddlewareStack(
-#         URLRouter(
-#             routing.websocket_urlpatterns
-#         )
-#     ),
-# })
-
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
-    'websocket': TokenAuthMiddleware(
-        URLRouter(
-            websockets_urlpatterns
-        )
+    'websocket':AllowedHostsOriginValidator(
+        TokenAuthMiddleware(
+            URLRouter(
+                websockets_urlpatterns
+            )
+        ),
     ),
 })
