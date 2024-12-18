@@ -96,59 +96,30 @@ class PlayerProfile(models.Model):
         return 50 * (self.level + 1)
 
     def check_level_up(self):
+        ACHIEVEMENTS = ["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"]
+
         level_up_xp = self.calculate_level_up_xp()
         while self.xp >= level_up_xp:
             self.xp -= self.calculate_level_up_xp()
             self.level += 1
-            level_up_xp = self.calculate_level_up_xp()
+            for achievement_name in ACHIEVEMENTS:
+                achievement = Achievement.objects.get(name=achievement_name)
+                player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
+
+                if player_achievement.gained == False:
+                    player_achievement.progress += 1
+                    player_achievement.save()
+
 
     def add_xp_points(self, amount):
         self.xp += amount
         self.check_level_up()
-
 
     def update_win_ratio(self):
         if self.total_games != 0:
             self.win_ratio = (self.games_won / self.total_games) * 100
         else:
             self.win_ratio = 0.0
-
-
-    def check_achievements3(self):
-        ACHIVEMENTS_NAME = ["Triumphant Trio" , "Sizzling Six", "Immortal", "khriz man pro max 1", "khriz man pro max 2" , "khriz man pro max 3"]
-
-        if self.player1.win_streak == 3:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[0])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-        elif self.player1.win_streak == 6:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[1])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-        elif self.player1.win_streak == 12:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[2])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-
-        if self.player1.loss_streak == 3:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[3])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-        elif self.player1.loss_streak == 6:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[4])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-        elif self.player1.loss_streak == 12:
-            achivement = PlayerAchievement.objects.get(player=self, name=ACHIVEMENTS_NAME[5])
-            if achivement.gained == False:
-                achivement.progress += 1
-                achivement.save()
-
 
     def check_achievements3(self):
         ACHIEVEMENTS = {
@@ -190,10 +161,8 @@ class PlayerProfile(models.Model):
 
         self.check_level_up()
         self.check_achievements3()
-        self.update_win_ratio()
 
         super().save(*args, **kwargs)
-
 
 
 class PlayerSettings(models.Model):
