@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from the .env file if it exists will be added after TODO
-load_dotenv(BASE_DIR.parent.parent / ".env")
+load_dotenv(BASE_DIR.parent.parent / ".env") 
 
 # ===========================
 # SECURITY SETTINGS
@@ -103,7 +103,7 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=600),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
@@ -161,7 +161,21 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
-    }
+    },
+    'players_queue': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
+    'games_pool': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/3",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions

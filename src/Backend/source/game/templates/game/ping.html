@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        /* ... previous styles remain the same ... */
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        #game-canvas {
+            background: #000;
+            border: 2px solid #333;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+        }
+
+        .status {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            font-size: 32px;
+            color: white;
+            pointer-events: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div class="score">
+            <span id="score-left">0</span>
+            <span id="score-right">0</span>
+        </div>
+        <div id="overlay" class="overlay">
+            <div id="status" class="status">Connecting...</div>
+            <button id="ready-btn" style="display: none;">Ready!</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('overlay');
+        const status = document.getElementById('status');
+        const readyBtn = document.getElementById('ready-btn');
+        const scoreLeft = document.getElementById('score-left');
+        const scoreRight = document.getElementById('score-right');
+
+        // Set canvas size
+        canvas.width = 800;
+        canvas.height = 600;
+
+        let socket = null;
+        let gameState = null;
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function connectWebSocket() {
+            // Get the CSRF token and session ID
+            const csrftoken = getCookie('csrftoken');
+            const accessToken = getCookie('access_token');
+            const refreshToken = getCookie('refresh_token');
+
+            // Create WebSocket URL with authentication
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `ws://${window.location.hostname}:8080/ws/game/`;
+
+            // Create WebSocket with cookies
+            socket = new WebSocket(wsUrl);
+            
+            // Add cookies to WebSocket handshake access_token
+            socket.onbeforeopen = (event) => {
+                event.target.setRequestHeader('Cookie', `access_token=${accessToken}; refresh_token=${refreshToken}; csrftoken=${csrftoken}`);
+            };
+
+            socket.onopen = () => {
+                status.textContent = 'Waiting for opponent...';
+                console.log('WebSocket connected with authentication');
+            };
+
+            socket.onclose = () => {
+                status.textContent = 'Connection lost. Reconnecting...';
+                overlay.style.display = 'flex';
+                readyBtn.style.display = 'none';
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                status.textContent = 'Connection error! Please check if you are logged in.';
+            };
+
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                gameState = data;
+
+                // Update game state
+                switch (data.status) {
+                    case 'waiting':
+                        overlay.style.display = 'flex';
+                        readyBtn.style.display = 'block';
+                        status.textContent = 'Opponent found! Click ready when you want to start.';
+                        break;
+
+                    case 'playing':
+                        overlay.style.display = 'none';
+                        readyBtn.style.display = 'none';
+                        break;
+
+                    case 'finished':
+                        overlay.style.display = 'flex';
+                        readyBtn.style.display = 'none';
+                        status.textContent = `Game Over! ${data.winner} wins!`;
+                        break;
+                }
+
+                updateScores();
+                drawGame();
+            };
+        }
+
+        // ... rest of the code remains the same ...
+        
+        readyBtn.addEventListener('click', () => {
+            socket.send(JSON.stringify({ action: 'ready' }));
+            readyBtn.disabled = true;
+            status.textContent = 'Waiting for other player...';
+        });
+
+        function updateScores() {
+            if (gameState && gameState.players) {
+                scoreLeft.textContent = gameState.players.player1.score;
+                scoreRight.textContent = gameState.players.player2.score;
+            }
+        }
+
+        function drawGame() {
+            if (!gameState) return;
+
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw center line
+            ctx.setLineDash([5, 15]);
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.strokeStyle = '#fff';
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw paddles
+            ctx.fillStyle = '#fff';
+            
+            // Left paddle (player1)
+            const leftPaddleY = (gameState.players.player1.paddle_y / 100) * canvas.height;
+            ctx.fillRect(20, leftPaddleY - 40, 10, 80);
+            
+            // Right paddle (player2)
+            const rightPaddleY = (gameState.players.player2.paddle_y / 100) * canvas.height;
+            ctx.fillRect(canvas.width - 30, rightPaddleY - 40, 10, 80);
+
+            // Draw ball
+            if (gameState.ball) {
+                const ballX = (gameState.ball.x / 100) * canvas.width;
+                const ballY = (gameState.ball.y / 100) * canvas.height;
+                ctx.beginPath();
+                ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+            }
+        }
+
+        // Handle paddle movement
+        canvas.addEventListener('mousemove', (e) => {
+            if (gameState && gameState.status === 'playing') {
+                const rect = canvas.getBoundingClientRect();
+                const y = ((e.clientY - rect.top) / canvas.height) * 100;
+                socket.send(JSON.stringify({
+                    action: 'move_paddle',
+                    position: y
+                }));
+            }
+        });
+
+        // Handle window resize
+        function handleResize() {
+            const container = canvas.parentElement;
+            const scale = Math.min(
+                window.innerWidth / container.offsetWidth,
+                window.innerHeight / container.offsetHeight
+            );
+            
+            container.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        // Start connection
+        connectWebSocket();
+    </script>
+</body>
+</html>
