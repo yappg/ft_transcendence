@@ -5,8 +5,7 @@ import { SideBarContext } from '@/context/SideBarContext';
 
 import { useUser } from '@/context/GlobalContext';
 
-import NotificationBell from  '@/components/notifications/notifications'
-
+import NotificationBell from '@/components/notifications/notifications';
 
 export const Header = () => {
   const paths = [
@@ -27,15 +26,15 @@ export const Header = () => {
     setShowSearchBar(true);
   };
 
-  const {user, isLoading} = useUser();
+  const { user, isLoading } = useUser();
 
   if (!user)
     return (
-      <h1 className="size-[200px] flex justify-center items-center font-dayson rounded-md text-[30px] text-gray-600">
-      Loading...
-    </h1>
+      <h1 className="flex size-[200px] items-center justify-center rounded-md font-dayson text-[30px] text-gray-600">
+        Loading...
+      </h1>
     );
-  
+
   // here we gonna build the notif logic
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
@@ -57,11 +56,16 @@ export const Header = () => {
         <button
           className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 lg:hidden`}
         >
-          <div className="size-[30px] items-center justify-center md:size-[40px]" onClick={handleClick}>
+          <div
+            className="size-[30px] items-center justify-center md:size-[40px]"
+            onClick={handleClick}
+          >
             <IconSearch className="size-[35px] text-gray-400" />
           </div>
         </button>
-        <Command className={`${showSearchBar ? 'flex' : 'hidden'} transition-all duration-300 lg:flex lg:w-[340px] xl:w-[400px]`}>
+        <Command
+          className={`${showSearchBar ? 'flex' : 'hidden'} transition-all duration-300 lg:flex lg:w-[340px] xl:w-[400px]`}
+        >
           <CommandInput placeholder="Search..." />
           <CommandList />
         </Command>
