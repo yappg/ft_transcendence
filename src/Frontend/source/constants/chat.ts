@@ -14,10 +14,19 @@ export interface Message {
   send_at?: string;
 }
 
-export interface Chat {
+export interface LastMessage {
+  content: string;
   id: number;
-  senders: User[];
-  last_message?: Message;
+  send_at: string;
 }
-
-
+export interface ReceiverData {
+  avatar: string;
+  id: number;
+  username: string;
+}
+export interface Chat {
+  created_at: string;
+  id: number;
+  last_message?: LastMessage;
+  receiver: ReceiverData;
+}

@@ -4,7 +4,7 @@ from accounts.models import Player
 
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    senders = models.ManyToManyField(Player)
+    senders = models.ManyToManyField(Player)# participents
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

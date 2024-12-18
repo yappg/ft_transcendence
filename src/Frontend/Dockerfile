@@ -13,7 +13,7 @@ RUN yarn install
 
 EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD [ "sh",  "-c",  "while true; do yarn dev && sleep 5 ;done" ]
 
 ######################################
 # Stage 2: Build stage

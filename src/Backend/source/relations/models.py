@@ -32,9 +32,6 @@ class FriendInvitation(models.Model):
     
     # def save():
         
-
-
-
 class BlockedFriends(models.Model):
     blocker = models.ForeignKey(Player, related_name='blocked_users', on_delete=models.CASCADE)
     blocked = models.ForeignKey(Player, related_name='blocked_by', on_delete=models.CASCADE)
@@ -46,7 +43,7 @@ class BlockedFriends(models.Model):
 
 class Notification(models.Model):
     recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
-    Type = models.TextField(max_length=25, default='')
+    Type = models.TextField(max_length=45, default='')
     message = models.TextField(max_length=255, default='Default notification')
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
