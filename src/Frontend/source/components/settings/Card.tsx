@@ -2,13 +2,14 @@ import React, { use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { IconType } from 'react-icons/lib';
 export const Card = ({
   title,
   Icon,
   path,
 }: {
   title: string;
-  Icon: React.ReactNode;
+  Icon: IconType;
   path: string;
 }) => {
   const searchParams = useSearchParams();
