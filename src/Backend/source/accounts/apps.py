@@ -78,14 +78,19 @@ class AccountsConfig(AppConfig):
                 {"name" : "Prime", "description" : "reach level 200 in the platform.", "xp_gain" : 10000, "condition" : 200},
                 {"name" : "Ascendant", "description" : "reach level 500 in the platform.", "xp_gain" : 20000, "condition" : 500},
 
-                {"name": "Triumphant Trio", "description": "Streak of 3 wins", "xp_gain": 5000, "condition": 1},
-                {"name": "Sizzling Six", "description": "Streak of 6 wins", "xp_gain": 10000, "condition": 1},
-                {"name": "Immortal", "description": "Streak of 12 wins", "xp_gain": 15000, "condition": 1},
 
-                {"name": "khriz man pro max 1", "description": "loss 3 matches in row", "xp_gain": 69, "condition": 1},
-                {"name": "khriz man pro max 2", "description": "loss 6 matches in row", "xp_gain": 69, "condition": 1},
-                {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 1},
+                # done
+                {"name": "Triumphant Trio", "description": "Streak of 3 wins", "xp_gain": 5000, "condition": 3},
+                {"name": "Sizzling Six", "description": "Streak of 6 wins", "xp_gain": 10000, "condition": 6},
+                {"name": "Immortal", "description": "Streak of 12 wins", "xp_gain": 15000, "condition": 12},
 
+                {"name": "khriz man pro max 1", "description": "loss 3 matches in row", "xp_gain": 69, "condition": 3},
+                {"name": "khriz man pro max 2", "description": "loss 6 matches in row", "xp_gain": 69, "condition": 6},
+                {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 12},
+
+
+
+                # done logic need a to be merged for the achievements 1 and 2
                 {"name": "khriz man 1", "description": "loss with 0 points to 10", "xp_gain": 69, "condition": 1},
                 {"name": "khriz man 2", "description": "loss with 0 points to 20", "xp_gain": 69, "condition": 1},
                 {"name": "khriz man 3", "description": "loss with 0 points to 30", "xp_gain": 69, "condition": 1},
