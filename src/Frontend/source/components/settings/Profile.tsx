@@ -1,127 +1,122 @@
-import React from 'react';
-import { IconFeather } from '@tabler/icons-react';
 import { useState } from 'react';
-import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { IconCloudLock } from '@tabler/icons-react';
-const ProfileShema = z.object({
-  email: z.string().email(),
-  username: z.string().min(3),
-  newPassword: z.string().min(8),
-});
-const Profile = () => {
-  const [profile, setProfile] = useState({
-    username: 'Meryem22',
-    name: 'Meryem',
-    email: 'test.ts@gmail.com',
-    oldPassword: '123',
-  });
-  const [newProfile, setNewProfile] = useState({
-    username: Profile.username,
-    email: Profile.email,
-    oldPass: '',
-    newPass: '',
-  });
-  const [errors, setErrors] = useState({});
-  function handleSave() {
-    try {
-      ProfileShema.parse({
-        email: newProfile.email,
-        username: newProfile.username,
-        newPassword: newProfile.newPass,
-      });
-      setErrors({});
-      setProfile({
-        username: newProfile.username,
-        email: newProfile.email,
-        oldPassword: newProfile.oldPass,
-      });
-      setNewProfile({ ...newProfile, oldPass: '', newPass: '' });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors = error.errors.reduce((acc, curr) => {
-          acc[curr.path[0]] = curr.message;
-          return acc;
-        }, {});
-        setErrors(fieldErrors);
+import Image from 'next/image';
+import { CoverCard } from './CoverCard';
+import { ImageCard } from './ImageCard';
+
+export default function ProfileInfo() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState('');
+  const [coverError, setCoverError] = useState('');
+  const [fullName, setFullName] = useState('Meryeme Kelba');
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setProfileError('File size exceeds 5MB.');
+        setSelectedImage(null);
+        return;
       }
+
+      // Convert file to URL for preview
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+      setProfileError('');
     }
-  }
+  };
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setCoverError('File size exceeds 5MB.');
+        setCoverImage(null);
+        return;
+      }
+
+      // Convert file to URL for preview
+      const imageUrl = URL.createObjectURL(file);
+      setCoverImage(imageUrl);
+      setCoverError('');
+    }
+  };
+
   return (
-    // <Content>
-    //   <div className="w-full h-[95%] flex flex-col items-center justify-center">
-    //     <div className="h-[10%] w-full border-b-[2px] border-l-[2px] border-black bg-[#00000099]">
-    //       <div className="h-[50%] w-[100%] flex items-center justify-center flex-row p-8 gap-8 ml-[-90px]">
-    //         {/* <IconEdit stroke={1} className="text-white h-[50px] w-[50px]" /> */}
-    //         {/* <h1 className="text-[30px] text-white font-coustard font-light border-b-2">
-    //           Edit Profile
-    //         </h1> */}
-    //       </div>
-    //     </div>
-    //     <div className="w-full h-[90%] flex flex-col items-start justify-start gap-12">
-    //       <EditProfilePicture/>
-    //       <EditProfile/>
-    //     </div>
-    //   </div>
-    // </Content>
-    <div className="size-full flex flex-col gap-2 items-center">
-      <div className="w-full h-1/5 flex justify-between items-center p-5 border-b-2 border-[rgba(28,28,28,0.9)]">
-        <div className="size-[200px] gap-2 flex items-center justify-start p-4 flex-col">
-          <h1 className="text-[rgba(28,28,28,0.9)] text-[20px]">Profile picture</h1>
-          <div className="size-[100px] rounded-full bg-white"></div>
-        </div>
-        <div className="w-[500px] h-full flex items-center justify-start gap-8">
-          <button className="bg-white rounded-md h-[50px] w-[200px] hover:bg-[#28AFB0] transition-all duration-300 text-[rgba(28,28,28,0.9)]">
-            Change picture
-          </button>
-          <button className="bg-white rounded-md h-[50px] w-[200px] text-red-500 ">
-            Delete picture
-          </button>
-        </div>
-        <div></div>
-        <div></div>
+    <div className='size-full overflow-y-scroll'>
+      <div className='w-full h-[12%] px-12 flex items-center'>
+        <h1 className='text-white font-dayson font-bold text-xl tracking-wider'>Profile Information</h1>
       </div>
-      <div className="w-full h-2/5">
-        <div className="w-full h-1/4 flex items-center justify-start gap-5 p-8">
-          <IconFeather stroke={2} />
-          <h1 className="text-[rgba(28,28,28,0.9)] text-[20px]">Personal information</h1>
-        </div>
-        <div className="w-full h-fit flex flex-col items-start justify-center gap-6">
-          <h1 className="text-white text-xl font-dayson">Email</h1>
-          <Input
-            value={newProfile.email}
-            onChange={(e) => {
-              setNewProfile({ ...newProfile, email: e.target.value });
-            }}
-            placeholder="New mail..."
-            className="bg-[#0000003D] rounded-[50px] w-[400px] text-white  placeholder:opacity-55"
+      <div className="w-full h-fit px-12 py-6 flex flex-wrap gap-4 items-center justify-between">
+        {/* Profile Picture Section */}
+          <ImageCard handleDeleteImage={() => {
+        setSelectedImage(null);
+        setProfileError('');
+      }} selectedImage={selectedImage} handleImageChange={handleImageChange} profileError={profileError}/>
+
+        {/* Cover Picture Section */}
+            <CoverCard coverImage={coverImage} handleCoverChange={handleCoverChange} coverError={coverError} />
+      </div>
+      <div className="w-full h-fit px-12 py-6 flex flex-wrap gap-4 items-start justify-start">
+        <div className="w-fit flex flex-col gap-4">
+          <label className="text-white text-sm">Username</label>
+          <input
+            type="text"
+            value="username123"
+            disabled
+            className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
           />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500 font-coustard">{errors.email}</p>
-          )}
-        </div>
-        <div className="w-full h-fit flex flex-col items-start justify-center gap-6">
-          <h1 className="text-white text-xl font-dayson">Username</h1>
-          <Input
-            value={newProfile.username}
-            onChange={(e) => {
-              setNewProfile({ ...newProfile, username: e.target.value });
-            }}
-            placeholder="New mail..."
-            className="bg-[#0000003D] rounded-[50px] w-[400px] text-white  placeholder:opacity-55"
+          <label className="text-white text-sm">Email</label>
+          <input
+            type="email"
+            value="user@example.com"
+            disabled
+            className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
           />
-          {errors.username && (
-            <p className="mt-1 text-sm text-red-500 font-coustard">{errors.username}</p>
-          )}
+        </div>
+
+        <div className="w-fit h-full  flex flex-col gap-4">
+          <label className="text-white text-sm">Full Name</label>
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="py-2 px-4 bg-white text-black rounded-md outline-none"
+          />
         </div>
       </div>
-      <div className="w-full h-2/5">
-        <div className="w-full h-1/4 flex items-center justify-start gap-5 p-8">
-          <IconCloudLock stroke={2} />
-          <h1 className="text-[rgba(28,28,28,0.9)] text-[20px]">Security</h1>
+      <div className='w-full h-[8%] px-12 flex items-center'>
+        <h1 className='text-white font-dayson font-bold text-xl tracking-wider'>Security</h1>
+      </div>
+      <div className="w-full h-fit px-12 py-6 flex flex-wrap gap-4 items-center justify-between">
+        <div className="w-fit flex flex-col gap-4">
+          <label className="text-white text-sm">Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none"
+          />
+          <label className="text-white text-sm">Confirm Password</label>
+          <input
+            type="password"
+            placeholder="Confirm your password"
+            className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none"
+          />
         </div>
+
+        <div className="w-fit flex flex-col gap-4">
+          <label className="text-white text-sm">Two Factor Authentication</label>
+          <button className="py-2 px-4 bg-blue-600 text-white rounded-md">Activate 2FA</button>
+          <button disabled className="py-2 px-4 bg-red-600 text-white rounded-md">Delete 2FA</button>
+        </div>
+      </div>
+      <div className="w-full px-12 py-6 flex justify-end">
+        <button className="w-[200px] py-3 px-6 bg-white text-black font-dayson rounded-md font-bold text-lg">
+          Save Changes
+        </button>
       </div>
     </div>
   );
-};
-export default Profile;
+}
