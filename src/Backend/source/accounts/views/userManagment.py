@@ -22,6 +22,8 @@ from ..serializers.userManagmentSerlizers import *
 
 
 # exlude disabled profiles with is_active to false from the account return to front that the profile is private
+
+
 class PlayerProfileViewSet(viewsets.ModelViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
@@ -45,6 +47,23 @@ class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+
+class PlayerAchievementViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PlayerAchievement.objects.all()
+    serializer_class = PlayerAchievementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request, pk=None):
+        try:
+            profile = PlayerProfile.objects.get(pk=pk)
+
+            serializer = self.get_serializer(profile.all_achievements(), many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        except PlayerProfile.DoesNotExist:
+            raise NotFound("Player profile not found.")
+
+#--------------------------User Infos ------------------------------
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = PlayerProfileSerializer
@@ -92,18 +111,17 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PlayerAchievementSerializer
 
-# class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
-#     serializer_class = PlayerAchievementSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         try:
-#             user = self.request.user
-#             player_profile = user.profile
-#             return player_profile.all_matches()
-#         except PlayerProfile.DoesNotExist:
-#             raise NotFound("Player profile not found.")
+    def get_queryset(self):
+        try:
+            user = self.request.user
+            profile = user.profile
+            return profile.all_achievements()
+        except PlayerProfile.DoesNotExist:
+            raise NotFound("Player profile not found.")
 
 # #--------------------------User Infos Update ------------------------------
 

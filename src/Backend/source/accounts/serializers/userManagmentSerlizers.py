@@ -134,3 +134,20 @@ class MatchHistorySerializer(serializers.ModelSerializer):
             'id', 'result', 'map_played', 'player1', 'player2',
             'player1_score', 'player2_score', 'date'
         ]
+
+
+class AchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievement
+        fields = [ "id", "name", "description", "condition", "xp_gain"  ]
+        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"  ]
+
+
+class PlayerAchievementSerializer(serializers.ModelSerializer):
+    achievement = AchievementSerializer(read_only=True)
+
+    class Meta:
+        model = PlayerAchievement
+        fields = ["id", "player", "achievement", "gained", "progress", "date_earned"]
+        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned"]
+
