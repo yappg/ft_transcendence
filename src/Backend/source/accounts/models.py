@@ -71,6 +71,8 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
+    # graph_data = models.JSONField(default=list)
+
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -91,11 +93,39 @@ class PlayerProfile(models.Model):
     def all_achievements(self):
         return PlayerAchievement.objects.filter(player=self).order_by('-gained', '-date_earned')
 
+    def all_achievements_gained(self):
+        return PlayerAchievement.objects.filter(player=self, gained=True).order_by('-date_earned')
+
+
     def weekly_statistics(self, days):
-        return MatchHistory.objects.filter(
-            Q(player1=self) | Q(player2=self),
-            date__gte=timezone.now() - timedelta(days=days)
-        ).order_by('-date')
+        end_date = timezone.now()
+        start_date = end_date - timedelta(days=days)
+
+        daily_stats = []
+
+        for day in range(days):
+            day_start = end_date - timedelta(days=day+1)
+            day_end = end_date - timedelta(days=day)
+
+            wins = MatchHistory.objects.filter(
+                Q(player1=self, result="player1") | Q(player2=self, result="player2"),
+                date__gte=day_start,
+                date__lt=day_end
+            ).count()
+
+            losses = MatchHistory.objects.filter(
+                Q(player1=self, result="player2") | Q(player2=self, result="player1"),
+                date__gte=day_start,
+                date__lt=day_end
+            ).count()
+
+            daily_stats.append({
+                'date': day_start.date().isoformat(),
+                'wins': wins,
+                'losses': losses
+            })
+
+        return daily_stats
 
 
     def calculate_level_up_xp(self):
@@ -168,6 +198,8 @@ class PlayerSettings(models.Model):
     private_profile = models.BooleanField(default=False)
     notifications_enabled = models.BooleanField(default=True)
 
+    stats_graph_days = models.PositiveIntegerField(default=7)
+
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -179,6 +211,8 @@ class PlayerSettings(models.Model):
 
 
 from django.db import transaction
+
+# TODO forume for the xp xin depending on the level and map played
 
 class MatchHistory(models.Model):
     XP_WIN = 30
@@ -222,8 +256,8 @@ class MatchHistory(models.Model):
         if self.player1 == self.player2:
             raise ValidationError("A player cannot play against themselves.")
 
-        self.player1.total_games += 10
-        self.player2.total_games += 10
+        self.player1.total_games += 1
+        self.player2.total_games += 1
 
         setattr(self.player1, f"{self.map_played.lower()}_games", getattr(self.player1, f"{self.map_played.lower()}_games") + 1)
         setattr(self.player2, f"{self.map_played.lower()}_games", getattr(self.player2, f"{self.map_played.lower()}_games") + 1)
