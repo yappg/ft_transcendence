@@ -9,7 +9,7 @@ import uuid
 class Vector2D:
     x: float
     y: float
-    
+
     def __add__(self, other):
         return Vector2D(self.x + other.x, self.y + other.y)
     
@@ -214,6 +214,7 @@ class GameManager:
         self.players_queue.rpush('players_queue', player_id)
     def pop_player_from_queue(self, player_id):
         self.players_queue.lpop('players_queue')#, player_id)
+        print(f'---------------------------->>>>>>>>>[Player ID: {player_id} has been removed from the queue]<<<<<<<----------------------')
 
     def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
         """Create a new game and store it"""
