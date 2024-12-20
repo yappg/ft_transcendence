@@ -22,8 +22,6 @@ from ..serializers.userManagmentSerlizers import *
 
 
 # exlude disabled profiles with is_active to false from the account return to front that the profile is private
-
-
 class PlayerProfileViewSet(viewsets.ModelViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer

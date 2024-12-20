@@ -64,6 +64,11 @@ urlpatterns = [
     path('user-history/', UserHistoryView , name='user_game_history'),
     path('user-achievements/', UserAchivementView , name='user_achievements'),
 
+# search views
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
+    # path ('search-friends', Search)
+
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
 # TODO implemetation may differ change_password , change_email , change_username , disable_account, delete_account
     # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
@@ -71,12 +76,6 @@ urlpatterns = [
     # path('change_password/', UserHistoryView , name='user_game_history'), # verficiation from front
     # path('disable_account/', UserHistoryView , name='user_game_history'), #
     # path('delete_account/', UserHistoryView , name='user_game_history'), #
-
-# search views
-    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
-    # path ('search-friends', Search)
-
-    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
 #list users
     # path('list/all/', PlayersViewList.as_view(), name='playersList'),
