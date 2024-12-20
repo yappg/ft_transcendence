@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from the .env file if it exists will be added after TODO
-
 load_dotenv(BASE_DIR.parent.parent / ".env")
 
 # ===========================
