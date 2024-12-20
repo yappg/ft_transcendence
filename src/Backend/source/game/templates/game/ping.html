@@ -31,6 +31,48 @@
             color: red;
             margin: 10px 0;
         }
+
+        .game-chat {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .chat-input button {
+            background: #28a745;
+        }
+
+        .chat-input button:hover {
+            background: #218838;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+            background: #fff;
+        }
     </style>
 </head>
 <body>
@@ -137,6 +179,7 @@
         function updateGameState(gameState) {
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw game elements
             ctx.fillStyle = '#fff';
@@ -173,7 +216,7 @@
             }
         }
 
-        // Handle paddle movement
+        // Event listeners
         canvas.addEventListener('mousemove', (e) => {
             if (ws && ws.readyState === WebSocket.OPEN) {
                 const rect = canvas.getBoundingClientRect();
