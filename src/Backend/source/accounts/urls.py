@@ -58,7 +58,7 @@ urlpatterns = [
 # restful endpoint
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
 
-# user-management # TODO add it to profile too achivements
+# user-management
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
@@ -77,7 +77,7 @@ urlpatterns = [
     # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
-    path('statistics/', StatisticsView.as_view(), name='statistics'),
+
 #list users
     # path('list/all/', PlayersViewList.as_view(), name='playersList'),
 

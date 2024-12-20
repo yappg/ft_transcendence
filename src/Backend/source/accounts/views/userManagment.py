@@ -92,7 +92,9 @@ class UserSettingsViewSet(viewsets.ModelViewSet):
 
     def get_object(self):
         try:
-            return self.get_queryset().get()
+            profile = PlayerProfile.objects.get(player=self.request.user)
+            settings = profile.settings
+            return settings
         except PlayerSettings.DoesNotExist:
             raise NotFound("Player settings not found.")
         except PlayerSettings.MultipleObjectsReturned:
