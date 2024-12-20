@@ -49,14 +49,15 @@ class PlayerProfile(models.Model):
     display_name = models.CharField(validators=[MinLengthValidator(3)], max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
 
-
     avatar = models.ImageField(
         upload_to='Avatars/',
-        default='Avatars/.defaultAvatar.jpeg'
+        default='Avatars/.defaultAvatar.jpeg',
+        null=True, blank=True
     )
     cover = models.ImageField(
         upload_to='Covers/',
-        default='Covers/.defaultCover.jpeg'
+        default='Covers/.defaultCover.jpeg',
+        null=True, blank=True
     )
 
 
