@@ -5,25 +5,24 @@ import { Assets, Sprite, Graphics } from 'pixi.js';
 // let dx = 1;
 // let dy = 1;
 
-export class PixiManager {
+export abstract class PixiManager {
   app: PIXI.Application;
   topRacket!: PIXI.Graphics;
   bottomRacket!: PIXI.Graphics;
   ball!: PIXI.Graphics;
   backgroundImage: string;
-  mode: string;
   keysPressed: Set<string> = new Set('');
   paddleWidth: number;
   gameState: string = 'start';
-  screenWidth: number;
-  screenHeight: number;
-  //   paddleHeight: number;
+  screenWidth: number = 0;
+  screenHeight: number = 0;
+  game: any;
 
-  constructor(container: HTMLElement, backgroundImage: string, mode: string) {
+  constructor(container: HTMLElement, backgroundImage: string, mode: string, game: any) {
     this.app = new PIXI.Application();
     this.backgroundImage = backgroundImage;
-    this.mode = mode;
     this.paddleWidth = 0;
+    this.game = game;
     this.initWindow(container).then(() => {});
   }
 
@@ -44,26 +43,36 @@ export class PixiManager {
     this.app.stage.addChild(background);
     if (this.gameState === 'start') {
       this.drawGameElements();
-      // const funct = async () => {
-      //   await setTimeout(() => {}, 50000);
-      // };
-      // funct();
-      this.gameState = 'over';
+      // this.gameState = 'over';
     }
     if (this.gameState === 'over') {
       this.removeGameElements();
     }
   }
 
+  abstract updatePaddlePosition(): void;
+
   removeGameElements() {
     this.app.stage.removeChild(this.topRacket);
     this.app.stage.removeChild(this.bottomRacket);
-    // this.app.stage.removeChild(this.ball);
-    let crayRadius = 10;
-    this.app.ticker.add(() => {
-      crayRadius += 100;
-      this.ball.circle(this.screenWidth / 2, this.screenHeight / 2, crayRadius);
-    });
+  }
+
+  addEventListeners() {
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    window.addEventListener('keyup', this.handleKeyUp.bind(this));
+    console.log('Event listeners added');
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    this.keysPressed.add(event.key);
+    console.log(`Key down: ${event.key}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+  }
+
+  handleKeyUp(event: KeyboardEvent) {
+    this.keysPressed.delete(event.key);
+    console.log(`Key up: ${event.key}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
   }
 
   drawGameElements() {
@@ -126,5 +135,53 @@ export class PixiManager {
     racket.filters = [glowFilter];
 
     return racket;
+  }
+}
+
+export class LocalGameManager extends PixiManager {
+  updatePaddlePosition() {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    if (!bottomRacket || !app) return;
+
+    const movementSpeed = 8;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+      console.log(`Moving leftB: ${bottomRacket.x}`);
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        app.screen.width - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+      console.log(`Moving rightB: ${bottomRacket.x}`);
+    }
+
+    if (
+      (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
+      !this.keysPressed.has('d') &&
+      !this.keysPressed.has('D')
+    ) {
+      this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
+      console.log(`Moving leftT: ${this.topRacket.x}`);
+    }
+
+    if (
+      (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
+      !this.keysPressed.has('a') &&
+      !this.keysPressed.has('A')
+    ) {
+      this.topRacket.x = Math.min(
+        app.screen.width - this.topRacket.width,
+        this.topRacket.x + movementSpeed
+      );
+      console.log(`Moving rightT: ${this.topRacket.x}`);
+    }
+    if (this.gameState === 'start') {
+      // this.updateBallPositionLocal();
+    }
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { PixiManager } from '@/components/game/pixi';
+import { LocalGameManager, PixiManager } from '@/components/game/pixi';
 import React, { useRef, useEffect, useState } from 'react';
 
 const GameArena = ({ mode, map }: { map: string; mode: string }) => {
@@ -10,15 +10,27 @@ const GameArena = ({ mode, map }: { map: string; mode: string }) => {
 
   useEffect(() => {
     if (canvasContainerRef.current) {
-      gameManagerRef.current = new PixiManager(canvasContainerRef.current, `/earth.png`, mode);
+      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/earth.png`, mode);
       gameManagerRef.current.drawGameElements();
     }
 
-    // return () => {
-    //   if (gameManagerRef.current) {
-    //     gameManagerRef.current.app.destroy(true);
-    //   }
-    // };
+    return () => {
+      if (gameManagerRef.current) {
+        gameManagerRef.current.app.destroy(true);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (gameManagerRef.current) {
+      window.addEventListener('keydown', (event) => gameManagerRef!.current!.handleKeyDown(event));
+      window.addEventListener('keyup', (event) => gameManagerRef!.current!.handleKeyUp(event));
+    }
+    return () => {
+      window.removeEventListener('keydown', (event) =>
+        gameManagerRef!.current!.handleKeyDown(event)
+      );
+    };
   }, []);
 
   return (
