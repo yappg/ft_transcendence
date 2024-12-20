@@ -14,12 +14,6 @@ import 'swiper/css/navigation';
 import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
-  // const getrout = (mode: string) => {
-  //   const newSearchParams = new URLSearchParams(searchParams.toString());
-  //   newSearchParams.set('mode', mode);
-  //   router.push(`/games?${searchParams.toString()}`);
-  // };
-
   return (
     <Swiper
       effect={'coverflow'}
@@ -39,7 +33,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
       className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/earth.png"
@@ -48,7 +42,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/Game-Arena?mode=${mode}&map=earth`}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/air.png"
@@ -57,7 +51,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/Game-Arena?mode=${mode}&map=air`}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/fire.png"
@@ -66,7 +60,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/Game-Arena?mode=${mode}&map=fire`}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/water.png"
@@ -80,17 +74,14 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 };
 
 const GameModeSwiper = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
   return (
     <Swiper
       effect={'coverflow'}
       grabCursor={true}
       centeredSlides={true}
       loop={true}
-      slidesPerView={2} // Show multiple slides
-      spaceBetween={60} // Add space between slides
+      slidesPerView={2}
+      spaceBetween={60}
       coverflowEffect={{
         rotate: 0,
         stretch: 0,
@@ -100,30 +91,38 @@ const GameModeSwiper = () => {
       autoplay={true}
       pagination={{ el: '.swiper-pagination', clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
+      className="swiper-container flex h-[70%] w-full items-center justify-center overflow-auto py-4"
     >
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
-          title="Play costum toutnement"
-          description="Air: The invisible killer we can not live without"
+          title="toutnement"
+          description=""
           url={`/games?mode=tournoment`}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
-          title="simple match One Vs One"
-          description="Because sometimes, you just need to watch the world burn."
-          url={`/games?mode=one-vson`}
+          title="Local Tournement"
+          description=""
+          url={`/games?mode=tournoment-local`}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
-          title="play vs our ai"
+          title="One Vs One"
+          description=""
+          url={`/games?mode=one-vs-one`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="Local One vs One"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url={`/games?mode=ai`}
+          url={`/games?mode=one-vs-one-local`}
         />
       </SwiperSlide>
     </Swiper>
@@ -134,7 +133,7 @@ const Game_modes = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode');
-  console.log(`mode`, mode);
+
   useEffect(() => {
     setIsActivated(2);
   }, [setIsActivated]);

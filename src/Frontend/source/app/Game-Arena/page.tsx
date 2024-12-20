@@ -5,13 +5,6 @@ import GameTable from '@/components/game/game-arena';
 import { useSearchParams } from 'next/navigation';
 import GameChat from '@/components/game/game-chat';
 import { GameProvider } from '@/context/GameContext';
-// import { useRouter } from 'next/naviation';
-
-interface GameArenaProps {
-  params: {
-    mode: string;
-  };
-}
 
 const GameArena = () => {
   const searchParams = useSearchParams();
