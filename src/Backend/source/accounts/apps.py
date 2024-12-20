@@ -49,6 +49,8 @@ class AccountsConfig(AppConfig):
 
 
 
+
+
                 # {"name" : "ice Apprentice", "description" : "win 5 games in ice biome.", "xp_gain" : 500, "condition" : 5},
                 # {"name" : "ice Adventurer", "description" : "win 20 games in ice biome.", "xp_gain" : 1000, "condition" : 20},
                 # {"name" : "ice Contender", "description" : "win 50 games in ice biome.", "xp_gain" : 2500, "condition" : 50},
@@ -70,7 +72,7 @@ class AccountsConfig(AppConfig):
                 # {"name" : "Earth Veteran", "description" : "win 100 games in earth biome.", "xp_gain" : 5000, "condition" : 100},
 
 
-                # done
+                # bruh
                 {"name" : "Spark", "description" : "reach level 10 in the platform.", "xp_gain" : 500, "condition" : 10},
                 {"name" : "Momentum", "description" : "reach level 20 in the platform.", "xp_gain" : 1000, "condition" : 20},
                 {"name" : "Edge", "description" : "reach level 50 in the platform.", "xp_gain" : 2500, "condition" : 50},
@@ -89,8 +91,6 @@ class AccountsConfig(AppConfig):
                 {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 12},
 
 
-
-                # done logic need a to be merged for the achievements 1 and 2
                 {"name": "khriz man 1", "description": "loss with 0 points to 10", "xp_gain": 69, "condition": 1},
                 {"name": "khriz man 2", "description": "loss with 0 points to 20", "xp_gain": 69, "condition": 1},
                 {"name": "khriz man 3", "description": "loss with 0 points to 30", "xp_gain": 69, "condition": 1},
