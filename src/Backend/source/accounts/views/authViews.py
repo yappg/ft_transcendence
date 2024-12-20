@@ -137,9 +137,10 @@ class GenerateURI(APIView):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         user = Player.objects.get(username=request.data['username'])
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
+        if user == None:  
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK) 
         if user.enabled_2fa == True:
             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
@@ -163,9 +164,11 @@ class VerifyOTP(APIView):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
         #     return Response(serializer.errors, status=400)
-        # username = request.data['username']
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
+        username = request.data['username']
         otp_token = request.data['otp_token']
-        # user = Player.objects.get(username=username)
+        user = Player.objects.get(username=username)
         user = request.user
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
@@ -187,9 +190,11 @@ class ValidateOTP(APIView):
         serializer = self.serializer_class(request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
-        # username = request.data['username']
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
+        username = request.data['username']
         otp_token = request.data['otp_token']
-        # user = Player.objects.get(username=username)
+        user = Player.objects.get(username=username)
         user = request.user
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
@@ -215,8 +220,10 @@ class DisableOTP(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # username = request.data['username']
-        # user = Player.objects.get(username=username)
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
+        username = request.data['username']
+        user = Player.objects.get(username=username)
         user = request.user
         if user is None:
             return Response({'error' : 'invalid user'})
