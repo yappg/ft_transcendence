@@ -26,12 +26,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.accept()
         await self.add_to_matchmaking()
 
-    def player_in_queue(self, player_id):
-        queue = game_manager.players_queue.lrange('players_queue', 0, -1)
-        print(f'Queue: {queue}')
-        BytesPlayerId = str(player_id).encode()
-        return BytesPlayerId in queue
-
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
@@ -53,45 +47,48 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def get_opponent(self):
-        player_id = game_manager.remove_player_from_queue()
-        print(f'Player ID: {player_id}')
-        player2 = player_id
-        # player2 = await database_sync_to_async(Player.objects.get)(id=player_id)
+        print('                         Getting opponent')
+        player2_id = await game_manager.remove_player_from_queue()
+        if not player2_id:
+            return print('                         No opponent found')
+        print(f'Player ID: {player2_id}')
 
+        # player2 = await database_sync_to_async(Player.objects.get)(id=player2_id)
         # self.game_model = await database_sync_to_async(Game.objects.create)(
         #             room_name=f'{player2.username}_VS_{self.user.username}',
         #             player1=self.user, player2=player2)
-        return player2  
+        # return player2
+
+    async def player_in_queue(self, player_id):
+        queue = game_manager.players_queue.lrange('players_queue', 0, -1)
+        print(f'Queue: {queue}')
+        BytesPlayerId = str(player_id).encode()
+        return BytesPlayerId in queue
 
     async def add_to_matchmaking(self):
-        print('Adding player to matchmaking')
+        print('                         Adding player to matchmaking')
         #could be there an effecient way for this checks 
-        if self.player_in_queue(self.user.id) and\
-            game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
-            print('Player already in queue')
+        if await self.player_in_queue(self.user.id) and game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
+            print('                         Player already in queue')
             return
-  
-        # print(self.PlayerInQueue) 
-        print(game_manager.players_queue.llen('players_queue'))
-        print(game_manager.players_queue.lrange('players_queue', 0, -1))
-        if game_manager.players_queue.llen('players_queue') > 1:
-            print('Creating game')
-            try:
-                player2 = await self.get_Opponent()
-                self.game = game_manager.create_game(self.user, player2, self.game_model.id)
 
+        if game_manager.players_queue.llen('players_queue') > 0:
+            print('                         Creating game')
+            try:
+                print('                         Creating haaaaaq game')
+                player2 = self.get_Opponent()
+                self.game = await game_manager.create_game(self.user, player2, self.game_model.id)
                 await self.channel_layer.group_add(
-                    f'game_{self.game_id}',
+                    f'game_{self.game.game_id}',
                     self.channel_name
                 )
                 await self.broadcast_game_state()
-            except :
+            except:
                 #TODO: handle the error
                 pass
         else:
             print('Adding player to queue')
-            game_manager.add_player_to_queue(self.user.id)
-
+            await game_manager.add_player_to_queue(self.user.id)
         return
 
     async def start_game_loop(self):
