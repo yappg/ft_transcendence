@@ -210,12 +210,14 @@ class GameManager:
         self.games = get_redis_connection("games_pool")
 
 
-    def add_player_to_queue(self, player_id):
+    async def add_player_to_queue(self, player_id):
         self.players_queue.rpush('players_queue', player_id)
-    def pop_player_from_queue(self, player_id):
-        self.players_queue.lpop('players_queue')#, player_id)
+    async def pop_player_from_queue(self, player_id):
+        ola = await self.players_queue.lpop('players_queue')
+        print(f'Player ID: {ola}')
+        return ola
 
-    def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
+    async def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
         """Create a new game and store it"""
         game = PingPongGame(_player1, _player2, game_model_id)
         self.games.set(game_model_id, game)
