@@ -18,14 +18,17 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         self.game = None
         self.game_model = None
+        # there is another way to do this, is to set the playerInQueue first the player still in the queue,
+        #but it doesnt work because each time the player connect the playerInQueue will be set to False 
         # self.PlayerInQueue = False
-        print(f'------------\nUser Authentified {self.user}\n----------------------\n')
+        print(f'\n------------>>>>>[User Authentified {self.user}]<<<<<<<<<----------------------\n')
 
         await self.accept()
         await self.add_to_matchmaking()
 
     def player_in_queue(self, player_id):
         queue = game_manager.players_queue.lrange('players_queue', 0, -1)
+        print(f'Queue: {queue}')
         BytesPlayerId = str(player_id).encode()
         return BytesPlayerId in queue
 
@@ -63,7 +66,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def add_to_matchmaking(self):
         print('Adding player to matchmaking')
         #could be there an effecient way for this checks 
-        if self.player_in_queue(self.user.id) and game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
+        if self.player_in_queue(self.user.id) and\
+            game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
             print('Player already in queue')
             return
   

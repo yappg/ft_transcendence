@@ -2,115 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game</title>
+    <title>Pong Game Test</title>
     <style>
-        /* ... previous styles remain the same ... */
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
         .game-container {
-            position: relative;
             width: 800px;
-            height: 600px;
-        }
-
-        #game-canvas {
-            background: #000;
-            border: 2px solid #333;
-            display: block;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
+            margin: 20px auto;
             text-align: center;
         }
-
+        #gameCanvas {
+            border: 2px solid black;
+            background: #000;
+        }
+        .controls {
+            margin: 20px 0;
+        }
         .status {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .score {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 100px;
-            font-size: 32px;
-            color: white;
-            pointer-events: none;
-        }
-
-        button {
-            padding: 12px 24px;
-            font-size: 18px;
-            background: #4CAF50;
-            border: none;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
             border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
         }
-
-        button:hover {
-            background: #45a049;
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
         }
-
-        button:disabled {
-            background: #666;
-            cursor: not-allowed;
+        .auth-status {
+            color: red;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <canvas id="game-canvas"></canvas>
+        <h1>Pong Game Test</h1>
+        <div class="auth-status" id="authStatus"></div>
+        <div class="status" id="connectionStatus">Status: Disconnected</div>
         <div class="score">
-            <span id="score-left">0</span>
-            <span id="score-right">0</span>
+            Player 1: <span id="score1">0</span> | 
+            Player 2: <span id="score2">0</span>
         </div>
-        <div id="overlay" class="overlay">
-            <div id="status" class="status">Connecting...</div>
-            <button id="ready-btn" style="display: none;">Ready!</button>
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        <div class="controls">
+            <button id="readyBtn">Ready</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('game-canvas');
+        let ws = null;
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const overlay = document.getElementById('overlay');
-        const status = document.getElementById('status');
-        const readyBtn = document.getElementById('ready-btn');
-        const scoreLeft = document.getElementById('score-left');
-        const scoreRight = document.getElementById('score-right');
+        const statusDisplay = document.getElementById('connectionStatus');
+        const authStatus = document.getElementById('authStatus');
+        const readyBtn = document.getElementById('readyBtn');
+        const score1Display = document.getElementById('score1');
+        const score2Display = document.getElementById('score2');
 
-        // Set canvas size
-        canvas.width = 800;
-        canvas.height = 600;
-
-        let socket = null;
-        let gameState = null;
-
+        // Function to get CSRF token from cookies
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -123,154 +71,139 @@
                     }
                 }
             }
+
             return cookieValue;
         }
 
-        function connectWebSocket() {
-            // Get the CSRF token and session ID
+        function checkAuthenticationStatus() {
             const csrftoken = getCookie('csrftoken');
             const accessToken = getCookie('access_token');
             const refreshToken = getCookie('refresh_token');
-
-            // Create WebSocket URL with authentication
-            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `ws://${window.location.hostname}:8080/ws/game/`;
-
-            // Create WebSocket with cookies
-            socket = new WebSocket(wsUrl);
             
-            // Add cookies to WebSocket handshake access_token
-            socket.onbeforeopen = (event) => {
-                event.target.setRequestHeader('Cookie', `access_token=${accessToken}; refresh_token=${refreshToken}; csrftoken=${csrftoken}`);
-            };
-
-            socket.onopen = () => {
-                status.textContent = 'Waiting for opponent...';
-                console.log('WebSocket connected with authentication');
-            };
-
-            {% comment %} socket.onclose = () => {
-                status.textContent = 'Connection lost. Reconnecting...';
-                overlay.style.display = 'flex';
-                readyBtn.style.display = 'none';
-            }; {% endcomment %}
-            setTimeout(connectWebSocket, 3000);
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                status.textContent = 'Connection error! Please check if you are logged in.';
-            };
-
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                gameState = data;
-
-                // Update game state
-                switch (data.status) {
-                    case 'waiting':
-                        overlay.style.display = 'flex';
-                        readyBtn.style.display = 'block';
-                        status.textContent = 'Opponent found! Click ready when you want to start.';
-                        break;
-
-                    case 'playing':
-                        overlay.style.display = 'none';
-                        readyBtn.style.display = 'none';
-                        break;
-
-                    case 'finished':
-                        overlay.style.display = 'flex';
-                        readyBtn.style.display = 'none';
-                        status.textContent = `Game Over! ${data.winner} wins!`;
-                        break;
-                }
-
-                updateScores();
-                drawGame();
-            };
-        }
-
-        // ... rest of the code remains the same ...
-        
-        readyBtn.addEventListener('click', () => {
-            socket.send(JSON.stringify({ action: 'ready' }));
-            readyBtn.disabled = true;
-            status.textContent = 'Waiting for other player...';
-        });
-
-        function updateScores() {
-            if (gameState && gameState.players) {
-                scoreLeft.textContent = gameState.players.player1.score;
-                scoreRight.textContent = gameState.players.player2.score;
+            if (!accessToken || !refreshToken) {
+                authStatus.textContent = 'Error: No access or refresh token found.';
+                return false;
             }
+            if (!csrftoken) {
+                authStatus.textContent = 'Error: No CSRF token found.';
+                return false;
+            }
+            
+            authStatus.textContent = '';
+            return true;
         }
 
-        function drawGame() {
-            if (!gameState) return;
+        function connectWebSocket() {
+            if (!checkAuthenticationStatus()) {
+                return;
+            }
 
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/game/`;
+            
+            // Create WebSocket connection with cookies
+            ws = new WebSocket(wsUrl);
+            
+            // Add cookies to WebSocket handshake
+            ws.onbeforeopen = () => {
+                const sessionid = getCookie('sessionid');
+                const csrftoken = getCookie('csrftoken');
+                ws.setRequestHeader('Cookie', `sessionid=${sessionid}; csrftoken=${csrftoken}`);
+            };
+
+            ws.onopen = () => {
+                statusDisplay.textContent = 'Status: Connected - Waiting for opponent';
+                authStatus.textContent = '';
+            };
+
+            ws.onclose = (event) => {
+                statusDisplay.textContent = 'Status: Disconnected';
+                if (event.code === 4001) {
+                    authStatus.textContent = 'Authentication failed. Please log in.';
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                statusDisplay.textContent = 'Status: Connection error';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateGameState(data);
+            };
+        }
+
+        function updateGameState(gameState) {
             // Clear canvas
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw center line
-            ctx.setLineDash([5, 15]);
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, 0);
-            ctx.lineTo(canvas.width / 2, canvas.height);
-            ctx.strokeStyle = '#fff';
-            ctx.stroke();
-            ctx.setLineDash([]);
+            // Draw game elements
+            ctx.fillStyle = '#fff';
 
             // Draw paddles
-            ctx.fillStyle = '#fff';
-            
-            // Left paddle (player1)
-            const leftPaddleY = (gameState.players.player1.paddle_y / 100) * canvas.height;
-            ctx.fillRect(20, leftPaddleY - 40, 10, 80);
-            
-            // Right paddle (player2)
-            const rightPaddleY = (gameState.players.player2.paddle_y / 100) * canvas.height;
-            ctx.fillRect(canvas.width - 30, rightPaddleY - 40, 10, 80);
+            if (gameState.paddle1) {
+                ctx.fillRect(20, gameState.paddle1.y, 10, 60);
+            }
+            if (gameState.paddle2) {
+                ctx.fillRect(canvas.width - 30, gameState.paddle2.y, 10, 60);
+            }
 
             // Draw ball
             if (gameState.ball) {
-                const ballX = (gameState.ball.x / 100) * canvas.width;
-                const ballY = (gameState.ball.y / 100) * canvas.height;
                 ctx.beginPath();
-                ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
+                ctx.arc(gameState.ball.x, gameState.ball.y, 5, 0, Math.PI * 2);
                 ctx.fill();
+            }
+
+            // Update score
+            if (gameState.score) {
+                score1Display.textContent = gameState.score.player1;
+                score2Display.textContent = gameState.score.player2;
+            }
+
+            // Update status
+            if (gameState.status) {
+                statusDisplay.textContent = `Status: ${gameState.status}`;
+                if (gameState.status === 'waiting') {
+                    readyBtn.style.display = 'block';
+                } else {
+                    readyBtn.style.display = 'none';
+                }
             }
         }
 
         // Handle paddle movement
         canvas.addEventListener('mousemove', (e) => {
-            if (gameState && gameState.status === 'playing') {
+            if (ws && ws.readyState === WebSocket.OPEN) {
                 const rect = canvas.getBoundingClientRect();
-                const y = ((e.clientY - rect.top) / canvas.height) * 100;
-                socket.send(JSON.stringify({
+                const y = e.clientY - rect.top;
+                ws.send(JSON.stringify({
                     action: 'move_paddle',
                     position: y
                 }));
             }
         });
 
-        // Handle window resize
-        function handleResize() {
-            const container = canvas.parentElement;
-            const scale = Math.min(
-                window.innerWidth / container.offsetWidth,
-                window.innerHeight / container.offsetHeight
-            );
-            
-            container.style.transform = `scale(${scale})`;
-        }
+        // Handle ready button
+        readyBtn.addEventListener('click', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    action: 'ready'
+                }));
+                readyBtn.disabled = true;
+            }
+        });
 
-        window.addEventListener('resize', handleResize);
-        handleResize();
-
-        // Start connection
+        // Initial connection
         connectWebSocket();
+
+        // Reconnect on disconnect
+        setInterval(() => {
+            if (ws === null || ws.readyState === WebSocket.CLOSED) {
+                connectWebSocket();
+            }
+        }, 5000);
     </script>
 </body>
 </html>
