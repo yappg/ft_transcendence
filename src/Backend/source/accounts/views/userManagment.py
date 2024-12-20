@@ -92,6 +92,19 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+
+# class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
+#     serializer_class = PlayerAchievementSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         try:
+#             user = self.request.user
+#             player_profile = user.profile
+#             return player_profile.all_matches()
+#         except PlayerProfile.DoesNotExist:
+#             raise NotFound("Player profile not found.")
+
 # #--------------------------User Infos Update ------------------------------
 
 # class UpdateUserInfos(APIView):
