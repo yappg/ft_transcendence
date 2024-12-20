@@ -101,7 +101,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'fire_wins',
             'earth_wins',
 
-            'created_at',
+            # 'created_at',
         ]
         read_only_fields = [
             'id',
@@ -119,15 +119,13 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'games_loss',
             'win_ratio',
 
-            # 'graph_data',
-
             # 'ice_games',
             # 'water_games',
             # 'fire_games',
             # 'earth_games',
 
             'last_login',
-            # 'created_at',
+            'created_at',
         ]
 
     def get_achievements(self, obj):
@@ -148,9 +146,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_last_login(self, obj):
         return obj.last_login.date().isoformat() if obj.last_login else None
 
-    # def get_created_at(self, obj):
-        # return obj.created_at.date().isoformat() if obj.created_at else None
-
+    def get_created_at(self, obj):
+        return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
         if len(value) < 3 or len(value) > 40:
