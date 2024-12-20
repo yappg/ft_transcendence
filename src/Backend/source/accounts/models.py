@@ -33,7 +33,6 @@ class Player(AbstractUser):
             for achievement in achievements:
                 PlayerAchievement.objects.get_or_create(player=self.profile, achievement=achievement)
 
-
 class PlayerProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
@@ -98,25 +97,13 @@ class PlayerProfile(models.Model):
 
 
     def check_level_up(self):
-        # up = False
         level_up_xp = self.calculate_level_up_xp()
 
         while self.xp >= level_up_xp:
             self.xp -= level_up_xp
             self.level += 1
             level_up_xp = self.calculate_level_up_xp()
-            # up = True
 
-        # return up
-
-    # def add_xp_points(self, amount):
-    #     self.xp += amount
-        # self.check_level_up()
-
-
-    # def add_xp_points(self, amount):
-    #     self.xp += amount
-    #     self.check_level_up()
 
     def update_win_ratio(self):
         if self.total_games != 0:
@@ -124,43 +111,34 @@ class PlayerProfile(models.Model):
         else:
             self.win_ratio = 0.0
 
+    def check_achievements(self):
+        def update_achievements(achievements, progress):
+            for achievement in achievements:
+                try:
+                    # print(f"Achievement: {achievement}, Progress: {progress}")
+                    achievement = Achievement.objects.get(name=achievement)
+                    player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
 
-    # def update_achievements(self):
-    #     ACHIEVEMENTS = ["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"]
+                    # print(f"before: Achievement: {achievement}, Progress: {progress}, Gained: {player_achievement.gained}")
+                    if player_achievement.gained == False:
+                        player_achievement.progress = progress
+                        player_achievement.save()
+                        # print(f"after: Achievement: {achievement}, Progress: {progress}, Gained: {player_achievement.gained}")
+                except Achievement.DoesNotExist:
+                    print(f"Warning: Achievement '{achievement}' does not exist")
+                    continue
 
-    #     print(f"Level: {self.level}")
-    #     for achievement_name in ACHIEVEMENTS:
-    #         try:
-    #             achievement = Achievement.objects.get(name=achievement_name)
-    #             player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
+        update_achievements(achievements=["Ice Apprentice", "Ice Adventurer", "Ice Contender", "Ice Veteran"], progress=self.ice_wins)
+        update_achievements(achievements=["Water Apprentice", "Water Adventurer", "Water Contender", "Water Veteran"], progress=self.water_wins)
+        update_achievements(achievements=["Fire Apprentice", "Fire Adventurer", "Fire Contender", "Fire Veteran"], progress=self.fire_wins)
+        update_achievements(achievements=["Earth Apprentice", "Earth Adventurer", "Earth Contender", "Earth Veteran"], progress=self.earth_wins)
 
-    #             print(f"before Achievement: {achievement_name}, Progress: {player_achievement.progress}, Gained: {player_achievement.gained}")
-    #             if player_achievement.gained == False:
-    #                 player_achievement.progress = self.level
-    #                 print(f"after Achievement: {achievement_name}, Progress: {player_achievement.progress}, Gained: {player_achievement.gained}")
-    #                 player_achievement.save()
-    #         except Achievement.DoesNotExist:
-    #             print(f"Warning: Achievement '{achievement_name}' does not exist")
-    #             continue
+        update_achievements(achievements=["ice Explorer", "ice Wanderer", "ice Traveler", "ice Pilgrim"], progress=self.ice_games)
+        update_achievements(achievements=["water Explorer", "water Wanderer", "water Traveler", "water Pilgrim"], progress=self.water_games)
+        update_achievements(achievements=["Fire Explorer", "Fire Wanderer", "Fire Traveler", "Fire Pilgrim"], progress=self.fire_games)
+        update_achievements(achievements=["Earth Explorer", "Earth Wanderer", "Earth Traveler", "Earth Pilgrim"], progress=self.earth_games)
 
-    def update_achievements(self):
-        ACHIEVEMENTS = ["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"]
-
-        print(f"Level: {self.level}")
-        for achievement_name in ACHIEVEMENTS:
-            try:
-                achievement = Achievement.objects.get(name=achievement_name)
-                player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
-
-                print(f"before Achievement: {achievement_name}, Progress: {player_achievement.progress}, Gained: {player_achievement.gained}")
-                if player_achievement.gained == False:
-                    player_achievement.progress = self.level
-                    print(f"after Achievement: {achievement_name}, Progress: {player_achievement.progress}, Gained: {player_achievement.gained}")
-                    player_achievement.save()
-            except Achievement.DoesNotExist:
-                print(f"Warning: Achievement '{achievement_name}' does not exist")
-                continue
-
+        update_achievements(achievements=["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"], progress=self.level)
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -192,9 +170,6 @@ class PlayerSettings(models.Model):
     class Meta:
         verbose_name = 'Player Settings'
         verbose_name_plural = 'Player Settings'
-
-
-
 
 
 from django.db import transaction
@@ -277,7 +252,7 @@ class MatchHistory(models.Model):
 
 
     def check_achievements(self):
-        def update_achievements1(player, player_score, opponent_score, is_winner):
+        def update_perfect_achivements(player, player_score, opponent_score, is_winner):
             if is_winner:
                 if opponent_score == 0:
                     if player_score >= 30:
@@ -307,14 +282,14 @@ class MatchHistory(models.Model):
                 try:
                     achievement = Achievement.objects.get(name=achievement_name)
                     player_achievement = PlayerAchievement.objects.get(player=player, achievement=achievement)
-                    if not player_achievement.gained:
+                    if player_achievement.gained == False:
                         player_achievement.progress += 1
                         player_achievement.save()
                 except Achievement.DoesNotExist:
                     print(f"Warning: Achievement '{achievement_name}' does not exist")
                     continue
 
-        def update_achievements2(winner, loser):
+        def update_streak_achievements(winner, loser):
             ACHIEVEMENTS = [
                 "Triumphant Trio",
                 "Sizzling Six",
@@ -329,7 +304,7 @@ class MatchHistory(models.Model):
                     try:
                         achievement = Achievement.objects.get(name=ACHIEVEMENTS[i])
                         player_achievement = PlayerAchievement.objects.get(player=winner, achievement=achievement)
-                        if not player_achievement.gained:
+                        if player_achievement.gained == False:
                             if i < 3:
                                 player_achievement.progress += 1
                             else:
@@ -343,7 +318,7 @@ class MatchHistory(models.Model):
                     try:
                         achievement = Achievement.objects.get(name=ACHIEVEMENTS[i])
                         player_achievement = PlayerAchievement.objects.get(player=loser, achievement=achievement)
-                        if not player_achievement.gained:
+                        if player_achievement.gained == False:
                             if i < 3:
                                 player_achievement.progress = 0
                             else:
@@ -353,13 +328,13 @@ class MatchHistory(models.Model):
                         print(f"Warning: Achievement '{ACHIEVEMENTS[i]}' does not exist")
                         continue
 
-        update_achievements1(player=self.player2, player_score=self.player2_score, opponent_score=self.player1_score, is_winner=self.result == "player2")
-        update_achievements1(player=self.player1, player_score=self.player1_score, opponent_score=self.player2_score, is_winner=self.result == "player1")
+        update_perfect_achivements(player=self.player2, player_score=self.player2_score, opponent_score=self.player1_score, is_winner=self.result == "player2")
+        update_perfect_achivements(player=self.player1, player_score=self.player1_score, opponent_score=self.player2_score, is_winner=self.result == "player1")
 
         if self.result == "player1":
-            update_achievements2(winner=self.player1, loser=self.player2)
+            update_streak_achievements(winner=self.player1, loser=self.player2)
         elif self.result == "player2":
-            update_achievements2(winner=self.player2, loser=self.player1)
+            update_streak_achievements(winner=self.player2, loser=self.player1)
 
 
     def save(self, *args, **kwargs):
@@ -367,8 +342,8 @@ class MatchHistory(models.Model):
             with transaction.atomic():
                 self.update_player_stats()
                 self.check_achievements()
-                self.player1.update_achievements()
-                self.player2.update_achievements()
+                self.player1.check_achievements()
+                self.player2.check_achievements()
                 super().save(*args, **kwargs)
         except Exception as e:
             raise ValidationError(f"Failed to save match: {str(e)}")
