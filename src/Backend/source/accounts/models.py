@@ -4,7 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.utils import timezone
 from django.db.models import Q
 from django.db import models
-
+from datetime import timedelta
 import string
 import random
 
@@ -91,6 +91,12 @@ class PlayerProfile(models.Model):
     def all_achievements(self):
         return PlayerAchievement.objects.filter(player=self).order_by('-gained', '-date_earned')
 
+    def weekly_statistics(self, days):
+        return MatchHistory.objects.filter(
+            Q(player1=self) | Q(player2=self),
+            date__gte=timezone.now() - timedelta(days=days)
+        ).order_by('-date')
+
 
     def calculate_level_up_xp(self):
         return 50 * (self.level + 1)
@@ -133,8 +139,8 @@ class PlayerProfile(models.Model):
         update_achievements(achievements=["Fire Apprentice", "Fire Adventurer", "Fire Contender", "Fire Veteran"], progress=self.fire_wins)
         update_achievements(achievements=["Earth Apprentice", "Earth Adventurer", "Earth Contender", "Earth Veteran"], progress=self.earth_wins)
 
-        update_achievements(achievements=["ice Explorer", "ice Wanderer", "ice Traveler", "ice Pilgrim"], progress=self.ice_games)
-        update_achievements(achievements=["water Explorer", "water Wanderer", "water Traveler", "water Pilgrim"], progress=self.water_games)
+        update_achievements(achievements=["Ice Explorer", "Ice Wanderer", "Ice Traveler", "Ice Pilgrim"], progress=self.ice_games)
+        update_achievements(achievements=["Water Explorer", "Water Wanderer", "Water Traveler", "Water Pilgrim"], progress=self.water_games)
         update_achievements(achievements=["Fire Explorer", "Fire Wanderer", "Fire Traveler", "Fire Pilgrim"], progress=self.fire_games)
         update_achievements(achievements=["Earth Explorer", "Earth Wanderer", "Earth Traveler", "Earth Pilgrim"], progress=self.earth_games)
 
@@ -367,9 +373,9 @@ class Achievement(models.Model):
 
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.PROTECT)
 
     gained = models.BooleanField(default=False)
+    achievement = models.ForeignKey(Achievement, on_delete=models.PROTECT)
     progress = models.IntegerField(default=0)
 
     date_earned = models.DateTimeField(null=True)
@@ -389,6 +395,6 @@ class PlayerAchievement(models.Model):
             self.date_earned = timezone.now()
             self.player.xp += self.achievement.xp_gain
             self.player.check_level_up()
-            self.player.save()
+            self.player.save(update_fields=['xp', 'level'])
 
         super().save(*args, **kwargs)

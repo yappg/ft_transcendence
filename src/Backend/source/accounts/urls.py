@@ -8,6 +8,7 @@ from .views.functionViews import *
 router = DefaultRouter()
 router.register(r'profiles', PlayerProfileViewSet, basename="profiles")
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
+router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user game history
 
 UserProfileView = UserProfileViewSet.as_view({
     'get': 'retrieve',
@@ -27,6 +28,12 @@ UserHistoryView = UserHistoryViewSet.as_view({
     'get': 'list',
     'options': 'options',
 })
+
+UserAchivementView = UserAchivementViewSet.as_view({
+    'get': 'list',
+    'options': 'options',
+})
+
 
 urlpatterns = [
 # regular auth
@@ -48,11 +55,15 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
-# user-management
+# restful endpoint
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
+
+# user-management # TODO add it to profile too achivements
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
+    path('user-achievements/', UserAchivementView , name='user_achievements'),
+
 
 # TODO implemetation may differ change_password , change_email , change_username , disable_account, delete_account
     # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
@@ -66,7 +77,7 @@ urlpatterns = [
     # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
-
+    path('statistics/', StatisticsView.as_view(), name='statistics'),
 #list users
     # path('list/all/', PlayersViewList.as_view(), name='playersList'),
 

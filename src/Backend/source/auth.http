@@ -36,6 +36,17 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
+    "username": "youssra",
+    "email": "yoyo@gmail.com",
+    "password": "password",
+    "password2": "password"
+}
+
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
     "username": "client4",
     "email": "client4@gmail.com",
     "password": "thisisapassword",
