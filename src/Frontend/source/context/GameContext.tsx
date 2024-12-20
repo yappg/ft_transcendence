@@ -9,9 +9,13 @@ export interface GameContextType {
   GameScore: [number, number];
   Rounds: RoundsProps[];
   GameState: 'start' | 'over' | 'round' | 'pause';
+  gameMode: 'local' | 'online';
+  gameMap: 'earth' | 'water' | 'fire' | 'air' | 'simple';
   setRounds: (rounds: (prevRounds: RoundsProps[]) => RoundsProps[]) => void;
   setGameScore: (score: [number, number]) => void;
   setGameState: (state: 'start' | 'over' | 'round' | 'pause') => void;
+  setGameMode: (mode: 'local' | 'online') => void;
+  setGameMap: (map: 'earth' | 'water' | 'fire' | 'air' | 'simple') => void;
   // GameOver: boolean,
   // setGameOver: (over: boolean) => void,
   // GameWinner: string | null,
@@ -29,6 +33,10 @@ const GameContext = createContext<GameContextType>({
   setRounds: () => {},
   GameState: 'start',
   setGameState: () => {},
+  gameMode: 'local',
+  setGameMode: () => {},
+  gameMap: 'simple',
+  setGameMap: () => {},
   // GameOver:false,
   // setGameOver: () => {},
   // GameWinner:null,
@@ -43,6 +51,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [GameScore, setGameScore] = useState<[number, number]>([0, 0]);
   const [Rounds, setRounds] = useState<RoundsProps[]>([]);
   const [GameState, setGameState] = useState<'start' | 'over' | 'round' | 'pause'>('start');
+  const [gameMode, setGameMode] = useState<'local' | 'online'>('local');
+  const [gameMap, setGameMap] = useState<'earth' | 'water' | 'fire' | 'air' | 'simple'>('simple');
   // const [GameOver, setGameOver] = useState<boolean>(false);
   // const [GameWinner, setGameWinner] = useState<string | null>(null);
   // const [GameRound, setGameRound] = useState<number>(0);
@@ -56,6 +66,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setRounds,
         GameState,
         setGameState,
+        gameMode,
+        setGameMode,
+        gameMap,
+        setGameMap,
         // setGameOver,
         // GameOver,
         // setGameWinner,
