@@ -72,7 +72,7 @@ class StatisticsSerializer(serializers.ModelSerializer):
         return (obj.earth_wins / obj.earth_games) * 100
 
     def get_graph_data(self, obj):
-        return obj.weekly_statistics(obj.settings.stats_graph_days)
+        return obj.graph_data
 
 
 # fix private profile only give back display name
@@ -199,6 +199,11 @@ class PlayerSettingsSerializer(serializers.ModelSerializer):
     def validate_stats_graph_days(self, value):
         if value < 1 or value > 30:
             raise serializers.ValidationError("stats_graph_days must be between 1 and 30")
+
+        player_profile = self.instance.player_profile
+        player_profile.graph_data = []
+        player_profile.weekly_statistics(value)
+
         return value
 
     def get_updated_at(self, obj):

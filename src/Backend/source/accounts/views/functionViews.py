@@ -5,25 +5,32 @@ from rest_framework import status
 from ..models import PlayerProfile
 from ..serializers.functionSerlizers import *
 
-# from django.core.cache import cache
-
 class SearchUsersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        search_term = request.query_params.get('search', '')
-        if search_term == '':
-            return Response({'message': 'search term is required'}, status=status.HTTP_400_BAD_REQUEST)
+        search_term = request.query_params.get('search', '').strip()
+
+        if not search_term:
+            return Response({'message': 'Search term is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(search_term) > 50:
+            return Response({'message': 'Search term too long'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             players = PlayerProfile.objects.filter(
                 display_name__istartswith=search_term
-            )
+            )[:50]
 
             serializer = SearchUsersSerializer(players, many=True)
-            return Response({'count': players.count(), 'results': serializer.data}, status=status.HTTP_200_OK)
-        except:
-            return Response({'message': 'failed to search users'}, status=400)
+            return Response({
+                'count': len(players),
+                'results': serializer.data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'message': 'An error occurred while searching users'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class LeaderboardView(APIView):
@@ -39,6 +46,9 @@ class LeaderboardView(APIView):
             )[:100]
 
             serializer = LeaderBoardSerializer(top_players, many=True)
-            return Response(serializer.data, status=200)
-        except:
-            return Response({'message': 'failed to get leaderboard'}, status=400)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'message': 'An error occurred while fetching leaderboard'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

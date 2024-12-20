@@ -29,6 +29,11 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put', 'patch', 'options']
 
 
+    def get_object(self):
+        try:
+            return super().get_object()
+        except PlayerProfile.DoesNotExist:
+            raise NotFound("Player profile not found.")
 
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
@@ -36,14 +41,20 @@ class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, pk=None):
+        if not pk:
+            raise NotFound("Profile ID is required.")
         try:
-            profile = PlayerProfile.objects.get(pk=pk)
-
-            serializer = self.get_serializer(profile.all_matches(), many=True)
+            profile = PlayerProfile.objects.select_related('player').get(pk=pk)
+            matches = profile.all_matches()
+            serializer = self.get_serializer(matches, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
+        except Exception as e:
+            return Response(
+                {"error": "An error occurred while fetching match history"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class PlayerAchievementViewSet(viewsets.ReadOnlyModelViewSet):
@@ -52,14 +63,20 @@ class PlayerAchievementViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, pk=None):
+        if not pk:
+            raise NotFound("Profile ID is required.")
         try:
-            profile = PlayerProfile.objects.get(pk=pk)
-
-            serializer = self.get_serializer(profile.all_achievements(), many=True)
+            profile = PlayerProfile.objects.select_related('player').get(pk=pk)
+            achievements = profile.all_achievements()
+            serializer = self.get_serializer(achievements, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
+        except Exception as e:
+            return Response(
+                {"error": "An error occurred while fetching achievements"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 #--------------------------User Infos ------------------------------
 
@@ -69,7 +86,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'put', 'patch', 'options']
 
     def get_queryset(self):
-        return PlayerProfile.objects.filter(player=self.request.user)
+        try:
+            return PlayerProfile.objects.select_related('player').filter(player=self.request.user)
+        except Exception:
+            return PlayerProfile.objects.none()
 
     def get_object(self):
         try:
@@ -85,18 +105,23 @@ class UserSettingsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'put', 'patch', 'options']
 
+
     def get_queryset(self):
-        return PlayerSettings.objects.filter(id=self.request.user.id)
+        try:
+            return PlayerSettings.objects.filter(id=self.request.user.id)
+        except Exception:
+            return PlayerSettings.objects.none()
 
     def get_object(self):
         try:
-            profile = PlayerProfile.objects.get(player=self.request.user)
-            settings = profile.settings
-            return settings
-        except PlayerSettings.DoesNotExist:
-            raise NotFound("Player settings not found.")
-        except PlayerSettings.MultipleObjectsReturned:
-            raise NotFound("Error Multiple player settings found for the user.")
+            profile = PlayerProfile.objects.select_related('settings').get(player=self.request.user)
+            if not profile.settings:
+                raise NotFound("Settings not found for this user.")
+            return profile.settings
+        except PlayerProfile.DoesNotExist:
+            raise NotFound("Player profile not found.")
+        except Exception as e:
+            raise NotFound("Error retrieving user settings.")
 
 
 class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -106,10 +131,12 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         try:
             user = self.request.user
-            player_profile = user.profile
+            player_profile = PlayerProfile.objects.select_related('player').get(player=user)
             return player_profile.all_matches()
         except PlayerProfile.DoesNotExist:
-            raise NotFound("Player profile not found.")
+            return []
+        except Exception:
+            return []
 
 class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -118,10 +145,12 @@ class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         try:
             user = self.request.user
-            profile = user.profile
+            profile = PlayerProfile.objects.select_related('player').get(player=user)
             return profile.all_achievements()
         except PlayerProfile.DoesNotExist:
-            raise NotFound("Player profile not found.")
+            return []
+        except Exception:
+            return []
 
 # #--------------------------User Infos Update ------------------------------
 

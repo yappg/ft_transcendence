@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.db.models import Q
 from django.db import models
@@ -8,6 +8,12 @@ from datetime import timedelta
 import string
 import random
 
+
+def validate_file_size(value):
+    filesize = value.size
+
+    if filesize > 5 * 1024 * 1024: # 5MB limit
+        raise ValidationError("The maximum file size that can be uploaded is 5MB")
 
 # auth user
 class Player(AbstractUser):
@@ -43,22 +49,32 @@ class PlayerProfile(models.Model):
 
     avatar = models.ImageField(
         upload_to='Avatars/',
-        default='Avatars/.defaultAvatar.jpeg'
+        default='Avatars/.defaultAvatar.jpeg',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
+            validate_file_size
+        ]
     )
     cover = models.ImageField(
         upload_to='Covers/',
-        default='Covers/.defaultCover.jpeg'
+        default='Covers/.defaultCover.jpeg',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
+            validate_file_size
+        ]
     )
 
+    xp = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    level = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
 
-    xp = models.PositiveIntegerField(default=0)
-    level = models.PositiveIntegerField(default=0)
+    total_games = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
 
-    total_games = models.PositiveIntegerField(default=0)
-
-    games_won = models.PositiveIntegerField(default=0)
-    games_loss = models.PositiveIntegerField(default=0)
-    win_ratio = models.FloatField(default=0.0)
+    games_won = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    games_loss = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    win_ratio = models.FloatField(default=0.0, validators=[
+        MinValueValidator(0.0),
+        MaxValueValidator(100.0)
+    ])
 
 
     ice_games =  models.PositiveIntegerField(default=0)
@@ -71,7 +87,7 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
-    # graph_data = models.JSONField(default=list)
+    graph_data = models.JSONField(default=list)
 
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,9 +115,6 @@ class PlayerProfile(models.Model):
 
     def weekly_statistics(self, days):
         end_date = timezone.now()
-        start_date = end_date - timedelta(days=days)
-
-        daily_stats = []
 
         for day in range(days):
             day_start = end_date - timedelta(days=day+1)
@@ -119,14 +132,13 @@ class PlayerProfile(models.Model):
                 date__lt=day_end
             ).count()
 
-            daily_stats.append({
+            self.graph_data.append({
                 'date': day_start.date().isoformat(),
                 'wins': wins,
                 'losses': losses
             })
 
-        return daily_stats
-
+            self.save(update_fields=['graph_data'])
 
     def calculate_level_up_xp(self):
         return 50 * (self.level + 1)
@@ -250,6 +262,16 @@ class MatchHistory(models.Model):
         ordering = ['-date']
         verbose_name = 'Match History'
         verbose_name_plural = 'Match Histories'
+        constraints = [
+            models.CheckConstraint(
+                check=~Q(player1=models.F('player2')),
+                name='players_cannot_be_same'
+            ),
+            models.CheckConstraint(
+                check=Q(player1_score__gte=0) & Q(player2_score__gte=0),
+                name='scores_must_be_positive'
+            )
+        ]
 
 
     def update_player_stats(self):
@@ -418,6 +440,7 @@ class PlayerAchievement(models.Model):
         ordering = ["-gained"]
         verbose_name = "player achievement"
         verbose_name_plural = "player achievements"
+        unique_together = ['player', 'achievement']
 
     def __str__(self):
         return f"{self.player} - {self.achievement}"
