@@ -3,8 +3,8 @@
 import React from 'react';
 import GameTable from '@/components/game/game-arena';
 import { useSearchParams } from 'next/navigation';
-import GameChat from '@/components/game/game-chat';
 import { GameProvider } from '@/context/GameContext';
+import ScoreTable from '@/components/game/game-chat';
 
 const GameArena = () => {
   const searchParams = useSearchParams();
@@ -15,7 +15,7 @@ const GameArena = () => {
     <GameProvider>
       <div className="grid h-screen w-full grid-cols-7 gap-4 bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
         <div className="col-start-1 col-end-4 hidden lg:block">
-          <GameChat></GameChat>
+          <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
         <div

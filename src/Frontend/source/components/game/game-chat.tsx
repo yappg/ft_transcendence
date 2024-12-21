@@ -23,30 +23,30 @@ const PlayerScore = ({ player, score, isme }: { player: User; score: number; ism
   );
 };
 
-const GameChat = () => {
+const ScoreTable = () => {
   const { user } = useUser();
-  const { GameScore, Rounds, setRounds, setGameScore, setGameState } = useGame();
+  const game = useGame();
 
   useEffect(() => {
-    if (GameScore[0] >= 7 || GameScore[1] >= 7) {
+    if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
       const newRound = {
-        round: Rounds.length + 1,
-        winner: GameScore[0] > GameScore[1] ? 'Player 1' : 'Player 2',
+        round: game.Rounds.length + 1,
+        winner: game.GameScore[0] > game.GameScore[1] ? 'Player 1' : 'Player 2',
       };
 
-      setRounds((prevRounds: RoundsProps[]) => {
+      game.setRounds((prevRounds: RoundsProps[]) => {
         const updatedRounds = [...prevRounds, newRound];
         return updatedRounds as RoundsProps[];
       });
 
-      setGameScore([0, 0]);
-
-      if (Rounds.length >= 3) {
-        console.log('Game Over');
-        setGameState('over');
-      }
+      game.setGameScore([0, 0]);
     }
-  }, [GameScore, setRounds, setGameScore, Rounds, setGameState]);
+    if (game.Rounds.length == 3) {
+      console.log('Game Over');
+      game.setGameState('over');
+      // .removeGameElements();
+    }
+  }, [game]);
 
   return (
     <div className="flex flex-col items-center justify-around gap-8">
@@ -57,23 +57,23 @@ const GameChat = () => {
         <IoIosArrowBack /> <span>Game Arena</span>
       </Link>
       <div className="flex h-[170px] w-full items-end justify-between">
-        <PlayerScore player={user || ({} as User)} score={GameScore[0]} isme={true} />
-        {Rounds.length <= 3 ? (
+        <PlayerScore player={user || ({} as User)} score={game.GameScore[0]} isme={true} />
+        {game.GameState === 'start' ? (
           <div className="flex h-full w-fit flex-col items-center justify-center font-dayson text-[40px] dark:text-white">
             <h1 className="">Round</h1>
-            <h3>{Rounds.length + 1}</h3>
+            <h3>{game.Rounds.length + 1}</h3>
           </div>
         ) : (
           <div className="flex size-full flex-col items-center justify-center font-dayson text-[40px] dark:text-white">
             game over
           </div>
         )}
-        <PlayerScore player={user || ({} as User)} score={GameScore[1]} isme={false} />
+        <PlayerScore player={user || ({} as User)} score={game.GameScore[1]} isme={false} />
       </div>
       <div className="flex h-fit w-full items-end justify-between rounded-[10px] bg-black-crd">
         {/* rounds  */}
         <div className="flex size-full flex-col items-center justify-around overflow-auto">
-          {Rounds.map((round, index) => (
+          {game.Rounds.map((round, index) => (
             <div
               key={index}
               className="flex h-[90px] w-full items-center justify-around border-b border-[rgb(255,255,255,0.3)]"
@@ -88,4 +88,4 @@ const GameChat = () => {
   );
 };
 
-export default GameChat;
+export default ScoreTable;
