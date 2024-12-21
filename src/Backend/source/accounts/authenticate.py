@@ -8,6 +8,7 @@ import jwt
 class CotumAuthentication(JWTAuthentication):
     def authenticate(self, request):
         access_token = request.COOKIES.get('access_token')
+        print(f"access token {access_token}")
         if not access_token:
             return None
 
