@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from accounts.serializers import PlayerSerializer
 from .models import *
 
 class FriendInvitationSerializer(serializers.ModelSerializer):
