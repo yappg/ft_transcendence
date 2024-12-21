@@ -31,7 +31,7 @@ const Home = () => {
     setIsActivated(1);
   }, [setIsActivated]);
   return (
-    <div className="flex size-full items-center justify-center">
+    <div className="size-full md:py-4 md:pl-6 overflow-auto">
       <button onClick={handleClick} className="h-6 w-14 rounded-md bg-blue-400">
         logout
       </button>

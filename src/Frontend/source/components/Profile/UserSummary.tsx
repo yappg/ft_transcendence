@@ -5,10 +5,10 @@ import { MatchHistory } from '@/constants/MatchHistory';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import FriendServices from '@/services/friendServices';
-import { Graph } from './Graph';
-import { RChart, statistics } from './statistics';
 import { toast } from '@/hooks/use-toast';
 import MatchHistoryBoard from './MatchHistoryBoard';
+import { Chart } from "@/components/Profile/Chart";
+import { ChartLine } from '@/components/Profile/ChartLine';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
   useEffect(() => {
@@ -71,7 +71,7 @@ const UserSummary = (): JSX.Element => {
     },
   ];
   return (
-    <div className="size-full bg-[#242627]/90 shadow-[0px_-28px_17px_0px_rgba(36,_38,_39,_1)] overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12">
+    <div className="size-full bg-[#242627]/90 shadow-[0px_-28px_17px_0px_rgba(36,_38,_39,_1)] overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12 pb-5">
       <div className="w-full h-screen lg:size-full xl:w-[65%] flex items-start justify-start flex-col gap-2">
         <div className="w-full lg:h-[20%] h-[10%] flex flex-row gap-3 overflow-hidden p-5 xl:p-2 ">
           {achievements.map((achievement, index) => (
@@ -127,12 +127,12 @@ const UserSummary = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="size-full xl:w-[35%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row xl:flex-col">
-        <div className="w-1/2 h-full xl:w-full xl:h-[45%]  flex items-start">
-          <RChart />
+      <div className="size-full xl:w-[35%] xl:h-[97%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row md:flex-col  gap-7 xl:m-4 xl:p-4 border-2">
+        <div className="w-full h-2/5 xl:w-full xl:h-[45%] flex items-start">
+          <Chart />
         </div>
-        <div className="xl:w-[90%] w-1/2 h-full flex items-center justify-center">
-          <Graph />
+        <div className="xl:w-[90%] w-full h-3/5 flex items-start justify-start overflow-hidden">
+          <ChartLine />
         </div>
       </div>
     </div>

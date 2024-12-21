@@ -23,14 +23,14 @@ const UserInfo = () => {
 
         <div className="flex sm:items-start items-center lg:justify-end sm:justify-center sm:w-[700px] h-full flex-col p-10 w-full">
           <div className="gap-10">
-            <h1 className="2xl:text-[50px] xl:text-[45px] lg:text-[35px] md:text-[30px] text-[20px] font-dayson text-white ">
+            <h1 className="2xl:text-[40px] xl:text-[45px] lg:text-[35px] md:text-[30px] text-[20px] font-dayson text-white ">
               {user.name}
             </h1>
             <div className="flex flex-row items-center lg:gap-6 gap-3 w-[100%] ">
-              <p className="2xl:text-[35px] xl:text-[32px] lg:text-[25px] md:text-[17px] text-[12px] text-[#B6B6B6] font-dayson">
+              <p className="2xl:text-[30px] xl:text-[32px] lg:text-[25px] md:text-[17px] text-[12px] text-[#B6B6B6] font-dayson">
                 @{user.username}
               </p>
-              <p className="2xl:text-[28px] xl:text-[23px] md:text-[17px] text-[12px] text-[#B6B6B6] font-dayson">
+              <p className="2xl:text-[23px] xl:text-[23px] md:text-[17px] text-[12px] text-[#B6B6B6] font-dayson">
                 level {user.level}
               </p>
             </div>

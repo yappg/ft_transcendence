@@ -34,10 +34,8 @@ export default function RootLayout({
       <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
         <AuthProvider>
           <SideBarProvider>
-            <TabProvider>
               <Providers>{children}</Providers>
               <Toaster />
-            </TabProvider>
           </SideBarProvider>
         </AuthProvider>
       </body>

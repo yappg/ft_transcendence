@@ -12,9 +12,11 @@ import { chatService } from '@/services/chatService';
 import { Message, User, Chat } from '@/constants/chat';
 
 const App: React.FC = () => {
-  const {} = useContext(SideBarContext);
-
-
+  const { setIsActivated} = useContext(SideBarContext);
+  
+  useEffect(() => {
+    setIsActivated(7);
+  }, []);
 
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [chatPartner, setChatPartner] = useState<User | null>(null);
