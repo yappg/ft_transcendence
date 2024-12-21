@@ -48,16 +48,16 @@ class PlayerProfile(models.Model):
 
 
     avatar = models.ImageField(
-        upload_to='Avatars/',
-        default='Avatars/.defaultAvatar.jpeg',
+        upload_to='avatars/',
+        default='avatars/.defaultAvatar.jpeg',
         validators=[
             FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
             validate_file_size
         ]
     )
     cover = models.ImageField(
-        upload_to='Covers/',
-        default='Covers/.defaultCover.jpeg',
+        upload_to='covers/',
+        default='covers/.defaultCover.jpeg',
         validators=[
             FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
             validate_file_size
@@ -463,7 +463,7 @@ class Achievement(models.Model):
         return self.name
 
     def get_image(self, is_unlocked):
-        return self.image if is_unlocked else self.image_bw
+        return self.image.url if is_unlocked else self.image_bw.url
 
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
