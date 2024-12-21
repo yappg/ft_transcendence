@@ -149,7 +149,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ######### SEARCH SPECS === GET === ONLY ######################################################################################
 ############################################################
 #########
-GET http://localhost:8080/accounts/search-users/?search=P
+GET http://localhost:8080/accounts/search-users/?search=e
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NzQxNTEyLCJpYXQiOjE3MzQ3MzkxMTIsImp0aSI6IjZhNWU5ZDk2MzczMTQ5NmZiNjE2NGEzMzlmY2IyYWUxIiwidXNlcl9pZCI6Mn0.qE35EfEix-bjftACPvFM3KIglYxKc7TJcVYBiUMuZ2g
 
 # ######### search friends
