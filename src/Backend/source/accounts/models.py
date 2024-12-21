@@ -12,7 +12,7 @@ import random
 def validate_file_size(value):
     filesize = value.size
 
-    if filesize > 5 * 1024 * 1024: # 5MB limit
+    if filesize > 5 * 1024 * 1024:
         raise ValidationError("The maximum file size that can be uploaded is 5MB")
 
 # auth user
