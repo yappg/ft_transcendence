@@ -11,7 +11,6 @@ const GameArena = ({ mode, map }: { map: string; mode: string }) => {
   useEffect(() => {
     if (canvasContainerRef.current) {
       gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/earth.png`, mode);
-      gameManagerRef.current.drawGameElements();
     }
 
     return () => {
@@ -34,11 +33,11 @@ const GameArena = ({ mode, map }: { map: string; mode: string }) => {
   }, []);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-blue-300">
+    <div className="flex h-screen w-full items-center justify-center bg-black">
       <div
         ref={canvasContainerRef}
         id="table"
-        className="size-[90%] overflow-hidden rounded-[20px]"
+        className="h-[700px] w-[500px] overflow-hidden rounded-[20px]"
       />
     </div>
   );
