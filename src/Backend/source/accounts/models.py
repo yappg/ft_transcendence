@@ -226,12 +226,34 @@ class PlayerSettings(models.Model):
 
 from django.db import transaction
 
-# TODO forume for the xp xin depending on the level and map played
-
 class MatchHistory(models.Model):
-    XP_WIN = 30
-    XP_DRAW = 20
-    XP_LOSS = 15
+    # Base XP values
+    BASE_XP_WIN = 30
+    BASE_XP_DRAW = 20
+    BASE_XP_LOSS = 15
+
+    # XP multipliers based on map
+    MAP_XP_MULTIPLIERS = {
+        'ice': 1.2,
+        'water': 1.1,
+        'fire': 1.0,
+        'earth': 1.0
+    }
+
+    # XP level scaling
+    def get_level_multiplier(self, level):
+        if level < 10:
+            return 1.0
+        elif level < 20:
+            return 1.2
+        elif level < 50:
+            return 1.4
+        elif level < 100:
+            return 1.6
+        elif level < 200:
+            return 2.0
+        else:
+            return 2.5
 
     RESULT_CHOICES = [
         ("player1", 'Player 1 Win'),
@@ -275,6 +297,18 @@ class MatchHistory(models.Model):
             )
         ]
 
+    def calculate_xp(self, player, is_winner):
+        if is_winner:
+            base_xp = self.BASE_XP_WIN
+        elif self.result == "draw":
+            base_xp = self.BASE_XP_DRAW
+        else:
+            base_xp = self.BASE_XP_LOSS
+
+        map_multiplier = self.MAP_XP_MULTIPLIERS[self.map_played]
+        level_multiplier = self.get_level_multiplier(player.level)
+
+        return int(base_xp * map_multiplier * level_multiplier)
 
     def update_player_stats(self):
         if self.player1 == self.player2:
@@ -295,14 +329,15 @@ class MatchHistory(models.Model):
             winner = self.player2
             loser = self.player1
         else:
-            self.player1.xp += self.XP_DRAW
-            self.player2.xp += self.XP_DRAW
+            # draw casee
+            self.player1.xp += self.calculate_xp(self.player1, False)
+            self.player2.xp += self.calculate_xp(self.player2, False)
 
         if winner and loser:
             winner.games_won += 1
             loser.games_loss += 1
-            winner.xp += self.XP_WIN
-            loser.xp += self.XP_LOSS
+            winner.xp += self.calculate_xp(winner, True)
+            loser.xp += self.calculate_xp(loser, False)
             setattr(winner, f"{self.map_played.lower()}_wins", getattr(winner, f"{self.map_played.lower()}_wins") + 1)
 
         self.player1.update_win_ratio()
@@ -313,7 +348,6 @@ class MatchHistory(models.Model):
 
         self.player1.save()
         self.player2.save()
-
 
     def check_achievements(self):
         def update_perfect_achivements(player, player_score, opponent_score, is_winner):
@@ -400,7 +434,6 @@ class MatchHistory(models.Model):
         elif self.result == "player2":
             update_streak_achievements(winner=self.player2, loser=self.player1)
 
-
     def save(self, *args, **kwargs):
         try:
             with transaction.atomic():
@@ -413,9 +446,10 @@ class MatchHistory(models.Model):
             raise ValidationError(f"Failed to save match: {str(e)}")
 
 
-
 class Achievement(models.Model):
-    # image = models.ImageField()
+    image = models.ImageField(default='achievements/colored/default.png')
+    image_bw = models.ImageField(default='achievements/bw/default.png')
+
     name = models.CharField(blank=False, max_length=50, unique=True)
     description = models.TextField(blank=False, max_length=200)
     xp_gain = models.IntegerField(blank=False)
@@ -428,6 +462,8 @@ class Achievement(models.Model):
     def __str__(self):
         return self.name
 
+    def get_image(self, is_unlocked):
+        return self.image if is_unlocked else self.image_bw
 
 class PlayerAchievement(models.Model):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE)
