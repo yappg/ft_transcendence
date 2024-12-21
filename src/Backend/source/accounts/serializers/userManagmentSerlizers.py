@@ -234,27 +234,26 @@ class MatchHistorySerializer(serializers.ModelSerializer):
         return obj.date.date().isoformat() if obj.date else None
 
 class AchievementSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
     class Meta:
         model = Achievement
         fields = [ "id", "name", "description", "condition", "xp_gain"]
-        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"  ]
+        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"]
 
-    # def get_image(self, obj):
-    #     return obj.get_image(True)
+
 
 
 class PlayerAchievementSerializer(serializers.ModelSerializer):
     achievement = AchievementSerializer(read_only=True)
     date_earned = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerAchievement
-        fields = ["id", "player", "achievement", "gained", "progress", "date_earned"]
-        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned"]
+        fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
+        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
 
     def get_date_earned(self, obj):
         return obj.date_earned.date().isoformat() if obj.date_earned else None
 
-
+    def get_image(self, obj):
+        return obj.achievement.get_image(obj.gained)
