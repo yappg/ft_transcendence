@@ -71,6 +71,7 @@ class PlayerProfile(models.Model):
 
     games_won = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     games_loss = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+
     win_ratio = models.FloatField(default=0.0, validators=[
         MinValueValidator(0.0),
         MaxValueValidator(100.0)
@@ -87,7 +88,6 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
-    graph_data = models.JSONField(default=list)
 
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -113,8 +113,10 @@ class PlayerProfile(models.Model):
         return PlayerAchievement.objects.filter(player=self, gained=True).order_by('-date_earned')
 
 
-    def weekly_statistics(self, days):
+    def daily_stats(self, days):
         end_date = timezone.now()
+
+        daily_stats = []
 
         for day in range(days):
             day_start = end_date - timedelta(days=day+1)
@@ -132,13 +134,13 @@ class PlayerProfile(models.Model):
                 date__lt=day_end
             ).count()
 
-            self.graph_data.append({
+            daily_stats.append({
                 'date': day_start.date().isoformat(),
                 'wins': wins,
                 'losses': losses
             })
 
-            self.save(update_fields=['graph_data'])
+        return daily_stats
 
     def calculate_level_up_xp(self):
         return 50 * (self.level + 1)
