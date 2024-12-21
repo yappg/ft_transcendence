@@ -45,10 +45,17 @@ re: clean build
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -f $(COMPOSE) $(filter-out $@, $(MAKECMDGOALS))
 
 it:
 	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
+
+migrations:
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "makemigrations"
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "migrate"
+
+kill:
+	@docker compose -p $(PROJECT) kill "$(filter-out $@, $(MAKECMDGOALS))"
 
 restart:
 	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
