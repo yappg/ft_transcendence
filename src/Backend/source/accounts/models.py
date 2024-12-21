@@ -447,8 +447,8 @@ class MatchHistory(models.Model):
 
 
 class Achievement(models.Model):
-    image = models.ImageField(default='achievements/colored/default.png')
-    image_bw = models.ImageField(default='achievements/bw/default.png')
+    image = models.ImageField(default='achievements/colored/.default.png')
+    image_bw = models.ImageField(default='achievements/bw/.default.png')
 
     name = models.CharField(blank=False, max_length=50, unique=True)
     description = models.TextField(blank=False, max_length=200)
