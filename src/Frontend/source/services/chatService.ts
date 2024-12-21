@@ -1,34 +1,21 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { Chat, Message, User } from '@/constants/chat';
 
 const CHAT_BASE_URL = 'http://localhost:8080/chat';
 const USER_BASE_URL = 'http://localhost:8080/accounts';
 
+const userApi = axios.create({
+  baseURL: USER_BASE_URL,
+  withCredentials: true,
+});
 const chatApi = axios.create({
   baseURL: CHAT_BASE_URL,
   withCredentials: true,
 });
 
-const userApi = axios.create({
-  baseURL: USER_BASE_URL,
-  withCredentials: true,
-});
-
-const setAuthToken = (config) => {
-  const token = Cookies.get('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-};
-
-chatApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
-userApi.interceptors.request.use(setAuthToken, (error) => Promise.reject(error));
 
 class ChatService {
-  private socket: WebSocket | null = null;
-  // private currentUserId: number | null = null;
+  private sockets: Map<number, WebSocket> = new Map();
 
   async getChatList(): Promise<Chat[]> {
     const response = await chatApi.get('/list/');
@@ -44,52 +31,53 @@ class ChatService {
     chatId: number,
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
-    if (this.socket) {
-      console.log('WebSocket connection already exists');
-      return this.socket;
+    if (this.sockets.has(chatId)) {
+      console.log('WebSocket connection already exists for chatId:', chatId);
+      return this.sockets.get(chatId)!;
     }
 
     const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
-    this.socket = new WebSocket(socketUrl);
-    // const currenttemp = await this.getCurrentUserId;
-    // this.currentUserId = currenttemp.id;
+    const socket = new WebSocket(socketUrl);
 
-    this.socket.onopen = () => {
-      console.log('WebSocket connection established');
+    socket.onopen = () => {
+      console.log('WebSocket connection established for chatId:', chatId);
     };
 
-    this.socket.onmessage = (event) => {
+    socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // if (data.sender !== this.currentUserId) {check after/
-          onMessage(data);
+        onMessage(data);
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
     };
 
-    this.socket.onerror = (error) => {
+    socket.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
 
-    this.socket.onclose = (event) => {
+    socket.onclose = (event) => {
       console.log('WebSocket connection closed:', event);
-      this.socket = null;
+      this.sockets.delete(chatId);
     };
 
-    return this.socket;
+    this.sockets.set(chatId, socket);
+    return socket;
   }
 
-  async sendMessage(chatId: number, content: string, userId: number): Promise<void> {
+  async sendMessage(chatId: number, content: string, userId: number, receiverId: number): Promise<void> {
     console.log('chatService.sendMessage called'); // Debug log
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+    const socket = this.sockets.get(chatId);
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       throw new Error('WebSocket connection is not open');
     }
 
     try {
-      this.socket.send(JSON.stringify({
+      socket.send(JSON.stringify({
         content: content,
         sender: userId,
+        receiver: receiverId,
+        chatId: chatId,
       }));
     } catch (error) {
       console.error('Error sending message:', error);
@@ -112,6 +100,12 @@ class ChatService {
     return response.data;
   }
 
+  closeAllConnections(): void {
+    this.sockets.forEach((socket, chatId) => {
+      socket.close();
+      this.sockets.delete(chatId);
+    });
+  }
 }
 
 export const chatService = new ChatService();
