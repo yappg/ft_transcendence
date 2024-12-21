@@ -35,16 +35,16 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [showSearchBar, setShowSearchBar] = useState(false);
   return (
-    <div className="flex h-fit w-full items-center justify-between px-4">
+    <div className="flex h-fit w-full items-center justify-between md:px-4 px-0">
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
-          <div key={path.id} className="flex h-full w-fit items-center justify-start gap-4">
-            <h1 className=" font-dayson text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
+          <div key={path.id} className="flex h-full w-fit items-center justify-start sm:gap-4 gap-2">
+            <h1 className="font-dayson text-[12px] sm:text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
               {path.path}
             </h1>
             {path.id === 1 && (
-              <span className="font-dayson text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
+              <span className="font-dayson text-[12px] sm:text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
                 {profile.name}
               </span>
             )}
@@ -55,10 +55,10 @@ export const Header = () => {
           className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 xl:hidden items-center justify-center`}
         >
           <div
-            className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]"
+            className="flex size-[23px] sm:size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]"
             onClick={handleClick}
           >
-            <IconSearch className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
+            <IconSearch className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
           </div>
         </button>
         <Command
@@ -67,8 +67,8 @@ export const Header = () => {
           <CommandInput placeholder="Search..." />
           <CommandList />
         </Command>
-        <div className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
-          <IoMdNotifications className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
+        <div className="flex size-[23px] sm:size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
+          <IoMdNotifications className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
         </div>
       </div>
     </div>

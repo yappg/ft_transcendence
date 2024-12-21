@@ -11,12 +11,14 @@ import { usePathname } from 'next/navigation';
 import { ComponentType, useContext } from 'react';
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Checkbox } from "@/components/ui/checkbox"
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, updateUser } = useAuth();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
+    console.log('id', isActivated, id);
     setIsActivated(id);
   };
   // const usename = localStorage.getItem('user');
@@ -56,12 +58,12 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
-      <SidebarProvider className="md:hidden flex overflow-hidden absolute">
-        <SidebarLeft className=" bg-transparent " />
+      <SidebarProvider className="md:hidden flex overflow-hidden absolute mt-[-5px]">
+        <SidebarLeft className=" bg-transparent" />
         <SidebarInset className=" bg-transparent">
           <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2">
-            <div className="flex flex-1 items-center gap-2 px-3">
-              <SidebarTrigger className="size-[50px]" />
+            <div>
+              <SidebarTrigger className="sm:size-[50px] size-[80px]" />
             </div>
           </header>
         </SidebarInset>

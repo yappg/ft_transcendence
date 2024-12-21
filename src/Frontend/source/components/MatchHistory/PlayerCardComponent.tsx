@@ -7,7 +7,7 @@ interface PlayerCardProps {
   level: number;
   score: number;
   reverse?: boolean;
-iHhighScore: boolean;
+  isHighScore: boolean;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ profilePhoto, playerName, level, score, reverse , isHighScore }) => {

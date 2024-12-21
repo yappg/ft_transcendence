@@ -7,9 +7,14 @@ import { useSearchParams } from 'next/navigation';
 import Theme from '@/components/settings/Theme';
 import Security from '@/components/settings/Security';
 import Logout from '@/components/settings/Logout';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Profile from '@/components/settings/Profile';
+import { SideBarContext } from '@/context/SideBarContext';
 export default function Settings() {
+  const { setIsActivated } = useContext(SideBarContext);
+  useEffect(() => {
+    setIsActivated(8);
+  }, [setIsActivated]);
   const fields = [
     {
       title: 'Profile',
