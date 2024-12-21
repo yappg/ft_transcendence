@@ -16,7 +16,6 @@ from drf_yasg import openapi
 class ChatView(APIView):
 
     @swagger_auto_schema(request_body=ChatRoomSerializer)
-    # def get(self, request):
     def post(self, request):
         current_user = request.user
         friend_username = request.data.get('senders')
@@ -97,7 +96,7 @@ class ChatMessagesView(APIView):
         message = Message.objects.create(
             chatroom = chat,
             sender=sender,
-            # receiver=receiver,
+            receiver=receiver,
             content=content
         )
 

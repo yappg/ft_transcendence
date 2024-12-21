@@ -6,7 +6,7 @@ import InputBar from './input-bar';
 import { MyButton } from '@/components/generalUi/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthClient } from '@/hooks/fetch-auth';
+import { AuthClient } from '@/services/fetch-auth';
 import { useAuth, User } from '@/context/AuthContext';
 
 type FieldType = 'input' | 'password' | 'email' | 'text' | 'number' | 'date';
@@ -49,7 +49,7 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
         {text}
         <Link
           href={`/auth/${href}`}
-          className="text-primary dark:text-primary-dark font-bold hover:underline"
+          className="font-bold text-primary hover:underline dark:text-primary-dark"
         >
           {href}
         </Link>
@@ -59,7 +59,6 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
 };
 
 export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => {
-  const user = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
@@ -125,7 +124,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
     try {
       const response = await (isSignup ? AuthClient.signup(formData) : AuthClient.signin(formData));
-
       console.log('response: ', response);
 
       if (response.message) {
@@ -134,19 +132,24 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
           description: isSignup ? 'Account created successfully' : 'Logged in successfully',
           className: 'bg-primary border-none text-white bg-opacity-20',
         });
-        auth.login({
+        console.log('formData: ', formData);
+        console.log('response: ', response);
+        const loggeduser = await auth.login({
           username: formData.username,
-          is2FAEnabled: (response.enabled_2fa === 'True'),
+          is2FAEnabled: response.enabled_2fa === 'True',
+          is2FAvalidated: isSignup ? true : false, // this been edited to fit signup case
         } as User);
+        console.log('auth: ', loggeduser, auth.user);
+        console.log('isSignup: ', isSignup);
         if (isSignup) {
           router.push('/2fa/signup-2fa');
-        } else if (response.enabled_2fa === 'True') {
-          router.push('/2fa/login-2fa/');
           return;
+        }
+        if (response.enabled_2fa === 'True') {
+          router.push('/2fa/login-2fa/');
         } else {
           router.push('/home');
         }
-        return;
       }
       if (response.error)
         toast({
@@ -162,7 +165,6 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         variant: 'destructive',
         className: 'bg-primary-dark border-none text-white',
       });
-      console.log('helloooooooooo2\n', error);
     } finally {
       setIsSubmitting(false);
     }

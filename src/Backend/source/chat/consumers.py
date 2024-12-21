@@ -43,13 +43,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         text_data_json = json.loads(text_data)
         content = text_data_json.get('content')
-        sender_id = text_data_json.get('sender') 
+        sender_id = text_data_json.get('sender')
+        receiver_id = text_data_json.get('receiver')
 
-        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}")
+        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id}--")
 
         try:
             sender = await sync_to_async(Player.objects.get)(id=sender_id)
-            # reciever = await Player.objects.get(id=reciever_id)
+            receiver = await sync_to_async(Player.objects.get)(id=receiver_id)
             chat = await sync_to_async(ChatRoom.objects.get)(id=self.chatId)
         except Player.DoesNotExist:
             print(f"-----------------[DEBUG] Sender or Reciever with ID {sender_id} does not exist")
@@ -62,7 +63,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Save the message to the database
         new_message = await sync_to_async(Message.objects.create)(
-            chatroom=chat, sender=sender, content=content
+            chatroom=chat, sender=sender,receiver=receiver, content=content
         )
 
         # Debug: Print after the message is saved
@@ -74,21 +75,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'content': new_message.content,
                 'sender': sender.username,
+                'receiver': receiver.username,
                 'chatId': chat.id,
-                # 'reciever': reciever_id,
             }
         )
     async def chat_message(self, event):
         content = event['content']
         sender_id = event['sender']
         chatId = event['chatId']
-        # reciever_id = event['reciever']
+        receiver_id = event['receiver']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': content,
             'sender': sender_id,
-            'chatId': chatId
-            # 'reciever': reciever_id
+            'chatId': chatId,
+            'receiver': receiver_id
         }))
         print(f"-----------------[[DEBUG] Message sent to WebSocket: {event['content']} from sender {event['sender']}")
