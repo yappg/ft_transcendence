@@ -25,6 +25,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings.developments'
 # Initialize Django
 django.setup()  # Ensure Django is set up before accessing any models
 
+# TODO what the AllowedHostsOriginValidator is for.
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket':AllowedHostsOriginValidator(
