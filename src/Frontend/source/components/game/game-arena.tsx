@@ -1,69 +1,41 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+//
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import PixiManager from './pixi-manager';
-import SocketManager from './socket-manager';
+import { LocalGameManager, PixiManager } from '@/components/game/pixi';
 import { useGame } from '@/context/GameContext';
+import React, { useRef, useEffect, useState } from 'react';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
-  const game = useGame();
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
-  const pixiManagerRef = useRef<PixiManager | null>(null);
-  const socketManagerRef = useRef<SocketManager | null>(null);
+  const game = useGame();
+
+  const gameManagerRef = useRef<PixiManager | null>(null);
 
   useEffect(() => {
-    if (game.GameState === 'start') {
-      (async () => {
-        setTimeout(() => {}, 500000);
-      })();
-      if (canvasContainerRef.current) {
-        pixiManagerRef.current = new PixiManager(
-          canvasContainerRef.current,
-          'nakebli',
-          `/${map}.png`,
-          mode,
-          game
-          // setGameScore,
-          // GameScore
-        );
-        if (mode.indexOf('local') === -1) {
-          socketManagerRef.current = new SocketManager(
-            'ws://your-backend-url/ws/game/',
-            pixiManagerRef.current
-          );
-        }
-      }
-
-      // return () => {
-      //   if (pixiManagerRef.current) {
-      //     pixiManagerRef.current.destroy();
-      //   }
-      //   if (socketManagerRef.current) {
-      //     socketManagerRef.current.close();
-      //   }
-      // };
-    } else if (game.GameState === 'over') {
-      if (pixiManagerRef.current) {
-        pixiManagerRef.current.removeGameElements();
-
-        pixiManagerRef.current.renderGameOver();
-      }
-      // setWinnerPicture('/path/to/winner-picture.png');
+    if (canvasContainerRef.current) {
+      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/earth.png`, game);
     }
-  }, [game.GameState]);
+
+    return () => {
+      if (gameManagerRef.current) {
+        gameManagerRef.current.app.destroy(true);
+      }
+    };
+  }, []);
+
   useEffect(() => {
-    if (pixiManagerRef.current) {
-      window.addEventListener('keydown', (event) => pixiManagerRef!.current!.handleKeyDown(event));
+    if (gameManagerRef.current) {
+      window.addEventListener('keydown', (event) => gameManagerRef!.current!.handleKeyDown(event));
+      window.addEventListener('keyup', (event) => gameManagerRef!.current!.handleKeyUp(event));
     }
     return () => {
       window.removeEventListener('keydown', (event) =>
-        pixiManagerRef!.current!.handleKeyDown(event)
+        gameManagerRef!.current!.handleKeyDown(event)
       );
     };
   }, []);
 
-  return <div ref={canvasContainerRef} id="table" />;
+  return <div ref={canvasContainerRef} id="table" className="size-full overflow-hidden" />;
 };
 
 export default GameTable;
