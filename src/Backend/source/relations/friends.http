@@ -61,7 +61,7 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 
 ########
 
-GET http://localhost:8080/accounts/users/5
+GET http://localhost:8080/accounts/users/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcyOTA0LCJpYXQiOjE3MzMwNzExMDQsImp0aSI6IjAxNjE3MmUyZjdjNTRmMTQ4ZjdmMzBmMWY4Y2U4YzcxIiwidXNlcl9pZCI6NX0.F6CCQG6ruEwRAgVzrMlMzin0Krc00aPbe0BS5As-3dA
 
 
