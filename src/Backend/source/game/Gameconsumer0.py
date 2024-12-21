@@ -9,6 +9,12 @@ from game.models import Game
 
 game_manager = GameManager()
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+RESET = '\033[0m'
+
 class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if not self.scope["user"].is_authenticated:
@@ -18,10 +24,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         self.game = None
         self.game_model = None
+        self.JoinedGame = False
         # there is another way to do this, is to set the playerInQueue first the player still in the queue,
         #but it doesnt work because each time the player connect the playerInQueue will be set to False 
         # self.PlayerInQueue = False
-        print(f'\n------------>>>>>[User Authentified {self.user}]<<<<<<<<<----------------------\n')
+        print(f'\n{GREEN}------------>>>>>[User Authentified {self.user}]<<<<<<<<<----------------------{RESET}\n')
 
         await self.accept()
         await self.add_to_matchmaking()
@@ -29,7 +36,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
-            action = data.get('action') 
+            action = data.get('action')
 
             if action == 'move_paddle':
                 if self.game:
@@ -47,36 +54,35 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def get_opponent(self):
-        print('                         Getting opponent')
-        player2_id = await game_manager.remove_player_from_queue()
+        print(f'{RED}Getting opponent{RESET}')
+        player2_id = await game_manager.pop_player_from_queue()
         if not player2_id:
-            return print('                         No opponent found')
-        print(f'Player ID: {player2_id}')
-
-        # player2 = await database_sync_to_async(Player.objects.get)(id=player2_id)
+            return
+        print(f'Player1 ID {BLUE}[{self.user.id}]{RESET} VS Player ID {BLUE}[{player2_id}] {RESET}')
+        player2 = await database_sync_to_async(Player.objects.get)(id=player2_id)
         # self.game_model = await database_sync_to_async(Game.objects.create)(
         #             room_name=f'{player2.username}_VS_{self.user.username}',
         #             player1=self.user, player2=player2)
-        # return player2
+        # self.game_model.game_channel_name = f'{self.user.username}{player2.id}{self.game_model.id}'
+        
+        return player2
 
-    async def player_in_queue(self, player_id):
+    def player_in_queue(self, player_id):
         queue = game_manager.players_queue.lrange('players_queue', 0, -1)
-        print(f'Queue: {queue}')
+        print(f'Queue >>>>>>>>>>>>> : {queue}')
         BytesPlayerId = str(player_id).encode()
         return BytesPlayerId in queue
 
     async def add_to_matchmaking(self):
-        print('                         Adding player to matchmaking')
         #could be there an effecient way for this checks 
-        if await self.player_in_queue(self.user.id) and game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
-            print('                         Player already in queue')
+        if self.player_in_queue(self.user.id) and game_manager.players_queue.llen('players_queue') == 1:#should i make await here??
+            print(f'{RED}Player {self.user.id} already in Queue{RESET}')
             return
 
         if game_manager.players_queue.llen('players_queue') > 0:
-            print('                         Creating game')
+            print(f'{RED}player :{self.user.id}Creating game.......{RESET}')
             try:
-                print('                         Creating haaaaaq game')
-                player2 = self.get_Opponent()
+                player2 = await self.get_opponent()  # fix function name and await
                 self.game = await game_manager.create_game(self.user, player2, self.game_model.id)
                 await self.channel_layer.group_add(
                     f'game_{self.game.game_id}',
@@ -87,7 +93,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 #TODO: handle the error
                 pass
         else:
-            print('Adding player to queue')
+            print(f'{YELLOW}Adding player to queue{RESET}')
             await game_manager.add_player_to_queue(self.user.id)
         return
 
@@ -126,12 +132,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_game_result(self, game_state):
-        # Implement game result saving logic here
         pass
 
-    # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
+    # Implement game result saving logic here
     async def disconnect(self, close_code):
+    # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
         # self.channel_layer.group_discard(self.groupe_name, self.channel_name)
         await self.close()
-        
-# {"username":"kadigh","password":"abdo123"}
+
+# {"username":"kad","password":"qwe123"}
