@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/classnames-order */
 'use client';
 
 import React from 'react';
@@ -13,16 +14,16 @@ const GameArena = () => {
 
   return (
     <GameProvider>
-      <div className="flex flex-col h-screen w-full bg-linear-gradient lg:p-8 lg:gap-8 dark:bg-linear-gradient-dark xl:flex-row">
-        <div className="lg:block w-full h-h-1/5">
+      <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full flex-col lg:gap-8 lg:p-8 xl:flex-row">
+        <div className="h-1/5 w-full lg:w-2/6">
           <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
-        <div className="overflow-hidden rounded-[20px] border-[10px] border-black h-full lg:w-full">
+        <div className="h-full overflow-hidden xl:w-3/6 justify-center items-center flex border-black border-4 rounded-2xl bg-black">
           <GameTable mode={mode || ''} map={map || ''} />
         </div>
         {/* abilities */}
-        <div className="col-start-7 col-end-8 bg-slate-400 h-[100px]"></div>
+        <div className="col-start-7 col-end-8 h-[100px] bg-slate-400"></div>
       </div>
     </GameProvider>
   );
