@@ -15,8 +15,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "User3",
-    "email": "User3@gmail.com",
+    "username": "yasser",
+    "email": "yasser@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -26,8 +26,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "User2",
-    "email": "User2@gmail.com",
+    "username": "mehdi",
+    "email": "mehdi@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -150,13 +150,9 @@ Content-Type: application/json
 }
 
 ######
-POST  http://localhost:8080/chat/1/messages/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
-Content-Type: application/json
 
-{
-    "receiver":"mery",
-    "content":"WA llalala"
-}
+GET  http://localhost:8080/chat/1/messages/
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODIzOTkyLCJpYXQiOjE3MzQ3Mzc1OTIsImp0aSI6IjEzMTg5MjRjMGI5NzRjMGJhNDU4Y2MxMWRkMmYwN2NlIiwidXNlcl9pZCI6MX0.8LWX5LDSOwLYtlFp-GeEiPVJO4y0MNILrKw_7MUUChk
+
 
 ########
