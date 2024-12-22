@@ -1,69 +1,19 @@
-############--------_JTW_--------------############
-
-
-POST http://localhost:8080/api/JWT/token/
-Content-Type: application/json
-
-{
-    "username": "xxx",
-    "password": "csfdsgopxabcvbdfgdfg"
-}
-
-########---------signup------_#########
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "User0",
-    "email": "User0@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-###   ###   ##  ## ###  ##  ## ### ##
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "UserX",
-    "email": "UserX@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-### ### ####  ### ###  #####----  ----
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "hind",
-    "email": "hindo@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-###  ####   ###  ### ## ####  ###
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "SadUser",
-    "email": "SadUser@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-##########-----LIST----############
+##########
 
 GET http://localhost:8080/relations/notifications/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjg1MDI0LCJpYXQiOjE3MzM1OTg2MjQsImp0aSI6IjczMDQwYWE2ZTU2MTQ4YTJhMGY5M2Q1YjQ2OTk3NjFiIiwidXNlcl9pZCI6NH0.PzR58hnXJmIFW0vNFqFW9TJXGapkZLdR8Ffla0WIVsQ
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 ########
 
 GET http://localhost:8080/accounts/users/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcyOTA0LCJpYXQiOjE3MzMwNzExMDQsImp0aSI6IjAxNjE3MmUyZjdjNTRmMTQ4ZjdmMzBmMWY4Y2U4YzcxIiwidXNlcl9pZCI6NX0.F6CCQG6ruEwRAgVzrMlMzin0Krc00aPbe0BS5As-3dA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
+
+
+################
+
+GET http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 
 # #########-----me---- ####
@@ -73,12 +23,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 
 GET http://localhost:8080/accounts/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcwNDg1LCJpYXQiOjE3MzMwNjg2ODUsImp0aSI6IjY1YzYxOGUzYTEyNDRjYzU4NGFlNTBmOWEzMDk5YjkxIiwidXNlcl9pZCI6NX0.njthXe5ZdAMp9_W1WgIfnbwWZj1tI04O9hq3uJ1Jai4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 
 ###-----------FRIENDS------##############
 GET http://localhost:8080/relations/players/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzcxODQxLCJpYXQiOjE3MzM2ODU0NDEsImp0aSI6IjJkY2ExYzFhNWM0NzQwODE4MWM4Yzk4MDRiMGUyNjMxIiwidXNlcl9pZCI6MTF9.BmkYIbkXwWlvNQ5K7p7juHl4Ke0Nj0r3NyjvFGOqNzs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
+
+###################
+
+GET http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 ## ### ## ### # ##### #####
 
@@ -88,7 +43,7 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 ###
 
 OPTIONS http://localhost:8080/relations/notifications/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzcxODQxLCJpYXQiOjE3MzM2ODU0NDEsImp0aSI6IjJkY2ExYzFhNWM0NzQwODE4MWM4Yzk4MDRiMGUyNjMxIiwidXNlcl9pZCI6MTF9.BmkYIbkXwWlvNQ5K7p7juHl4Ke0Nj0r3NyjvFGOqNzs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 
 
@@ -97,20 +52,20 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 #########
 
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc2NTg3LCJpYXQiOjE3MzMyNzQ3ODcsImp0aSI6IjRiYTI0MjNhMGRkZTQyNzFhYzM5NDdlNjY4ZmFlYTg0IiwidXNlcl9pZCI6NX0.FDpLjR5KCKuX5dDfZalN8b8dvIzUpsN0sf34DLzw9j4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 Content-Type: application/json
 
 {
-    "receiver":"pipo"
+    "receiver":"client2"
 }
 ### #  ## ##
 
 POST http://localhost:8080/relations/friends/accept/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 Content-Type: application/json
 
 {
-    "sender":"ali"
+    "sender":"client2"
 }
 ### ## #
 
@@ -135,11 +90,11 @@ POST http://localhost:8080/accounts/JWT/token/refresh
 ############--------------CHAT-------###############
 
 GET http://localhost:8080/chat/list/
-Cookie eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
+Cookie eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 
 ####
 POST http://localhost:8080/chat/ch/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 Content-Type: application/json
 
 {
@@ -148,7 +103,7 @@ Content-Type: application/json
 
 ######
 POST  http://localhost:8080/chat/1/messages/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM5MTMyLCJpYXQiOjE3MzQ4MzY3MzIsImp0aSI6Ijc1NDQyMDc4MWQ1MTQzMzM5MmMwNTVlMzhmYWE0OTJmIiwidXNlcl9pZCI6Mn0.8CmFPb0oWvrM-ojZ8Vx3DpB6AQt0HQOG7Ith-NobhKU
 Content-Type: application/json
 
 {
