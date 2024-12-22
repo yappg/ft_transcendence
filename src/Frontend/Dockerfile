@@ -13,8 +13,8 @@ RUN yarn install
 
 EXPOSE 3000
 
-# CMD ["yarn", "dev"]
-CMD [ "sh", "-c", "while true; do yarn dev && sleep 10; done" ]
+CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 5; done"]
+# CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
 # Stage 2: Build stage
@@ -50,3 +50,4 @@ EXPOSE 3000
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["yarn", "start"]
+# CMD [ "tail", "-f", "/dev/null" ]

@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 
 export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
-  const BASE_URL = 'http://localhost:8080/api/2fa/';
+  const BASE_URL = 'http://localhost:8080/accounts/2fa/';
   try {
     const response = await axios.post(`${BASE_URL}${endpoint}/`, {
       username: name,
@@ -29,7 +29,7 @@ export const fetchQrCode = async (
   try {
     const fetchData = async () => {
       setIsLoading(true);
-      const data = await axios.post('http://localhost:8080/api/2fa/generate-uri/', {
+      const data = await axios.post('http://localhost:8080/accounts/2fa/generate-uri/', {
         username: user,
       });
       setQRcode(data.data.uri);
