@@ -20,26 +20,17 @@ class ChatView(APIView):
     def post(self, request):
         current_user = request.user
         friend_username = request.data.get('senders')
-
-        # Ensure the friend exists
         try:
             friend = Player.objects.get(username=friend_username)
         except Player.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
-
-        # Stop the user from chatting with themselves
         if current_user == friend:
             return Response({"error": "You cannot start a chat with yourself"}, status=400)
-        # Check if a chat between the two participants already exists
         chat_name = f"{current_user}_{friend}_room"
         chat = ChatRoom.objects.filter(name=chat_name).first()
-        print("ddddddddddddddddd1")
-
-        # Create a new chat and add both senders
         if chat is None:
             chat = ChatRoom.objects.create(name=chat_name)
             chat.senders.add(current_user, friend)
-        # Serialize and return the chat
         serializer = ChatRoomSerializer(chat)
         return Response(serializer.data)
 
@@ -50,8 +41,6 @@ class ChatListView(APIView):
     def get(self, request):
         user = request.user
         chats = ChatRoom.objects.filter(senders=user)
-        
-        # Pass request to serializer context to access current user
         serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -64,7 +53,6 @@ class ChatMessagesView(APIView):
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
             return Response({"error": "Chat se7ra"}, status=404)
-        # obtain all the history
         messages = Message.objects.filter(chatroom=chat).order_by('send_at')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
@@ -77,15 +65,12 @@ class ChatMessagesView(APIView):
         print(f"-----------------{receiverId}-----------------------------------2")
         content = request.data.get('content')
         print(f"-----------------{content}-----------------------------------3")
-
-        #validate that chat exists
         try:
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
             return Response({"error": "Chat makynsh"}, status=404)
 
         print(f"-----------------{chat}-----------------------------------4")
-        #validate that receiver exists and is a participants of the chat
 
         try:
             receiver = Player.objects.get(username=receiverId)
@@ -95,7 +80,6 @@ class ChatMessagesView(APIView):
 
         if receiver not in chat.senders.all():
             return Response({"error": "Receiver is not a sender of this chat"}, status=404)
-        #create save
         message = Message.objects.create(
             chatroom = chat,
             sender=sender,

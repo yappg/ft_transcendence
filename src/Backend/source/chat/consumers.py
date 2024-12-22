@@ -35,11 +35,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.chat_group_name,
             self.channel_name
         )
-        # Debug: Print when the WebSocket is disconnected
         print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
 
     async def receive(self, text_data):
-        # Debug: Print the received WebSocket message data
         print(f"-----------------[DEBUG] Received message data: {text_data}")
 
         text_data_json = json.loads(text_data)
@@ -62,12 +60,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         print(f"-----------------[DEBUG] Valid sender {sender.username} and chat {self.chatId} found")
 
-        # Save the message to the database
         new_message = await sync_to_async(Message.objects.create)(
             chatroom=chat, sender=sender,receiver=receiver, content=content
         )
 
-        # Debug: Print after the message is saved
         print(f"-----------------[DEBUG] Message saved: {content} from {sender.username}")
 
         await self.channel_layer.group_send(
@@ -87,7 +83,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = event['receiver']
 
         print(f"-----------------[[DEBUG] Sending message [---|---]to WebSocket: {content} from sender {sender_id} to receiver {receiver_id}")
-        # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': content,
             'sender': sender_id,

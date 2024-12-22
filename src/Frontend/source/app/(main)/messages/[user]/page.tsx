@@ -12,9 +12,9 @@ import { useParams } from 'next/navigation';
 
 export default function Page() {
   const [chatSelected, setChatSelected] = useState<Chat | null>(null);
-  const { chats, messages, setMessages } = useUser(); 
+  const { chats, messages, setMessages } = useUser();
   const param = useParams();
-  const chat_id = parseInt(param.user) ;
+  const chat_id = parseInt(param.user as string);
 
   const findChatById = (id: number): Chat | null => {
     if (chats === null) {
@@ -24,8 +24,7 @@ export default function Page() {
     console.log('DEBUG 2: --> temp', temp);
     return temp;
   };
-  
-  
+
   console.log('DEUBG 1: --> chat_id', chat_id);
   const fetchMessages = async () => {
     try {
@@ -35,14 +34,13 @@ export default function Page() {
       console.error('Failed to fetch messages', error);
     }
   };
-  
+
   useEffect(() => {
     if (chat_id > 0) {
       setChatSelected(findChatById(chat_id) as Chat);
       fetchMessages();
     }
   }, [chat_id]);
-
 
   return (
     <div className="flex size-full flex-row items-center justify-center">

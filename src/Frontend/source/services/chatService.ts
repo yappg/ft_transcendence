@@ -13,7 +13,6 @@ const chatApi = axios.create({
   withCredentials: true,
 });
 
-
 class ChatService {
   private sockets: Map<number, WebSocket> = new Map();
 
@@ -28,7 +27,7 @@ class ChatService {
   }
 
   async createWebSocketConnection(
-    chatId: number, 
+    chatId: number,
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
     if (this.sockets.has(chatId)) {
@@ -65,7 +64,12 @@ class ChatService {
     return socket;
   }
 
-  async sendMessage(chatId: number, content: string, userId: number, receiverId: number): Promise<void> {
+  async sendMessage(
+    chatId: number,
+    content: string,
+    userId: number,
+    receiverId: number
+  ): Promise<void> {
     console.log('chatService.sendMessage called'); // Debug log
     const socket = this.sockets.get(chatId);
     if (!socket || socket.readyState !== WebSocket.OPEN) {
@@ -73,12 +77,14 @@ class ChatService {
     }
 
     try {
-      socket.send(JSON.stringify({
-        content: content,
-        sender: userId,
-        receiver: receiverId,
-        chatId: chatId,
-      }));
+      socket.send(
+        JSON.stringify({
+          content: content,
+          sender: userId,
+          receiver: receiverId,
+          chatId: chatId,
+        })
+      );
     } catch (error) {
       console.error('Error sending message:', error);
       throw new Error('Failed to send message');

@@ -12,7 +12,7 @@ import { MessageBubble } from '@/components/chat/MessageBubb';
 interface MessagesProps {
   chatId: number;
   chatPartner: Chat | null;
-  receiverId: number;
+  receiverId: number | undefined;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
@@ -26,8 +26,6 @@ export const Messages: React.FC<MessagesProps> = ({
 }) => {
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  // const socketRef = useRef<WebSocket | null>(null);
-  // const currentChatIdRef = useRef<number | null>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   let socketRef = useRef<WebSocket | null>(null);
 
@@ -36,36 +34,6 @@ export const Messages: React.FC<MessagesProps> = ({
     if (user) setCurrentUserId(user.id);
   }, [user]);
 
-  useEffect(() => {
-    const setupWebSocket = async () => {
-
-      try {
-        socketRef.current = await chatService.createWebSocketConnection(
-          chatId,
-          handleWebSocketMessage
-        );
-      } catch (error) {
-        console.error('WebSocket connection failed', error);
-      }
-    };
-
-    setupWebSocket();
-    setNewMessage('');
-
-   
-      return () => {
-        if (socketRef.current) {
-          socketRef.current.close();
-        }
-    };
-  }, [chatId]);
-
-  // Scroll messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Handle incoming WebSocket messages
   const handleWebSocketMessage = (message: any) => {
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -79,7 +47,32 @@ export const Messages: React.FC<MessagesProps> = ({
     ]);
   };
 
-  // Handle sending a new message
+  useEffect(() => {
+    const setupWebSocket = async () => {
+      try {
+        socketRef.current = await chatService.createWebSocketConnection(
+          chatId,
+          handleWebSocketMessage
+        );
+      } catch (error) {
+        console.error('WebSocket connection failed', error);
+      }
+    };
+
+    setupWebSocket();
+    setNewMessage('');
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, [chatId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -110,7 +103,7 @@ export const Messages: React.FC<MessagesProps> = ({
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
-              src={chatPartner?.receiver.avatar}
+              src={'http://localhost:8080' + chatPartner?.receiver.avatar}
               alt={`${chatPartner?.receiver.username}'s profile`}
               className="rounded-full"
             />

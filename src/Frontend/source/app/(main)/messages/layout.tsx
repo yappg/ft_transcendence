@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
-import { ChatItem } from '@/components/chat/chatList';
-import { Chat, Message, User } from '@/constants/chat';
-import { chatService } from '@/services/chatService';
+import React, { useEffect, useState } from 'react';
+import { Chat } from '@/constants/chat';
 import { useUser } from '@/context/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { ChatCard } from '@/components/chat/ChatCard';
@@ -16,18 +14,11 @@ export default function ChatLayout({
 }>) {
   const router = useRouter();
   const { chats, messages, user, setMessages } = useUser();
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
-
   const [listChat, setListChat] = useState<Chat[] | null>(chats);
-  //   // const [users, setUsers] = useState<User[] | null>(null);
-  const [users, setUsers] = useState<{ [key: string]: User }>({});
-  const [currentUserId, setCurrentUserId] = useState<number>(0);
-  const [receiverId, setReceiverId] = useState<number | null>(null);
   const [showChat, setShowChat] = useState(false);
-  // -----------User Id--------------///
+
   useEffect(() => {
     if (messages.length > 0) {
-      setCurrentUserId(user?.id as number);
       setShowChat(true);
       console.log('called', user?.id);
     }
@@ -48,7 +39,7 @@ export default function ChatLayout({
               setMessages([]);
               router.back();
             }}
-            className="absolute lg:hidden right-8 top-8 z-[99] size-[50px] cursor-pointer rounded-md bg-white"
+            className="absolute right-8 top-8 z-[99] size-[50px] cursor-pointer rounded-md bg-white lg:hidden"
           ></div>
         )}
         {showChat && (
@@ -57,17 +48,11 @@ export default function ChatLayout({
           </div>
         )}
         <div className="size-full lg:w-2/5">
-          {/* <ChatList
-            onChatSelect={handleChatSelect}
-            selectedChat={selectedChat}
-            chats={chats}
-            users={users}
-          /> */}
           <div
             className={`costum-little-shadow size-full overflow-hidden rounded-[15px] bg-black-crd lg:block ${!showChat ? 'block' : 'hidden'}`}
           >
             <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-black-crd px-4 font-dayson text-white">
-              <h2>Chat List</h2>
+              <h2>O-O-O-O-O-O</h2>
             </div>
             <div className="custom-scrollbar-container flex size-full flex-col items-center justify-start gap-1">
               {listChat &&
