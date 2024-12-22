@@ -2,8 +2,6 @@ import { GoCheckCircle } from 'react-icons/go';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendServices from '@/services/friendServices';
-import { useState } from 'react';
-import {useEffect} from 'react';
 
 type FriendRequestCardProps = {
   name: string;
@@ -11,6 +9,7 @@ type FriendRequestCardProps = {
   vari: string;
   actions?: JSX.Element[];
   customStyles?: React.CSSProperties;
+  onRequestAccepted?: (username: string) => void;
 };
 
 const FriendRequestCard = ({
@@ -19,6 +18,7 @@ const FriendRequestCard = ({
   vari,
   actions,
   customStyles = {},
+  onRequestAccepted,
 }: FriendRequestCardProps): JSX.Element => {
 
   const achievements = [
@@ -38,9 +38,12 @@ const FriendRequestCard = ({
   async function acceptRequest() {
     try {
       const response = await FriendServices.acceptFriendRequest(name);
-      console.log("accepted Friends",response.message, "kakka", name);
+      console.log("accepted Friends",response.message, name);
       if(response.message){
         console.log(response.message);
+        if (onRequestAccepted) {
+          onRequestAccepted(name);
+        }
       }
       else if(response.error) {
           console.log('accpet',response.error);

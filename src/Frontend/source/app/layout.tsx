@@ -4,8 +4,7 @@ import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 import { SideBarProvider } from '@/context/SideBarContext';
-import { TabProvider } from '@/context/TabContext';
-import { AuthProvider, useAuth, User } from '@/context/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 const dayson = Days_One({
   subsets: ['latin'],

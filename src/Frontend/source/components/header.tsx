@@ -1,10 +1,13 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
-import { IoMdNotifications } from 'react-icons/io';
-import { useContext } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
-import { useState } from 'react';
+
+import { useUser } from '@/context/GlobalContext';
 import { RiMenu2Fill } from "react-icons/ri";
+
+import NotificationBell from  '@/components/notifications/notifications'
+
 
 export const Header = () => {
   const paths = [
@@ -18,22 +21,21 @@ export const Header = () => {
     { id: 8, path: 'Settings' },
     { id: 9, path: 'Profile' },
   ];
-  const profile = {
-    name: 'Meryeme',
-    lastHistory: {
-      myscore: 10,
-      opponentScore: 5,
-      opponentProfile: {
-        name: 'John Doe',
-        avatar: '/images/avatar.jpg',
-      },
-    },
-  };
-  function handleClick() {
-    setShowSearchBar(!showSearchBar);
-  }
+
   const { isActivated } = useContext(SideBarContext);
+
   const [showSearchBar, setShowSearchBar] = useState(false);
+
+  const {user, isLoading} = useUser();
+
+  if (!user)
+    return (
+      <h1 className="size-[200px] flex justify-center items-center font-dayson rounded-md text-[30px] text-gray-600">
+      Loading...
+    </h1>
+    );
+  
+  // here we gonna build the notif logic
   return (
     <div className="flex h-fit w-full items-center justify-between md:px-4 px-0">
       {paths
@@ -44,8 +46,8 @@ export const Header = () => {
               {path.path}
             </h1>
             {path.id === 1 && (
-              <span className="font-dayson text-[12px] sm:text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
-                {profile.name}
+              <span className="font-dayson text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
+                {user.username}
               </span>
             )}
           </div>
