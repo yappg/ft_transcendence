@@ -24,18 +24,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type':'connection_establish',
             'message':'you\'re now connected'
         }))
-        # print(f"-----------------[DEBUG] WebSocket connection established for chat ID: {self.chatId}")
+        print(f"-----------------[DEBUG] WebSocket connection established for chat ID: {self.chatId}")
 
 
     async def disconnect(self, close_code):
-        # Leave the chat group
+        print(f"WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
+        if close_code == 1006:
+            print(f"Abnormal closure for chat ID: {self.chatId}, Close code: {close_code}")
         await self.channel_layer.group_discard(
             self.chat_group_name,
             self.channel_name
         )
-
         # Debug: Print when the WebSocket is disconnected
-        # print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
+        print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
 
     async def receive(self, text_data):
         # Debug: Print the received WebSocket message data
@@ -46,7 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = text_data_json.get('sender')
         receiver_id = text_data_json.get('receiver')
 
-        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id}--")
+        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id} |")
 
         try:
             sender = await sync_to_async(Player.objects.get)(id=sender_id)
@@ -85,6 +86,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chatId = event['chatId']
         receiver_id = event['receiver']
 
+        print(f"-----------------[[DEBUG] Sending message [---|---]to WebSocket: {content} from sender {sender_id} to receiver {receiver_id}")
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'content': content,

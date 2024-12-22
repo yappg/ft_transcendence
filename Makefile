@@ -14,7 +14,6 @@ RESET := \033[0m
 
 build: down
 	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
-	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
 	$(MAKE) logs
 
 up: down
@@ -34,6 +33,9 @@ list:
 	docker compose -p $(PROJECT) images  && \
 
 clean:
+	docker compose -p $(PROJECT) down --volumes --remove-orphans
+
+fclean:
 	docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
 
 re: clean build
