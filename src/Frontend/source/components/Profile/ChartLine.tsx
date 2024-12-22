@@ -30,8 +30,8 @@ const chartConfig = {
 
 export const ChartLine = () => {
   return (
-    <div className="w-[500px] h-[300px] border-2">
-        <ChartContainer config={chartConfig} className='border-2'>
+    <div className="w-[500px] h-[300px] ">
+        <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={chartData}

@@ -17,38 +17,55 @@ build: down
 	$(MAKE) logs
 
 up: down
-	docker compose -p $(PROJECT) -f $(COMPOSE) up -d  && \
+	@docker compose -p $(PROJECT) -f $(COMPOSE) up -d  && \
 	$(MAKE) logs
 
 down:
-	docker compose -p $(PROJECT) down --remove-orphans
+	@docker compose -p $(PROJECT) down --remove-orphans
 
 logs:
-	docker compose -p $(PROJECT) logs -f
+	@docker compose -p $(PROJECT) logs -f
 
 list:
 	@echo "$(YELLOW)\n<========= containers =========>\n$(RESET)"  && \
 	docker compose -p $(PROJECT) ps  && \
 	echo "$(YELLOW)\n<=========   images   =========>\n$(RESET)"  && \
-	docker compose -p $(PROJECT) images  && \
+	docker compose -p $(PROJECT) images
 
 clean:
-	docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
+	@docker compose -p $(PROJECT) down --volumes --remove-orphans
+	@$(MAKE) data-reset
+
+fclean:
+	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
+	@$(MAKE) data-reset
 
 re: clean build
 
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -f $(COMPOSE) $(filter-out $@, $(MAKECMDGOALS))
 
 it:
-	docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
+	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
+
+migrations:
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "makemigrations"
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "migrate"
+
+kill:
+	@docker compose -p $(PROJECT) kill "$(filter-out $@, $(MAKECMDGOALS))"
 
 restart:
-	docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
 
 ##########################################   UTILITIES  ##########################################
+
+data-reset:
+	@echo "$(GREEN)>$(YELLOW) removing all backend migrations files ...$(RESET)"
+	@find ./src/Backend/source/ -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	@find ./src/Backend/source/ -name "__pycache__" -type d -delete
 
 prune:
 	@echo "$(GREEN)>$(YELLOW) removing all docker resources: CONTRL + C to cancel...$(RESET)"
@@ -56,12 +73,14 @@ prune:
 	@echo "$(GREEN)>$(YELLOW) Starting the pruning process: $(RESET)"
 	@docker kill $$(docker ps -aq) 2>/dev/null || true
 	@docker rm $$(docker ps -aq) 2>/dev/null || true
+	@echo "$(GREEN)>$(YELLOW) removing all containers...$(RESET)"
+	@sleep 2
 	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
 	@docker network rm $$(docker network ls -q) 2>/dev/null || true
 	@docker rmi $$(docker images -aq) 2>/dev/null || true
 	@echo "$(GREEN)>$(YELLOW) done.$(RESET)"
 
-push:
+push: data-reset
 	@echo "$(GREEN)>$(YELLOW) Adding changes to git...$(RESET)"
 	git add .
 	git status
@@ -76,4 +95,4 @@ push:
 
 #################################################################################################
 
-.PHONEY: up down logs list clean re compose it restart prune push
+.PHONEY: build up down logs list clean fclean re compose it restart data-reset prune push
