@@ -1,59 +1,59 @@
 services:
-    container-exporter:
-      container_name: cadvisor
-      image: gcr.io/cadvisor/cadvisor
-      privileged: true
-      volumes:
-        - /:/rootfs:ro
-        - /var/run/:/var/run:ro
-        - /sys:/sys:ro
-        - /dev/disk/:/dev/disk:ro
-        - /Users/${USER}/.docker/run/:/var/run/:ro
-      networks:
-        - transcendence
-      ports:
-        - 8000:8080
-      restart: unless-stopped
+    # container-exporter:
+    #   container_name: cadvisor
+    #   image: gcr.io/cadvisor/cadvisor
+    #   privileged: true
+    #   volumes:
+    #     - /:/rootfs:ro
+    #     - /var/run/:/var/run:ro
+    #     - /sys:/sys:ro
+    #     - /dev/disk/:/dev/disk:ro
+    #     - /Users/${USER}/.docker/run/:/var/run/:ro
+    #   networks:
+    #     - transcendence
+    #   ports:
+    #     - 8000:8080
+    #   restart: unless-stopped
 
 
-    web:
-      container_name: nginx
-      build:
-        context: ./src/Services/nginx
-        dockerfile: Dockerfile
-      image: nginx
-      networks:
-        - transcendence
-      ports:
-        - 80:80
-        - 443:443
-      # depends_on:
-      #   frontend:
-      #       condition: service_healthy
-      #   backend:
-      #       condition: service_healthy
-      #   grafana:
-      #       condition: service_healthy
-      #   kibana:
-      #       condition: service_healthy
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
-      restart: always
+    # web:
+    #   container_name: nginx
+    #   build:
+    #     context: ./src/Services/nginx
+    #     dockerfile: Dockerfile
+    #   image: nginx
+    #   networks:
+    #     - transcendence
+    #   ports:
+    #     - 80:80
+    #     - 443:443
+    #   # depends_on:
+    #   #   frontend:
+    #   #       condition: service_healthy
+    #   #   backend:
+    #   #       condition: service_healthy
+    #   #   grafana:
+    #   #       condition: service_healthy
+    #   #   kibana:
+    #   #       condition: service_healthy
+    #   healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
+    #     interval: 10s
+    #     timeout: 5s
+    #     retries: 3
+    #     start_period: 5s
+    #   restart: always
 
-    web-exporter:
-      container_name: nginx-exporter
-      image: nginx/nginx-prometheus-exporter
-      command: --nginx.scrape-uri=http://web:8080/stub_status
-      networks:
-        - transcendence
-      depends_on:
-        web:
-          condition: service_healthy
-      restart: unless-stopped
+    # web-exporter:
+    #   container_name: nginx-exporter
+    #   image: nginx/nginx-prometheus-exporter
+    #   command: --nginx.scrape-uri=http://web:8080/stub_status
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     web:
+    #       condition: service_healthy
+    #   restart: unless-stopped
 
 
     frontend:
@@ -144,18 +144,18 @@ services:
         start_period: 5s
       restart: always
 
-    cache-exporter:
-      container_name: redis-exporter
-      image: bitnami/redis-exporter
-      environment:
-        REDIS_PASSWORD: ${REDIS_PASS}
-        REDIS_ADDR: "redis://cache:6379"
-      networks:
-        - transcendence
-      depends_on:
-        cache:
-          condition: service_healthy
-      restart: unless-stopped
+    # cache-exporter:
+    #   container_name: redis-exporter
+    #   image: bitnami/redis-exporter
+    #   environment:
+    #     REDIS_PASSWORD: ${REDIS_PASS}
+    #     REDIS_ADDR: "redis://cache:6379"
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     cache:
+    #       condition: service_healthy
+    #   restart: unless-stopped
 
 
     database:
@@ -178,73 +178,73 @@ services:
         start_period: 5s
       restart: always
 
-    database-exporter:
-      container_name: postgres-exporter
-      image: wrouesnel/postgres_exporter
-      environment:
-        DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
-      networks:
-        - transcendence
-      depends_on:
-        database:
-          condition: service_healthy
-      restart: unless-stopped
+    # database-exporter:
+    #   container_name: postgres-exporter
+    #   image: wrouesnel/postgres_exporter
+    #   environment:
+    #     DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     database:
+    #       condition: service_healthy
+    #   restart: unless-stopped
 
 
-    prometheus:
-      container_name: prometheus
-      image: prom/prometheus:latest
-      volumes:
-        - prometheus-data:/prometheus
-        - "./src/Services/prometheus:/etc/prometheus:ro"
-        - "./src/Services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-        - "./src/Services/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
-      command:
-        - "--config.file=/etc/prometheus/prometheus.yml"
-        - "--storage.tsdb.path=/prometheus"
-      networks:
-        - transcendence
-      restart: always
+    # prometheus:
+    #   container_name: prometheus
+    #   image: prom/prometheus:latest
+    #   volumes:
+    #     - prometheus-data:/prometheus
+    #     - "./src/Services/prometheus:/etc/prometheus:ro"
+    #     - "./src/Services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+    #     - "./src/Services/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
+    #   command:
+    #     - "--config.file=/etc/prometheus/prometheus.yml"
+    #     - "--storage.tsdb.path=/prometheus"
+    #   networks:
+    #     - transcendence
+    #   restart: always
 
-    alert-manager:
-      container_name: alert-manager
-      image: prom/alertmanager
-      volumes:
-        - alert-manager-data:/alertmanager
-        - "./src/Services/alert-manager:/etc/alertmanager:ro"
-      networks:
-        - transcendence
-      depends_on:
-        - prometheus
-      restart: always
+    # alert-manager:
+    #   container_name: alert-manager
+    #   image: prom/alertmanager
+    #   volumes:
+    #     - alert-manager-data:/alertmanager
+    #     - "./src/Services/alert-manager:/etc/alertmanager:ro"
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     - prometheus
+    #   restart: always
 
-    disord-alerts:
-      container_name: discord-alerts
-      image: benjojo/alertmanager-discord
-      environment:
-        DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
-      networks:
-        - transcendence
-      depends_on:
-        - alert-manager
-      restart: always
+    # disord-alerts:
+    #   container_name: discord-alerts
+    #   image: benjojo/alertmanager-discord
+    #   environment:
+    #     DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     - alert-manager
+    #   restart: always
 
-    grafana:
-      container_name: grafana
-      image: grafana/grafana
-      environment:
-        GF_SERVER_ROOT_URL: https://localhost/monitoring
-        GF_SERVER_SERVE_FROM_SUB_PATH: true
-        GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
-        GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-      volumes:
-        - grafana-data:/var/lib/grafana
-        - "./src/Services/grafana:/etc/grafana/provisioning:ro"
-      networks:
-        - transcendence
-      depends_on:
-        - prometheus
-      restart: unless-stopped
+    # grafana:
+    #   container_name: grafana
+    #   image: grafana/grafana
+    #   environment:
+    #     GF_SERVER_ROOT_URL: https://localhost/monitoring
+    #     GF_SERVER_SERVE_FROM_SUB_PATH: true
+    #     GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+    #     GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    #   volumes:
+    #     - grafana-data:/var/lib/grafana
+    #     - "./src/Services/grafana:/etc/grafana/provisioning:ro"
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     - prometheus
+    #   restart: unless-stopped
 
 
 volumes:
