@@ -1,6 +1,8 @@
-
 from rest_framework import serializers
 from ..models import *
+from relations.models import Friends
+from django.db.models import Q
+from relations.serializers import ProfileFriendsSerializer
 
 ########################################################################################
 
@@ -105,6 +107,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     achievements = serializers.SerializerMethodField()
 
     statistics = serializers.SerializerMethodField()
+    friends = serializers.SerializerMethodField()
 
     last_login = serializers.SerializerMethodField()
     # created_at = serializers.SerializerMethodField()
@@ -142,6 +145,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'games_loss',
             'win_ratio',
 
+
+            'friends',
             # 'ice_games',
             # 'water_games',
             # 'fire_games',
@@ -158,6 +163,43 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_statistics(self, obj):
         # from ..serializers import StatisticsSerializer
         return StatisticsSerializer(obj, read_only=True).data
+
+
+
+
+    def get_friends(self, obj):
+        # More efficient query using select_related
+        friends = Friends.objects.filter(
+            Q(friend_requester=obj.player) | Q(friend_responder=obj.player)
+        ).select_related('friend_requester', 'friend_responder').distinct()
+
+        # Use a list comprehension for better performance
+        unique_friends = []
+        seen_players = set()
+
+        for friend in friends:
+            other_player = (
+                friend.friend_responder
+                if friend.friend_requester == obj.player
+                else friend.friend_requester
+            )
+
+            if other_player.id not in seen_players:
+                seen_players.add(other_player.id)
+                unique_friends.append(friend)
+
+        return (
+            ProfileFriendsSerializer(
+                unique_friends,
+                context={'request': self.context.get('request')},
+                many=True
+            ).data if unique_friends else []
+        )
+
+
+
+
+
 
     def get_xp(self, obj):
         xp_percentage = (obj.xp / obj.calculate_level_up_xp()) * 100
