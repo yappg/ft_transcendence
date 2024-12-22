@@ -19,7 +19,6 @@ class NotificationListView(ListAPIView):
         return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
 
 
-
 class PlayerListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -32,14 +31,14 @@ class PlayerListView(APIView):
         friends_ids = Friends.objects.filter(
             Q(friend_requester=user) | Q(friend_responder=user)
         ).values_list('friend_requester_id', 'friend_responder_id')
-        
+
         friend_invitation_ids = FriendInvitation.objects.filter(
             Q(sender=user) | Q(receiver=user)
         ).values_list('sender_id', 'receiver_id')
-        
+
         friends_ids = set([item for sublist in friends_ids for item in sublist if item != user.id])
         friend_invitation_ids = set([item for sublist in friend_invitation_ids for item in sublist if item != user.id])
-        
+
         players = Player.objects.exclude(
             Q(id=user.id) |
             Q(id__in=friends_ids)|
@@ -114,7 +113,7 @@ class BlockedFriendsView(APIView):
 
 class FriendInvitationView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(
         request_body=FriendInvitationSerializer,
         responses={200: 'Success', 400: 'Invalid input'}
@@ -129,14 +128,14 @@ class FriendInvitationView(APIView):
 
         if sender == receiver:
             return Response({"error": "You cannot send a friend request to yourself"}, status=200)
-        
+
                 # Check if they are already friends
         if Friends.objects.filter(
             (Q(friend_requester=sender) & Q(friend_responder=receiver)) |
             (Q(friend_requester=receiver) & Q(friend_responder=sender))
         ).exists():
             return Response({"error": "You are already friends"}, status=200)
-        
+
         invitation, created = FriendInvitation.objects.get_or_create(sender=sender, receiver=receiver)
         if not created:
             return Response({"error": "Friend request already sent"}, status=200)
@@ -163,11 +162,11 @@ class AcceptInvitationView(APIView):
         invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver, status='pending').first()
         if not invitation:
             return Response({"error": "Invitation not found or already accepted"}, status=200)
-        
-        
+
+
         invitation.status = 'accepted'
         invitation.save()
-        
+
         # chat_name = f"{current_user}_{friend}_room"
         # chat = ChatRoom.objects.filter(name=chat_name).first()
 

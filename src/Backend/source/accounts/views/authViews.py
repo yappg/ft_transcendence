@@ -1,76 +1,51 @@
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from django.core.cache import cache
-from .permissions import AnonRateLimitThrottling
-from .models import *
-from .serializers import *
-from .utils import *
+import pyotp
+import requests
 from drf_yasg.utils import swagger_auto_schema
 
+# from django.conf import settings
+# from django.shortcuts import redirect
+# from django.core.cache import cache
+# from django.contrib.auth import authenticate
+# from django.contrib.auth.models import User
+# from django.contrib.auth.signals import user_logged_in
+from rest_framework import status
+from rest_framework import serializers
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework.generics import get_object_or_404
 
+from ..permissions import (
+    AnonRateLimitThrottling
+)
 
+from ..models import (
+    Player
+)
 
-class PlayerProfileView(APIView):
-    
-    def get(self, request):
-        permission_classes = [IsAuthenticated]
-        userInfo = request.user
-        serializer = PlayerSerializer(userInfo)
-        return Response(serializer.data, status=200)
-
-
-class PlayerProfileViewWithUserName(APIView):
-    
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request, username):
-        userInfo = get_object_or_404(Player, username=username)
-        serializer = PlayerSerializer(userInfo)
-        return Response(serializer.data, status=200)
-# -----
-
-
-class PlayerProfileViewWithId(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request, userId):
-        userInfo = get_object_or_404(Player, id=userId)
-        serializer = PlayerSerializer(userInfo)
-        return Response(serializer.data, status=200)
-
-# ----
-
-class PlayersViewList(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    model = Player
-    serializer_class=PlayerSerializer
-    queryset=Player.objects.all()
+from ..serializers.authSerializers import *
+from .utils import *
 
 #------------------------------------ Auth ------------------------------------
+@swagger_auto_schema(request_body=SignUpSerializer)
 class SignUpView(APIView):
     permission_classes = [AllowAny]
     serializer_class = SignUpSerializer
     # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
-    @swagger_auto_schema(request_body=SignUpSerializer)
     def post(self, request):
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
 
-        serializer = self.serializer_class(data=request.data)
         try:
+            serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
             if user:
                 access_token, refresh_token = generate_tokens(user)
-                resp = Response({'message': 'Logged in Successfully'}, 
+                resp = Response({'message': 'Logged in Successfully'},
                               status=status.HTTP_201_CREATED)
                 resp.set_cookie(
                     key='access_token',
@@ -93,14 +68,14 @@ class SignUpView(APIView):
 
         return Response({'error': 'User not created'}, status=status.HTTP_200_OK)
 
+
+@swagger_auto_schema(request_body=SignInSerializer)
 class SignInView(APIView):
     permission_classes = [AllowAny]
     Serializer_class = SignInSerializer
-    throttle_classes = [AnonRateLimitThrottling]
+    # throttle_classes = [AnonRateLimitThrottling]
     authentication_classes = []
 
-
-    @swagger_auto_schema(request_body=SignInSerializer)
     def post(self, request):
 
         if request.user.is_authenticated:
@@ -153,7 +128,6 @@ class LogoutView(APIView):
         return response
 
 #------------------------------------- 2FA ------------------------------------
-import pyotp
 
 class GenerateURI(APIView):
     permission_classes = [AllowAny]
@@ -255,13 +229,6 @@ class DisableOTP(APIView):
             status=status.HTTP_200_OK)
 
 #---------------------------------- OAuth2.0 ----------------------------------
-import requests
-from django.conf import settings
-from django.contrib.auth import login
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
-from rest_framework.response import Response
 
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
@@ -326,22 +293,3 @@ class OAuth42CallbackView(APIView):
             httponly=False
         )
         return resp
-
-#--------------------------User Infos Update ------------------------------
-
-class UpdateUserInfos(APIView):
-    # permission_classes = [Allow]
-    serializer_class = UpdateUserInfosSerializer
-
-    def post(self, request):
-        serializer = UpdateUserInfosSerializer(
-            data=request.data,
-            context={'user':request.user}
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message': 'You Updated your informations'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_200_OK)
-
-
-# {"username":"kad","password":"asd123"}
