@@ -30,6 +30,29 @@ class PlayerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("username must be unique.")
         return value
 
+class PlayerRelationsSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Player
+        fields = [
+            'id',
+            'username',
+            'avatar',
+        ]
+        read_only_fields = [
+            'id',
+            'username',
+            'avatar',
+        ]
+
+    def get_avatar(self, obj):
+        return obj.profile.avatar
+
+    def get_username(self, obj):
+        return obj.profile.display_name
+
 
 class StatisticsSerializer(serializers.ModelSerializer):
     ice_ratio = serializers.SerializerMethodField()
