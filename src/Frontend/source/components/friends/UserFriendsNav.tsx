@@ -6,16 +6,37 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
+import {chatService} from '@/services/chatService';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
 
 const UserFriendsNav = (): JSX.Element => {
-  const player = {
-    name: 'Noureddine Akebli',
-    level: 22,
-  };
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
+  const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
+  
+  
+  // need a fetch from the parent component... this is tmp fetch
+  useEffect(() => {
+    // Fetch the current user's ID
+    const fetchCurrentUserId = async () => {
+      try {
+        const response = await chatService.getCurrentUserId();
+        setCurrentUserName(response.username);
+        console.log(response.username)
+      } catch (error) {
+        console.error('Failed to fetch current user ID', error);
+      }
+    };
+    
+    fetchCurrentUserId();
+  }, []);
+
+
+  const player = {
+    name: currentUserUserName,
+    level: 22,
+  };
 
   useEffect(() => {
     const displayInvit = async () => {
@@ -65,19 +86,33 @@ const UserFriendsNav = (): JSX.Element => {
     }
     displayFriends();
   }, []);
-   
-
-
-  // const { name, level } = player;
   
   const [activeIndex, setActiveIndex] = useState(0);
-  // const { activeIndex, setActiveIndex } = useContext(TabContext);
 
   const headers = [
     { title: 'Your Friends', href: '' },
     { title: 'Invitations', href: '' },
     { title: 'Add New', href: '' },
   ];
+  
+  const handleRequestAccepted = (username: string) => {
+    // Find the accepted request
+    const acceptedRequest = Requests.find((req: any) => req.sender === username);
+    if (acceptedRequest) {
+      // Remove the accepted request from the Requests list
+      setRequests((prevRequests: any) => prevRequests.filter((req: any) => req.sender !== username));
+      // Add the new friend to the Friends list
+      const newFriend = {
+        friend_requester: currentUserUserName,
+        friend_responder: username,
+        profilePhoto: acceptedRequest.senderProfilePhoto,
+        level: acceptedRequest.level,
+        wins: acceptedRequest.wins,
+      };
+      setFriends((prevFriends: any) => [...prevFriends, newFriend]);
+    }
+  };
+
   const renderContent = () => {
     if (activeIndex === 0) {
       return (
@@ -86,7 +121,7 @@ const UserFriendsNav = (): JSX.Element => {
           Friends.map((friend: any, index) => (
             <FriendsComponent
               key={index}
-              name={friend.friend_requester}
+              name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
               ProfilePhoto={friend.profilePhoto}
               level={friend.level}
               wins={friend.wins}
@@ -99,9 +134,9 @@ const UserFriendsNav = (): JSX.Element => {
               }
             />
           ))
-  ) : (
-    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
-  )}
+          ) : (
+            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+          )}
         </div>
       );
     } else if (activeIndex === 1) {
@@ -114,11 +149,13 @@ const UserFriendsNav = (): JSX.Element => {
               name={invitation.sender}
               ProfilePhoto={invitation.senderProfilePhoto}
               vari={invitation.created_at}
+              onRequestAccepted={handleRequestAccepted}
             />
           ))
-  ) : (
-    <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
-  )}
+          ) : (
+            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
+          )
+        }
         </div>
       );
     } else if (activeIndex === 2) {
