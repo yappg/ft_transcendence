@@ -10,9 +10,12 @@ export abstract class PixiManager {
   backgroundImage: string;
   keysPressed: Set<string> = new Set('');
   paddleWidth: number;
+  paddleheight!: number;
+  ballRatio!: number;
   gameState: string = 'start';
   screenWidth: number = 0;
   screenHeight: number = 0;
+  movementSpeed: number = 0;
   game: any;
   round = 0;
   dx = 1;
@@ -40,6 +43,8 @@ export abstract class PixiManager {
     background.width = this.screenWidth;
     background.height = this.screenHeight;
     this.paddleWidth = this.screenWidth / 5;
+    this.paddleheight = this.screenHeight / 40;
+    this.ballRatio = this.screenWidth / 35;
     background.alpha = 0.2;
     this.app.stage.addChild(background);
     if (this.game.gameState === 'start') {
@@ -76,7 +81,7 @@ export abstract class PixiManager {
       this.screenWidth / 2 - this.paddleWidth / 2,
       20,
       this.paddleWidth,
-      this.screenHeight / 40,
+      this.paddleheight,
       0xff0000,
       0x000000
     );
@@ -84,7 +89,7 @@ export abstract class PixiManager {
       this.screenWidth / 2 - this.paddleWidth / 2,
       this.screenHeight - 50,
       this.paddleWidth,
-      this.screenHeight / 40,
+      this.paddleheight,
       0x00ffff,
       0x000000
     );
@@ -193,34 +198,39 @@ export class LocalGameManager extends PixiManager {
   updateBallPosition() {
     if (!this.ball || !this.app) return;
 
-    const movementSpeed = 5;
+    const baseSpeed = 8;
 
-    this.ball.x += this.dx * movementSpeed;
-    this.ball.y += this.dy * movementSpeed;
+    const baseScreenDiagonal = Math.sqrt(800 ** 2 + 1080 ** 2);
+    const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
+
+    this.movementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
+
+    this.ball.x += this.dx * this.movementSpeed;
+    this.ball.y += this.dy * this.movementSpeed;
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
       this.dx *= -1;
-      this.ball.x += this.dx * movementSpeed;
+      this.ball.x += this.dx * this.movementSpeed;
     }
 
     if (
-      this.ball.y - 10 >= this.topRacket.y &&
+      this.ball.y + this.ballRatio + this.paddleheight >= this.topRacket.y &&
       this.ball.y <= this.topRacket.y + this.topRacket.height &&
       this.ball.x >= this.topRacket.x &&
       this.ball.x <= this.topRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * movementSpeed;
+      this.ball.y += this.dy * this.movementSpeed;
     }
 
     if (
-      this.ball.y + 10 >= this.bottomRacket.y &&
+      this.ball.y + this.ballRatio >= this.bottomRacket.y &&
       this.ball.y <= this.bottomRacket.y + this.bottomRacket.height &&
       this.ball.x >= this.bottomRacket.x &&
       this.ball.x <= this.bottomRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * movementSpeed;
+      this.ball.y += this.dy * this.movementSpeed;
     }
     if (this.ball.y <= 0 || this.ball.y >= this.screenHeight) {
       const score1 = this.game.GameScore[0];
@@ -228,9 +238,11 @@ export class LocalGameManager extends PixiManager {
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
+        this.dy = 1;
       } else {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
+        this.dy = -1;
       }
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
