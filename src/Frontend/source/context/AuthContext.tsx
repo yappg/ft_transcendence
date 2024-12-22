@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-// User interface definition
 export interface User {
   id: string;
   username: string;
@@ -17,29 +16,29 @@ interface AuthContextType {
   updateUser: (updates: Partial<User>) => void;
 }
 
-// Create AuthContext
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Helper function to safely parse booleans from localStorage
 const parseBoolean = (value: string | null) => value === 'True';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const is2FAEnabled = parseBoolean(localStorage.getItem('otp-enabled'));
     const is2FAvalidated = parseBoolean(localStorage.getItem('otp-validated'));
-    return storedUser
-      ? {
-          username: storedUser,
-          email: '', // Initialize email if not stored in localStorage
-          id: '', // Initialize id if not stored
-          is2FAEnabled,
-          is2FAvalidated,
-        }
-      : null;
-  });
 
-  // Handle user login
+    if (storedUser) {
+      setUser({
+        username: storedUser,
+        email: '',
+        id: '',
+        is2FAEnabled,
+        is2FAvalidated,
+      });
+    }
+  }, []);
+
   const login = (userData: User): Promise<User> => {
     return new Promise<User>((resolve) => {
       localStorage.setItem('user', userData.username);
@@ -50,7 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Update user details
   const updateUser = (updates: Partial<User>) => {
     setUser((prevUser: any) => {
       if (!prevUser) return null; // No update if user is null
@@ -62,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Handle user logout
   const logout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('otp-enabled');
@@ -77,7 +74,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook to use AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
