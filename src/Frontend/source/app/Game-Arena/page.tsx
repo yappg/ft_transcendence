@@ -13,19 +13,16 @@ const GameArena = () => {
 
   return (
     <GameProvider>
-      <div className="grid h-screen w-full grid-cols-7 gap-4 bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
-        <div className="col-start-1 col-end-4 hidden lg:block">
+      <div className="flex flex-col h-screen w-full bg-linear-gradient lg:p-8 lg:gap-8 dark:bg-linear-gradient-dark xl:flex-row">
+        <div className="lg:block w-full h-h-1/5">
           <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
-        <div
-          className="col-start-4 col-end-7 overflow-hidden rounded-[20px] border-[10px] border-black bg-slate-400"
-          id="table"
-        >
+        <div className="overflow-hidden rounded-[20px] border-[10px] border-black h-full lg:w-full">
           <GameTable mode={mode || ''} map={map || ''} />
         </div>
         {/* abilities */}
-        <div className="col-start-7 col-end-8 bg-slate-400"></div>
+        <div className="col-start-7 col-end-8 bg-slate-400 h-[100px]"></div>
       </div>
     </GameProvider>
   );

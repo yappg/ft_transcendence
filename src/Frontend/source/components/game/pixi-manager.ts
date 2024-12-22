@@ -94,6 +94,7 @@ class PixiManager {
     x: number,
     y: number,
     width: number,
+
     height: number,
     color: number,
     glowColor: number
