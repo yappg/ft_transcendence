@@ -16,13 +16,44 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
         fields = ['id', 'blocker', 'blocked', 'created_at']
 
 
-class FriendsSerializer(serializers.ModelSerializer):
-    friend_requester = serializers.StringRelatedField()
-    friend_responder = serializers.StringRelatedField()
+class ProfileFriendsSerializer(serializers.ModelSerializer):
+    # id = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
+    level = serializers.SerializerMethodField()
 
     class Meta:
         model = Friends
-        fields = ['id', 'friend_requester', 'friend_responder', 'created_at']
+        fields = ['id', 'display_name', 'avatar', 'level']
+        read_only_fields = ['id', 'display_name', 'avatar', 'level']
+
+    def get_id(self, obj):
+        if self.context['request'].user == obj.friend_requester:
+            return obj.friend_responder.profile.id
+        return obj.friend_requester.profile.id
+
+    def get_display_name(self, obj):
+        if self.context['request'].user == obj.friend_requester:
+            return obj.friend_responder.profile.display_name
+        return obj.friend_requester.profile.display_name
+
+    def get_level(self, obj):
+        if self.context['request'].user == obj.friend_requester:
+            return obj.friend_responder.profile.level
+        return obj.friend_requester.profile.level
+
+    def get_avatar(self, obj):
+        if self.context['request'].user == obj.friend_requester:
+            return obj.friend_responder.profile.avatar
+        return obj.friend_requester.profile.avatar
+
+# class FriendsSerializer(serializers.ModelSerializer):
+#     friend_requester = serializers.StringRelatedField()
+#     friend_responder = serializers.StringRelatedField()
+
+#     class Meta:
+#         model = Friends
+#         fields = ['id', 'friend_requester', 'friend_responder', 'created_at']
 
 
 class NotificationSerializer(serializers.ModelSerializer):
