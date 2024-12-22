@@ -44,7 +44,7 @@ export const Chart = () => {
   }, []);
 
   return (
-    <div className="flex items-start justify-start w-[300px] h-[300px]">
+    <div className="flex items-start justify-start w-[50%] h-[300px]">
       <div className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
@@ -67,7 +67,7 @@ export const Chart = () => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
                       <text
-                        x={viewBox.cx}
+                        x={viewBox.cx} 
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"

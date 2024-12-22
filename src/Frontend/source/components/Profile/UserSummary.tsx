@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import MatchHistoryBoard from './MatchHistoryBoard';
 import { Chart } from "@/components/Profile/Chart";
 import { ChartLine } from '@/components/Profile/ChartLine';
+import Rating from './rating';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
   useEffect(() => {
@@ -127,9 +128,10 @@ const UserSummary = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="size-full xl:w-[35%] xl:h-[97%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row md:flex-col  gap-7 xl:m-4 xl:p-4 border-2">
-        <div className="w-full h-2/5 xl:w-full xl:h-[45%] flex items-start">
+      <div className="size-full xl:w-[35%] xl:h-[97%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row md:flex-col  gap-7 xl:m-4 xl:p-4">
+        <div className="w-full h-2/5 xl:w-full xl:h-[45%] flex items-center justify-between pt-7">
           <Chart />
+          <Rating />
         </div>
         <div className="xl:w-[90%] w-full h-3/5 flex items-start justify-start overflow-hidden">
           <ChartLine />
