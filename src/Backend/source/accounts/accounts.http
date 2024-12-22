@@ -4,7 +4,7 @@
 
 #########
 GET http://localhost:8080/accounts/rest-profiles
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODQyNDM3LCJpYXQiOjE3MzQ4NDAwMzcsImp0aSI6ImNhODY0NGUyZDAzYjQzYjVhMzY5NDY0ODJkYWUwNThkIiwidXNlcl9pZCI6N30.mpp6bf3MobUIX-zXvDx8fFr0ndCWl4LLSbgScUWRNVw
 
 #########
 GET http://localhost:8080/accounts/rest-profiles/5/
@@ -64,7 +64,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODQyNDM3LCJpYXQiOjE3MzQ4NDAwMzcsImp0aSI6ImNhODY0NGUyZDAzYjQzYjVhMzY5NDY0ODJkYWUwNThkIiwidXNlcl9pZCI6N30.mpp6bf3MobUIX-zXvDx8fFr0ndCWl4LLSbgScUWRNVw
 
 #########
 PUT http://localhost:8080/accounts/user-profile/

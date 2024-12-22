@@ -9,12 +9,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "Earth", visitors: 30, fill: "var(--color-chrome)" },
-  { browser: "Air", visitors: 20, fill: "var(--color-safari)" },
-  { browser: "Water", visitors: 5, fill: "var(--color-firefox)" },
-  { browser: "Fire", visitors: 11, fill: "var(--color-edge)" },
-];
+
 
 const chartConfig = {
   visitors: {
@@ -25,7 +20,7 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
   safari: {
-    label: "Air",
+    label: "Ice",
     color: "hsl(var(--chart-2))",
   },
   firefox: {
@@ -38,10 +33,35 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export const Chart = () => {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+export const Chart = ({
+  total_games,
+  statistics,
+} : {
+  total_games?: number;
+  statistics?: {
+    earth_ratio: number;
+    fire_ratio: number;
+    water_ratio: number;
+    ice_ratio: number;
+    graph_data: {
+      date: string;
+      wins: number;
+      losses: number;
+    }[];
+  };
+}) => {
+  console.log(statistics, total_games);
+  if (!statistics?.earth_ratio && !statistics?.ice_ratio && !statistics?.water_ratio && !statistics?.fire_ratio) {
+    return <div className="w-full h-full flex items-center justify-center">
+      <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
+    </div>;
+  }
+  const chartData = [
+    { browser: "Earth", visitors:  statistics?.earth_ratio , fill: "var(--color-chrome)" },
+    { browser: "Ice", visitors:  statistics?.ice_ratio , fill: "var(--color-safari)" },
+    { browser: "Water", visitors:  statistics?.water_ratio , fill: "var(--color-firefox)" },
+    { browser: "Fire", visitors:  statistics?.fire_ratio , fill: "var(--color-edge)" },
+  ];
 
   return (
     <div className="flex items-start justify-start w-[50%] h-[300px]">
@@ -77,7 +97,7 @@ export const Chart = () => {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {total_games}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

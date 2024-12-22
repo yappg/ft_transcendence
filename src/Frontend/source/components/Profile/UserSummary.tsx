@@ -10,67 +10,72 @@ import MatchHistoryBoard from './MatchHistoryBoard';
 import { Chart } from "@/components/Profile/Chart";
 import { ChartLine } from '@/components/Profile/ChartLine';
 import Rating from './rating';
+import { useUser } from '@/context/GlobalContext';
 const UserSummary = (): JSX.Element => {
   const [Friends, setFriends] = useState([]);
-  useEffect(() => {
-    const displayFriends = async () => {
-      try {
-        const response = await FriendServices.getFriends();
-        console.log('Friends:', response.data);
-        if (response.message) {
-          setFriends(response.data);
-        } else if (response.error) {
-          console.log(response.error);
-        }
-      } catch (error) {
-        toast({
-          title: 'Authentication failed',
-          description: 'Oups Somthing went wrong !',
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white',
-        });
-      }
-    };
-    displayFriends();
-  }, []);
-  const achievements = [
-    {
-      name: 'Achievement 1',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 2',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 3',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 4',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 5',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 6',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 7',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 8',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 9',
-      icon: '/ach1.svg',
-    },
-  ];
+  const { user: userProfile } = useUser();
+  if (!userProfile) return <div>Loading...</div>; 
+  const {total_games, statistics, level, achievements } = userProfile;
+
+  // useEffect(() => {
+  //   const displayFriends = async () => {
+  //     try {
+  //       const response = await FriendServices.getFriends();
+  //       console.log('Friends:', response.data);
+  //       if (response.message) {
+  //         setFriends(response.data);
+  //       } else if (response.error) {
+  //         console.log(response.error);
+  //       }
+  //     } catch (error) {
+  //       toast({
+  //         title: 'Authentication failed',
+  //         description: 'Oups Somthing went wrong !',
+  //         variant: 'destructive',
+  //         className: 'bg-primary-dark border-none text-white',
+  //       });
+  //     }
+  //   };
+  //   displayFriends();
+  // }, []);
+  // const achievements = [
+  //   {
+  //     name: 'Achievement 1',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 2',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 3',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 4',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 5',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 6',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 7',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 8',
+  //     icon: '/ach1.svg',
+  //   },
+  //   {
+  //     name: 'Achievement 9',
+  //     icon: '/ach1.svg',
+  //   },
+  // ];
   return (
     <div className="size-full bg-[#242627]/90 shadow-[0px_-28px_17px_0px_rgba(36,_38,_39,_1)] overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12 pb-5">
       <div className="w-full h-screen lg:size-full xl:w-[65%] flex items-start justify-start flex-col gap-2">
@@ -80,7 +85,7 @@ const UserSummary = (): JSX.Element => {
               key={index}
               className="lg:size-[65px] transition-all duration-300 xl:size-[80px] sm:size-[70px] size-[50px] bg-[#00A6FF]"
             >
-              <AvatarImage src={achievement.icon} />
+              <AvatarImage src={"http://localhost:8080" + achievement.image} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
@@ -130,11 +135,11 @@ const UserSummary = (): JSX.Element => {
       </div>
       <div className="size-full xl:w-[35%] xl:h-[97%] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row md:flex-col  gap-7 xl:m-4 xl:p-4">
         <div className="w-full h-2/5 xl:w-full xl:h-[45%] flex items-center justify-between pt-7">
-          <Chart />
+          <Chart total_games={total_games} statistics={userProfile?.statistics} />
           <Rating />
         </div>
         <div className="xl:w-[90%] w-full h-3/5 flex items-start justify-start overflow-hidden">
-          <ChartLine />
+          <ChartLine statistics={userProfile?.statistics} />
         </div>
       </div>
     </div>
