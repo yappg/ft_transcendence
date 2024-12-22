@@ -6,7 +6,7 @@ from .views.userManagment import *
 from .views.functionViews import *
 
 router = DefaultRouter()
-router.register(r'profiles', PlayerProfileViewSet, basename="profiles")
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id} 
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
 router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user game history
 
