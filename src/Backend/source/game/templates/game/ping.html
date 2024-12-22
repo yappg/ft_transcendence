@@ -171,8 +171,8 @@
             };
 
             ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                updateGameState(data);
+                console.log('Data received:', event.data);
+                statusDisplay.textContent = 'Data: ' + event.data;
             };
         }
 
