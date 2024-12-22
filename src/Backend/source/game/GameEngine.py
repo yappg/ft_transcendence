@@ -40,27 +40,26 @@ class Paddle:
         self.position.y = max(self.height / 2, min(100 - self.height / 2, new_y))
 
 @dataclass
-class Player:
-    id: str
+class GamePlayer:
+    id: int
     username: str
+    channel_name: str 
+    game_id: str #= str(uuid.uuid4())
     paddle: Paddle
     score: int = 0
 
+
 class PingPongGame:
-    def __init__(self,player1 : Player, player2: Player, game_model_id: int):
+    def __init__(self, player1, player2, game_model_id: int):
         self.game_id = game_model_id
         self.ball = Ball(Vector2D(50, 50), Vector2D(300, 300))
+
         # Initialize players with paddles at opposite sides
-        self.player1 = Player(
-            player1.id,
-            player1.username,
-            Paddle(Vector2D(5, 50))  # Left paddle
-        )
-        self.player2 = Player(
-            player2.id,
-            player2.username,
-            Paddle(Vector2D(95, 50))  # Right paddle
-        )
+        self.player1 = player1
+        player2.paddle = Paddle(Vector2D(5, 50))  # Left paddle
+        self.player2 = player2
+        self.player2.paddle = Paddle(Vector2D(95, 50))  # Right paddle
+
         self.game_width = 100
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
@@ -76,7 +75,7 @@ class PingPongGame:
         """Update game state. Returns True if the game state changed."""
         if self.status != 'playing':
             return False
-            
+
         # Update ball position
         self.ball.update(delta_time)
         
@@ -201,37 +200,8 @@ from game.models import Game
 from accounts.models import Player, PlayerProfile
 
 class GameManager:
-    def __init__(self):
-        print('**Game Manager Initialized**')
-        # self.games: Dict[str, PingPongGame] = {}
 
-        self.players_queue = get_redis_connection("players_queue")
-        self.games = get_redis_connection("games_pool")
-
-
-    async def add_player_to_queue(self, player_id):
-        print(f'Adding player to queue: {player_id}')
-        self.players_queue.rpush('players_queue', player_id)
-
-    async def pop_player_from_queue(self):
-        try:
-            queue_length = self.players_queue.llen('players_queue')
-            # print(f'Queue length before pop: {queue_length}')
-            if queue_length == 0:
-                print('Queue is empty, cannot pop player')
-                return None
-
-            ola = self.players_queue.lpop('players_queue')
-            if ola is None:
-                print('No player found in queue')
-            else:
-                print(f'Player ID: {ola.decode("utf-8")}')
-            return ola
-        except Exception as e:
-            print(f'Error popping player from queue: {e}')
-            return None
-
-    async def create_game(self,_player1:Player, _player2: Player, game_model_id: int) -> PingPongGame:
+    async def create_game(self,_player1, _player2, game_model_id: int) -> PingPongGame:
         """Create a new game and store it"""
         print(f'Creating game with ID: {game_model_id}')
         game = PingPongGame(_player1, _player2, game_model_id)

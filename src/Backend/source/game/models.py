@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from accounts.models import PlayerProfile
+from accounts.models import Player, PlayerProfile
 
 class Game(models.Model):
     TIMER = 6 # in minutes
@@ -15,10 +15,10 @@ class Game(models.Model):
     room_name = models.CharField(max_length=100)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='WAITING')
     
-    winner = models.ForeignKey(PlayerProfile, on_delete=models.SET_NULL, related_name='game_win', null=True, blank=True)
+    winner = models.ForeignKey(Player, on_delete=models.SET_NULL, related_name='game_win', null=True, blank=True)
     
-    player1 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='games_as_player1')
-    player2 = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='games_as_player2', null=True, blank=True)
+    player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='games_as_player1')
+    player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='games_as_player2', null=True, blank=True)
     
     player1_score = models.IntegerField(default=0)
     player2_score = models.IntegerField(default=0)
