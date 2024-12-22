@@ -19,9 +19,10 @@ export const ChatCard = ({ chatContent }: { chatContent: Chat }) => {
         alt="avatar"
       />
       <div className="flex h-full w-fit flex-col items-center justify-center gap-4">
-        <h1 className=" font-dayson text-[20px] text-white ">{chatContent.receiver?.username}</h1>
-        <h1 className=" font-coustard text-[16px] text-[#B7B7B799]">
-          {chatContent.last_message?.content}
+        <h1 className="font-dayson text-[25px] text-white">{chatContent.receiver?.username}</h1>
+        <h1 className="font-coustard text-[20px] text-[#B7B7B799]">
+          {/* do not overflow THE LAST MESSAGE*/}
+          {chatContent.last_message?.content.slice(0, 20)}...
         </h1>
       </div>
     </div>

@@ -81,7 +81,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###-----------FRIENDS------##############
 GET http://localhost:8080/relations/players/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNzcxODQxLCJpYXQiOjE3MzM2ODU0NDEsImp0aSI6IjJkY2ExYzFhNWM0NzQwODE4MWM4Yzk4MDRiMGUyNjMxIiwidXNlcl9pZCI6MTF9.BmkYIbkXwWlvNQ5K7p7juHl4Ke0Nj0r3NyjvFGOqNzs
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTIxNzk3LCJpYXQiOjE3MzQ4MzUzOTcsImp0aSI6IjcyOGY5MWI5OWUzMTQyNWRhOWQyZTUxYmMzZDU5MjU1IiwidXNlcl9pZCI6Mn0.ZXDr85yt0NFCdoDPS9Gdyy9pGcXl6gfqUWcrJXzN48I
 
 ## ### ## ### # ##### #####
 

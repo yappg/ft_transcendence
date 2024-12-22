@@ -29,7 +29,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         return None
     
     def get_receiver(self, obj):
-        # Assuming the chat is between two users
         user = self.context.get('request').user
         receivers = obj.senders.exclude(id=user.id)
         
