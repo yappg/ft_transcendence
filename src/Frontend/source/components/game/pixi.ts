@@ -1,11 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
-import { RoundsProps } from '@/context/GameContext';
-import { ReceiptEuroIcon, ThermometerSunIcon } from 'lucide-react';
-
-// let dx = 1;
-// let dy = 1;
 
 export abstract class PixiManager {
   app: PIXI.Application;
@@ -47,7 +42,6 @@ export abstract class PixiManager {
     this.paddleWidth = this.screenWidth / 5;
     background.alpha = 0.2;
     this.app.stage.addChild(background);
-    console.log('gamestate', this.game.gameState);
     if (this.game.gameState === 'start') {
       this.drawGameElements();
     }
@@ -62,8 +56,29 @@ export abstract class PixiManager {
   removeGameElements() {
     this.app.stage.removeChild(this.topRacket);
     this.app.stage.removeChild(this.bottomRacket);
+    this.app.stage.removeChild(this.ball);
+    this.createWinnerText();
   }
 
+  createWinnerText() {
+    const style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 36,
+      fill: "#ffffff", // gradient
+      stroke: '#4a1850',
+      dropShadow: true,
+      // dropShadowColor: '#000000',
+      // dropShadowBlur: 4,
+      // dropShadowAngle: Math.PI / 6,
+      // dropShadowDistance: 6,
+    });
+
+    const text = new PIXI.Text('', style);
+    text.x = this.app.screen.width / 2;
+    text.y = this.app.screen.height / 2;
+    text.anchor.set(0.5);
+    return text;
+  }
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
     console.log(`Key down: ${event.key}`);
@@ -99,14 +114,19 @@ export abstract class PixiManager {
     this.app.stage.addChild(this.topRacket);
     this.app.stage.addChild(this.bottomRacket);
     this.app.stage.addChild(this.ball);
-    if (this.game.gameState === 'start') {
-      this.app.ticker.add(() => {
+    console.log('gamestate', this.game.gameState);
+    this.app.ticker.add(() => {
+      if (this.game.gameState === 'start') {
         if (this.round < 3) {
           this.updateBallPosition();
           this.updatePaddlePosition();
+        } else {
+          this.game.gameState = 'over';
+          this.game.setGameState('over');
+          this.removeGameElements();
         }
-      });
-    }
+      }
+    });
   }
 
   createBall(x: number, y: number, radius: number, color: number) {
@@ -192,10 +212,6 @@ export class LocalGameManager extends PixiManager {
   }
   updateBallPosition() {
     if (!this.ball || !this.app) return;
-
-
-    // console.log('screenheight:', this.ball.x);
-    // console.log('screenwidht:', this.ball.y);
 
     const movementSpeed = 5;
 
