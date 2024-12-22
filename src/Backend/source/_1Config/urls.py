@@ -29,10 +29,10 @@ urlpatterns = [
     path('schema-viewer/', include('schema_viewer.urls')),
     path('prometheus/', include('django_prometheus.urls')),
 
-    path('accounts/', include('accounts.urls')),
-    path('chat/', include('chat.urls')),
-    path('game/', include('game.urls')),
-    path('relations/', include('relations.urls')),
+    path('accounts/', include('accounts.urls'), name='accounts'),
+    path('relations/', include('relations.urls'), name='relations'),
+    path('chat/', include('chat.urls'), name='chat'),
+    path('game/', include('game.urls'), name='game'),
 
     # path('health/', health_checkup, name='health_checkup'),
 ]

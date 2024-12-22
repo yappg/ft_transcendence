@@ -5,7 +5,7 @@ import { SideBarContext } from '@/context/SideBarContext';
 
 import { useUser } from '@/context/GlobalContext';
 import { RiMenu2Fill } from "react-icons/ri";
-
+import { IoMdNotifications } from "react-icons/io";
 import NotificationBell from  '@/components/notifications/notifications'
 
 
@@ -34,7 +34,10 @@ export const Header = () => {
       Loading...
     </h1>
     );
-  
+  function handleClick() {
+    setShowSearchBar(!showSearchBar);
+  }
+
   // here we gonna build the notif logic
   return (
     <div className="flex h-fit w-full items-center justify-between md:px-4 px-0">
