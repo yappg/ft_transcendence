@@ -101,7 +101,7 @@ MIDDLEWARE = [
 # ===========================
 # DRF & JWT CONFIGURATION
 # ===========================
-
+ 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=600),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-
+   
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -308,3 +308,9 @@ USE_TZ = True
 
 # Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#TODO fixing tokens being sent in the Authorization header
+#TODO implement the jwt sliding token 
+#TODO finalise the oauth2 implementation
+#TODO understand the asyncio role
+
