@@ -16,7 +16,6 @@ const userApi = axios.create({
 interface User {
   id: number;
   username: string;
-  // Add other user properties as needed
   [key: string]: any;
 }
 
@@ -101,7 +100,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log('this is the fetched chat: ', fetchedChats);
       setChats(fetchedChats);
     } catch (error) {
-      console.error('Failed to fetch chats or user details', error);
+      console.log('Failed to fetch chats or user details', error);
     }
   };
 
@@ -111,7 +110,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const data = await FriendServices.getPlayers();
       if (data.message) {
-        console.log(data.data);
         setplayers(data.data);
         setIsLoading(false);
       }
@@ -131,7 +129,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const fetchedNotifications = await notificationsService.getNotifications();
       setNotifications(fetchedNotifications as Notification[]);
       setNotificationCount(fetchedNotifications.length);
-      console.log(fetchNotifications);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch notifications'));
       setNotifications([]);
@@ -182,6 +179,4 @@ export const useUser = () => {
 
   return context;
 };
-
-// Export the userApi and userService for use in other parts of the application
 export { userApi, userService };

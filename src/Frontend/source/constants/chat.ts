@@ -29,4 +29,5 @@ export interface Chat {
   id: number;
   last_message?: LastMessage;
   receiver: ReceiverData;
+  send_at: string;
 }
