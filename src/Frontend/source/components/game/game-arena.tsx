@@ -13,11 +13,11 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
 
   useEffect(() => {
     if (canvasContainerRef.current) {
-      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/earth.png`, game);
+      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/${map}.png`, game);
     }
 
     return () => {
-      if (gameManagerRef.current) {
+      if (gameManagerRef.current?.app) {
         gameManagerRef.current.app.destroy(true);
       }
     };
