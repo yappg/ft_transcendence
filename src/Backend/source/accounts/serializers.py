@@ -6,8 +6,7 @@ from django.contrib.auth import authenticate
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Player
-        fields = ('id', 'username','email','avatar')
-        # fields = ('id', 'username','email', 'wins', 'losses',)
+        fields = ('id', 'username','avatar')
 
 #########################
 
