@@ -1,9 +1,10 @@
-//
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { LocalGameManager, PixiManager } from '@/components/game/pixi';
 import { useGame } from '@/context/GameContext';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
@@ -13,7 +14,11 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
 
   useEffect(() => {
     if (canvasContainerRef.current) {
-      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/${map}.png`, game);
+      gameManagerRef.current = new LocalGameManager(
+        canvasContainerRef.current,
+        `/${map}.png`,
+        game
+      );
     }
 
     return () => {
@@ -35,7 +40,13 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
     };
   }, []);
 
-  return <div ref={canvasContainerRef} id="table" className="size-full overflow-hidden" />;
+  return (
+    <div
+      ref={canvasContainerRef}
+      id="table"
+      className="aspect-auto sm:w-400px aspect-h-4  aspect-w-3 max-h-[60vh] w-full overflow-hidden rounded-[20px] border-[10px] border-black"
+    />
+  );
 };
 
 export default GameTable;

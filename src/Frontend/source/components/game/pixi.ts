@@ -57,28 +57,8 @@ export abstract class PixiManager {
     this.app.stage.removeChild(this.topRacket);
     this.app.stage.removeChild(this.bottomRacket);
     this.app.stage.removeChild(this.ball);
-    this.createWinnerText();
   }
 
-  createWinnerText() {
-    const style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fill: "#ffffff", // gradient
-      stroke: '#4a1850',
-      dropShadow: true,
-      // dropShadowColor: '#000000',
-      // dropShadowBlur: 4,
-      // dropShadowAngle: Math.PI / 6,
-      // dropShadowDistance: 6,
-    });
-
-    const text = new PIXI.Text('', style);
-    text.x = this.app.screen.width / 2;
-    text.y = this.app.screen.height / 2;
-    text.anchor.set(0.5);
-    return text;
-  }
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
     console.log(`Key down: ${event.key}`);
@@ -96,7 +76,7 @@ export abstract class PixiManager {
       this.screenWidth / 2 - this.paddleWidth / 2,
       20,
       this.paddleWidth,
-      25,
+      this.screenHeight / 40,
       0xff0000,
       0x000000
     );
@@ -104,12 +84,12 @@ export abstract class PixiManager {
       this.screenWidth / 2 - this.paddleWidth / 2,
       this.screenHeight - 50,
       this.paddleWidth,
-      25,
+      this.screenHeight / 40,
       0x00ffff,
       0x000000
     );
 
-    this.ball = this.createBall(0, 0, 15, 0xff0000);
+    this.ball = this.createBall(0, 0, this.screenWidth / 35, 0xff0000);
 
     this.app.stage.addChild(this.topRacket);
     this.app.stage.addChild(this.bottomRacket);
