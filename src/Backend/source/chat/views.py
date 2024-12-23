@@ -52,7 +52,7 @@ class ChatMessagesView(APIView):
         try:
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
-            return Response({"error": "Chat se7ra"}, status=404)
+            return Response({"error": "Chat Not Found"}, status=404)
         messages = Message.objects.filter(chatroom=chat).order_by('send_at')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
@@ -68,18 +68,18 @@ class ChatMessagesView(APIView):
         try:
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
-            return Response({"error": "Chat makynsh"}, status=404)
+            return Response({"error": "Chat not Found"}, status=404)
 
         print(f"-----------------{chat}-----------------------------------4")
 
         try:
             receiver = Player.objects.get(username=receiverId)
         except Player.DoesNotExist:
-            return Response({"error": "Receiver makynsh"}, status=404)
+            return Response({"error": "Receiver Not Found"}, status=404)
         print(f"-----------------{receiver}-----------------------------------5")
 
         if receiver not in chat.senders.all():
-            return Response({"error": "Receiver is not a sender of this chat"}, status=404)
+            return Response({"error": "Receiver is not a participants of this chat"}, status=404)
         message = Message.objects.create(
             chatroom = chat,
             sender=sender,
