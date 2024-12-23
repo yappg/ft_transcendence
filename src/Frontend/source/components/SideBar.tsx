@@ -67,7 +67,9 @@ export const SideBar = ({
           isActivated === 7 ||
           isActivated === 6 ||
           isActivated === 8 ||
+          isActivated === 9 ||
           pathname === '/friends' ||
+          pathname === '/profile' ||
           pathname === '/settings' ||
           pathname === '/messages'
             ? 'gap-3'
@@ -78,7 +80,7 @@ export const SideBar = ({
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory') &&
+        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory' || pathname === '/Profile') &&
           smallScreenIcons.map((item) => {
             return showIcon(item.Icon, item.id, isActivated, item.path);
           })}
