@@ -125,13 +125,12 @@ Content-Type: application/json
 
 #########
 GET http://localhost:8080/accounts/user-history/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTAzNzI0LCJpYXQiOjE3MzQ5MDEzMjQsImp0aSI6ImRmN2YxMDljNDEwNDQxNjI4NTc2OWJmYzgxMzEzNTJlIiwidXNlcl9pZCI6Mn0.pUqripRM-DMvRqw6qjKCfHpE_HN8XH5fE7gN39x6Xjc
 ####################################################################################################################################
 
 #########
 GET http://localhost:8080/accounts/user-achievements/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTIyOTYxLCJpYXQiOjE3MzQ5MjA1NjEsImp0aSI6ImQ4ZWY3ZDgwYmFlNDQ3MTdhOTZlZTViNmY2MzdlZDA2IiwidXNlcl9pZCI6NH0.DtgP2oWlMDfg9SybyA8XwTv2O4zxEiPoiwyEcqeS1xY
 
 ####################################################################################################################################
 
@@ -142,8 +141,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/leaderboard
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTIzMDM0LCJpYXQiOjE3MzQ5MjA2MzQsImp0aSI6IjVlNzU5MGIyN2M0MzQwZmE4ZmViYWIzOGNlNjk0MWI2IiwidXNlcl9pZCI6NX0.t5nnrTi4aFZDB3C10zJCYV4Ik5J3XhZJ9AhV07zypLo
 
 ############################################################
 ######### SEARCH SPECS === GET === ONLY ######################################################################################

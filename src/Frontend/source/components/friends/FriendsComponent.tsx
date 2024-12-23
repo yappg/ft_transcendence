@@ -4,6 +4,7 @@ const FriendsComponent = ({
   ProfilePhoto,
   level,
   wins,
+  losses,
   messagesLink,
   customStyles = {},
 }: {
@@ -11,6 +12,7 @@ const FriendsComponent = ({
   ProfilePhoto: string;
   level: number;
   wins: number;
+  losses?: number;
   messagesLink: JSX.Element;
   customStyles?: React.CSSProperties;
 }): JSX.Element => {
@@ -63,7 +65,7 @@ const FriendsComponent = ({
         </div>
         <div className="w-fit">
           <h1 className="font-coustard text-[#28AFB0] transition-all duration-300 text-[9px] md:text-[12px] lg:text-[23px] xl:text-[26px] 2xl:text-[30px] dark:text-[#E43222]">
-            Wins {wins}/70
+            Wins {wins}/{losses }
           </h1>
         </div>
       </div>

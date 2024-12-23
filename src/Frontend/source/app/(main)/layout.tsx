@@ -18,7 +18,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   const { user, updateUser } = useAuth();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
-
+    console.log('Clicked on ID:', id);
     setIsActivated(id);                                                                                              
   };
 
@@ -37,8 +37,10 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
             isActivated === 6 ||
             isActivated === 4 ||
             isActivated === 6 ||
+            isActivated === 9 ||
             pathname === '/friends' ||
             pathname === '/LeaderBoard' ||
+            pathname === '/Profile' ||
             pathname === '/MatchHistory' ||
             pathname === '/messages'
             ? 'hidden'
