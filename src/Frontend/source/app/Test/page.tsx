@@ -1,46 +1,17 @@
-'use client';
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable @next/next/no-img-element */
+//
 
-import { LocalGameManager, PixiManager } from '@/components/game/pixi';
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 
-const GameArena = ({ mode, map }: { map: string; mode: string }) => {
-  const canvasContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const gameManagerRef = useRef<PixiManager | null>(null);
-
-  useEffect(() => {
-    if (canvasContainerRef.current) {
-      gameManagerRef.current = new LocalGameManager(canvasContainerRef.current, `/earth.png`, mode);
-    }
-
-    return () => {
-      if (gameManagerRef.current) {
-        gameManagerRef.current.app.destroy(true);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (gameManagerRef.current) {
-      window.addEventListener('keydown', (event) => gameManagerRef!.current!.handleKeyDown(event));
-      window.addEventListener('keyup', (event) => gameManagerRef!.current!.handleKeyUp(event));
-    }
-    return () => {
-      window.removeEventListener('keydown', (event) =>
-        gameManagerRef!.current!.handleKeyDown(event)
-      );
-    };
-  }, []);
-
+const test = () => {
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-black">
-      <div
-        ref={canvasContainerRef}
-        id="table"
-        className="h-[700px] w-[500px] overflow-hidden rounded-[20px]"
-      />
+    <div className="aspect-h-2 aspect-w-4">
+      {/* <div className="size-full"> */}
+      <img src="/earth.png" alt="" className="size-full" />
+      {/* </div> */}
     </div>
   );
 };
 
-export default GameArena;
+export default test;

@@ -41,21 +41,10 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   }, []);
 
   return (
-    // <div
-    //   ref={canvasContainerRef}
-    //   id="table"
-    //   className="aspect-auto sm:w-400px aspect-h-4  aspect-w-3 max-h-[60vh] w-full overflow-hidden rounded-[20px] border-[10px] border-black"
-    // />
     <div
       ref={canvasContainerRef}
       id="table"
-      className="overflow-hidden rounded-[20px] border-[10px] border-black"
-      style={{
-        height: '900vh',
-        width: 'calc(180vh / 3)',
-        maxHeight: '100%',
-        maxWidth: '100%',
-      }}
+      className="aspect-h-4 aspect-w-3 w-full overflow-hidden border-[10px] border-black-crd md:rounded-[20px]"
     />
   );
 };
