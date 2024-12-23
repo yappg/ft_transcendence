@@ -28,6 +28,7 @@ interface UserContextType {
   chats: Chat[] | null;
   notifications: Notification[];
   messages: Message[];
+  setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   notificationCount: number;
   fetchCurrentUserDetails: () => Promise<void>;
@@ -58,6 +59,7 @@ const UserContext = createContext<UserContextType>({
   players: null,
   messages: [],
   setMessages: () => {},
+  setChats: () => {},
   notifications: [],
   notificationCount: 0,
   fetchCurrentUserDetails: async () => {},
@@ -156,13 +158,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         notifications,
         notificationCount,
         chats,
+        setChats,
         messages,
         setMessages,
-        fetchCurrentUserDetails,
-        fetchPlayers,
-        fetchNotifications,
         setNotifications,
         setNotificationCount,
+        fetchNotifications,
+        fetchPlayers,
+        fetchCurrentUserDetails,
       }}
     >
       {children}

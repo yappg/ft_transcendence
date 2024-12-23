@@ -47,12 +47,12 @@ class ChatService {
         const data = JSON.parse(event.data);
         onMessage(data);
       } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
+        console.log('Error parsing WebSocket message:', error);
       }
     };
 
     socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.log('WebSocket error:', error);
     };
 
     socket.onclose = (event) => {
@@ -86,7 +86,7 @@ class ChatService {
         })
       );
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.log('Error sending message:', error);
       throw new Error('Failed to send message');
     }
   }
