@@ -40,7 +40,7 @@ const config: Config = {
       textColor: ['dark'],
     },
   },
-  plugins: [require('tailwind-scrollbar-hide'), require('@tailwindcss/aspect-ratio')],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: 'class',
 };
 
