@@ -1,30 +1,55 @@
 'use client';
 import { Chat } from '@/constants/chat';
+import { useUser } from '@/context/GlobalContext';
 import { useRouter } from 'next/navigation';
 
-export const ChatCard = ({ chatContent }: { chatContent: Chat }) => {
-  const router = useRouter();
 
+interface ChatCardProps {
+  chatContent: Chat;
+  lastMessage?: string;
+}
+
+
+export const ChatCard = ({ chatContent , lastMessage }: ChatCardProps) => {
+  const {messages, setMessages} = useUser();
+  const router = useRouter();
+  
   return (
     <div
       onClick={() => {
+        if (messages.length > 0)
+          setMessages([]);
+
         console.log('routed to chat ', chatContent.id);
         router.push(`/messages/${chatContent.id}`);
       }}
-      className="flex h-[120px] w-full cursor-pointer items-center justify-start gap-8 bg-black-crd px-8"
+      className="flex w-full cursor-pointer items-center justify-between bg-color-cdr px-4 py-3 hover:bg-[#252525]"
     >
-      <img
-        className="size-[75px] rounded-full"
-        src={'http://localhost:8080' + chatContent.receiver.avatar}
-        alt="avatar"
-      />
-      <div className="flex h-full w-fit flex-col items-center justify-center gap-4">
-        <h1 className="font-dayson text-[25px] text-white">{chatContent.receiver?.username}</h1>
-        <h1 className="font-coustard text-[20px] text-[#B7B7B799]">
-          {/* do not overflow THE LAST MESSAGE*/}
-          {chatContent.last_message?.content.slice(0, 20)}...
-        </h1>
-      </div>
+        <div className="flex items-center gap-5">
+          <img
+            className="h-12 w-12 rounded-full object-cover"
+            src={'http://localhost:8080' + chatContent.receiver.avatar}
+            alt="avatar"
+          />
+          <div className="flex flex-col">
+            <span className="text-base font-medium text-white">
+              {chatContent.receiver?.username}
+            </span>
+            <p className="text-sm text-gray-400">
+              {lastMessage || chatContent?.last_message?.content || '...'}
+            </p>
+          </div>
+       </div>
+        <div className="flex flex-col items-end gap-2">
+          {chatContent?.last_message?.send_at && (
+            <span className="text-xs text-gray-400">
+              {new Date(chatContent.last_message.send_at).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </span> 
+          )}
+        </div>
     </div>
   );
 };

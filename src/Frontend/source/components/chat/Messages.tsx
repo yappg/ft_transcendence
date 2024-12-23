@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable tailwindcss/no-custom-classname */
-import React, { useState, useEffect, useRef } from 'react';
-import { RiCheckDoubleLine } from 'react-icons/ri';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { IoSend } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { chatService } from '@/services/chatService';
-import { Chat, Message, ReceiverData, User } from '@/constants/chat';
+import { Chat, Message } from '@/constants/chat';
 import { useUser } from '@/context/GlobalContext';
 import { MessageBubble } from '@/components/chat/MessageBubb';
 
@@ -17,6 +16,7 @@ interface MessagesProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
+
 export const Messages: React.FC<MessagesProps> = ({
   chatId,
   chatPartner,
@@ -25,17 +25,17 @@ export const Messages: React.FC<MessagesProps> = ({
   receiverId,
 }) => {
   const [newMessage, setNewMessage] = useState<string>('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   let socketRef = useRef<WebSocket | null>(null);
 
-  const { user } = useUser();
+  const { user , setChats} = useUser();
   useEffect(() => {
     if (user) setCurrentUserId(user.id);
   }, [user]);
 
   const handleWebSocketMessage = (message: any) => {
-    setMessages((prevMessages) => [
+    setMessages((prevMessages: any) => [
       ...prevMessages,
       {
         chat: chatId,
@@ -45,8 +45,21 @@ export const Messages: React.FC<MessagesProps> = ({
         timestamp: new Date().toISOString(),
       },
     ]);
-  };
 
+    setChats((prevChats: any) => {
+      if (!prevChats) return prevChats;
+      return prevChats.map((chat) => {
+        if (chat.id === chatId) {
+          return {
+            ...chat,
+            last_message: message.content,
+          };
+        }
+        return chat;
+      });
+    });
+  };
+  console.log('messages length:', messages.length);
   useEffect(() => {
     const setupWebSocket = async () => {
       try {
@@ -68,11 +81,7 @@ export const Messages: React.FC<MessagesProps> = ({
       }
     };
   }, [chatId]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
+  
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -94,8 +103,16 @@ export const Messages: React.FC<MessagesProps> = ({
       console.error('Failed to send message', error);
     }
   };
+  
+    useEffect(() => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTo({
+          top: messagesContainerRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }, [messages]);
 
-  // -----------divs---//
   return (
     <div className=" costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
       {/* headbar */}
@@ -115,15 +132,14 @@ export const Messages: React.FC<MessagesProps> = ({
         </div>
       </div>
       {/* messages */}
-      <div className="custom-scrollbar-container flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
-        {messages.map((message, index) => (
+      <div ref={messagesContainerRef} className="custom-scrollbar-container flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
+        {messages.length > 0 &&  messages.map((message, index) => (
           <MessageBubble
             key={index}
             message={message}
             isCurrentUser={chatPartner?.receiver.username == message.receiver}
           />
         ))}
-        <div ref={messagesEndRef} />
       </div>
       {/* message input */}
       <form

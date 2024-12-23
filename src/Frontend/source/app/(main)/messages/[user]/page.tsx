@@ -1,7 +1,6 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/no-custom-classname */
 // eslint-disable-next-line react-hooks/exhaustive-deps
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Messages } from '@/components/chat/Messages';
@@ -12,7 +11,7 @@ import { useParams } from 'next/navigation';
 
 export default function Page() {
   const [chatSelected, setChatSelected] = useState<Chat | null>(null);
-  const { chats, messages, setMessages } = useUser();
+  const { chats, messages, setMessages, setChats } = useUser();
   const param = useParams();
   const chat_id = parseInt(param.user as string);
 
@@ -29,11 +28,22 @@ export default function Page() {
   const fetchMessages = async () => {
     try {
       const fetchedMessages = await chatService.getChatMessages(chat_id);
-      setMessages(fetchedMessages);
-    } catch (error) {
-      console.error('Failed to fetch messages', error);
-    }
-  };
+        if (fetchedMessages.length > 0) {
+          const lastMessage = fetchedMessages[fetchedMessages.length - 1];
+          if (chats) {
+            const updatedChats = chats.map(chat => 
+              chat.id === chat_id 
+                ? { ...chat, last_message: lastMessage }
+                : chat
+            );
+            setChats(updatedChats);
+            setMessages(fetchedMessages);
+          }
+        }
+      } catch (error) {
+        console.log('Failed to fetch messages', error);
+      }
+    };
 
   useEffect(() => {
     if (chat_id > 0) {
@@ -41,6 +51,7 @@ export default function Page() {
       fetchMessages();
     }
   }, [chat_id]);
+
 
   return (
     <div className="flex size-full flex-row items-center justify-center">
