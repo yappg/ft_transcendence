@@ -40,8 +40,8 @@ export default function Settings() {
     }
   };
   return (
-    <div className="size-full py-4 pl-6">
-      <div className="size-full bg-[#00000099] rounded-[40px] [box-shadow:4px_4px_60px_0px_rgba(0,0,0,1)] overflow-hidden flex flex-row">
+    <div className="size-full py-4 pl-6 overflow-hidden">
+      <div className="size-full bg-[#00000099] rounded-[40px] [box-shadow:4px_4px_60px_0px_rgba(0,0,0,1)]  flex flex-row">
         <div className="w-[310px] h-full bg-[#0000008C] border-l-2 border-[#0000008C]">
           <div className="w-full h-1/3 flex items-center justify-center">
             <RiSettings5Fill size={120} color="white" />
