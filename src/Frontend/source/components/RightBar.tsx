@@ -25,7 +25,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
   return (
     <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
       <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
-        <Link href="/Profile" >
+        <Link href="/Profile" onClick={() => handleClick(9)} >
         <Avatar className="size-auto">
           <AvatarImage src="/ProfilePhoto.svg" />
           <AvatarFallback>CN</AvatarFallback>

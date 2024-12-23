@@ -12,70 +12,11 @@ import { ChartLine } from '@/components/Profile/ChartLine';
 import Rating from './rating';
 import { useUser } from '@/context/GlobalContext';
 const UserSummary = (): JSX.Element => {
-  const [Friends, setFriends] = useState([]);
   const { user: userProfile } = useUser();
   if (!userProfile) return <div>Loading...</div>; 
-  const {total_games, statistics, level, achievements } = userProfile;
-
-  // useEffect(() => {
-  //   const displayFriends = async () => {
-  //     try {
-  //       const response = await FriendServices.getFriends();
-  //       console.log('Friends:', response.data);
-  //       if (response.message) {
-  //         setFriends(response.data);
-  //       } else if (response.error) {
-  //         console.log(response.error);
-  //       }
-  //     } catch (error) {
-  //       toast({
-  //         title: 'Authentication failed',
-  //         description: 'Oups Somthing went wrong !',
-  //         variant: 'destructive',
-  //         className: 'bg-primary-dark border-none text-white',
-  //       });
-  //     }
-  //   };
-  //   displayFriends();
-  // }, []);
-  // const achievements = [
-  //   {
-  //     name: 'Achievement 1',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 2',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 3',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 4',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 5',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 6',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 7',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 8',
-  //     icon: '/ach1.svg',
-  //   },
-  //   {
-  //     name: 'Achievement 9',
-  //     icon: '/ach1.svg',
-  //   },
-  // ];
+  const {total_games, achievements } = userProfile;
+  // const {players} = useUser();
+  const {PlayerMatches} = useUser();
   return (
     <div className="size-full bg-[#242627]/90 shadow-[0px_-28px_17px_0px_rgba(36,_38,_39,_1)] overflow-y-scroll custom-scrollbar-container xl:overflow-y-hidden flex 2xl:px-8 px-4 xl:flex-row xl:gap-0 flex-col gap-12 pb-5">
       <div className="w-full h-screen lg:size-full xl:w-[65%] flex items-start justify-start flex-col gap-2">
@@ -92,13 +33,13 @@ const UserSummary = (): JSX.Element => {
         </div>
         <div className="lg:h-[80%] size-full flex items-center justify-between xl:px-5 lg:flex-row flex-col gap-8 overflow-y-scroll custom-scrollbar-container">
           <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll lg:w-[48%] size-full bg-[#4C4D4E] rounded-[50px] shadow-2xl">
-            {MatchHistory.map((user, index) => (
+            {PlayerMatches.map((user, index) => (
               <MatchHistoryBoard
                 key={index}
-                name={user.player1}
-                Profile={user.player1Photo}
-                Player1score={user.player1Score}
-                Player2score={user.player2Score}
+                name={user.player2.display_name}
+                Profile={user.player2.avatar}
+                Player1score={user.player1_score || 0}
+                Player2score={user.player2_Score || 0}
               />
             ))}
             <Link href="/MatchHistory">
@@ -111,21 +52,25 @@ const UserSummary = (): JSX.Element => {
             </Link>
           </div>
           <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll lg:w-[48%] size-full bg-[#4C4D4E] rounded-[50px] shadow-2xl flex flex-col">
-            <div className="flex-grow">
-              {Friends.map((user, index) => (
+            {/* <div className="flex-grow">
+              {players.length > 0 ? (
+                players.map((user, index) => (
                 <UserActivityBoard
                   key={index}
                   name={user.name}
                   level={user.level}
                   Profile={user.ProfilePhoto}
                 />
-              ))}
-            </div>
+              ))
+              ) : (
+                <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+              )}
+            </div> */}
 
             <Link href="/friends">
               <div className="w-full sticky bottom-0 bg-[#4C4D4E] z-10 h-[50px] border-t-2 border-[#B8B8B8] flex items-center justify-end gap-4 px-10">
                 <h1 className="2xl:text-[20px] lg:text-[15px] font-dayson text-[#B8B8B8]">
-                  {Friends.length} Friends
+                   Friends
                 </h1>
                 <h1 className="2xl:text-[25px] lg:text-[20px] font-dayson text-[#B8B8B8]">{'>'}</h1>
               </div>
