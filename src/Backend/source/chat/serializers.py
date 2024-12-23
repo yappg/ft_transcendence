@@ -17,16 +17,16 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         read_only=True
     )
     last_message = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = ChatRoom
         fields = ['id', 'senders', 'created_at', 'last_message']
-    
-    
+
+
     def get_senders(self, obj):
         senders = obj.senders.all()
         return [{'username': senders.username, 'avatar': senders.avatar.url} for sender in senders]
-    
+
     def get_last_message(self, obj):
         LastMessage = obj.messages.order_by('-send_at').first()
         if LastMessage:

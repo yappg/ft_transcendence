@@ -33,8 +33,8 @@ class PlayerSerializer(serializers.ModelSerializer):
         return value
 
 class PlayerRelationsSerializer(serializers.ModelSerializer):
-    avatar = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Player
@@ -49,15 +49,17 @@ class PlayerRelationsSerializer(serializers.ModelSerializer):
             'avatar',
         ]
 
+    # ge
+
     def get_avatar(self, obj):
-        return obj.profile.avatar
+        return obj.profile.avatar.url
 
     def get_username(self, obj):
         return obj.profile.display_name
 
 
 class StatisticsSerializer(serializers.ModelSerializer):
-    ice_ratio = serializers.SerializerMethodField()
+    air_ratio = serializers.SerializerMethodField()
     water_ratio = serializers.SerializerMethodField()
     fire_ratio = serializers.SerializerMethodField()
     earth_ratio = serializers.SerializerMethodField()
@@ -67,7 +69,7 @@ class StatisticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerProfile
         fields = [
-            'ice_ratio',
+            'air_ratio',
             'water_ratio',
             'fire_ratio',
             'earth_ratio',
@@ -76,28 +78,36 @@ class StatisticsSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["__all__"]
 
-    def get_ice_ratio(self, obj):
-        if obj.ice_games == 0:
+    def get_air_ratio(self, obj):
+        if obj.total_games == 0:
             return 0.0
-        return (obj.ice_wins / obj.ice_games) * 100
+        return (obj.air_wins / obj.total_games) * 100
 
     def get_water_ratio(self, obj):
-        if obj.water_games == 0:
+        if obj.total_games == 0:
             return 0.0
-        return (obj.water_wins / obj.water_games) * 100
+        return (obj.water_wins / obj.total_games) * 100
 
     def get_fire_ratio(self, obj):
-        if obj.fire_games == 0:
+        if obj.total_games == 0:
             return 0.0
-        return (obj.fire_wins / obj.fire_games) * 100
+        return (obj.fire_wins / obj.total_games) * 100
 
     def get_earth_ratio(self, obj):
-        if obj.earth_games == 0:
+        if obj.total_games == 0:
             return 0.0
-        return (obj.earth_wins / obj.earth_games) * 100
+        return (obj.earth_wins / obj.total_games) * 100
 
     def get_graph_data(self, obj):
         return obj.daily_stats(obj.settings.stats_graph_days)
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PlayerProfile
+        fields = ['id', 'display_name', 'avatar', 'level']
+        read_only_fields = ['id', 'display_name', 'avatar', 'level']
 
 
 # fix private profile only give back display name
@@ -108,6 +118,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
+    matches_history = serializers.SerializerMethodField()
 
     last_login = serializers.SerializerMethodField()
     # created_at = serializers.SerializerMethodField()
@@ -117,17 +128,17 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         exclude = [
             'player' ,
 
-            'ice_games',
+            'air_games',
             'water_games',
             'fire_games',
             'earth_games',
 
-            'ice_wins',
+            'air_wins',
             'water_wins',
             'fire_wins',
             'earth_wins',
 
-            # 'created_at',
+            'created_at',
         ]
         read_only_fields = [
             'id',
@@ -147,59 +158,37 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 
             'friends',
-            # 'ice_games',
+            'matches_history',
+            # 'air_games',
             # 'water_games',
             # 'fire_games',
             # 'earth_games',
 
             'last_login',
-            'created_at',
+            # 'created_at',
         ]
 
     def get_achievements(self, obj):
         # from ..serializers import PlayerAchievementSerializer
-        return PlayerAchievementSerializer(obj.all_achievements_gained(), many=True).data
+        return PlayerAchievementSerializer(obj.all_achievements_gained()[:10], many=True).data
 
     def get_statistics(self, obj):
         # from ..serializers import StatisticsSerializer
         return StatisticsSerializer(obj, read_only=True).data
 
-
-
-
     def get_friends(self, obj):
-        # More efficient query using select_related
-        friends = Friends.objects.filter(
-            Q(friend_requester=obj.player) | Q(friend_responder=obj.player)
-        ).select_related('friend_requester', 'friend_responder').distinct()
+        LIMIT = 4 # for now
 
-        # Use a list comprehension for better performance
-        unique_friends = []
-        seen_players = set()
+        if obj.settings.private_profile == True:
+            return ["private"]
+        return FriendsSerializer(obj.all_friends()[:LIMIT], many=True).data
 
-        for friend in friends:
-            other_player = (
-                friend.friend_responder
-                if friend.friend_requester == obj.player
-                else friend.friend_requester
-            )
+    def get_matches_history(self, obj):
+        LIMIT = 4 # for now
 
-            if other_player.id not in seen_players:
-                seen_players.add(other_player.id)
-                unique_friends.append(friend)
-
-        return (
-            ProfileFriendsSerializer(
-                unique_friends,
-                context={'request': self.context.get('request')},
-                many=True
-            ).data if unique_friends else []
-        )
-
-
-
-
-
+        if obj.settings.private_profile == True:
+            return ["private"]
+        return MatchHistorySerializer(obj.all_matches()[:LIMIT], many=True).data
 
     def get_xp(self, obj):
         xp_percentage = (obj.xp / obj.calculate_level_up_xp()) * 100
@@ -211,8 +200,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_last_login(self, obj):
         return obj.last_login.date().isoformat() if obj.last_login else None
 
-    def get_created_at(self, obj):
-        return obj.created_at.date().isoformat() if obj.created_at else None
+    # def get_created_at(self, obj):
+    #     return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
         if len(value) < 3 or len(value) > 40:

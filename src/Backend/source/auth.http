@@ -82,7 +82,7 @@ POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "client2",
+    "username": "client1",
     "password": "thisisapassword"
 }
 ##########

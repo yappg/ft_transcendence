@@ -9,15 +9,9 @@ class FriendInvitationSerializer(serializers.ModelSerializer):
         model = FriendInvitation
         fields = ['sender', 'id', 'receiver', 'created_at', 'status']
 
-class BlockedFriendsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BlockedFriends
-        fields = ['id', 'blocker', 'blocked', 'created_at']
-
 
 class ProfileFriendsSerializer(serializers.ModelSerializer):
-    # id = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
     display_name = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
     level = serializers.SerializerMethodField()
@@ -38,22 +32,25 @@ class ProfileFriendsSerializer(serializers.ModelSerializer):
         return obj.friend_requester.profile.display_name
 
     def get_level(self, obj):
+        print(f"request user is {self.context['request'].user}")
         if self.context['request'].user == obj.friend_requester:
             return obj.friend_responder.profile.level
         return obj.friend_requester.profile.level
 
     def get_avatar(self, obj):
+        print(f"request user is {self.context['request'].user}")
         if self.context['request'].user == obj.friend_requester:
-            return obj.friend_responder.profile.avatar
-        return obj.friend_requester.profile.avatar
+            return obj.friend_responder.profile.avatar.url
+        return obj.friend_requester.profile.avatar.url
 
-# class FriendsSerializer(serializers.ModelSerializer):
-#     friend_requester = serializers.StringRelatedField()
-#     friend_responder = serializers.StringRelatedField()
 
-#     class Meta:
-#         model = Friends
-#         fields = ['id', 'friend_requester', 'friend_responder', 'created_at']
+class FriendsSerializer(serializers.ModelSerializer):
+    friend_requester = serializers.StringRelatedField()
+    friend_responder = serializers.StringRelatedField()
+
+    class Meta:
+        model = Friends
+        fields = ['id', 'friend_requester', 'friend_responder', 'created_at']
 
 
 class NotificationSerializer(serializers.ModelSerializer):

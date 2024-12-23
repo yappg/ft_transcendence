@@ -8,6 +8,9 @@ from datetime import timedelta
 import string
 import random
 
+# from relations.models import Friends
+
+
 
 def validate_file_size(value):
     filesize = value.size
@@ -22,17 +25,24 @@ class Player(AbstractUser):
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
 
     def __str__(self):
-        return self.username
+        if self.is_superuser:
+            return f"{self.username}(Admin)"
+        return self.profile.display_name
 
     class Meta:
         verbose_name = 'Player'
         verbose_name_plural = 'Players'
 
     def save(self, *args, **kwargs):
+        from relations.models import BlockedUsers
+
         is_new = self.pk is None
         super().save(*args, **kwargs)
         if is_new and not self.is_superuser:
             PlayerProfile.objects.create(player=self)
+
+            BlockedUsers.objects.create(user=self)
+
             PlayerSettings.objects.create(player_profile=self.profile)
             achievements = Achievement.objects.all()
 
@@ -78,12 +88,12 @@ class PlayerProfile(models.Model):
     ])
 
 
-    ice_games =  models.PositiveIntegerField(default=0)
+    air_games =  models.PositiveIntegerField(default=0)
     water_games =  models.PositiveIntegerField(default=0)
     fire_games =  models.PositiveIntegerField(default=0)
     earth_games =  models.PositiveIntegerField(default=0)
 
-    ice_wins =  models.PositiveIntegerField(default=0)
+    air_wins =  models.PositiveIntegerField(default=0)
     water_wins =  models.PositiveIntegerField(default=0)
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
@@ -109,9 +119,28 @@ class PlayerProfile(models.Model):
     def all_achievements(self):
         return PlayerAchievement.objects.filter(player=self).order_by('-gained', '-date_earned')
 
+
+    def all_friends(self):
+        from relations.models import Friends
+        friends = Friends.objects.filter(
+            Q(friend_requester=self.player) |
+            Q(friend_responder=self.player)
+        ).order_by('-created_at').select_related('friend_requester', 'friend_responder').distinct()
+
+        print(f"all friends relations for {self.display_name} are : {friends}")
+
+        friend_players = []
+        for friendship in friends:
+            if friendship.friend_requester == self.player:
+                friend_players.append(friendship.friend_responder.profile)
+            else:
+                friend_players.append(friendship.friend_requester.profile)
+
+        print(f"all player objects of friends for {self.display_name} are : {friend_players}")
+        return friend_players
+
     def all_achievements_gained(self):
         return PlayerAchievement.objects.filter(player=self, gained=True).order_by('-date_earned')
-
 
     def daily_stats(self, days):
         end_date = timezone.now()
@@ -178,18 +207,17 @@ class PlayerProfile(models.Model):
                     print(f"Warning: Achievement '{achievement}' does not exist")
                     continue
 
-        update_achievements(achievements=["Ice Apprentice", "Ice Adventurer", "Ice Contender", "Ice Veteran"], progress=self.ice_wins)
+        update_achievements(achievements=["Air Apprentice", "Air Adventurer", "Air Contender", "Air Veteran"], progress=self.air_wins)
         update_achievements(achievements=["Water Apprentice", "Water Adventurer", "Water Contender", "Water Veteran"], progress=self.water_wins)
         update_achievements(achievements=["Fire Apprentice", "Fire Adventurer", "Fire Contender", "Fire Veteran"], progress=self.fire_wins)
         update_achievements(achievements=["Earth Apprentice", "Earth Adventurer", "Earth Contender", "Earth Veteran"], progress=self.earth_wins)
 
-        update_achievements(achievements=["Ice Explorer", "Ice Wanderer", "Ice Traveler", "Ice Pilgrim"], progress=self.ice_games)
+        update_achievements(achievements=["Air Explorer", "Air Wanderer", "Air Traveler", "Air Pilgrim"], progress=self.air_games)
         update_achievements(achievements=["Water Explorer", "Water Wanderer", "Water Traveler", "Water Pilgrim"], progress=self.water_games)
         update_achievements(achievements=["Fire Explorer", "Fire Wanderer", "Fire Traveler", "Fire Pilgrim"], progress=self.fire_games)
         update_achievements(achievements=["Earth Explorer", "Earth Wanderer", "Earth Traveler", "Earth Pilgrim"], progress=self.earth_games)
 
         update_achievements(achievements=["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"], progress=self.level)
-
     def save(self, *args, **kwargs):
         if not self.display_name:
             max_attempts = 10
@@ -234,7 +262,7 @@ class MatchHistory(models.Model):
 
     # XP multipliers based on map
     MAP_XP_MULTIPLIERS = {
-        'ice': 1.2,
+        'air': 1.2,
         'water': 1.1,
         'fire': 1.0,
         'earth': 1.0
@@ -262,7 +290,7 @@ class MatchHistory(models.Model):
     ]
 
     MAP_CHOICES = [
-        ('ice', 'Ice'),
+        ('air', 'Air'),
         ('water', 'Water'),
         ('fire', 'Fire'),
         ('earth', 'Earth'),

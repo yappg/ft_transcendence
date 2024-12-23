@@ -28,6 +28,10 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrAdminReadOnly]
     http_method_names = ['get', 'put', 'patch', 'options']
 
+    def get_queryset(self):
+        if self.action == 'list':
+            return PlayerProfile.objects.all()[:10]
+        return PlayerProfile.objects.all()
 
     def get_object(self):
         try:
@@ -35,16 +39,25 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
     serializer_class = MatchHistorySerializer
     permission_classes = [IsAuthenticated]
+
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return MatchHistory.objects.all()[:10]
+        return MatchHistory.objects.all()
 
     def retrieve(self, request, pk=None):
         if not pk:
             raise NotFound("Profile ID is required.")
         try:
             profile = PlayerProfile.objects.select_related('player').get(pk=pk)
+            if profile.settings.private_profile == True:
+                return Response(data=[], status=status.HTTP_200_OK)
             matches = profile.all_matches()
             serializer = self.get_serializer(matches, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
