@@ -19,11 +19,14 @@ const GameArena = () => {
           <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
-        <div className="h-full overflow-hidden xl:w-3/6 justify-center items-center flex border-black border-4 rounded-2xl bg-black">
-          <GameTable mode={mode || ''} map={map || ''} />
+        <div className="h-full overflow-hidden xl:w-3/6 justify-center items-center flex xl:rounded-2xl bg-black-crd">
+          {/* still one bug in small screens when width is smaller than height need to limit height */}
+          <div className="size-full sm:max-w-[calc(3*((400vh/5)-100px)/4)] flex justify-items-start">
+            <GameTable mode={mode || ''} map={map || ''} />
+          </div>
         </div>
         {/* abilities */}
-        <div className="col-start-7 col-end-8 h-[100px] bg-slate-400"></div>
+        <div className="col-start-7 col-end-8 h-[80px] bg-black"></div>
       </div>
     </GameProvider>
   );
