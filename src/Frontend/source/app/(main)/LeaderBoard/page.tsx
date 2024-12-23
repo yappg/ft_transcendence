@@ -1,6 +1,5 @@
 'use client';
 import FriendsComponent from '@/components/friends/FriendsComponent';
-import { PlayerLeaderBoard } from '@/constants/PlayerLeaderBoard';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext, useEffect } from 'react';
 import { useUser } from '@/context/GlobalContext';
@@ -10,14 +9,14 @@ export default function Page() {
     setIsActivated(4);
   }, []);
   const {PlayerLeaderBoard} = useUser();
-  console.log(PlayerLeaderBoard);
+  console.log('hnaaaaaaaaaaaa',PlayerLeaderBoard);
   return (
     <div className="size-full md:py-4 md:pl-6 overflow-auto">
       <div className="costum-little-shadow size-full md:rounded-[50px] md:w-full overflow-hidden">
         <div className="flex size-full w-full flex-col items-start justify-start">
           <div className="h-[100%] w-full ">
             <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-              <div className="bg-black-crd dark:bg-transparent w-full h-fit">
+              {/* <div className="bg-black-crd dark:bg-transparent w-full h-fit">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
                   ProfilePhoto={PlayerLeaderBoard[0].avatar}
@@ -63,8 +62,8 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: 'rgba(205, 127, 50, 0.3)' }}
                 />
-              </div>
-              {PlayerLeaderBoard.map((friend, index) => (
+              </div> */}
+              {/* {PlayerLeaderBoard.map((friend, index) => (
                 <FriendsComponent
                   key={index + 4}
                   name={friend.display_name}
@@ -81,7 +80,7 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: '' }}
                 />
-              ))}
+              ))} */}
             </div>
           </div>
         </div>

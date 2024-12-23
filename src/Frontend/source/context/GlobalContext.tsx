@@ -18,8 +18,8 @@ const userApi = axios.create({
 
 interface User {
   id: number;
-  username: string;
-  // Add other user properties as needed
+  display_name: string;
+  avatar: string;
   [key: string]: any;
 }
 
@@ -39,6 +39,8 @@ interface UserContextType {
   fetchNotifications: () => Promise<void>;
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
+  PlayerMatches: User[] | null;
+  PlayerLeaderBoard: User[] | null;
 }
 
 interface UserProfile extends User {
@@ -67,7 +69,7 @@ const userService = {
     return response.data;
   },
   async getPlayerLeaderBoard(): Promise<User>{
-    const response = await userApi.get(`/user-leaderboard/`);
+    const response = await userApi.get(`/leaderboard/`);
     return response.data;
   }
 };
@@ -89,7 +91,7 @@ const UserContext = createContext<UserContextType>({
   setNotifications: () => {},
   setNotificationCount: () => {},
   PlayerMatches: null,
-  LeaderBoard: null
+  PlayerLeaderBoard: null
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
