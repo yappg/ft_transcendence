@@ -63,13 +63,13 @@ class MatchMakingSystem:
                         game_model = await database_sync_to_async(Game.objects.create)(player1=player1_model, player2=player2_model)
 
                         # Create game instance
-                        game = PingPongGame(player1, player2, game_model_id=game_model.id)
+                        game = PingPongGame(player1, player2, game_model_id=game_model.id )
                         self.games[game.game_id] = game
                         
                         # Remove matched players from queue
                         del self.players_queue[player1_id]
                         del self.players_queue[player2_id]
-                        
+
                         # Notify players
                         await self.notify_players(player1, player2, game_model.id)
                         
@@ -83,16 +83,6 @@ class MatchMakingSystem:
                 print(f'Error in matchmaking loop: {str(e)}')
                 await asyncio.sleep(1)
 
-
-    # def get_player_model(player_id):
-    #     """Get player model asynchronously"""
-    #     return Player.objects.get(id=player_id)
-
-
-    # def create_game_model(player1_model, player2_model):
-    #     """Create game model asynchronously"""
-    #     return Game.objects.create(player1=player1_model, player2=player2_model)
-
     async def notify_players(self, player1, player2, game_id):
         """Notify players about the game match"""
         await self._channel_layer.send(
@@ -100,6 +90,7 @@ class MatchMakingSystem:
             {
                 'type': 'game.found',
                 'opponent': player2.username,
+                'opponent_id': player1.id,
                 'game_id': game_id,
                 'message': "Game found, Get Ready to play!!"
             }
@@ -109,6 +100,7 @@ class MatchMakingSystem:
             {
                 'type': 'game.found',
                 'opponent': player1.username,
+                'opponent_id': player1.id,
                 'game_id': game_id,
                 'message': "Game found, Get Ready to play!!"
             }
