@@ -13,34 +13,33 @@ from drf_yasg import openapi
 
 
 
-class ChatView(APIView):
+# class ChatView(APIView):
 
-    @swagger_auto_schema(request_body=ChatRoomSerializer)
-    def post(self, request):
-        current_user = request.user
-        friend_username = request.data.get('senders')
+#     @swagger_auto_schema(request_body=ChatRoomSerializer)
+#     def post(self, request):
+#         current_user = request.user
+#         friend_display_name = request.data.get('senders')
 
-        # Ensure the friend exists
-        try:
-            friend = Player.objects.get(username=friend_username)
-        except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=404)
+#         # Ensure the friend exists
+#         try:
+#             friend = Player.objects.get(profile__display_name=friend_display_name)
+#         except Player.DoesNotExist:
+#             return Response({"error": "User not found"}, status=404)
 
-        # Stop the user from chatting with themselves
-        if current_user == friend:
-            return Response({"error": "You cannot start a chat with yourself"}, status=400)
-        # Check if a chat between the two participants already exists
-        chat_name = f"{current_user}_{friend}_room"
-        chat = ChatRoom.objects.filter(name=chat_name).first()
-        print("ddddddddddddddddd1")
+#         # Stop the user from chatting with themselves
+#         if current_user == friend:
+#             return Response({"error": "You cannot start a chat with yourself"}, status=400)
+#         # Check if a chat between the two participants already exists
+#         chat_name = f"{current_user}_{friend}_room"
+#         chat = ChatRoom.objects.filter(name=chat_name).first()
 
-        # Create a new chat and add both senders
-        if chat is None:
-            chat = ChatRoom.objects.create(name=chat_name)
-            chat.senders.add(current_user, friend)
-        # Serialize and return the chat
-        serializer = ChatRoomSerializer(chat)
-        return Response(serializer.data)
+#         # Create a new chat and add both senders
+#         if chat is None:
+#             chat = ChatRoom.objects.create(name=chat_name)
+#             chat.senders.add(current_user, friend)
+#         # Serialize and return the chat
+#         serializer = ChatRoomSerializer(chat)
+#         return Response(serializer.data)
 
 
 class ChatListView(APIView):
@@ -70,8 +69,8 @@ class ChatMessagesView(APIView):
     def post(self, request, chatId):
         sender = request.user
         print(f"-----------------{sender}-----------------------------------1")
-        receiverId = request.data.get('receiver')
-        print(f"-----------------{receiverId}-----------------------------------2")
+        receiver = request.data.get('receiver')
+        print(f"-----------------{receiver}-----------------------------------2")
         content = request.data.get('content')
         print(f"-----------------{content}-----------------------------------3")
 
@@ -85,7 +84,7 @@ class ChatMessagesView(APIView):
         #validate that receiver exists and is a participants of the chat
 
         try:
-            receiver = Player.objects.get(username=receiverId)
+            receiver = Player.objects.get(profile__display_name=receiver)
         except Player.DoesNotExist:
             return Response({"error": "Receiver makynsh"}, status=404)
         print(f"-----------------{receiver}-----------------------------------5")
@@ -102,4 +101,3 @@ class ChatMessagesView(APIView):
 
         serializer = MessageSerializer(message)
         return Response(serializer.data, status=201)
-
