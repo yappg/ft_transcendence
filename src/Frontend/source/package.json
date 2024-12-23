@@ -49,7 +49,6 @@
   "devDependencies": {
     "@shadcn/ui": "^0.0.4",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/node": "^20",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^18",

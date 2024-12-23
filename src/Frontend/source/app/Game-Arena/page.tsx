@@ -15,7 +15,7 @@ const GameArena = () => {
   return (
     <GameProvider>
       <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full flex-col lg:gap-8 lg:p-8 xl:flex-row">
-        <div className="h-1/5 w-full lg:w-2/6">
+        <div className="h-1/5 w-full xl:w-2/6">
           <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
