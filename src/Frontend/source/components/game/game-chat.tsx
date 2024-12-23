@@ -12,14 +12,14 @@ const PlayerScore = ({ player, score, isme }: { player: User; score: number; ism
   return (
     <div className={`flex h-4/5 w-2/5 items-center gap-2 ${isme ? '' : 'justify-end'}`}>
       <Avatar
-        className={`h-fit w-1/2 ${isme ? '' : 'order-3'} hidden md:block md:max-h-[100px] md:max-w-[100px] bg-blue-400`}
+        className={`h-fit w-1/2 ${isme ? '' : 'order-3'} hidden bg-blue-400 md:block md:max-h-[100px] md:max-w-[100px]`}
       >
         <AvatarImage src="/Avatar.svg" alt="avatar" />
         <AvatarFallback className="bg-black-crd">CN</AvatarFallback>
       </Avatar>
       <div className="flex flex-col font-dayson text-[18px] dark:text-white xl:text-[30px]">
         <div>{player.username}</div>
-        <div className={` text-white-crd w-full ${isme ? '' : 'text-end'}`}>{score}</div>
+        <div className={` w-full text-white-crd ${isme ? '' : 'text-end'}`}>{score}</div>
       </div>
     </div>
   );
@@ -46,18 +46,18 @@ const ScoreTable = () => {
   }, [game]);
 
   return (
-    <div className="flex xl:flex-col items-center justify-around gap-1 xl:gap-8">
+    <div className="flex items-center justify-around gap-1 xl:flex-col xl:gap-8">
       <Link
         href={'#'}
-        className="flex h-[60px] w-auto xl:w-full items-center justify-start font-dayson text-[48px] dark:text-white"
+        className="flex h-[60px] w-auto items-center justify-start font-dayson text-[48px] dark:text-white xl:w-full"
       >
         <IoIosArrowBack className="size-[20px] md:size-[60px]" />{' '}
-        <span className="xl:block hidden">Game Arena</span>
+        <span className="hidden xl:block">Game Arena</span>
       </Link>
 
-      <div className="flex w-full items-center justify-between p-4 font-dayson text-[20px] md:text-[35px] dark:text-white">
+      <div className="flex w-full items-center justify-between p-4 font-dayson text-[20px] dark:text-white md:text-[35px]">
         <PlayerScore player={user || ({} as User)} score={game.GameScore[0]} isme={true} />
-        <div className="flex size-auto text-center items-center justify-center border-white-crd border-2 rounded-[10px] text-white-crd">
+        <div className="flex size-auto items-center justify-center rounded-[10px] border-2 border-white-crd text-center text-white-crd">
           {game.GameState === 'start' ? (
             <div className="flex flex-col gap-1 p-2">
               <h1>Round</h1>
@@ -71,7 +71,7 @@ const ScoreTable = () => {
         <PlayerScore player={user || ({} as User)} score={game.GameScore[1]} isme={false} />
       </div>
 
-      <div className="xl:flex h-fit w-full hidden items-end justify-between rounded-[10px] bg-black-crd">
+      <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd xl:flex">
         {/* rounds  */}
         <div className="flex size-full flex-col items-center justify-around overflow-auto">
           {game.Rounds.map((round, index) => (

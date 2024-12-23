@@ -65,17 +65,15 @@ export abstract class PixiManager {
       fontSize: 64,
       fill: '#ff0000',
       align: 'center',
-      stroke: '#000000',
-      strokeThickness: 6,
     });
-  
+
     const gameOverText = new PIXI.Text('Game\nOver', style);
-  
+
     // Position the text in the center of the screen
     gameOverText.anchor.set(0.5);
     gameOverText.x = this.screenWidth / 2;
     gameOverText.y = this.screenHeight / 2;
-  
+
     this.app.stage.addChild(gameOverText);
   }
 
@@ -102,7 +100,7 @@ export abstract class PixiManager {
     );
     this.bottomRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
-      this.screenHeight - 20 - this.paddleheight, 
+      this.screenHeight - 20 - this.paddleheight,
       this.paddleWidth,
       this.paddleheight,
       0x00ffff,
@@ -175,7 +173,7 @@ export class LocalGameManager extends PixiManager {
     if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 1920; // Reference screen width
-    const movementSpeed  = (this.screenWidth / baseScreenWidth) * 15; 
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
