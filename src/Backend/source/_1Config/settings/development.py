@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
 from dotenv import load_dotenv
-
+ 
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
@@ -38,7 +38,7 @@ CORS_ALLOWED_ORIGINS = [
     # 'http://127.0.0.1:3000',
     # 'http://localhost:3000',
 ]
-
+  
 # ===========================
 # APPLICATION CONFIGURATION
 # ===========================

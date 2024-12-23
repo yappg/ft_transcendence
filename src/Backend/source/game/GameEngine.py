@@ -26,8 +26,8 @@ class Ball:
         self.position = self.position + (self.velocity * delta_time)
 
     def reset(self):
-        self.position = Vector2D(50, 50)
-        self.velocity = Vector2D(300, 300)  # Pixels per second
+        self.position = Vector2D(50, 80)
+        self.velocity = Vector2D(50, 50)# Pixels per second
 
 @dataclass
 class Paddle:
@@ -45,22 +45,28 @@ class GamePlayer:
     username: str
     channel_name: str 
     game_id: str #= str(uuid.uuid4())
-    paddle: Paddle
+    status: str = 'waiting'
+    paddle: Paddle = None
     score: int = 0
 
 
 class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
+        print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
         self.game_id = game_model_id
         self.ball = Ball(Vector2D(50, 50), Vector2D(300, 300))
 
         # Initialize players with paddles at opposite sides
         self.player1 = player1
-        player2.paddle = Paddle(Vector2D(5, 50))  # Left paddle
+        self.player1.game_id = game_model_id
+        self.player1.status = 'ready'
+        self.player1.paddle = Paddle(Vector2D(5, 50))  # Left paddle
         self.player2 = player2
+        self.player2.game_id = game_model_id
+        self.player2.status = 'ready'
         self.player2.paddle = Paddle(Vector2D(95, 50))  # Right paddle
 
-        self.game_width = 100
+        self.game_width = 160
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
         self.winner = None
@@ -172,8 +178,8 @@ class PingPongGame:
             'status': self.status,
             'ball':
             {
-            'x': self.ball.position.x,
-            'y': self.ball.position.y
+            'x': self.ball.position.x, # / self.game_width,
+            'y': self.ball.position.y # / self.game_height
             },
             'players': 
             {
@@ -181,7 +187,7 @@ class PingPongGame:
                 {
                     'id': self.player1.id,
                     'username': self.player1.username,
-                    'paddle_y': self.player1.paddle.position.y,
+                    'paddle_y': self.player1.paddle.position.y, # / self.game_height,
                     'score': self.player1.score
                 },
                 'player2':
@@ -195,10 +201,6 @@ class PingPongGame:
             'winner': self.winner.username if self.winner else None
         }
 
-from django_redis import get_redis_connection
-from game.models import Game
-from accounts.models import Player, PlayerProfile
-
 class GameManager:
 
     async def create_game(self,_player1, _player2, game_model_id: int) -> PingPongGame:
@@ -206,8 +208,6 @@ class GameManager:
         print(f'Creating game with ID: {game_model_id}')
         game = PingPongGame(_player1, _player2, game_model_id)
         self.games.set(game_model_id, game)
-        # self.games
-        # self.games[game_model_id] = game
         return game
 
     def get_game(self, game_id: str) -> Optional[PingPongGame]:

@@ -49,23 +49,28 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
+            print (f'\n{YELLOW}------------>>>>>[Received Data {data}]<<<<<<<<<----------------------{RESET}\n')
             # Actions = {
             #     'move_paddle': self.move_paddle,
             #     'ready': self.ready
             # }
             action  = data.get('action')
             # if !action:
-            #     return
+            #     return 
 
             if action == 'ready':
-                game_id = data.get('game_id')
+                game_id = data.get('game_id', None)
+                if not game_id:
+                    return
                 self.game = matchmake_system.games.get(data.get('game_id'))
-                if self.game and self.game.status == 'waiting'\
-                        and self.game.player1.id == self.user.id:
+                if self.game.player1.status == 'ready' and self.game.player2.status == 'ready'\
+                     and self.game.status == 'waiting':
+                    print(f'\n{BLUE}------------>>>>>[Game Ready to Start]<<<<<<<<<----------------------{RESET}\n')
                     self.game.start_game()
                     await self.start_game_loop()
                     await self.broadcast_game_state()
             elif action == 'move_paddle':
+                print(f'\n{BLUE}------------>>>>>[Moving Paddle Position[{data.get('position')}]]<<<<<<<<<----------------------{RESET}\n')
                 if self.game:
                     new_y = data.get('position', 50)
                     self.game.move_paddle(self.user.id, new_y)
@@ -114,6 +119,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_manager.remove_game(self.game_id)
         self.game = None
         self.game_id = None
+        self.InGame = False
 
     @database_sync_to_async
     def save_game_result(self, game_state):
@@ -122,7 +128,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     # Implement game result saving logic here
     async def disconnect(self, close_code):
     # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
-        # self.channel_layer.group_discard(self.groupe_name, self.channel_name)
+        
         await self.close()
 
 # {"username":"kad","password":"qwe123"}
