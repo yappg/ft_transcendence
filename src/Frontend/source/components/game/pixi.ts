@@ -47,12 +47,7 @@ export abstract class PixiManager {
     this.ballRatio = this.screenWidth / 35;
     background.alpha = 0.2;
     this.app.stage.addChild(background);
-    if (this.game.gameState === 'start') {
-      this.drawGameElements();
-    }
-    if (this.game.gameState === 'over') {
-      this.removeGameElements();
-    }
+    this.drawGameElements();
   }
 
   abstract updatePaddlePosition(): void;
@@ -62,6 +57,26 @@ export abstract class PixiManager {
     this.app.stage.removeChild(this.topRacket);
     this.app.stage.removeChild(this.bottomRacket);
     this.app.stage.removeChild(this.ball);
+  }
+
+  displayGameOverText() {
+    const style = new PIXI.TextStyle({
+      fontFamily: 'Days One',
+      fontSize: 64,
+      fill: '#ff0000',
+      align: 'center',
+      stroke: '#000000',
+      strokeThickness: 6,
+    });
+  
+    const gameOverText = new PIXI.Text('Game\nOver', style);
+  
+    // Position the text in the center of the screen
+    gameOverText.anchor.set(0.5);
+    gameOverText.x = this.screenWidth / 2;
+    gameOverText.y = this.screenHeight / 2;
+  
+    this.app.stage.addChild(gameOverText);
   }
 
   handleKeyDown(event: KeyboardEvent) {
@@ -87,7 +102,7 @@ export abstract class PixiManager {
     );
     this.bottomRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
-      this.screenHeight - 50,
+      this.screenHeight - 20 - this.paddleheight, 
       this.paddleWidth,
       this.paddleheight,
       0x00ffff,
@@ -99,7 +114,6 @@ export abstract class PixiManager {
     this.app.stage.addChild(this.topRacket);
     this.app.stage.addChild(this.bottomRacket);
     this.app.stage.addChild(this.ball);
-    console.log('gamestate', this.game.gameState);
     this.app.ticker.add(() => {
       if (this.game.gameState === 'start') {
         if (this.round < 3) {
@@ -109,6 +123,7 @@ export abstract class PixiManager {
           this.game.gameState = 'over';
           this.game.setGameState('over');
           this.removeGameElements();
+          this.displayGameOverText();
         }
       }
     });
@@ -159,7 +174,8 @@ export class LocalGameManager extends PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = 15;
+    const baseScreenWidth = 1920; // Reference screen width
+    const movementSpeed  = (this.screenWidth / baseScreenWidth) * 15; 
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -198,7 +214,7 @@ export class LocalGameManager extends PixiManager {
   updateBallPosition() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 8;
+    const baseSpeed = 6;
 
     const baseScreenDiagonal = Math.sqrt(800 ** 2 + 1080 ** 2);
     const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
