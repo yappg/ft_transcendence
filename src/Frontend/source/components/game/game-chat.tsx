@@ -12,12 +12,12 @@ const PlayerScore = ({ player, score, isme }: { player: User; score: number; ism
   return (
     <div className={`flex h-4/5 w-2/5 items-center gap-2 ${isme ? '' : 'justify-end'}`}>
       <Avatar
-        className={`h-fit w-1/2 ${isme ? '' : 'order-3'} hidden bg-blue-400 md:block md:max-h-[100px] md:max-w-[100px]`}
+        className={`h-full w-auto ${isme ? '' : 'order-3'} hidden bg-blue-400 md:block md:max-h-[100px] md:max-w-[100px]`}
       >
         <AvatarImage src="/Avatar.svg" alt="avatar" />
         <AvatarFallback className="bg-black-crd">CN</AvatarFallback>
       </Avatar>
-      <div className="flex flex-col font-dayson text-[18px] dark:text-white xl:text-[30px]">
+      <div className="flex flex-col font-poppin text-[10px] dark:text-white xl:text-[30px]">
         <div>{player.username}</div>
         <div className={` w-full text-white-crd ${isme ? '' : 'text-end'}`}>{score}</div>
       </div>
@@ -55,11 +55,11 @@ const ScoreTable = () => {
         <span className="hidden xl:block">Game Arena</span>
       </Link>
 
-      <div className="flex w-full items-center justify-between p-4 font-dayson text-[20px] dark:text-white md:text-[35px]">
+      <div className="flex w-full items-center justify-between p-2 xlp-4 font-dayson text-[20px] dark:text-white md:text-[35px]">
         <PlayerScore player={user || ({} as User)} score={game.GameScore[0]} isme={true} />
-        <div className="flex size-auto items-center justify-center rounded-[10px] border-2 border-white-crd text-center text-white-crd">
+        <div className="flex h-[40px] lg:h-auto text-[10px]  items-center justify-center rounded-[10px] border-2 border-white-crd text-center text-white-crd p-2">
           {game.GameState === 'start' ? (
-            <div className="flex flex-col gap-1 p-2">
+            <div className="flex lg:flex-col">
               <h1>Round</h1>
               <h3>{game.Rounds.length + 1}</h3>
             </div>
