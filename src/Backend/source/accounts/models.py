@@ -13,10 +13,10 @@ from django.core.validators import MinLengthValidator
 
 # auth user
 class Player(AbstractUser):
+
     enabled_2fa=models.BooleanField(default=False)
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
-
     #this model needs to have a profilefield which refers to the playerprofile model
     # profile=models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name='player')
 
@@ -43,8 +43,15 @@ class Player(AbstractUser):
 
 # TODO for a private profile dont serlizer all the data only full public ###
 class PlayerProfile(models.Model):
+    status_choices = [
+        ('waiting', 'waiting'),
+        ('inqueue', 'inqueue'),
+        ('ready', 'ready'),
+        ('playing', 'playing'),
+    ]
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
+    status=models.CharField(max_length=20, choices=status_choices, default='waiting')
     is_online=models.BooleanField(default=False)
     display_name = models.CharField(validators=[MinLengthValidator(3)], max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
