@@ -15,8 +15,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "kadigh",
-    "email": "kadigh@gmail.com",
+    "username": "sixieCow",
+    "email": "moooo@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }
@@ -26,8 +26,8 @@ POST http://localhost:8080/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "mehdi",
-    "email": "mehdi@gmail.com",
+    "username": "bennix",
+    "email": "bennix@gmail.com",
     "password": "csfdsgopxabcvbdfgdfg",
     "password2": "csfdsgopxabcvbdfgdfg"
 }

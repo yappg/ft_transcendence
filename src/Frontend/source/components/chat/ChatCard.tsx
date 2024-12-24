@@ -14,15 +14,19 @@ export const ChatCard = ({ chatContent , lastMessage }: ChatCardProps) => {
   const {messages, setMessages} = useUser();
   const router = useRouter();
   
+  const handleChatClick = async () => {
+    const currentPath = window.location.pathname;
+    const targetPath = `/messages/${chatContent.id}`;
+    
+    if (currentPath !== targetPath) {
+      setMessages([]);
+      router.push(targetPath);
+    }
+  };
+  
   return (
     <div
-      onClick={() => {
-        if (messages.length > 0)
-          setMessages([]);
-
-        console.log('routed to chat ', chatContent.id);
-        router.push(`/messages/${chatContent.id}`);
-      }}
+      onClick={handleChatClick}
       className="flex w-full cursor-pointer items-center justify-between bg-color-cdr px-4 py-3 hover:bg-[#252525]"
     >
         <div className="flex items-center gap-5">
