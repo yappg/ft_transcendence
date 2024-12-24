@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
+import SocketManager from './socket-manager';
 
 export abstract class PixiManager {
   app: PIXI.Application;
@@ -50,8 +51,8 @@ export abstract class PixiManager {
     this.drawGameElements();
   }
 
-  abstract updatePaddlePosition(): void;
-  abstract updateBallPosition(): void;
+  abstract updateTopPaddlePosition(): void;
+  abstract updateBallPosition(x?: number, y?: number): void;
 
   removeGameElements() {
     this.app.stage.removeChild(this.topRacket);
@@ -116,7 +117,8 @@ export abstract class PixiManager {
       if (this.game.gameState === 'start') {
         if (this.round < 3) {
           this.updateBallPosition();
-          this.updatePaddlePosition();
+          this.updateBottomPaddlePosition();
+          this.updateTopPaddlePosition();
         } else {
           this.game.gameState = 'over';
           this.game.setGameState('over');
@@ -125,6 +127,29 @@ export abstract class PixiManager {
         }
       }
     });
+  }
+
+  updateBottomPaddlePosition() {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    if (!bottomRacket || !app) return;
+
+    const baseScreenWidth = 1920; // Reference screen width
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+      console.log(`Moving leftB: ${bottomRacket.x}`);
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        this.screenWidth - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+      console.log(`Moving rightB: ${bottomRacket.x}`);
+    }
   }
 
   createBall(x: number, y: number, radius: number, color: number) {
@@ -166,27 +191,10 @@ export abstract class PixiManager {
 }
 
 export class LocalGameManager extends PixiManager {
-  updatePaddlePosition() {
-    const bottomRacket = this.bottomRacket;
-    const app = this.app;
+  updateTopPaddlePosition() {
 
-    if (!bottomRacket || !app) return;
-
-    const baseScreenWidth = 1920; // Reference screen width
+    const baseScreenWidth = 1920;
     const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
-
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
-      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
-      console.log(`Moving leftB: ${bottomRacket.x}`);
-    }
-
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
-      bottomRacket.x = Math.min(
-        this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
-      );
-      console.log(`Moving rightB: ${bottomRacket.x}`);
-    }
 
     if (
       (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
@@ -265,5 +273,36 @@ export class LocalGameManager extends PixiManager {
       this.ball.x = this.screenWidth / 2;
       this.ball.y = this.screenHeight / 2;
     }
+  }
+}
+
+export class OnlineGameManager extends PixiManager {
+  private socketManager!: SocketManager;
+  
+  updateTopPaddlePosition(): void {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    if (!bottomRacket || !app) return;
+
+    const baseScreenWidth = 1920;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+      console.log(`Moving leftB: ${bottomRacket.x}`);
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        this.screenWidth - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+      console.log(`Moving rightB: ${bottomRacket.x}`);
+    }
+  }
+
+  updateBallPosition(): void {
+    // Implementation for online game
   }
 }

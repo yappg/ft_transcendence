@@ -14,19 +14,19 @@ const GameArena = () => {
 
   return (
     <GameProvider>
-      <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full flex-col lg:gap-8 lg:px-8 lg:flex-row">
-        <div className="h-[50px] lg:h-1/5 w-full lg:w-2/6">
+      <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-auto flex-col xl:gap-8 xl:px-8 lg:flex-row">
+        <div className="h-[100px] lg:h-full w-full xl:w-auto flex justify-center items-center">
           <ScoreTable></ScoreTable>
         </div>
         {/* game table */}
-        <div className='w-full h-full flex items-center justify-center'>
-          <div className="size-full overflow-hidden max-w-[calc(3*(100vh-200px)/4)] lg:w-5/6 justify-center items-center flex">
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="size-full overflow-hidden max-w-[calc(3*(100vh-200px)/4)] lg:max-w-[calc(280vh/4)] xl:w-5/6 justify-center items-center flex">
             {/* still one bug in small screens when width is smaller than height need to limit height */}
             <GameTable mode={mode || ''} map={map || ''} />
           </div>
         </div>
-        {/* abilities */}
-        <div className="col-start-7 col-end-8 h-[80px] bg-black"></div>
+          {/* abilities */}
+          <div className="col-start-7 col-end-8 h-[100px] bg-black"></div>
       </div>
     </GameProvider>
   );

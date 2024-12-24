@@ -3,6 +3,7 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 export interface RoundsProps {
   round: number;
   winner: string | null;
+  score: [number, number];
 }
 
 export interface GameContextType {
