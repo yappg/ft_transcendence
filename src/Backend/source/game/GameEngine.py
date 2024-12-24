@@ -27,7 +27,7 @@ class Ball:
 
     def reset(self):
         self.position = Vector2D(50, 80)
-        self.velocity = Vector2D(50, 50)# Pixels per second
+        self.velocity = Vector2D(10, 10)# Pixels per second
 
 @dataclass
 class Paddle:
@@ -45,7 +45,7 @@ class GamePlayer:
     username: str
     channel_name: str 
     game_id: str #= str(uuid.uuid4())
-    status: str = 'waiting'
+    status: str = 'waiting'# waiting, ready, playing
     paddle: Paddle = None
     score: int = 0
 
@@ -64,7 +64,7 @@ class PingPongGame:
         self.player2 = player2
         self.player2.game_id = game_model_id
         self.player2.status = 'ready'
-        self.player2.paddle = Paddle(Vector2D(95, 50))  # Right paddle
+        self.player2.paddle = Paddle(Vector2D(155, 50))  # Right paddle
 
         self.game_width = 160
         self.game_height = 100
@@ -79,24 +79,17 @@ class PingPongGame:
     
     def update(self, delta_time: float) -> bool:
         """Update game state. Returns True if the game state changed."""
+
         if self.status != 'playing':
             return False
-
-        # Update ball position
         self.ball.update(delta_time)
-        
-        # Check for collisions and scoring
+
         if self._check_collisions():
             return True
-            
-        # Check for scoring
         if self._check_scoring():
             return True
-            
-        # Check for game end
         if self._check_game_end():
-            return True
-            
+            return True            
         return False
     
     def _check_collisions(self) -> bool:
@@ -178,23 +171,21 @@ class PingPongGame:
             'status': self.status,
             'ball':
             {
-            'x': self.ball.position.x, # / self.game_width,
-            'y': self.ball.position.y # / self.game_height
+                'x': self.ball.position.x, # / self.game_width,
+                'y': self.ball.position.y # / self.game_height
             },
             'players': 
             {
-                'player1':
+                self.player1.username:
                 {
                     'id': self.player1.id,
-                    'username': self.player1.username,
-                    'paddle_y': self.player1.paddle.position.y, # / self.game_height,
+                    'paddle_x': self.player1.paddle.position.x, # / self.game_height,
                     'score': self.player1.score
                 },
-                'player2':
+                self.player2.username:
                 {
                     'id': self.player2.id,
-                    'username': self.player2.username,
-                    'paddle_y': self.player2.paddle.position.y,
+                    'paddle_x': self.player2.paddle.position.x,
                     'score': self.player2.score
                 }
             },
