@@ -7,6 +7,8 @@ import { useUser } from '@/context/GlobalContext';
 import { RiMenu2Fill } from "react-icons/ri";
 import { IoMdNotifications } from "react-icons/io";
 import NotificationBell from  '@/components/notifications/notifications'
+import { SidebarLeft } from '@/components/ui/sidebar-left';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 
 export const Header = () => {
@@ -35,21 +37,31 @@ export const Header = () => {
     </h1>
     );
   function handleClick() {
-    setShowSearchBar(!showSearchBar);
+    setShowSearchBar(true);
   }
-
-  // here we gonna build the notif logic
   return (
-    <div className="flex h-fit w-full items-center justify-between md:px-4 px-0">
+    <div className="flex h-fit w-full items-center justify-between px-4">
+      <div className="md:hidden flex size-[50px]">
+        <SidebarProvider >
+        <SidebarLeft className="bg-transparent" />
+        <SidebarInset className="bg-transparent">
+          <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2">
+            <div>
+              <SidebarTrigger />
+            </div>
+          </header>
+        </SidebarInset>
+      </SidebarProvider>
+      </div>
       {paths
         .filter((path) => path.id === isActivated)
         .map((path) => (
           <div key={path.id} className="flex h-full w-fit items-center justify-start sm:gap-4 gap-2">
-            <h1 className="font-dayson text-[12px] sm:text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
+            <h1 className="font-dayson text-[16px] sm:text-[20px] font-black text-black dark:text-white md:text-[25px] lg:text-[32px] xl:text-[36px]">
               {path.path}
             </h1>
             {path.id === 1 && (
-              <span className="font-dayson text-[20px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
+              <span className="font-dayson sm:text-[20px] text-[16px] font-black text-aqua dark:text-fire-red md:text-[25px] lg:text-[32px] xl:text-[36px]">
                 {user.username}
               </span>
             )}

@@ -11,8 +11,15 @@ export default function Page() {
   }, [setIsActivated]);
   const {PlayerMatches} = useUser();
   return (
-    <div className="size-full md:py-4 md:pl-6 overflow-auto">
-      <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll md:rounded-[50px]">
+    <div className="size-full md:py-4 md:pl-6 overflow-auto ">
+      <div className=" custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll md:rounded-[50px] bg-[#00000099]">
+        {
+          PlayerMatches?.length === 0 && (
+            <div className="w-full h-full flex items-center justify-center">
+              <h1 className="text-white text-2xl font-dayson font-bold">No Matches Found</h1>
+            </div>
+          )
+        }
       {PlayerMatches?.map((match: any) => (
           <MatchHistoryComponent
             key={match.id}

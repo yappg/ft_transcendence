@@ -23,11 +23,11 @@ export const Card = ({
   return (
     <div className="w-full h-[16.6%] bg-[#00000026] border-t-[2px] border-r-[2px] border-black hover:bg-[#000000] transition-all duration-300">
       <button
-        className="size-full flex items-center justify-start gap-11 px-12"
+        className="size-full items-center justify-start gap-11 px-12"
         onClick={handleFilter}
       >
-        <Icon size={30} color="white" />
-        <h1 className="text-white font-dayson">{title}</h1>
+        <Icon className="size-[30px]" color="white" />
+        <h1 className="text-white font-dayson xl:flex hidden">{title}</h1>
       </button>
     </div>
   );

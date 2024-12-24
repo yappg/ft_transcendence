@@ -11,7 +11,8 @@ export const ImageCard = ({
     handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     profileError: string,
 }) => {
-    return (        <div className='w-fit h-full flex items-center justify-center gap-6'>
+    return (        
+    <div className='w-fit h-full flex items-center justify-center gap-6'>
     <Image
       src={selectedImage || '/ProfilePicture.svg'}
       alt='Profile picture'
@@ -20,7 +21,7 @@ export const ImageCard = ({
       className='size-[80px] rounded-full bg-white bg-cover object-cover'
     />
     <div className='w-fit h-full flex flex-col items-start justify-center gap-2'>
-      <h1 className='text-lg text-white tracking-wider'>Profile Picture</h1>
+      <h1 className='text-sm text-white tracking-wider'>Profile Picture</h1>
       <h1 className='text-sm text-gray-400 tracking-wider'>JPEG, JPG, max 5MB</h1>
       {profileError && <p className='text-red-600 text-sm'>{profileError}</p>}
     </div>

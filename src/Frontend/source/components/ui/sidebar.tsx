@@ -279,7 +279,10 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <IconMenu2 stroke={1.5} className="text-[rgba(28,28,28,0.9)] size-[70px] border-2"/>
+      <IconMenu2 style={{
+        width: "1.75rem",
+        height: "1.75rem"
+      }} stroke={1.5} className="text-[rgba(28,28,28,0.9)] size-[70px] border-2"/>
     </Button>
   )
 })

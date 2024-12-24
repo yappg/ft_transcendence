@@ -3,15 +3,18 @@ import { CoverCard } from './CoverCard';
 import { Switch } from '@/components/ui/switch';
 import { ImageCard } from './ImageCard';
 import { z } from 'zod';
+import { useUser } from '@/context/GlobalContext';
 
 export default function ProfileInfo() {
+  const { user } = useUser();
   const [isClicked, setIsClicked] = useState(false);
+  console.log(user);
   const [profileState, setProfileState] = useState({
-    selectedImage: null as string | null,
-    coverImage: null as string | null,
+    selectedImage: user.avatar,
+    coverImage: user.cover,
     profileError: '',
     coverError: '',
-    fullName: 'Meryeme',
+    fullName: user.display_name,
     password: '',
     NewPassword: '',
   });
@@ -23,7 +26,7 @@ export default function ProfileInfo() {
     NewPassword: '',
   });
   const imageSchema = z.object({
-    type: z.enum(['image/jpeg', 'image/png', 'image/webp']),
+    type: z.enum(['image/jpeg', 'image/png']),
     size: z.number().max(5 * 1024 * 1024),
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -114,19 +117,20 @@ export default function ProfileInfo() {
   }, [profile]);
   return (
     <div className="size-full p-10">
-      <div className="h-[40%] gap-10">
-        <div className="w-full h-[12%] px-12 flex items-center">
-          <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
+      <div className="custom-scrollbar-container overflow-y-scroll">
+      <div className="gap-10">
+        <div className="w-full h-[12%] flex items-center">
+          <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200 ">
             Profile Information
           </h1>
         </div>
-        <div className="w-full h-fit px-20 py-6 flex flex-wrap gap-[300px] items-center justify-start">
+        <div className="w-full 2xl:px-10 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
           <ImageCard
             handleDeleteImage={() => {
               updateState('selectedImage', null);
               // setProfileError('');
             }}
-            selectedImage={profileState.selectedImage}
+            selectedImage={profileState.ProfilePhoto1}
             handleImageChange={handleImageChange}
             profileError={profileState.profileError}
           />
@@ -137,7 +141,7 @@ export default function ProfileInfo() {
             coverError={profileState.coverError}
           />
         </div>
-        <div className="w-full h-fit px-20 py-6 flex flex-wrap gap-32 items-start justify-start">
+        <div className="w-full h-fit 2xl:px-20 py-6 flex flex-wrap 2xl:gap-32 xl:gap-10 lg:gap-7 items-start justify-start px-12">
           <div className="w-fit flex flex-col gap-4">
             <label className="text-white text-sm">Username</label>
             <input
@@ -156,7 +160,7 @@ export default function ProfileInfo() {
           </div>
 
           <div className="w-fit h-full  flex flex-col gap-4">
-            <label className="text-white text-sm">Full Name</label>
+            <label className="text-white text-sm">Display name</label>
             <input
               type="text"
               value={profileState.fullName}
@@ -170,13 +174,13 @@ export default function ProfileInfo() {
         </div>
       </div>
       <div className="h-[60%] gap-[200px]">
-        <div className="w-full px-12 py-6 flex flex-wrap items-center justify-start h-[40%] gap-10">
+        <div className="w-full py-6 flex flex-wrap items-center justify-start h-[40%] gap-10">
           <div className="w-full h-[8%] flex items-center">
             <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
               Security
             </h1>
           </div>
-          <div className="w-fit flex flex-col gap-4 pl-10">
+          <div className="w-fit flex flex-col gap-4 2xl:px-20 px-12">
             <label className="text-white text-sm">Password</label>
             <input
               type="password"
@@ -196,17 +200,17 @@ export default function ProfileInfo() {
             {errors.NewPassword && <p className="text-red-500 text-sm">{errors.NewPassword}</p>}
           </div>
         </div>
-        <div className="flex flex-row w-full h-[60%] py-10 justify-between">
-          <div className="w-[30%] h-full flex justify-start flex-col gap-10">
-            <div className="w-full h-[12%] px-12 flex items-center">
+        <div className="flex flex-row w-full h-[60%] py-6 justify-between">
+          <div className="2xl:w-[50%] h-full flex justify-start flex-col gap-10">
+            <div className="w-full h-[12%] flex items-center">
               <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
                 Two Factor Authentication
               </h1>
             </div>
-            <div className="w-full h-[50%] pl-20 flex items-center justify-between flex-col">
+            <div className="w-full h-[50%] 2xl:pl-16 xl:pl-10 flex items-start justify-between flex-col">
               <p className="font-coustard text-lg text-white opacity-[80%]">
-                Two Factor Authentication protects your account by requiring an additional code when
-                you log in on a new device.
+                Two Factor Authentication protects your account by <br />
+                requiring an additional ode when you log in on a new device.<br />
               </p>
               <div className="w-full h-[50%] flex items-center justify-start flex-row gap-5">
                 <h1 className="font-coustard text-xl text-white">Activate 2FA</h1>
@@ -222,7 +226,8 @@ export default function ProfileInfo() {
               {isClicked ? 'Updated' : 'Update'}
             </button>
           </div>
-        </div>
+          </div>
+          </div>
       </div>
     </div>
   );
