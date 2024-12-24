@@ -16,12 +16,40 @@ const userApi = axios.create({
   withCredentials: true,
 });
 
-interface User {
-  id: number;
+export interface User {
+  id:           number;
+  username:     string;
+  xp:           number;
+  achievements: any[];
+  statistics:   Statistics;
+  last_login:   number;
+  is_online:    boolean;
   display_name: string;
-  avatar: string;
-  [key: string]: any;
+  bio:          string;
+  avatar:       string;
+  cover:        string;
+  level:        number;
+  total_games:  number;
+  games_won:    number;
+  games_loss:   number;
+  win_ratio:    number;
+  created_at:   Date;
 }
+
+export interface Statistics {
+  ice_ratio:   number;
+  water_ratio: number;
+  fire_ratio:  number;
+  earth_ratio: number;
+  graph_data:  GraphDatum[];
+}
+
+export interface GraphDatum {
+  date:   Date;
+  wins:   number;
+  losses: number;
+}
+
 
 interface UserContextType {
   user: User | null;
@@ -187,6 +215,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     setError(null);
     try {
       const fetchedLeaderBoard = await userService.getPlayerLeaderBoard();
+      console.log('this is the fetched leaderboard: ', fetchedLeaderBoard);
       setPlayerLeaderBoard(fetchedLeaderBoard);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch LeaderBoard'));

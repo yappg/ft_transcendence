@@ -10,8 +10,7 @@ import { SideBarContext } from '@/context/SideBarContext';
 import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
 import { ComponentType, useContext } from 'react';
-import { SidebarLeft } from '@/components/ui/sidebar-left';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -24,11 +23,11 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <UserProvider>
-      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient p-8 dark:bg-linear-gradient-dark">
+      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient sm:p-8 dark:bg-linear-gradient-dark">
         <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
-        <div className="col-span-10 col-start-2 row-start-1 flex items-start justify-start pt-2 transition-all duration-300 ">
+        <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-start-1 flex items-start justify-start pt-2 transition-all duration-300 border-2">
           <Header />
         </div>
         <div
@@ -49,16 +48,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
-      <SidebarProvider className="md:hidden flex overflow-hidden absolute mt-[-5px]">
-        <SidebarLeft className=" bg-transparent" />
-        <SidebarInset className=" bg-transparent">
-          <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2">
-            <div>
-              <SidebarTrigger className="sm:size-[50px] size-[80px]" />
-            </div>
-          </header>
-        </SidebarInset>
-      </SidebarProvider>
+
       <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr]">
         {children}
       </div>

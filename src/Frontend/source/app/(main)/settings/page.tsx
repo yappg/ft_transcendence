@@ -40,13 +40,13 @@ export default function Settings() {
     }
   };
   return (
-    <div className="size-full py-4 pl-6 overflow-hidden">
-      <div className="size-full bg-[#00000099] rounded-[40px] [box-shadow:4px_4px_60px_0px_rgba(0,0,0,1)]  flex flex-row">
-        <div className="w-[310px] h-full bg-[#0000008C] border-l-2 border-[#0000008C]">
-          <div className="w-full h-1/3 flex items-center justify-center">
-            <RiSettings5Fill size={120} color="white" />
+    <div className="size-full md:py-4 md:pl-6 overflow-auto border-2">
+      <div className="costum-little-shadow size-full md:rounded-[50px] md:w-full overflow-hidden bg-[#00000099] flex flex-row">
+        <div className="xl:w-[310px] xl:w-[250px] w-[100px] h-full bg-[#0000008C] border-l-2 border-[#0000008C]">
+          <div className="xl:w-[310px] xl:w-[250px] w[100px] h-1/3 flex items-center justify-center">
+            <RiSettings5Fill color="white" className="xl:size-[120px]" />
           </div>
-          <div className="w-full h-2/3 ">
+          <div className="w-full h-2/3">
             {fields.map((field, index) => (
               <Card key={index} title={field.title} Icon={field.Icon} path={field.path} />
             ))}
@@ -55,7 +55,7 @@ export default function Settings() {
             </div>
           </div>
         </div>
-        <div className="w-full h-full overflow-hidden">{renderContent()}</div>
+        <div className="w-full h-full custom-scrollbar-container overflow-y-scroll">{renderContent()}</div>
       </div>
     </div>
   );
