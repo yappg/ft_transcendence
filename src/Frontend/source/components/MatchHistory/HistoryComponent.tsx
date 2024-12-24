@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PlayerCard from '@/components/MatchHistory/PlayerCardComponent';
 const MatchHistoryComponent = ({
     Player1,
@@ -20,7 +19,7 @@ const MatchHistoryComponent = ({
     Score2: number;
   }): JSX.Element => {{
     return (
-        <div className="bg-black-crd flex h-[150px] w-full flex-row items-center border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 lg:px-5 gap-3">
+        <div className="bg-black-crd flex md:h-[150px] h-[100px] w-full flex-row items-center border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 lg:px-5 gap-3">
             <PlayerCard 
                 profilePhoto={ProfilePhoto1} 
                 playerName={Player1}

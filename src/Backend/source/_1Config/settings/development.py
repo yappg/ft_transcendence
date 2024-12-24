@@ -34,9 +34,9 @@ ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = False  # Restrict origins
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://frontend:3000',
-    # 'http://127.0.0.1:3000',
-    # 'http://localhost:3000',
+    # 'http://frontend:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
 ]
 
 # ===========================
@@ -113,8 +113,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'accounts.authenticate.CotumAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authenticate.CotumAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon' : '3/min',

@@ -8,7 +8,6 @@ interface cardProps {
 
 const Card = ({ children, className }: cardProps) => {
   return (
-    // eslint-disable-next-line tailwindcss/no-custom-classname
     <div
       className={`${className} bg-white-crd costum-big-shadow dark:bg-secondary
       flex w-full flex-col items-center justify-center
