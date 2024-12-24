@@ -22,7 +22,6 @@ RESET = '\033[0m'
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.InGame = False
 
     async def connect(self):
         if not self.scope["user"].is_authenticated:
@@ -30,17 +29,30 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = self.scope["user"]
+        self.profile = await database_sync_to_async(PlayerProfile.objects.get)(player=self.user)
         self.game = None
-        print(f'\n{GREEN}------------>>>>>[User Authenticated {self.user}]<<<<<<<<<----------------------{RESET}\n')
+        print(f'\n{GREEN}[User Authenticated {self.user}]{RESET}\n')
 
-        # Start the matchmaking system if it's not already running
         if not matchmake_system._running:
             await matchmake_system.start()
 
         await self.accept()
-        if not self.InGame:
+        await self.channel_layer.group_add(
+            f'game_{self.user.id}',
+            self.channel_name
+        )
+        self.profile.status = 'waiting'
+        await database_sync_to_async(self.profile.save)()
+        
+
+        print(f'\n{GREEN}[User Profile {self.profile.status}]{RESET}\n')
+        if self.profile.status == 'waiting':
+            print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
             await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
-            self.InGame = True
+            self.profile.status = 'inqueue'
+            await database_sync_to_async(self.profile.save)()
+        else:
+            print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
         # else:
         #     await self.send(text_data=json.dumps({
         #         'message': 'You are already in a game'
@@ -49,28 +61,30 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
-            print (f'\n{YELLOW}------------>>>>>[Received Data {data}]<<<<<<<<<----------------------{RESET}\n')
-            # Actions = {
-            #     'move_paddle': self.move_paddle,
-            #     'ready': self.ready
-            # }
+            print (f'\n{YELLOW}[Received Data {data}]{RESET}\n')
+
             action  = data.get('action')
-            # if !action:
-            #     return 
 
             if action == 'ready':
+
                 game_id = data.get('game_id', None)
-                if not game_id:
+                print('game_id', game_id)
+                if not game_id or not self.game:
                     return
                 self.game = matchmake_system.games.get(data.get('game_id'))
-                if self.game.player1.status == 'ready' and self.game.player2.status == 'ready'\
-                     and self.game.status == 'waiting':
-                    print(f'\n{BLUE}------------>>>>>[Game Ready to Start]<<<<<<<<<----------------------{RESET}\n')
+
+                if self.players_ready() and self.game.status == 'waiting':
+                    print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
                     await self.start_game_loop()
                     await self.broadcast_game_state()
             elif action == 'move_paddle':
-                print(f'\n{BLUE}------------>>>>>[Moving Paddle Position[{data.get('position')}]]<<<<<<<<<----------------------{RESET}\n')
+                print(self.game)
+                if not self.game or self.game.status != 'playing' :
+                    return
+                if self.game.player1.status != 'ready' or self.game.player2.status != 'ready':
+                    return
+                print(f'\n{BLUE}[Moving Paddle Position[{data.get('position')}]]{RESET}\n')
                 if self.game:
                     new_y = data.get('position', 50)
                     self.game.move_paddle(self.user.id, new_y)
@@ -87,8 +101,24 @@ class GameConsumer(AsyncWebsocketConsumer):
             'game_id': event['game_id']
         }))
 
+    async def get_oppoent_PlayerProfile(self):
+        # (
+        #     self.game.player1 if self.game.player1.id == self.user.id else self.game.player2
+        # ).status = 'ready'
+        opponent_id = self.game.player1.id if self.game.player1.id == self.user.id else self.game.player2.id 
+        return await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)
+
+    async def players_ready(self):
+        opponent_profile = await self.get_oppoent_PlayerProfile()
+        if self.profile.status == 'ready' and opponent_profile.status == 'ready':
+            return True
+        return False
+
     async def start_game_loop(self):
+        import time
         while self.game and self.game.status == 'playing':
+            print(f'\n{YELLOW}[Game Loop Running]{RESET}\n')
+            # delta_time = time.perf_counter()
             delta_time = 1/60  # 60 FPS
             if self.game.update(delta_time):
                 await self.broadcast_game_state()
@@ -119,7 +149,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_manager.remove_game(self.game_id)
         self.game = None
         self.game_id = None
-        self.InGame = False
 
     @database_sync_to_async
     def save_game_result(self, game_state):
@@ -128,7 +157,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     # Implement game result saving logic here
     async def disconnect(self, close_code):
     # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
-        
+        self.profile.status = 'waiting'
+        await database_sync_to_async(self.profile.save)()
         await self.close()
 
 # {"username":"kad","password":"qwe123"}
