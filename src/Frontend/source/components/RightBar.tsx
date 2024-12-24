@@ -5,7 +5,9 @@ import { FaUsers } from 'react-icons/fa';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useContext } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
+import { useRouter } from 'next/navigation';
 export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) => void }) => {
+  const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
   const avatars = [
     { id: 1, path: '/Avatar.svg' },
@@ -25,10 +27,12 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
   return (
     <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
       <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
+        <Link href="/Profile" onClick={() => handleClick(9)} >
         <Avatar className="size-auto">
           <AvatarImage src="/ProfilePhoto.svg" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
+        </Link>
         <div className="flex items-center justify-center">
           <Link href="/friends">
             <FaUsers
@@ -39,7 +43,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
         </div>
         <div className=" custom-scrollbar-container flex flex-col items-center justify-start gap-1">
           {avatars.map((avatar) => (
-            <Avatar className="size-[80px] rounded-full p-2" key={avatar.id}>
+            <Avatar onClick={() => router.push("/Profile/4")} className="size-[80px] rounded-full p-2" key={avatar.id}>
               <AvatarImage src={avatar.path} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
