@@ -11,6 +11,7 @@ class Friends(models.Model):
         unique_together = ('friend_requester', 'friend_responder')
         
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
         chat_exists = ChatRoom.objects.filter(name=chat_name).exists()
 
@@ -18,7 +19,6 @@ class Friends(models.Model):
             chat = ChatRoom.objects.create(name=chat_name)
             chat.senders.add(self.friend_requester, self.friend_responder) 
         
-        super().save(*args, **kwargs)
     
 
 class FriendInvitation(models.Model):

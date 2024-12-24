@@ -10,6 +10,10 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@chakra-ui/menu": "^2.2.1",
+    "@chakra-ui/react": "^3.2.3",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -22,6 +26,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
+    "framer-motion": "^11.15.0",
     "input-otp": "^1.4.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.454.0",

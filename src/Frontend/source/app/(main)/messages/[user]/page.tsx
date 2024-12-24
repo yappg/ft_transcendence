@@ -20,30 +20,31 @@ export default function Page() {
       return null;
     }
     const temp = chats.find((chat) => chat.id === id);
-    console.log('DEBUG 2: --> temp', temp);
     return temp;
   };
 
-  console.log('DEUBG 1: --> chat_id', chat_id);
   const fetchMessages = async () => {
     try {
       const fetchedMessages = await chatService.getChatMessages(chat_id);
-        if (fetchedMessages.length > 0) {
-          const lastMessage = fetchedMessages[fetchedMessages.length - 1];
-          if (chats) {
-            const updatedChats = chats.map(chat => 
-              chat.id === chat_id 
-                ? { ...chat, last_message: lastMessage }
-                : chat
-            );
-            setChats(updatedChats);
-            setMessages(fetchedMessages);
-          }
+      if (fetchedMessages.length > 0) {
+        const lastMessage = fetchedMessages[fetchedMessages.length - 1];
+        if (chats) {
+          const updatedChats = chats.map(chat => 
+            chat.id === chat_id 
+              ? { ...chat, last_message: lastMessage }
+              : chat
+          );
+          setChats(updatedChats);
+          setMessages(fetchedMessages);
         }
-      } catch (error) {
-        console.log('Failed to fetch messages', error);
+      } else {
+        setMessages([]);
       }
-    };
+    } catch (error) {
+      console.log('Failed to fetch messages', error);
+      setMessages([]);
+    }
+  };
 
   useEffect(() => {
     if (chat_id > 0) {
@@ -52,6 +53,10 @@ export default function Page() {
     }
   }, [chat_id]);
 
+
+  if (!chatSelected) {
+    return <div className="flex size-full items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="flex size-full flex-row items-center justify-center">

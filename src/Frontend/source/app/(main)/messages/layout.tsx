@@ -6,7 +6,7 @@ import { Chat } from '@/constants/chat';
 import { useUser } from '@/context/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { ChatCard } from '@/components/chat/ChatCard';
-import { TiArrowBack } from "react-icons/ti";
+import { IoChevronBackOutline } from "react-icons/io5"
 
 export default function ChatLayout({
   children,
@@ -37,12 +37,7 @@ export default function ChatLayout({
     }
   }, [chats]);
 
-  // The user should be able to block other users. This way, they will see no more
-  //   messages from the account they blocked.
-
-  // The user should be able to invite other users to play a Pong game through the 
-  //   chat interface.
-  
+ 
   // The tournament system should be able to warn users expected for the next
   //   game.
   
@@ -65,7 +60,7 @@ export default function ChatLayout({
        }}
        className="absolute right-8 top-8 z-[99] size-[50px] rounded-md lg:hidden"
      >
-       <TiArrowBack  className="w-full h-full" />
+    <IoChevronBackOutline className="w-6 h-6" />
      </button>
         )}
         {showChat && (
@@ -82,7 +77,7 @@ export default function ChatLayout({
             </div>
             <div className="custom-scrollbar-container flex size-full flex-col items-center justify-start gap-5">
               {listChat &&
-                listChat.map((chat, index) => <ChatCard key={index} chatContent={chat} lastMessage={lastMessages[chat.id]} />)}
+                listChat.map((chat, index) => <ChatCard key={chat.id} chatContent={chat} lastMessage={lastMessages[chat.id]} />)}
             </div>
           </div>
         </div>
