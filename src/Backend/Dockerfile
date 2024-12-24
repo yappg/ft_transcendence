@@ -19,7 +19,7 @@ RUN pip install --upgrade pip \
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-CMD [ "sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 && sleep 5 ;done" ]
+CMD ["sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 || echo 'Server crashed, restarting...'; sleep 5; done"]
 # CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
@@ -44,3 +44,4 @@ EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
+# CMD [ "tail", "-f", "/dev/null" ]
