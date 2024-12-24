@@ -218,6 +218,7 @@ class PlayerProfile(models.Model):
         update_achievements(achievements=["Earth Explorer", "Earth Wanderer", "Earth Traveler", "Earth Pilgrim"], progress=self.earth_games)
 
         update_achievements(achievements=["Spark", "Momentum", "Edge", "Pinnacle", "Prime", "Ascendant"], progress=self.level)
+
     def save(self, *args, **kwargs):
         if not self.display_name:
             max_attempts = 10

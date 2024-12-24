@@ -7,7 +7,6 @@ urlpatterns = [
     path('friends/pending/', PendingInvitationsView.as_view(), name='pending_invitations'),
     path('friends/invite/', FriendInvitationView.as_view(), name='friend_invite'),
     path('friends/accept/', AcceptInvitationView.as_view(), name='accept_invite'),
-    path('friends/remove/', RemoveFriendView.as_view(), name='remove_friend'),
 
     path('notifications/', NotificationListView.as_view(), name='notification_list'),
     path('friends/block/', BlockedUsersView.as_view(), name='block_user'),

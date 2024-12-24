@@ -22,6 +22,9 @@ class Friends(models.Model):
 
     def save(self, *args, **kwargs):
         from chat.models import ChatRoom
+
+        super().save(*args, **kwargs)
+
         chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
         chat_exists = ChatRoom.objects.filter(name=chat_name).exists()
 
@@ -29,9 +32,10 @@ class Friends(models.Model):
             chat = ChatRoom.objects.create(name=chat_name, friends=self)
             chat.senders.add(self.friend_requester, self.friend_responder)
 
-        super().save(*args, **kwargs)
 
 
+
+# if he accept the invitation remove the fucking model and same if he declines
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
     receiver = models.ForeignKey(Player, related_name='received_invitations', on_delete=models.CASCADE)
@@ -75,6 +79,7 @@ class BlockedUsers(models.Model):
             self.blocked.remove(user_to_unblock)
             return True
         return False
+
 
 class Notification(models.Model):
     recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
