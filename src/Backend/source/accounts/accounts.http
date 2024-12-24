@@ -4,8 +4,7 @@
 
 #########
 GET http://localhost:8080/accounts/rest-profiles
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODQyNDM3LCJpYXQiOjE3MzQ4NDAwMzcsImp0aSI6ImNhODY0NGUyZDAzYjQzYjVhMzY5NDY0ODJkYWUwNThkIiwidXNlcl9pZCI6N30.mpp6bf3MobUIX-zXvDx8fFr0ndCWl4LLSbgScUWRNVw
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMxMzM3LCJpYXQiOjE3MzUwMjg5MzcsImp0aSI6ImE3NjA0Njk4MzI2ODQ2ZTZhNmUyNGQzMmI5ZDlkOTQwIiwidXNlcl9pZCI6Nn0.vl3A8DwcurI2egxcn7j0Xg4yrqtjOZdOSiekJ9fXVAk
 #########
 GET http://localhost:8080/accounts/rest-profiles/5/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
@@ -64,8 +63,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODQyNDM3LCJpYXQiOjE3MzQ4NDAwMzcsImp0aSI6ImNhODY0NGUyZDAzYjQzYjVhMzY5NDY0ODJkYWUwNThkIiwidXNlcl9pZCI6N30.mpp6bf3MobUIX-zXvDx8fFr0ndCWl4LLSbgScUWRNVw
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMxMzM3LCJpYXQiOjE3MzUwMjg5MzcsImp0aSI6ImE3NjA0Njk4MzI2ODQ2ZTZhNmUyNGQzMmI5ZDlkOTQwIiwidXNlcl9pZCI6Nn0.vl3A8DwcurI2egxcn7j0Xg4yrqtjOZdOSiekJ9fXVAk
 #########
 PUT http://localhost:8080/accounts/user-profile/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0ODM2ODE4LCJpYXQiOjE3MzQ4MzQ0MTgsImp0aSI6IjM3YjVmOWQ0MDE1YTQ0Y2JiNGUxNGUxMjA1YjMyMmMxIiwidXNlcl9pZCI6Mn0.AWwHVs5kwe1Ol5OK-O2HatwUhTopw6OQgynHgX0HvC4
@@ -141,9 +139,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/leaderboard
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTIzMDM0LCJpYXQiOjE3MzQ5MjA2MzQsImp0aSI6IjVlNzU5MGIyN2M0MzQwZmE4ZmViYWIzOGNlNjk0MWI2IiwidXNlcl9pZCI6NX0.t5nnrTi4aFZDB3C10zJCYV4Ik5J3XhZJ9AhV07zypLo
-
-############################################################
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMxMzM3LCJpYXQiOjE3MzUwMjg5MzcsImp0aSI6ImE3NjA0Njk4MzI2ODQ2ZTZhNmUyNGQzMmI5ZDlkOTQwIiwidXNlcl9pZCI6Nn0.vl3A8DwcurI2egxcn7j0Xg4yrqtjOZdOSiekJ9fXVAk
 ######### SEARCH SPECS === GET === ONLY ######################################################################################
 ############################################################
 #########

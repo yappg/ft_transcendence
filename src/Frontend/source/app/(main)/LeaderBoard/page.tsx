@@ -9,14 +9,18 @@ export default function Page() {
     setIsActivated(4);
   }, []);
   const {PlayerLeaderBoard} = useUser();
-  console.log('hnaaaaaaaaaaaa',PlayerLeaderBoard);
+  console.log('this is the fetched leaderboard2: ', PlayerLeaderBoard);
+  if(!PlayerLeaderBoard)
+    return <div className="size-full md:py-4 md:pl-6 flex items-center justify-center">
+      <h1 className="font-dayson font-bold text-[40px]"> No User</h1>
+    </div>
   return (
     <div className="size-full md:py-4 md:pl-6 overflow-auto">
-      <div className="costum-little-shadow size-full md:rounded-[50px] md:w-full overflow-hidden">
+      <div className="costum-little-shadow size-full md:rounded-[50px] md:w-full overflow-hidden bg-[#00000099]">
         <div className="flex size-full w-full flex-col items-start justify-start">
           <div className="h-[100%] w-full ">
             <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-              {/* <div className="bg-black-crd dark:bg-transparent w-full h-fit">
+              <div className="bg-black-crd dark:bg-transparent w-full h-fit">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
                   ProfilePhoto={PlayerLeaderBoard[0].avatar}
@@ -32,6 +36,8 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: 'rgba(255, 255, 0, 0.3)' }}
                 />
+                {
+                  PlayerLeaderBoard.length > 1 &&
                 <FriendsComponent
                   name={PlayerLeaderBoard[1].display_name}
                   ProfilePhoto={PlayerLeaderBoard[1].avatar}
@@ -47,6 +53,9 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: 'rgba(192, 192, 192, 0.3)' }}
                 />
+                }
+                {
+                  PlayerLeaderBoard.length > 2 &&
                 <FriendsComponent
                   name={PlayerLeaderBoard[2].display_name}
                   ProfilePhoto={PlayerLeaderBoard[2].avatar}
@@ -62,8 +71,10 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: 'rgba(205, 127, 50, 0.3)' }}
                 />
-              </div> */}
-              {/* {PlayerLeaderBoard.map((friend, index) => (
+                }
+              </div>
+              
+               {PlayerLeaderBoard.filter((val: { id: number }) => val.id >= 4).map((friend, index) => (
                 <FriendsComponent
                   key={index + 4}
                   name={friend.display_name}
@@ -80,7 +91,7 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: '' }}
                 />
-              ))} */}
+              ))}
             </div>
           </div>
         </div>

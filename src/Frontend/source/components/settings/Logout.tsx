@@ -45,7 +45,7 @@ const Logout = () => {
           className="size-full flex items-center justify-start gap-11 px-12"
         >
           <BsBoxArrowLeft size={30} color="white" />
-          <h1 className="text-white font-dayson">Lougout</h1>
+          <h1 className="text-white font-dayson xl:flex hidden">Lougout</h1>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-[#28AFB0] dark:bg-[#C1382C]">
