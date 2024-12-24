@@ -14,12 +14,12 @@ class CotumAuthentication(JWTAuthentication):
         try:
             # Validate the token
             validated_token = self.get_validated_token(access_token)
-            
+
             # Get the user
             user = self.get_user(validated_token)
-            
+
             return (user, validated_token)
-            
+
         except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed('Access token has expired')
         except jwt.InvalidTokenError:

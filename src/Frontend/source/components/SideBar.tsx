@@ -66,7 +66,11 @@ export const SideBar = ({
         className={`flex w-full flex-col items-center ${
           isActivated === 7 ||
           isActivated === 6 ||
+          isActivated === 8 ||
+          isActivated === 9 ||
           pathname === '/friends' ||
+          pathname === '/profile' ||
+          pathname === '/settings' ||
           pathname === '/messages'
             ? 'gap-3'
             : 'gap-6'
@@ -76,16 +80,17 @@ export const SideBar = ({
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory') &&
+        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory' || pathname === '/Profile') &&
           smallScreenIcons.map((item) => {
             return showIcon(item.Icon, item.id, isActivated, item.path);
           })}
       </div>
-      <button
+      <Link
         className={`flex size-[50px] items-center justify-center `}
+        href="/settings"
         onClick={() => {
-          setIsActivated(8);
-          if (isActivated == 8) setIsActivated(0);
+          if (isActivated == 8) handleRightClick(0);
+          handleRightClick(8);
         }}
       >
         <div
@@ -95,7 +100,7 @@ export const SideBar = ({
           size={isActivated == 8 ? 70 : 60}
           className={`text-[40px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] absolute z-10 transition-all duration-300 hover:text-aqua hover:dark:text-fire-red`}
         />
-      </button>
+      </Link>
     </div>
   );
 };

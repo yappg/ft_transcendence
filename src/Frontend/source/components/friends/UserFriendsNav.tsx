@@ -166,26 +166,26 @@ const UserFriendsNav = (): JSX.Element => {
     }
   };
   return (
-    <div className="flex size-full w-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between md:px-2 md:pr-4 lg:px-10">
-        <div className="flex h-fit flex-row items-center justify-between">
-          <Avatar className="max-w-[120px] md:size-auto ">
+    <div className="flex size-full flex-col items-start justify-start">
+      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10">
+        <div className="flex h-fit flex-row items-center justify-between w-[250px] md:w-[300px]">
+          <Avatar className="max-w-[120px] md:size-auto sm:size-[60px]">
             //
             <AvatarImage src="" />
-            <AvatarFallback className="font-dayson m-2 size-[80px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
+            <AvatarFallback className="font-dayson m-2 md:size-[80px] size-[60px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
               CN
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col ">
-            <h1 className="font-dayson text-[20px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
+            <h1 className="font-dayson text-[15px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
               {player.name}
             </h1>
-            <h1 className="font-coustard text-white opacity-[40%] md:text-[17px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
+            <h1 className="font-coustard text-white opacity-[40%] md:text-[17px] text-[15px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
               Level {player.level}
             </h1>
           </div>
         </div>
-        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 md:gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
+        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 sm:gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
           {headers.map((header, index) => (
             <Link href="#" key={index} onClick={() => setActiveIndex(index)}>
               <h1
