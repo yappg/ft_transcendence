@@ -41,6 +41,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             f'game_{self.user.id}',
             self.channel_name
         )
+        #TODO ths two lines are temporary must be deleted later
         self.profile.status = 'waiting'
         await database_sync_to_async(self.profile.save)()
         
@@ -57,13 +58,15 @@ class GameConsumer(AsyncWebsocketConsumer):
         #     await self.send(text_data=json.dumps({
         #         'message': 'You are already in a game'
         #     }))
-
+   
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
             print (f'\n{YELLOW}[Received Data {data}]{RESET}\n')
+            print(f'\n{YELLOW}[Game Status {self.game.status}]{RESET}\n')
 
             action  = data.get('action')
+            print(f'\n{YELLOW}[Action {action}]{RESET}\n')
 
             if action == 'ready':
 
@@ -90,6 +93,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     self.game.move_paddle(self.user.id, new_y)
                     await self.broadcast_game_state()
         except Exception as e:
+            print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
 
@@ -141,11 +145,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def handle_game_end(self):
         if not self.game:
             return
-            
-        # Save game result to database
+
         await self.save_game_result(self.game.get_state())
-        
-        # Clean up
+
         game_manager.remove_game(self.game_id)
         self.game = None
         self.game_id = None
