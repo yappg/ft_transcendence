@@ -20,6 +20,7 @@ class Friends(models.Model):
             return self.friend_responder
         return self.friend_requester
 
+
     def save(self, *args, **kwargs):
         from chat.models import ChatRoom
 

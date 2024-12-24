@@ -1,6 +1,9 @@
-############################
+
+
+
+###########################
 ######### GET #############
-############################
+###########################
 #review methods
 #########
 GET http://localhost:8080/relations/players/
@@ -10,6 +13,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 GET http://localhost:8080/relations/friends/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDE3OTA1LCJpYXQiOjE3MzUwMTU1MDUsImp0aSI6ImZhNWYwNTI1NGIwZDQwMmRiY2Y1ZjNkYzY0NDgxZmU2IiwidXNlcl9pZCI6Mn0.l_qYVGwgDDsPQKeq_vNZ6sG-Ta9ltljeN0z4_Sa5uFE
+
+
 
 #############
 DELETE http://localhost:8080/relations/friends/
@@ -59,6 +64,8 @@ Content-Type: application/json
 {
     "cancel_invite":"client2_28sv4y9f15zg"
 }
+
+
 
 ##########################################
 POST http://localhost:8080/relations/friends/accept/
