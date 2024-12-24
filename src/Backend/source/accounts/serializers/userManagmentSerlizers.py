@@ -122,6 +122,9 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     last_login = serializers.SerializerMethodField()
     # created_at = serializers.SerializerMethodField()
+    is_private = serializers.SerializerMethodField()
+
+    relation = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
@@ -164,9 +167,34 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             # 'fire_games',
             # 'earth_games',
 
+            'is_private',
+
+            'relation',
+
             'last_login',
             # 'created_at',
         ]
+
+    def get_relation(self, obj):
+        from relations.models import FriendInvitation
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return "none"
+
+        user = request.user
+        if obj.player == user:
+            return "self"
+        elif user in obj.all_friends():
+            return "friend"
+        elif FriendInvitation.objects.filter(receiver=user, sender=obj.player, status="pending").exists():
+            return "received_invite"
+        elif FriendInvitation.objects.filter(receiver=obj.player, sender=user, status="pending").exists():
+            return "sent_invite"
+        else:
+            return "none"
+
+    def get_is_private(self, obj):
+        return obj.settings.private_profile
 
     def get_achievements(self, obj):
         # from ..serializers import PlayerAchievementSerializer
@@ -180,14 +208,14 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         LIMIT = 4 # for now
 
         if obj.settings.private_profile == True:
-            return ["private"]
+            return []
         return FriendsSerializer(obj.all_friends()[:LIMIT], many=True).data
 
     def get_matches_history(self, obj):
         LIMIT = 4 # for now
 
         if obj.settings.private_profile == True:
-            return ["private"]
+            return []
         return MatchHistorySerializer(obj.all_matches()[:LIMIT], many=True).data
 
     def get_xp(self, obj):

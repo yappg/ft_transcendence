@@ -136,7 +136,6 @@ class PlayerProfile(models.Model):
             else:
                 friend_players.append(friendship.friend_requester.profile)
 
-        print(f"all player objects of friends for {self.display_name} are : {friend_players}")
         return friend_players
 
     def all_achievements_gained(self):
