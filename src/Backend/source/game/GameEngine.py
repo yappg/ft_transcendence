@@ -44,8 +44,8 @@ class GamePlayer:
     id: int
     username: str
     channel_name: str 
-    game_id: str #= str(uuid.uuid4())
-    status: str = 'waiting'# waiting, ready, playing
+    game_id: str 
+    status: str = 'waiting' # waiting, ready, playing, 'finished'
     paddle: Paddle = None
     score: int = 0
 
@@ -60,17 +60,17 @@ class PingPongGame:
         self.player1 = player1
         self.player1.game_id = game_model_id
         self.player1.status = 'ready'
-        self.player1.paddle = Paddle(Vector2D(5, 50))  # Left paddle
+        self.player1.paddle = Paddle(Vector2D(5, 50))  # Lower paddle
         self.player2 = player2
         self.player2.game_id = game_model_id
         self.player2.status = 'ready'
-        self.player2.paddle = Paddle(Vector2D(155, 50))  # Right paddle
+        self.player2.paddle = Paddle(Vector2D(155, 50))  # Upper paddle
 
         self.game_width = 160
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
         self.winner = None
-        self.winning_score = 11
+        self.winning_score = 7
 
     def start_game(self):
         """Start the game if both players are ready"""
@@ -101,7 +101,7 @@ class PingPongGame:
            self.ball.position.y >= self.game_height - self.ball.radius:
             self.ball.velocity.y *= -1
             changed = True
-        
+
         # Paddle collisions
         # Left paddle (player1)
         if self._check_paddle_collision(self.player1.paddle):
@@ -128,18 +128,18 @@ class PingPongGame:
         relative_intersect_y = (paddle.position.y - self.ball.position.y)
         normalized_intersect = relative_intersect_y / (paddle.height / 2)
         bounce_angle = normalized_intersect * math.pi / 4  # 45 degrees max angle
-        
+
         speed = math.sqrt(self.ball.velocity.x**2 + self.ball.velocity.y**2)
         self.ball.velocity.x = speed * math.cos(bounce_angle)
         self.ball.velocity.y = speed * math.sin(bounce_angle)
     
     def _check_scoring(self) -> bool:
         """Check if a point was scored"""
-        if self.ball.position.x <= 0:  # Player 2 scores
+        if self.ball.position.y <= 0:  # Player 2 scores
             self.player2.score += 1
             self.ball.reset()
             return True
-        elif self.ball.position.x >= self.game_width:  # Player 1 scores
+        elif self.ball.position.y >= self.game_height:  # Player 1 scores
             self.player1.score += 1
             self.ball.reset()
             return True
