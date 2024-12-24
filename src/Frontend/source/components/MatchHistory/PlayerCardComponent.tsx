@@ -7,13 +7,13 @@ interface PlayerCardProps {
   level: number;
   score: number;
   reverse?: boolean;
-iHhighScore: boolean;
+  isHighScore: boolean;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ profilePhoto, playerName, level, score, reverse , isHighScore }) => {
   return (
     <div
-      className={`w-[45%] h-full  flex items-center 2xl:gap-24 xl:gap-20 xl:gap-3 lg:p-10 p-4 ${
+      className={`w-[45%] h-full  flex items-center 2xl:gap-24 xl:gap-20 lg:p-10 p-4 ${
         reverse ? 'flex-row-reverse' : ''
       }`}
     >
