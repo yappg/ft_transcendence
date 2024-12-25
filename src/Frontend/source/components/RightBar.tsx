@@ -21,8 +21,8 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
     { id: 3, path: '/Avatar.svg' },
   ];
   function handleClick(id: number) {
-    handleRightClick(id); // Pass the ID to the parent handler
-    setIsActivated(id); // Update the context value
+    handleRightClick(id);
+    setIsActivated(id);
   }
   return (
     <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
@@ -43,7 +43,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
         </div>
         <div className=" custom-scrollbar-container flex flex-col items-center justify-start gap-1">
           {avatars.map((avatar) => (
-            <Avatar onClick={() => router.push("/Profile/4")} className="size-[80px] rounded-full p-2" key={avatar.id}>
+            <Avatar onClick={() => router.push("/Profile/2")} className="size-[80px] rounded-full p-2" key={avatar.id}>
               <AvatarImage src={avatar.path} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
