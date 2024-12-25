@@ -1,0 +1,19 @@
+
+###############
+GET http://localhost:8080/chat/list/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
+
+
+#########
+GET http://localhost:8080/chat/1/messages/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
+
+#########
+POST http://localhost:8080/chat/1/messages/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
+Content-Type: application/json
+
+{
+    "receiver":"client2",
+    "content":"hello"
+}

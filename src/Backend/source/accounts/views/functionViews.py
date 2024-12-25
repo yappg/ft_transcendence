@@ -19,7 +19,7 @@ class SearchUsersView(APIView):
         try:
             players = PlayerProfile.objects.filter(
                 display_name__istartswith=search_term
-            )[:50]
+            )[:50].exclude(player=request.user) # exlude block list
 
             serializer = SearchUsersSerializer(players, many=True)
             return Response({

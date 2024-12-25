@@ -28,10 +28,10 @@ class AccountsConfig(AppConfig):
         def seed_achievements(sender, **kwargs):
             if Achievement.objects.count() == 0:
                 default_achievements = [
-                    {"name" : "Ice Explorer", "description" : "Play 5 games in ice biome.", "xp_gain" : 250, "condition" : 5, "image" : "achievements/colored/.default.png" , "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Wanderer", "description" : "Play 20 games in ice biome.", "xp_gain" : 500, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Traveler", "description" : "Play 50 games in ice biome.", "xp_gain" : 1500, "condition" : 50, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Pilgrim", "description" : "Play 100 games in ice biome.", "xp_gain" : 2500, "condition" : 100, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Explorer", "description" : "Play 5 games in air biome.", "xp_gain" : 250, "condition" : 5, "image" : "achievements/colored/.default.png" , "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Wanderer", "description" : "Play 20 games in air biome.", "xp_gain" : 500, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Traveler", "description" : "Play 50 games in air biome.", "xp_gain" : 1500, "condition" : 50, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Pilgrim", "description" : "Play 100 games in air biome.", "xp_gain" : 2500, "condition" : 100, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
 
                     {"name" : "Water Explorer", "description" : "Play 5 games in water biome.", "xp_gain" : 250, "condition" : 5, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
                     {"name" : "Water Wanderer", "description" : "Play 20 games in water biome.", "xp_gain" : 500, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
@@ -49,10 +49,10 @@ class AccountsConfig(AppConfig):
                     {"name" : "Earth Pilgrim", "description" : "Play 100 games in earth biome.", "xp_gain" : 2500, "condition" : 100, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
 
 
-                    {"name" : "Ice Apprentice", "description" : "win 5 games in ice biome.", "xp_gain" : 500, "condition" : 5, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Adventurer", "description" : "win 20 games in ice biome.", "xp_gain" : 1000, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Contender", "description" : "win 50 games in ice biome.", "xp_gain" : 2500, "condition" : 50, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
-                    {"name" : "Ice Veteran", "description" : "win 100 games in ice biome.", "xp_gain" : 5000, "condition" : 100, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Apprentice", "description" : "win 5 games in air biome.", "xp_gain" : 500, "condition" : 5, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Adventurer", "description" : "win 20 games in air biome.", "xp_gain" : 1000, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Contender", "description" : "win 50 games in air biome.", "xp_gain" : 2500, "condition" : 50, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
+                    {"name" : "Air Veteran", "description" : "win 100 games in air biome.", "xp_gain" : 5000, "condition" : 100, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
 
                     {"name" : "Water Apprentice", "description" : "win 5 games in water biome.", "xp_gain" : 500, "condition" : 5, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
                     {"name" : "Water Adventurer", "description" : "win 20 games in water biome.", "xp_gain" : 1000, "condition" : 20, "image" : "achievements/colored/.default.png", "image_bw" : "achievements/bw/.default.png"},
@@ -107,6 +107,5 @@ class AccountsConfig(AppConfig):
                             "image_bw": achievement["image_bw"],
                         },
                     )
-
         post_migrate.connect(create_admin_user, sender=self)
         post_migrate.connect(seed_achievements, sender=self)

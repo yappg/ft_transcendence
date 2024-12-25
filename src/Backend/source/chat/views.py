@@ -15,7 +15,6 @@ from .models import ChatRoom
 
 
 class ChatView(APIView):
-
     @swagger_auto_schema(request_body=ChatRoomSerializer)
     def post(self, request):
         current_user = request.user
@@ -61,8 +60,8 @@ class ChatMessagesView(APIView):
     def post(self, request, chatId):
         sender = request.user
         print(f"-----------------{sender}-----------------------------------1")
-        receiverId = request.data.get('receiver')
-        print(f"-----------------{receiverId}-----------------------------------2")
+        receiver = request.data.get('receiver')
+        print(f"-----------------{receiver}-----------------------------------2")
         content = request.data.get('content')
         print(f"-----------------{content}-----------------------------------3")
         try:
@@ -73,7 +72,7 @@ class ChatMessagesView(APIView):
         print(f"-----------------{chat}-----------------------------------4")
 
         try:
-            receiver = Player.objects.get(username=receiverId)
+            receiver = Player.objects.get(profile__display_name=receiver)
         except Player.DoesNotExist:
             return Response({"error": "Receiver Not Found"}, status=404)
         print(f"-----------------{receiver}-----------------------------------5")
@@ -89,4 +88,3 @@ class ChatMessagesView(APIView):
 
         serializer = MessageSerializer(message)
         return Response(serializer.data, status=201)
-
