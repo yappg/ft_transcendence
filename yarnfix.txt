@@ -1,0 +1,41 @@
+// Yarn Warnings:
+
+// 1. ESLint Related (Dev Dependencies):
+// - Warning: @humanwhocodes/config-array@0.13.0 is deprecated
+//   Fix: Update to @eslint/config-array
+//   Command: yarn remove @humanwhocodes/config-array && yarn add -D @eslint/config-array
+
+// - Warning: @humanwhocodes/object-schema@2.0.3 is deprecated
+//   Fix: Update to @eslint/object-schema
+//   Command: yarn remove @humanwhocodes/object-schema && yarn add -D @eslint/object-schema
+
+// - Warning: rimraf@3.0.2 is outdated
+//   Fix: Update to rimraf v4 or later
+//   Command: yarn remove rimraf && yarn add -D rimraf@latest
+
+// - Warning: glob@7.2.3 is outdated
+//   Fix: Update to glob v9 or later
+//   Command: yarn remove glob && yarn add -D glob@latest
+
+// - Warning: inflight@1.0.6 has memory leaks
+//   Fix: Replace with lru-cache for async request coalescing
+//   Command: yarn remove inflight && yarn add -D lru-cache
+
+// 2. Package Dependencies (Production):
+// - Warning: chart.js@4.4.7 has invalid "pnpm" engine
+//   Fix: Review pnpm compatibility or use yarn/npm
+//   Command: yarn remove chart.js && yarn add chart.js@latest
+
+// 3. Missing Peer Dependencies (Production):
+// - Warning: bootstrap@5.3.3 missing @popperjs/core@^2.11.8
+//   Fix: Install @popperjs/core@^2.11.8
+//   Command: yarn add @popperjs/core@^2.11.8
+
+// - Warning: providers@0.5.0 missing multiple dependencies:
+//   Fix: Install these dependencies:
+//   Command: yarn add @angular/common@^8.1.1 @angular/core@^8.1.1 @brightpath/common@0.5.0 @brightpath/scheduling@0.5.0 @brightpath/activity-stream@0.5.0 angular2-uuid@1.1.1 tslib@^1.10.0
+
+// 4. Type Definition (Dev Dependencies):
+// - Warning: @types/react-dom@18.3.5 has incorrect peer dependency
+//   Fix: Update @types/react to match version ^18.0.0
+//   Command: yarn remove @types/react && yarn add -D @types/react@^18.0.0
