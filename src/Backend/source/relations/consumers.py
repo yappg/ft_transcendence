@@ -46,3 +46,4 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     #             'status': 'error',
     #             'message': 'Notification not found'
     #         }))
+    

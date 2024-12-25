@@ -157,9 +157,10 @@ const UserFriendsNav = (): JSX.Element => {
         }
         </div>
       );
-    } else if (activeIndex === 2) {
-      return <AddFriends />;
     }
+    // } else if (activeIndex === 2) {
+    //   return <AddFriends />;
+    // }
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">

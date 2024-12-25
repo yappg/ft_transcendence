@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
-from accounts.models import Player
+from accounts.models import Player, PlayerProfile
 from .models import ChatRoom, Message
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
@@ -48,34 +48,40 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id} |")
 
         try:
-            sender = await sync_to_async(Player.objects.get)(id=sender_id)
-            receiver = await sync_to_async(Player.objects.get)(id=receiver_id)
+            sender = await sync_to_async(PlayerProfile.objects.get)(id=sender_id)
+            receiver = await sync_to_async(PlayerProfile.objects.get)(id=receiver_id)
             chat = await sync_to_async(ChatRoom.objects.get)(id=self.chatId)
-        except Player.DoesNotExist:
+        except PlayerProfile.DoesNotExist:
             print(f"-----------------[DEBUG] Sender or Reciever with ID {sender_id} does not exist")
             return
         except ChatRoom.DoesNotExist:
             print(f"-----------------[DEBUG] Chat with ID {self.chatId} does not exist")
             return
 
-        print(f"-----------------[DEBUG] Valid sender {sender.username} and chat {self.chatId} found")
+        print(f"-----------------[DEBUG] ==================== Valid sender {sender.display_name} and chat {self.chatId} found")
 
-        new_message = await sync_to_async(Message.objects.create)(
-            chatroom=chat, sender=sender,receiver=receiver, content=content
-        )
+        # The lambda function is used here to wrap the Message.objects.create() call
+        # This is necessary because sync_to_async needs a callable (function) to convert to async
+        # The lambda creates an anonymous function that, when called, will execute the database create
+        # Without lambda, sync_to_async would try to convert the result of create() directly
+        # rather than converting the operation itself to be async
+        new_message = await sync_to_async(lambda: Message.objects.create(
+            chatroom=chat, sender=sender.player, receiver=receiver.player, content=content
+        ))()
 
-        print(f"-----------------[DEBUG] Message saved: {content} from {sender.username}")
+        print(f"-----------------[DEBUG] =============================================dssss")
 
         await self.channel_layer.group_send(
             self.chat_group_name,
             {
                 'type': 'chat_message',
                 'content': new_message.content,
-                'sender': sender.username,
-                'receiver': receiver.username,
+                'sender': sender.display_name,
+                'receiver': receiver.display_name,
                 'chatId': chat.id,
             }
         )
+        
     async def chat_message(self, event):
         content = event['content']
         sender_id = event['sender']
@@ -85,8 +91,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"-----------------[[DEBUG] Sending message [---|---]to WebSocket: {content} from sender {sender_id} to receiver {receiver_id}")
         await self.send(text_data=json.dumps({
             'content': content,
-            'sender': sender_id,
             'chatId': chatId,
+            'sender': sender_id,
             'receiver': receiver_id
         }))
         print(f"-----------------[[DEBUG] Message sent to WebSocket: {event['content']} from sender {event['sender']}")

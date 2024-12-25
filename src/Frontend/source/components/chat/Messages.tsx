@@ -32,9 +32,7 @@ export const Messages: React.FC<MessagesProps> = ({
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
-  const { user, setChats } = useUser();
-
-  
+  const { user, setChats } = useUser();  
   const handleBlockUser = async () => {
     try {
       // TODO: Implement block user functionality
