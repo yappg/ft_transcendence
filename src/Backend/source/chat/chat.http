@@ -1,19 +1,11 @@
 
 ###############
 GET http://localhost:8080/chat/list/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTUyMzQ2LCJpYXQiOjE3MzUxNDk5NDYsImp0aSI6IjhlMTdiYjU3MWVlNDQxMjI4Yjg4YTk0ZGIzZTIyNjYyIiwidXNlcl9pZCI6Mn0.f2Dd1ITysF3snEHT5AghjvFp-9oJ2ntEXj3aGH3XxGA
 
 
 #########
 GET http://localhost:8080/chat/1/messages/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTUyMzQ2LCJpYXQiOjE3MzUxNDk5NDYsImp0aSI6IjhlMTdiYjU3MWVlNDQxMjI4Yjg4YTk0ZGIzZTIyNjYyIiwidXNlcl9pZCI6Mn0.f2Dd1ITysF3snEHT5AghjvFp-9oJ2ntEXj3aGH3XxGA
 
 #########
-POST http://localhost:8080/chat/1/messages/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0OTI2OTIxLCJpYXQiOjE3MzQ5MjQ1MjEsImp0aSI6IjljYWQzMmNhZjgzZDQ2NDc5ZTExOGM5NTU0YTU1ODFlIiwidXNlcl9pZCI6Mn0.45s4aNxorWp6LdxdzpUs-HFv9J2COccEqGrDpCp3hkU
-Content-Type: application/json
-
-{
-    "receiver":"client2",
-    "content":"hello"
-}

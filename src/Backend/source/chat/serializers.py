@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from .models import ChatRoom, Message
-from accounts.models import Player
-
-class ReceiverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player 
-        fields = ['id', 'username', 'avatar']
+from accounts.models import Player, PlayerProfile
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
@@ -31,12 +26,12 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     def get_receiver(self, obj):
         user = self.context.get('request').user
         receivers = obj.senders.exclude(id=user.id)
-        
+    
         if receivers.exists():
             receiver = receivers.first()
             return {
-                'id': receiver.id,
-                'username': receiver.username,
-                'avatar': receiver.avatar.url if receiver.avatar else None
+                'id': receiver.profile.id,
+                'username': receiver.profile.display_name,
+                'avatar': receiver.profile.avatar.url if receiver.profile.avatar else None
             }
         return None
