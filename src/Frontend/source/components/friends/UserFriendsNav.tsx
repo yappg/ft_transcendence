@@ -6,9 +6,10 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
-import {chatService} from '@/services/chatService';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
+import { useUser } from '@/context/GlobalContext';
+
 
 const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
@@ -19,20 +20,15 @@ const UserFriendsNav = (): JSX.Element => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
   };
-  
-  // need a fetch from the parent component... this is tmp fetch
+  const {user } = useUser();
+
   useEffect(() => {
-    const fetchCurrentUserId = async () => {
       try {
-        const response = await chatService.getCurrentUserId();
-        setCurrentUserName(response.username);
-        console.log(response.username)
+        setCurrentUserName(user?.display_name);
+        console.log(user?.display_name)
       } catch (error) {
         console.error('Failed to fetch current user ID', error);
       }
-    };
-    
-    fetchCurrentUserId();
   }, []);
 
 
