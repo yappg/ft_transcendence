@@ -7,8 +7,8 @@ GET http://localhost:8080/accounts/rest-profiles
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMzMjg1LCJpYXQiOjE3MzUwMzA4ODUsImp0aSI6IjZjOGQ5ZGEzYjQ5ZjQxMGFhZWEwZjljNmQ3MzdiMjEzIiwidXNlcl9pZCI6Mn0.cUhuPLEVSvF85yNsPXFSdKEnXQLDJnmj4p4ro3O33fc
 
 #########
-GET http://localhost:8080/accounts/rest-profiles/4/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMzMjg1LCJpYXQiOjE3MzUwMzA4ODUsImp0aSI6IjZjOGQ5ZGEzYjQ5ZjQxMGFhZWEwZjljNmQ3MzdiMjEzIiwidXNlcl9pZCI6Mn0.cUhuPLEVSvF85yNsPXFSdKEnXQLDJnmj4p4ro3O33fc
+GET http://localhost:8080/accounts/rest-profiles/2/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTM2MDA2LCJpYXQiOjE3MzUxMzM2MDYsImp0aSI6IjQ0MGUxNGNiNTYwOTRhNjc5NjZmNGQ4NjQ0MWUzODliIiwidXNlcl9pZCI6M30.iGN2WjYSyL0eXWJh04GRGsZXrrXB3Cz-KwPHh5yNhWE
 
 #########
 PUT http://localhost:8080/accounts/rest-profiles/1/
@@ -62,7 +62,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMzMjg1LCJpYXQiOjE3MzUwMzA4ODUsImp0aSI6IjZjOGQ5ZGEzYjQ5ZjQxMGFhZWEwZjljNmQ3MzdiMjEzIiwidXNlcl9pZCI6Mn0.cUhuPLEVSvF85yNsPXFSdKEnXQLDJnmj4p4ro3O33fc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTI2NTc2LCJpYXQiOjE3MzUxMjQxNzYsImp0aSI6IjJiODVjNWE5MTk2ZTQxNzE5MGM4Y2FkZTJiMWNiMDVmIiwidXNlcl9pZCI6M30.MH5Q1pxAMq7-kxwj1FQ0URIocAyPxT6EF0pxgvAajNI
 
 #########
 PUT http://localhost:8080/accounts/user-profile/
@@ -104,7 +104,7 @@ Content-Type: application/json
   "id": "2",
   "private_profile": true,
   "notifications_enabled": false,
-  "stats_graph_days": 3,
+  "stats_graph_days": 3
 }
 
 #########
