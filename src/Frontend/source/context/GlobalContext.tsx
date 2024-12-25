@@ -256,6 +256,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         chats,
         messages,
         setMessages,
+        setChats,
         fetchCurrentUserDetails,
         fetchPlayers,
         fetchNotifications,

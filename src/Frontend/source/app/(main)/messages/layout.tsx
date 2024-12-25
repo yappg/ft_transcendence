@@ -44,10 +44,10 @@ export default function ChatLayout({
   // The user should be able to access other players profiles through the chat interface.
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full overflow-hidden lg:p-4">
       <div className="relative flex size-full gap-8">
         <div className="hidden h-full items-center justify-center lg:flex lg:w-3/5 lg:flex-row">
-          <div className="costum-little-shadow hidden size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd lg:flex">
+          <div className="costum-little-shadow hidden size-full flex-col items-center justify-center rounded-2xl bg-black-crd lg:flex">
             {children}
           </div>
         </div>
