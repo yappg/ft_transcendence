@@ -173,32 +173,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         console.log(data.data);
         setPlayers(data.data);
         setIsLoading(false);
+        return data.data;
       }
-      return data.data;
+      else if (data.error)
+      {
+        console.error(data.error)
+        setPlayers(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
       setPlayers(null);
     } finally {
       setIsLoading(false);
     }
-    return [];
   };
-  const fetchNotifications = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const fetchedNotifications = await notificationsService.getNotifications();
-      setNotifications(fetchedNotifications as Notification[]);
-      setNotificationCount(fetchedNotifications.length);
-      console.log(fetchNotifications);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch notifications'));
-      setNotifications([]);
-      setNotificationCount(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
   const fetchPlayerMatches = async () => {
     setIsLoading(true);
     setError(null);
@@ -211,8 +200,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     } finally {
       setIsLoading(false);
     }
-    return [];
   };
+
+  const fetchPlayerLeaderBoard = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const fetchPlayerLeaderBoard = await userService.getPlayerLeaderBoard();
+      setPlayerLeaderBoard(fetchPlayerLeaderBoard);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch player leaderBoard'));
+      setPlayerLeaderBoard(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const fetchNotifications = async () => {
     setIsLoading(true);
     setError(null);
