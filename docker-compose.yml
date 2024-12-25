@@ -56,33 +56,33 @@ services:
     #   restart: unless-stopped
 
 
-    frontend:
-      container_name: frontend
-      build:
-        context: ./src/Frontend
-        target: ${ENV:-development}
-        dockerfile: Dockerfile
-      image: frontend
-# DEV ==============>
-      volumes:
-        - ./src/Frontend/source:/app:rw
-        - /app/.next
-        - /app/node_modules
-# ==================>
-      networks:
-        - transcendence
-      ports:
-        - 3000:3000
-      # depends_on:
-      #     backend:
-      #         condition: service_healthy
-      # healthcheck:
-      #     test: ["CMD", ""]
-      #     interval: 1m30s
-      #     timeout: 30s
-      #     retries: 5
-      #     start_period: 30s
-      restart: always
+#     frontend:
+#       container_name: frontend
+#       build:
+#         context: ./src/Frontend
+#         target: ${ENV:-development}
+#         dockerfile: Dockerfile
+#       image: frontend
+# # DEV ==============>
+#       volumes:
+#         - ./src/Frontend/source:/app:rw
+#         - /app/.next
+#         - /app/node_modules
+# # ==================>
+#       networks:
+#         - transcendence
+#       ports:
+#         - 3000:3000
+#       # depends_on:
+#       #     backend:
+#       #         condition: service_healthy
+#       # healthcheck:
+#       #     test: ["CMD", ""]
+#       #     interval: 1m30s
+#       #     timeout: 30s
+#       #     retries: 5
+#       #     start_period: 30s
+#       restart: always
 
 
     backend:
