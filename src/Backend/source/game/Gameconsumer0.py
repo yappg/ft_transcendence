@@ -44,7 +44,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         #TODO ths two lines are temporary must be deleted later
         self.profile.status = 'waiting'
         await database_sync_to_async(self.profile.save)()
-        
 
         print(f'\n{GREEN}[User Profile {self.profile.status}]{RESET}\n')
         if self.profile.status == 'waiting':
@@ -58,25 +57,30 @@ class GameConsumer(AsyncWebsocketConsumer):
         #     await self.send(text_data=json.dumps({
         #         'message': 'You are already in a game'
         #     }))
-   
+
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
             print (f'\n{YELLOW}[Received Data {data}]{RESET}\n')
-            print(f'\n{YELLOW}[Game Status {self.game.status}]{RESET}\n')
+            # print(f'\n{YELLOW}[Game Status {self.game.status}]{RESET}\n')
 
             action  = data.get('action')
             print(f'\n{YELLOW}[Action {action}]{RESET}\n')
 
             if action == 'ready':
-
                 game_id = data.get('game_id', None)
                 print('game_id', game_id)
-                if not game_id or not self.game:
+                if not game_id :
                     return
-                self.game = matchmake_system.games.get(data.get('game_id'))
-
-                if self.players_ready() and self.game.status == 'waiting':
+                self.game_id = game_id 
+                print(matchmake_system.games)
+                self.game = matchmake_system.games[int(data.get('game_id'))]
+                print("ǵame", self.game)
+                if not self.game:
+                    return
+                players_ready = self.players_ready()
+                print(players_ready)
+                if players_ready and self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
                     await self.start_game_loop()
@@ -96,7 +100,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
-
+  
     async def game_found(self, event):
         # Send a message to the player that a game has been found
         await self.send(text_data=json.dumps({
