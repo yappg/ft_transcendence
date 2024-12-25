@@ -71,12 +71,6 @@ interface UserContextType {
   PlayerLeaderBoard: User[] | null;
 }
 
-interface UserProfile extends User {
-  winRate: number;
-  level: number;
-  totalWins: number;
-  totalGames: number;
-}
 
 const userService = {
   // async getUserDetailsByUsername(username: string): Promise<User> {
@@ -88,7 +82,7 @@ const userService = {
     const response = await userApi.get(`/user-profile/`);
     return response.data;
   },
-  async getUserProfile(): Promise<UserProfile> {
+  async getUserProfile(): Promise<User> {
     const response = await userApi.get(`${USER_PROFILE_BASE_URL}`);
     return response.data;
   },

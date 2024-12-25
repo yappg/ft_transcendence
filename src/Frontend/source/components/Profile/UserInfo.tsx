@@ -3,8 +3,9 @@ import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
 import { useUser } from '@/context/GlobalContext';
 
-const UserInfo = () => {
-  const { user: userProfile } = useUser();
+const UserInfo = ({
+  userProfile,
+}) => {
   return (
     <div className="size-full flex items-center justify-start px-10 absolute z-99 lg:flex-row flex-col">
       <div className="lg:h-full lg:w-[80%] w-full h-[80%] flex sm:flex-row flex-col">
@@ -47,12 +48,12 @@ const UserInfo = () => {
             <h1>{userProfile?.win_ratio}%</h1>
           </div>
         </div>
-        {/* <Link
+        <Link
           href="/settings?field=profile"
           className="text-black bg-[#B7B7B7] 2xl:size-[50px] md:size-[45px] rounded-[10px]"
         >
           <HiOutlinePencilSquare className="2xl:size-[50px] sm:size-[45px] size-[30px]" />
-        </Link> */}
+        </Link>
       </div>
     </div>
   );

@@ -20,10 +20,12 @@ export default function page() {
               filter: 'blur(10px)',
             }}
           ></div>
-          <UserInfo />
+          <UserInfo 
+          userProfile={userProfile}/>
         </div>
         <div className="flex items-center justify-center w-full h-[60%] md:h-[50%] ">
-          <UserSummary  />
+          <UserSummary 
+          user={userProfile} />
         </div>
       </div>
     </div>
