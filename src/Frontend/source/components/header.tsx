@@ -70,9 +70,7 @@ export const Header = () => {
       Loading...
     </h1>
     );
-  function handleClick() {
-    setShowSearchBar(true);
-  }
+
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
       <div className="md:hidden flex size-[50px]">

@@ -55,7 +55,6 @@ class FriendsListView(APIView):
             Q(friend_requester=user) | Q(friend_responder=user)
         ).distinct()
 
-        # Filter to ensure each friendship is only included once
         unique_friends = []
         seen_pairs = set()
         for friend in friends:
