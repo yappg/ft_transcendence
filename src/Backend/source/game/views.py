@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 
 def lobby_game(request):
-    return render(request, 'game/pingpong.html')
+    return render(request, 'game/ping.html')

@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from .models import Player
+from ..models import Player
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -46,7 +46,7 @@ def store_user_data(user_data, provider):
         email = user_data['email']
         f_name = user_data['given_name']
         l_name = user_data['family_name']
-        username =  str(f_name)+str(l_name)
+        username =  str(f_name)+str(l_name) #add a random number to make it unique
         img_url = user_data['picture'] if 'picture' in user_data else None 
 
     user, created = Player.objects.get_or_create(
@@ -64,7 +64,7 @@ def store_user_data(user_data, provider):
             tmpImg = NamedTemporaryFile(delete=True)
             tmpImg.write(response.content)
             tmpImg.flush()
-            # here may be a problem if all 42 images arent .jpg extension or google being .png 
+            # here may be a problem if all 42 images arent .jpg extension or google being .png
             if provider == '42':
                 user.avatar.save(f"{username}_profile.jpg", File(tmpImg), save=True)
             elif provider == 'google':
@@ -76,3 +76,5 @@ def store_user_data(user_data, provider):
 def generate_tokens(user):
         refresh_token = RefreshToken.for_user(user)
         return (str(refresh_token.access_token), str(refresh_token))
+
+# for Oauth2 username must check if theres a user with the same username, if so add a random number to make it unique
