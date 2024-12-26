@@ -6,10 +6,12 @@ import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/g
 import { useGame } from '@/context/GameContext';
 import React, { useRef, useEffect } from 'react';
 import socketManager from './socket-manager';
+import { useUser } from '@/context/GlobalContext';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const game = useGame();
+  const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -24,13 +26,14 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     } else {
-      socketRef.current = new socketManager("ws://localhost:8080/ws/game");
+      socketRef.current = new socketManager('ws://localhost:8080/ws/game');
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
           `/${map}.png`,
           game,
-          socketRef.current
+          socketRef.current,
+          user?.user
         );
       }
     }

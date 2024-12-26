@@ -93,7 +93,7 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
               // <div className="flex size-full flex-col items-center justify-center border-white border-2 rounded-[10px]">
               <div>game over</div>
             ) : (
-              <div>Next Round</div>
+              <div>get ready</div>
             )}
           </div>
           {mode.indexOf('local') === -1 ? (
