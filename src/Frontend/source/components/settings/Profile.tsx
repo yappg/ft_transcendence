@@ -7,8 +7,13 @@ import { useUser } from '@/context/GlobalContext';
 
 export default function ProfileInfo() {
   const { user } = useUser();
+  if (!user) {
+    return <div className="w-full h-full flex items-center justify-center">
+      <h1 className="text-white text-2xl">Loading...</h1>
+    </div>;
+  }
   const [isClicked, setIsClicked] = useState(false);
-  console.log(user);
+  console.log("user settings: ", user);
   const [profileState, setProfileState] = useState({
     selectedImage: user.avatar,
     coverImage: user.cover,
@@ -124,7 +129,7 @@ export default function ProfileInfo() {
             Profile Information
           </h1>
         </div>
-        <div className="w-full 2xl:px-10 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
+        <div className="w-full 2xl:px-20 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
           <ImageCard
             handleDeleteImage={() => {
               updateState('selectedImage', null);
@@ -173,7 +178,7 @@ export default function ProfileInfo() {
           </div>
         </div>
       </div>
-      <div className="h-[60%] gap-[200px]">
+      <div className="h-fit gap-[200px]">
         <div className="w-full py-6 flex flex-wrap items-center justify-start h-[40%] gap-10">
           <div className="w-full h-[8%] flex items-center">
             <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
@@ -200,7 +205,7 @@ export default function ProfileInfo() {
             {errors.NewPassword && <p className="text-red-500 text-sm">{errors.NewPassword}</p>}
           </div>
         </div>
-        <div className="flex flex-row w-full h-[60%] py-6 justify-between">
+        <div className="flex flex-col w-full h-fit gap-[50px] py-6 justify-between">
           <div className="2xl:w-[50%] h-full flex justify-start flex-col gap-10">
             <div className="w-full h-[12%] flex items-center">
               <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
