@@ -1,37 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
+import { Achievement } from '@/constants/achivemement';
 
-const AchievementBadge = ({
-  title = 'First Achievement',
-  description = 'play first game and win with',
-  points = 10,
-  progress = 75,
-  xpReward = 1000,
-  iconUrl = '/api/placeholder/80/80',
+const AchievementBadge: React.FC<Achievement> = ({
+  title,
+  description,
+  points,
+  progress,
+  xpReward,
+  iconUrl,
 }) => {
   return (
-    <div className="relative flex h-[132px] w-[423px] items-center rounded-3xl bg-gray-500 p-4">
-      {/* Icon Container */}
+    <div className="relative flex h-[150px] w-full items-center rounded-3xl bg-[#FFFF00] bg-opacity-[40%] p-4 transition-transform duration-300 hover:scale-105 gap-5 border border-blue-500">
       <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-blue-500">
-        <img src={iconUrl} alt="Icon" className="size-16 object-cover" />
+        <img 
+          src={iconUrl} 
+          alt="Achievement Icon" 
+          className="size-full object-cover" 
+          aria-label={title} 
+        />
       </div>
 
-      {/* Content Container */}
       <div className="ml-4 grow">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold italic text-white">{title}</h2>
+          <h2 className="text-2xl font-bold italic text-blue-500">{title}</h2>
           <span className="font-bold text-blue-400">+{xpReward} xp</span>
         </div>
 
-        {/* Description */}
-        <div className="mb-2 text-gray-300">
+        <div className="mb-2 text-gray-700">
           {description} {points} points
         </div>
 
-        {/* Progress Bar */}
         <div className="h-3 overflow-hidden rounded-full bg-gray-700">
           <div
-            className="h-full rounded-full bg-blue-500 transition-all duration-300"
+            className={`h-full rounded-full transition-all duration-300 ${progress === 100 ? 'bg-green-500' : 'bg-blue-500'}`}
             style={{ width: `${progress}%` }}
           />
         </div>

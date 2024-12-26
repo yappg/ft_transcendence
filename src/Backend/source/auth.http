@@ -73,7 +73,7 @@ POST http://localhost:8080/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "bxbx",
+    "username": "kadigh",
     "password": "AbcdEfgh"
 }
 
