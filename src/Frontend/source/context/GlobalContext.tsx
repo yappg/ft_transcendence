@@ -226,7 +226,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     fetchChats();
     fetchPlayerMatches();
     fetchPlayerLeaderBoard();
-  }, [user?.username]);
+  }, [userId]);
 
   return (
     <UserContext.Provider

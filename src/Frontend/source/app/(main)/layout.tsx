@@ -4,7 +4,6 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
-import { UserProvider } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
 import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
@@ -19,8 +18,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <UserProvider>
-      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient sm:p-8 dark:bg-linear-gradient-dark">
+      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] md:gap-[8px] overflow-auto bg-linear-gradient md:p-8 dark:bg-linear-gradient-dark">
         <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
@@ -50,7 +48,6 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
         {children}
       </div>
     </div>
-    </UserProvider>
   );
 }
 
