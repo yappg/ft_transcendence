@@ -31,7 +31,7 @@ urlpatterns = [
     path('prometheus/', include('django_prometheus.urls')),
 
     #all entrys go to one point
-    path('api/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('game/', include('game.urls')),
     path('relations/', include('relations.urls')),
@@ -48,3 +48,4 @@ urlpatterns = [
 # django would take resp of serving media files only in dev mode, and in production NGINX should serve them
 if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

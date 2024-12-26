@@ -1,82 +1,24 @@
 ############--------_JTW_--------------############
 
 
-POST http://localhost:8080/api/JWT/token/
-Content-Type: application/json
-
-{
-    "username": "xxx",
-    "password": "csfdsgopxabcvbdfgdfg"
-}
-
-########---------signup------_#########
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "User0",
-    "email": "User0@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-###   ###   ##  ## ###  ##  ## ### ##
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "UserX",
-    "email": "UserX@gmail.com",
-    "password": "csfdsgopxabcvbdfgdfg",
-    "password2": "csfdsgopxabcvbdfgdfg"
-}
-
-### ### ####  ### ###  #####----  ----
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "hind",
-    "email": "hindo@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-###  ####   ###  ### ## ####  ###
-
-POST http://localhost:8080/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "SadUser",
-    "email": "SadUser@gmail.com",
-    "password": "csfdsgbcvbdfgdfg",
-    "password2": "csfdsgbcvbdfgdfg"
-}
-##########-----LIST----############ 
-
-GET http://localhost:8080/relations/notifications/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjg1MDI0LCJpYXQiOjE3MzM1OTg2MjQsImp0aSI6IjczMDQwYWE2ZTU2MTQ4YTJhMGY5M2Q1YjQ2OTk3NjFiIiwidXNlcl9pZCI6NH0.PzR58hnXJmIFW0vNFqFW9TJXGapkZLdR8Ffla0WIVsQ
+GET http://localhost:8080/accounts/list/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
 
 ########
 
-GET http://localhost:8080/api/users/5
+GET http://localhost:8080/accounts/users/5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcyOTA0LCJpYXQiOjE3MzMwNzExMDQsImp0aSI6IjAxNjE3MmUyZjdjNTRmMTQ4ZjdmMzBmMWY4Y2U4YzcxIiwidXNlcl9pZCI6NX0.F6CCQG6ruEwRAgVzrMlMzin0Krc00aPbe0BS5As-3dA
 
 
 
 # #########-----me---- ####
-# backend   | Not Found: /api/users/me/
-# backend   | HTTP GET /api/users/me/ 404 [0.03, 172.18.0.1:64634]
+# backend   | Not Found: /accounts/users/me/
+# backend   | HTTP GET /accounts/users/me/ 404 [0.03, 172.18.0.1:64634]
 #######
 
 
-GET http://localhost:8080/api/users/me
+GET http://localhost:8080/accounts/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDcwNDg1LCJpYXQiOjE3MzMwNjg2ODUsImp0aSI6IjY1YzYxOGUzYTEyNDRjYzU4NGFlNTBmOWEzMDk5YjkxIiwidXNlcl9pZCI6NX0.njthXe5ZdAMp9_W1WgIfnbwWZj1tI04O9hq3uJ1Jai4
-
-
-
 
 
 ###-----------FRIENDS------##############
@@ -115,9 +57,11 @@ Content-Type: application/json
 {
     "sender":"ali"
 }
-### ## # 
+### ## #
 
 
+POST http://localhost:8080/accounts/JWT/token/
+Content-Type: application/json
 
 
 
@@ -132,8 +76,8 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/api/JWT/token/refresh
-# 
+POST http://localhost:8080/accounts/JWT/token/refresh
+#
 
 ############--------------CHAT-------###############
 
@@ -146,7 +90,8 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 Content-Type: application/json
 
 {
-    "senders":"mery"
+    "senders":"ali"
+
 }
 
 ######
