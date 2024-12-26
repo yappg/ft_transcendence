@@ -1,31 +1,65 @@
 import { OnlineGameManager } from './pixi';
 
-class SocketManager {
-  socket: WebSocket;
-  pixiManager: OnlineGameManager;
-  sendData: any;
+class SocketManager extends WebSocket {
+  // socket: WebSocket;
+  pixiManager!: OnlineGameManager;
 
-  constructor(url: string, onlinegameanager: OnlineGameManager) {
-    this.socket = new WebSocket(url);
-    this.pixiManager = onlinegameanager;
+  constructor(url: string) {
+    super(url);
 
-    this.socket.onopen = () => {
+    this.onopen = () => {
       console.log('WebSocket connection established');
     };
 
-    this.socket.onmessage = (event) => {
+    this.onmessage = (event) => {
       const data = JSON.parse(event.data);
       this.handleSocketMessage(data);
     };
 
-    this.socket.onclose = () => {
+    this.onclose = () => {
       console.log('WebSocket connection closed');
     };
 
-    this.socket.onerror = (error) => {
+    this.onerror = (error) => {
       console.log('WebSocket error:', error);
     };
   }
+
+  setPixiManager(manager: OnlineGameManager) {
+    this.pixiManager = manager;
+  }
+
+  sendData(data: any) {
+    this.send(JSON.stringify({ data }));
+  }
+  
+  handleSocketMessage(data: any) {
+    switch (data.type) {
+      case 'acknowledgeOpponent':
+      //saving game id and opponent data in the gamne context
+      case 'gameUpdate':
+        this.pixiManager.updateToppaddlePosition(data);
+        this.pixiManager.updateBallPosition(data);
+        break;
+      case 'scoreUpdate':
+        this.pixiManager.updateScore(data);
+        break;
+      case 'gameState':
+        this.pixiManager.game.gameState = data.state;
+        this.pixiManager.game.setGameState(data.state);
+        break;
+      default:
+        break;
+    }
+  }
+
+  close() {
+    this.close();
+  }
+}
+
+export default SocketManager;
+
 
   //format of socket sending messages:
   // {
@@ -42,7 +76,7 @@ class SocketManager {
   // {
   //   gameId: string,
   //   x: number,
-  //   }
+  //  }
 
   //format of socket recieving messages:
   // {
@@ -56,7 +90,7 @@ class SocketManager {
   //   opponent: {
   //     id: string,
   //     username: string,
-  //   },
+  // },
 
   // data format for 'gameUpdate' message:
   // {
@@ -67,7 +101,7 @@ class SocketManager {
   //   topRacket: {
   //     x: number,
   //   },
-  //   }
+  // }
 
   // data format for 'scoreUpdate' message:
   // {
@@ -76,27 +110,7 @@ class SocketManager {
   //   player2: number,
   // },
 
-  handleSocketMessage(data: any) {
-    switch (data.type) {
-      case 'acknowledgeOpponent':
-      //saving game id and opponent data in the gamne context
-      case 'gameUpdate':
-        this.pixiManager.updateGameState(data);
-        break;
-      case 'scoreUpdate':
-        this.pixiManager.updateScores(data);
-        break;
-      case 'gameState':
-        this.pixiManager.handleGameState(data);
-        break;
-      default:
-        break;
-    }
-  }
-
-  close() {
-    this.socket.close();
-  }
-}
-
-export default SocketManager;
+  // data format for 'gameState' message:
+  // {
+  //   state: 'start' | 'over' | 'waiting' | 'paused',
+  // }
