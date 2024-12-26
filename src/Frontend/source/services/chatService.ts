@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Chat, Message, User } from '@/constants/chat';
 
 const CHAT_BASE_URL = 'http://localhost:8080/chat';
-const USER_BASE_URL = 'http://localhost:8080/api';
+const USER_BASE_URL = 'http://localhost:8080/accounts';
 
 const userApi = axios.create({
   baseURL: USER_BASE_URL,
@@ -28,7 +28,7 @@ class ChatService {
   }
 
   async createWebSocketConnection(
-    chatId: number, 
+    chatId: number,
     onMessage: (message: any) => void
   ): Promise<WebSocket> {
     if (this.sockets.has(chatId)) {
