@@ -5,7 +5,7 @@ import React from 'react';
 import GameTable from '@/components/game/game-arena';
 import { useSearchParams } from 'next/navigation';
 import { GameProvider } from '@/context/GameContext';
-import ScoreTable from '@/components/game/game-chat';
+import ScoreTable from '@/components/game/game-score';
 
 const GameArena = () => {
   const searchParams = useSearchParams();
@@ -16,7 +16,7 @@ const GameArena = () => {
     <GameProvider>
       <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-auto flex-col xl:gap-8 xl:px-8 lg:flex-row">
         <div className="h-[100px] lg:h-full w-full xl:w-auto flex justify-center items-center">
-          <ScoreTable></ScoreTable>
+          <ScoreTable mode={mode || ''} map={map || ''}></ScoreTable>
         </div>
         {/* game table */}
         <div className="w-full h-full flex items-center justify-center">

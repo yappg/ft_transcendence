@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
 import SocketManager from './socket-manager';
+import { User } from '@/context/GlobalContext';
 
 export abstract class PixiManager {
   app: PIXI.Application;
@@ -13,10 +14,11 @@ export abstract class PixiManager {
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
-  gameState: string = 'start';
+  gameState: string = 'waiting';
   screenWidth: number = 0;
   screenHeight: number = 0;
-  movementSpeed: number = 0;
+  ballMovementSpeed: number = 0;
+  waitingText!: PIXI.Text;
   game: any;
   round = 0;
   dx = 1;
@@ -27,7 +29,7 @@ export abstract class PixiManager {
     this.backgroundImage = backgroundImage;
     this.paddleWidth = 0;
     this.game = game;
-    this.game.gameState = 'start';
+    this.game.gameState = 'waiting';
     this.initWindow(container).then(() => {});
   }
 
@@ -51,8 +53,8 @@ export abstract class PixiManager {
     this.drawGameElements();
   }
 
-  abstract updateTopPaddlePosition(): void;
-  abstract updateBallPosition(x?: number, y?: number): void;
+  abstract updatePaddlePosition(): void;
+  abstract updateBallPosition(data?: {x: number, y: number}): void;
 
   removeGameElements() {
     this.app.stage.removeChild(this.topRacket);
@@ -68,7 +70,7 @@ export abstract class PixiManager {
       align: 'center',
     });
 
-    const gameOverText = new PIXI.Text('Game\nOver', style);
+    const gameOverText = new PIXI.Text({ text: 'Game\nOver', style: style });
 
     // Position the text in the center of the screen
     gameOverText.anchor.set(0.5);
@@ -112,13 +114,14 @@ export abstract class PixiManager {
 
     this.app.stage.addChild(this.topRacket);
     this.app.stage.addChild(this.bottomRacket);
-    this.app.stage.addChild(this.ball);
     this.app.ticker.add(() => {
+      if (this.game.gameState === 'waiting') {
+        this.displayWaitingText();
+      }
       if (this.game.gameState === 'start') {
         if (this.round < 3) {
           this.updateBallPosition();
-          this.updateBottomPaddlePosition();
-          this.updateTopPaddlePosition();
+          this.updatePaddlePosition();
         } else {
           this.game.gameState = 'over';
           this.game.setGameState('over');
@@ -129,27 +132,34 @@ export abstract class PixiManager {
     });
   }
 
-  updateBottomPaddlePosition() {
-    const bottomRacket = this.bottomRacket;
-    const app = this.app;
+  displayWaitingText() {
+    if (!this.app.stage.children.includes(this.waitingText)) {
+      const style = new PIXI.TextStyle({
+        fontFamily: 'Days One',
+        fontSize: 64,
+        fill: '#ff0000',
+        align: 'center',
+      });
 
-    if (!bottomRacket || !app) return;
+      this.waitingText = new PIXI.Text({ text: 'Waiting', style: style });
 
-    const baseScreenWidth = 1920; // Reference screen width
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
+      this.waitingText.anchor.set(0.5);
+      this.waitingText.x = this.screenWidth / 2;
+      this.waitingText.y = this.screenHeight / 2;
 
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
-      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
-      console.log(`Moving leftB: ${bottomRacket.x}`);
+      this.app.stage.addChild(this.waitingText);
     }
+    this.handleWaitingState();
+  }
 
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
-      bottomRacket.x = Math.min(
-        this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
-      );
-      console.log(`Moving rightB: ${bottomRacket.x}`);
-    }
+  async handleWaitingState() {
+    const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
+    sleepmoment.then(() => {
+      this.app.stage.removeChild(this.waitingText);
+      this.app.stage.addChild(this.ball);
+      this.game.gameState = 'start';
+      this.game.setGameState('start');
+    });
   }
 
   createBall(x: number, y: number, radius: number, color: number) {
@@ -191,10 +201,25 @@ export abstract class PixiManager {
 }
 
 export class LocalGameManager extends PixiManager {
-  updateTopPaddlePosition() {
+  updatePaddlePosition() {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 1920;
     const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        this.screenWidth - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+    }
 
     if (
       (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
@@ -202,7 +227,6 @@ export class LocalGameManager extends PixiManager {
       !this.keysPressed.has('D')
     ) {
       this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
-      console.log(`Moving leftT: ${this.topRacket.x}`);
     }
 
     if (
@@ -214,25 +238,24 @@ export class LocalGameManager extends PixiManager {
         this.screenWidth - this.topRacket.width,
         this.topRacket.x + movementSpeed
       );
-      console.log(`Moving rightT: ${this.topRacket.x}`);
     }
   }
   updateBallPosition() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 6;
+    const baseSpeed = 4;
 
     const baseScreenDiagonal = Math.sqrt(800 ** 2 + 1080 ** 2);
     const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
 
-    this.movementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
+    this.ballMovementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
 
-    this.ball.x += this.dx * this.movementSpeed;
-    this.ball.y += this.dy * this.movementSpeed;
+    this.ball.x += this.dx * this.ballMovementSpeed;
+    this.ball.y += this.dy * this.ballMovementSpeed;
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
       this.dx *= -1;
-      this.ball.x += this.dx * this.movementSpeed;
+      this.ball.x += this.dx * this.ballMovementSpeed;
     }
 
     if (
@@ -242,7 +265,7 @@ export class LocalGameManager extends PixiManager {
       this.ball.x <= this.topRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * this.movementSpeed;
+      this.ball.y += this.dy * this.ballMovementSpeed;
     }
 
     if (
@@ -252,7 +275,7 @@ export class LocalGameManager extends PixiManager {
       this.ball.x <= this.bottomRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * this.movementSpeed;
+      this.ball.y += this.dy * this.ballMovementSpeed;
     }
     if (this.ball.y <= 0 || this.ball.y >= this.screenHeight) {
       const score1 = this.game.GameScore[0];
@@ -268,7 +291,16 @@ export class LocalGameManager extends PixiManager {
       }
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
+        this.app.stage.removeChild(this.ball);
+        this.ball.x = this.screenWidth / 2;
+        this.ball.y = this.screenHeight / 2;
+        this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
+        this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
         this.round += 1;
+        if (this.round < 3) {
+          this.game.gameState = 'waiting';
+          this.game.setGameState('waiting');
+        }
       }
       this.ball.x = this.screenWidth / 2;
       this.ball.y = this.screenHeight / 2;
@@ -277,9 +309,32 @@ export class LocalGameManager extends PixiManager {
 }
 
 export class OnlineGameManager extends PixiManager {
-  private socketManager!: SocketManager;
-  
-  updateTopPaddlePosition(): void {
+  private socketManager: SocketManager;
+  private user: User;
+
+  constructor(
+    container: HTMLElement,
+    backgroundImage: string,
+    game: any,
+    socketManager: any,
+    user: User
+  ) {
+    super(container, backgroundImage, game);
+    this.socketManager = socketManager;
+    this.socketManager.setPixiManager(this);
+    this.user = user;
+  }
+
+  // case 'gameUpdate':
+  //   this.pixiManager.updateGameState(data);
+  //   break;
+  // case 'scoreUpdate':
+  //   this.pixiManager.updateScores(data);
+  //   break;
+  // case 'gameState':
+  //   this.pixiManager.handleGameState(data);
+
+  updateBottompaddlePosition() {
     const bottomRacket = this.bottomRacket;
     const app = this.app;
 
@@ -290,7 +345,8 @@ export class OnlineGameManager extends PixiManager {
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
-      console.log(`Moving leftB: ${bottomRacket.x}`);
+      //send the new position to the socket
+      this.socketManager.sendData({ x: bottomRacket.x });
     }
 
     if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
@@ -298,11 +354,45 @@ export class OnlineGameManager extends PixiManager {
         this.screenWidth - bottomRacket.width,
         bottomRacket.x + movementSpeed
       );
-      console.log(`Moving rightB: ${bottomRacket.x}`);
+      this.socketManager.sendData({ x: bottomRacket.x });
     }
   }
+  updateToppaddlePosition(x: number) {
+    this.topRacket.x = x;
+  }
 
-  updateBallPosition(): void {
-    // Implementation for online game
+  updatePaddlePosition() {
+    this.updateBottompaddlePosition();
+
+    // const baseScreenWidth = 1920;
+    // const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
+
+    // if (
+    //   (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
+    //   !this.keysPressed.has('d') &&
+    //   !this.keysPressed.has('D')
+    // ) {
+    //   this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
+    // }
+
+    // if (
+    //   (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
+    //   !this.keysPressed.has('a') &&
+    //   !this.keysPressed.has('A')
+    // ) {
+    //   this.topRacket.x = Math.min(
+    //     this.screenWidth - this.topRacket.width,
+    //     this.topRacket.x + movementSpeed
+    //   );
+    // }
+  }
+
+  updateBallPosition(data?: {x: number, y: number}): void {
+    this.ball.x = data?.x || this.ball.x;
+    this.ball.y = data?.y || this.ball.y;
+  }
+
+  updateScore(data: { score: { mine: number; opponent: number } }) {
+    this.game.GameScore = [data.score.mine, data.score.opponent];
   }
 }

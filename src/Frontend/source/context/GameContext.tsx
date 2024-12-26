@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
+import { User } from './GlobalContext';
 
 export interface RoundsProps {
   round: number;
@@ -7,27 +8,27 @@ export interface RoundsProps {
 }
 
 export interface GameContextType {
+  GameId: number;
+  setGameId: (id: number) => void;
   GameScore: [number, number];
   Rounds: RoundsProps[];
-  GameState: 'start' | 'over' | 'round' | 'pause';
+  GameState: 'start' | 'over' | 'round' | 'waiting';
   gameMode: 'local' | 'online';
   gameMap: 'earth' | 'water' | 'fire' | 'air' | 'simple';
   setRounds: (rounds: (prevRounds: RoundsProps[]) => RoundsProps[]) => void;
   setGameScore: (score: [number, number]) => void;
-  setGameState: (state: 'start' | 'over' | 'round' | 'pause') => void;
+  setGameState: (state: 'start' | 'over' | 'round' | 'waiting') => void;
   setGameMode: (mode: 'local' | 'online') => void;
   setGameMap: (map: 'earth' | 'water' | 'fire' | 'air' | 'simple') => void;
-  // GameOver: boolean,
-  // setGameOver: (over: boolean) => void,
+  opponent: User | null;
+  setOpponent: (opponent: User | null) => void;
   // GameWinner: string | null,
   // setGameWinner: (winner: string | null) => void,
-  // GameRound: number,
-  // setGameRound: (round: number) => void,
-  // GameRoundWinner: string | null,
-  // setGameRoundWinner: (winner: string | null) => void,
 }
 
 const GameContext = createContext<GameContextType>({
+  GameId: 0,
+  setGameId: () => {},
   GameScore: [0, 0],
   setGameScore: () => {},
   Rounds: [],
@@ -38,29 +39,26 @@ const GameContext = createContext<GameContextType>({
   setGameMode: () => {},
   gameMap: 'simple',
   setGameMap: () => {},
-  // GameOver:false,
-  // setGameOver: () => {},
+  opponent: null,
+  setOpponent: () => {},
   // GameWinner:null,
   // setGameWinner: () => {},
-  // GameRound:0,
-  // setGameRound: () => {},
-  // GameRoundWinner:null,
-  // setGameRoundWinner: () => {},
 });
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [GameId, setGameId] = useState<number>(0);
   const [GameScore, setGameScore] = useState<[number, number]>([0, 0]);
   const [Rounds, setRounds] = useState<RoundsProps[]>([]);
-  const [GameState, setGameState] = useState<'start' | 'over' | 'round' | 'pause'>('start');
+  const [GameState, setGameState] = useState<'start' | 'over' | 'round' | 'waiting'>('waiting');
   const [gameMode, setGameMode] = useState<'local' | 'online'>('local');
   const [gameMap, setGameMap] = useState<'earth' | 'water' | 'fire' | 'air' | 'simple'>('simple');
-  // const [GameOver, setGameOver] = useState<boolean>(false);
+  const [opponent, setOpponent] = useState<User | null>(null);
   // const [GameWinner, setGameWinner] = useState<string | null>(null);
-  // const [GameRound, setGameRound] = useState<number>(0);
-  // const [GameRoundWinner, setGameRoundWinner] = useState<string | null>(null);
   return (
     <GameContext.Provider
       value={{
+        GameId,
+        setGameId,
         setGameScore,
         GameScore,
         Rounds,
@@ -71,14 +69,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setGameMode,
         gameMap,
         setGameMap,
-        // setGameOver,
-        // GameOver,
+        opponent,
+        setOpponent,
         // setGameWinner,
         // GameWinner,
-        // setGameRound,
-        // GameRound,
-        // setGameRoundWinner,
-        // GameRoundWinner,
       }}
     >
       {children}
