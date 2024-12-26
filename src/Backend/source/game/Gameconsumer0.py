@@ -44,7 +44,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         #TODO ths two lines are temporary must be deleted later
         self.profile.status = 'waiting'
         await database_sync_to_async(self.profile.save)()
-        
 
         print(f'\n{GREEN}[User Profile {self.profile.status}]{RESET}\n')
         if self.profile.status == 'waiting':
