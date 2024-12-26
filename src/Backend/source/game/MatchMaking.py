@@ -17,18 +17,16 @@ class MatchMakingSystem:
         self.players_queue: Dict[int, GamePlayer] = {}
         self.games: Dict[int, PingPongGame] = {}
         self._matchmaking_task = None
-        self._channel_layer = get_channel_layer()
+        self.channel_layer = get_channel_layer()
         self._running = False
 
     async def start(self):
-        """Start the matchmaking system"""
         if not self._running:
             self._running = True
             self._matchmaking_task = asyncio.create_task(self.matchmaking_loop())
             print(f'{RED_BOLD}Matchmaking System Started{RESET}')
 
     async def stop(self):
-        """Stop the matchmaking system"""
         if self._running:
             self._running = False
             if self._matchmaking_task:
@@ -41,11 +39,10 @@ class MatchMakingSystem:
             print(f'{RED_BOLD}Matchmaking System Stopped{RESET}')
 
     async def matchmaking_loop(self):
-        """Main matchmaking loop"""
         i = 0
         while self._running:
             try:
-                if i % 10 == 0:
+                if i % 100 == 0:
                     print('Matchmaking Loop')
                     print(f'Players in Queue: {len(self.players_queue)}')
                     print(f'Players indices in Queue: {self.players_queue.keys()}')
@@ -67,7 +64,8 @@ class MatchMakingSystem:
 
                         del self.players_queue[player1_id]
                         del self.players_queue[player2_id]
-
+                        await self.channel_layer.group_add(f'game_{game_model.id}', player1.channel_name)
+                        await self.channel_layer.group_add(f'game_{game_model.id}', player2.channel_name)
                         await self.notify_players(player1, player2, game_model.id)
                     except Exception as e:
                         print(f'Error creating game: {str(e)}')
@@ -95,7 +93,7 @@ class MatchMakingSystem:
 
     async def notify_players(self, player1, player2, game_id):
         """Notify players about the game match"""
-        await self._channel_layer.send(
+        await self.channel_layer.send(
             player1.channel_name,
             {
                 'type': 'game.found',
@@ -105,7 +103,7 @@ class MatchMakingSystem:
                 'message': "Game found, Get Ready to play!!"
             }
         )
-        await self._channel_layer.send(
+        await self.channel_layer.send(
             player2.channel_name,
             {
                 'type': 'game.found',

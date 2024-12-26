@@ -27,17 +27,17 @@ class Ball:
 
     def reset(self):
         self.position = Vector2D(50, 80)
-        self.velocity = Vector2D(10, 10)# Pixels per second
+        self.velocity = Vector2D(20, 20)# Pixels per second
 
 @dataclass
 class Paddle:
     position: Vector2D
-    width: float = 3.0
-    height: float = 15.0
-    
-    def move(self, new_y: float):
+    width: float = 100.0 #15.0
+    height: float = 3.0
+
+    def move(self, new_x: float):
         # Clamp paddle position within game bounds
-        self.position.y = max(self.height / 2, min(100 - self.height / 2, new_y))
+        self.position.x = max(self.width / 2, min(100 - self.width / 2, new_x))
 
 @dataclass
 class GamePlayer:
@@ -49,28 +49,27 @@ class GamePlayer:
     paddle: Paddle = None
     score: int = 0
 
-
 class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
         self.game_id = game_model_id
-        self.ball = Ball(Vector2D(50, 50), Vector2D(300, 300))
+        self.ball = Ball(Vector2D(50, 50), Vector2D(20, 20))
 
         # Initialize players with paddles at opposite sides
         self.player1 = player1
         self.player1.game_id = game_model_id
         self.player1.status = 'ready'
-        self.player1.paddle = Paddle(Vector2D(5, 50))  # Lower paddle
+        self.player1.paddle = Paddle(Vector2D(50, 5))  # Lower paddle
         self.player2 = player2
         self.player2.game_id = game_model_id
         self.player2.status = 'ready'
-        self.player2.paddle = Paddle(Vector2D(155, 50))  # Upper paddle
+        self.player2.paddle = Paddle(Vector2D(50, 171))  # Upper paddle
 
-        self.game_width = 160
-        self.game_height = 100
+        self.game_width = 100
+        self.game_height = 176
         self.status = 'waiting'  # waiting, playing, finished
         self.winner = None
-        self.winning_score = 7
+        self.winning_score = 1
 
     def start_game(self):
         """Start the game if both players are ready"""
@@ -80,6 +79,9 @@ class PingPongGame:
     def update(self, delta_time: float) -> bool:
         """Update game state. Returns True if the game state changed."""
 
+        print (f'\033[31;1mUpdating game with ID: {self.status}\033[0m')
+        #print ball coordinations
+        print(f'Ball Position: {self.ball.position.x}, {self.ball.position.y}')
         if self.status != 'playing':
             return False
         self.ball.update(delta_time)
@@ -91,38 +93,37 @@ class PingPongGame:
         if self._check_game_end():
             return True            
         return False
-    
+
+    #TODO remove _ from functions
     def _check_collisions(self) -> bool:
-        """Handle collisions between ball and paddles/walls"""
         changed = False
-        
+
         # Wall collisions (top/bottom)
-        if self.ball.position.y <= self.ball.radius or \
-           self.ball.position.y >= self.game_height - self.ball.radius:
-            self.ball.velocity.y *= -1
+        if self.ball.position.x <= self.ball.radius or \
+           self.ball.position.x >= self.game_width - self.ball.radius:
+            self.ball.velocity.x *= -1
             changed = True
 
         # Paddle collisions
-        # Left paddle (player1)
-        if self._check_paddle_collision(self.player1.paddle):
-            self.ball.velocity.x = abs(self.ball.velocity.x)  # Move right
+        # Lower paddle (player1)
+        if self._check_paddle_collision(self.player1.paddle, 'Lower'):
+            self.ball.velocity.y = abs(self.ball.velocity.y)  # Move right
             self._adjust_ball_angle(self.player1.paddle)
             changed = True
-            
-        # Right paddle (player2)
-        elif self._check_paddle_collision(self.player2.paddle):
-            self.ball.velocity.x = -abs(self.ball.velocity.x)  # Move left
+        # Upper paddle (player2)
+        elif self._check_paddle_collision(self.player2.paddle, 'Upper'):
+            self.ball.velocity.y = -abs(self.ball.velocity.y)  # Move left
             self._adjust_ball_angle(self.player2.paddle)
             changed = True
-            
         return changed
-    
-    def _check_paddle_collision(self, paddle: Paddle) -> bool:
+
+    def _check_paddle_collision(self, paddle: Paddle, check) -> bool:
         """Check if ball collides with given paddle"""
-        # Simplified rectangle collision check
-        return (abs(self.ball.position.x - paddle.position.x) < (paddle.width + self.ball.radius) and
-                abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius))
-    
+
+        collosion_x = abs(self.ball.position.x - paddle.position.x) < (paddle.width + self.ball.radius)
+        collosion_y = abs(self.ball.position.y - paddle.position.y) > (paddle.height + self.ball.radius)
+        return collosion_x and collosion_y
+
     def _adjust_ball_angle(self, paddle: Paddle):
         """Adjust ball angle based on where it hits the paddle"""
         relative_intersect_y = (paddle.position.y - self.ball.position.y)
@@ -132,10 +133,9 @@ class PingPongGame:
         speed = math.sqrt(self.ball.velocity.x**2 + self.ball.velocity.y**2)
         self.ball.velocity.x = speed * math.cos(bounce_angle)
         self.ball.velocity.y = speed * math.sin(bounce_angle)
-    
+
     def _check_scoring(self) -> bool:
-        """Check if a point was scored"""
-        if self.ball.position.y <= 0:  # Player 2 scores
+        if self.ball.position.y <= 0: # Player 2 scores
             self.player2.score += 1
             self.ball.reset()
             return True
@@ -191,21 +191,3 @@ class PingPongGame:
             },
             'winner': self.winner.username if self.winner else None
         }
-
-class GameManager:
-
-    async def create_game(self,_player1, _player2, game_model_id: int) -> PingPongGame:
-        """Create a new game and store it"""
-        print(f'Creating game with ID: {game_model_id}')
-        game = PingPongGame(_player1, _player2, game_model_id)
-        self.games.set(game_model_id, game)
-        return game
-
-    def get_game(self, game_id: str) -> Optional[PingPongGame]:
-        """Get a game by its ID"""
-        return self.games.get(game_id)
-
-    def remove_game(self, game_id: str):
-        """Remove a game by its ID"""
-        if self.games.get(game_id):
-            self.games.delete(game_id)
