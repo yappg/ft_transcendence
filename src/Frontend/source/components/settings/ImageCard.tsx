@@ -3,11 +3,9 @@ import Image from 'next/image';
 export const ImageCard = ({
     selectedImage,
     handleImageChange,
-    handleDeleteImage,
     profileError
 } : {
     selectedImage: string | null,
-    handleDeleteImage: () => void,
     handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     profileError: string,
 }) => {
@@ -38,10 +36,4 @@ export const ImageCard = ({
       className='hidden'
       onChange={handleImageChange}
     />
-    <button
-      className='py-2 px-4 bg-red-600 text-white rounded-md'
-      onClick={handleDeleteImage}
-    >
-      Delete
-    </button>
   </div>)}

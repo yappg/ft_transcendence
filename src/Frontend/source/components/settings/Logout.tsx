@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { TbLogout2 } from "react-icons/tb";
+import { TbLogout2 } from 'react-icons/tb';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/settings/Card';
@@ -39,9 +39,11 @@ const Logout = () => {
     <AlertDialog>
       <AlertDialogTrigger
         asChild
-        className="bg-transparent border-none size-full hover:bg-[#000000] transition-all duration-300 flex items-center justify-center"
+        className=" bg-transparent size-full p-0"
       >
-        <Card title="Logout" Icon={TbLogout2} path="" />
+        <Button className="size-full">
+          <Card title="Logout" Icon={TbLogout2}  path="" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-[#28AFB0] dark:bg-[#C1382C]">
         <AlertDialogHeader>

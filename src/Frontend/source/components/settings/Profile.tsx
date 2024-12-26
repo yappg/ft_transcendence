@@ -78,7 +78,6 @@ export default function ProfileInfo() {
     }
   };
   const handleClick = () => {
-    console.log(profileState);
     const Updateschema = z.object({
       fullname: z.string().min(3, 'Full name must be at least 3 characters'),
       password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -121,7 +120,7 @@ export default function ProfileInfo() {
     console.log(profile);
   }, [profile]);
   return (
-    <div className="size-full p-10">
+    <div className="size-full py-8 px-6 lg:p-10">
       <div className="custom-scrollbar-container overflow-y-scroll">
       <div className="gap-10">
         <div className="w-full h-[12%] flex items-center">
@@ -131,10 +130,6 @@ export default function ProfileInfo() {
         </div>
         <div className="w-full 2xl:px-20 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
           <ImageCard
-            handleDeleteImage={() => {
-              updateState('selectedImage', null);
-              // setProfileError('');
-            }}
             selectedImage={profileState.ProfilePhoto1}
             handleImageChange={handleImageChange}
             profileError={profileState.profileError}
@@ -215,7 +210,7 @@ export default function ProfileInfo() {
             <div className="w-full h-[50%] 2xl:pl-16 xl:pl-10 flex items-start justify-between flex-col">
               <p className="font-coustard text-lg text-white opacity-[80%]">
                 Two Factor Authentication protects your account by <br />
-                requiring an additional ode when you log in on a new device.<br />
+                requiring an additional code when you log in on a new device.<br />
               </p>
               <div className="w-full h-[50%] flex items-center justify-start flex-row gap-5">
                 <h1 className="font-coustard text-xl text-white">Activate 2FA</h1>
