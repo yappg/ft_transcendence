@@ -1,76 +1,36 @@
+'use client';
 import React from 'react';
-import Bracket from 'tournament-bracket';
-
-// import TournamentTree from './TournamentTree';
-
-// declare module 'tournament-bracket' {
-//   import { FC } from 'react';
-
-//   interface Team {
-//     name: string;
-//   }
-
-//   interface Seed {
-//     id: number;
-//     teams: Team[];
-//     winner: string;
-//   }
-
-//   interface Round {
-//     title: string;
-//     seeds: Seed[];
-//   }
-
-//   interface BracketProps {
-//     rounds: Round[];
-//   }
-
-//   const Bracket: FC<BracketProps>;
-//   export default Bracket;
-// }
-
-// const TournamentTree = ({ matches }: { matches: any }) => {
-//   return (
-//     <div>
-//       <BracketTree rounds={matches} />
-//     </div>
-//   );
-// };
+import Tournament from './tournament';
 
 const App = () => {
-  const matches = [
-    {
-      title: 'Semi Finals',
-      seeds: [
-        {
-          id: 1,
-          teams: [{ name: 'Player 1' }, { name: 'Player 2' }],
-          winner: 'Player 1',
-        },
-        {
-          id: 2,
-          teams: [{ name: 'Player 3' }, { name: 'Player 4' }],
-          winner: 'Player 3',
-        },
-      ],
-    },
-    {
-      title: 'Final',
-      seeds: [
-        {
-          id: 3,
-          teams: [{ name: 'Player 1' }, { name: 'Player 3' }],
-          winner: 'Player 1',
-        },
-      ],
-    },
+  // Mock images for players (can be replaced with backend data)
+  const playerImages = [
+    './Avatar.svg',
+    './Avatar.svg',
+    './logo.svg',
+    './logo.svg',
   ];
-  // console.log(bracket);
+
+  // Function to create a single-elimination tree dynamically
+  const createTree = (players: any): { data: { player: string }; right?: any; left?: any } => {
+    if (players.length === 1) {
+      // Base case: single player as winner
+      return { data: { player: players[0] } };
+    }
+
+    const mid = Math.floor(players.length / 2);
+    return {
+      data: { player: 'Winner' },
+      right: createTree(players.slice(0, mid)), // Right subtree
+      left: createTree(players.slice(mid)), // Left subtree
+    };
+  };
+
+  const myTree = createTree(playerImages);
 
   return (
-    <div>
-      <h1>Tournament Bracket</h1>
-      <Bracket rounds={matches} />
+    <div className="flex justify-center items-center bg-linear-gradient dark:bg-linear-gradient-dark h-screen w-full">
+      <Tournament myTree={myTree} />
     </div>
   );
 };

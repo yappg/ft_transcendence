@@ -36,7 +36,10 @@ class SocketManager extends WebSocket {
   handleSocketMessage(data: any) {
     switch (data.type) {
       case 'acknowledgeOpponent':
-      //saving game id and opponent data in the gamne context
+        this.pixiManager.game.gameId = data.gameId;
+        this.pixiManager.game.opponent = data.opponent;
+        this.pixiManager.game.setGameId(data.gameId);
+        this.pixiManager.game.setOpponent(data.opponent);
       case 'gameUpdate':
         this.pixiManager.updateToppaddlePosition(data);
         this.pixiManager.updateBallPosition(data);

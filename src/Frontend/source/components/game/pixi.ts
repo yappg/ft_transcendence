@@ -72,7 +72,6 @@ export abstract class PixiManager {
 
     const gameOverText = new PIXI.Text({ text: 'Game\nOver', style: style });
 
-    // Position the text in the center of the screen
     gameOverText.anchor.set(0.5);
     gameOverText.x = this.screenWidth / 2;
     gameOverText.y = this.screenHeight / 2;
@@ -310,29 +309,20 @@ export class LocalGameManager extends PixiManager {
 
 export class OnlineGameManager extends PixiManager {
   private socketManager: SocketManager;
-  private user: User;
+  private user: User | null;
 
   constructor(
     container: HTMLElement,
     backgroundImage: string,
     game: any,
     socketManager: any,
-    user: User
+    user: User | null
   ) {
     super(container, backgroundImage, game);
     this.socketManager = socketManager;
     this.socketManager.setPixiManager(this);
     this.user = user;
   }
-
-  // case 'gameUpdate':
-  //   this.pixiManager.updateGameState(data);
-  //   break;
-  // case 'scoreUpdate':
-  //   this.pixiManager.updateScores(data);
-  //   break;
-  // case 'gameState':
-  //   this.pixiManager.handleGameState(data);
 
   updateBottompaddlePosition() {
     const bottomRacket = this.bottomRacket;
@@ -345,7 +335,6 @@ export class OnlineGameManager extends PixiManager {
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
-      //send the new position to the socket
       this.socketManager.sendData({ x: bottomRacket.x });
     }
 
@@ -363,28 +352,6 @@ export class OnlineGameManager extends PixiManager {
 
   updatePaddlePosition() {
     this.updateBottompaddlePosition();
-
-    // const baseScreenWidth = 1920;
-    // const movementSpeed = (this.screenWidth / baseScreenWidth) * 15;
-
-    // if (
-    //   (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
-    //   !this.keysPressed.has('d') &&
-    //   !this.keysPressed.has('D')
-    // ) {
-    //   this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
-    // }
-
-    // if (
-    //   (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
-    //   !this.keysPressed.has('a') &&
-    //   !this.keysPressed.has('A')
-    // ) {
-    //   this.topRacket.x = Math.min(
-    //     this.screenWidth - this.topRacket.width,
-    //     this.topRacket.x + movementSpeed
-    //   );
-    // }
   }
 
   updateBallPosition(data?: {x: number, y: number}): void {
