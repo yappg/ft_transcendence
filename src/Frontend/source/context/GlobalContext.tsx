@@ -6,6 +6,7 @@ import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
+import {Achievement} from '@/constants/achivemement';
 import { LeaderBoard } from '@/constants/LeaderBoard';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
@@ -70,6 +71,7 @@ interface UserContextType {
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
   PlayerMatches: User[] | null;
   PlayerLeaderBoard: User[] | null;
+  achievements: Achievement[] | null;
 }
 
 interface UserProfile extends User {
@@ -78,12 +80,7 @@ interface UserProfile extends User {
   totalWins: number;
   totalGames: number;
 }
-
-const userService = {
-  // async getUserDetailsByUsername(username: string): Promise<User> {
-  //   const response = await userApi.get(`/user-profile/}`);
-  //   return response.data;
-  // },
+ const userService = {
 
   async getCurrentUserId(): Promise<User> {
     const response = await userApi.get(`/user-profile/`);
@@ -101,6 +98,7 @@ const userService = {
     const response = await userApi.get(`/leaderboard/`);
     return response.data;
   },
+
 };
 
 const UserContext = createContext<UserContextType>({
@@ -121,7 +119,7 @@ const UserContext = createContext<UserContextType>({
   setNotifications: () => {},
   setNotificationCount: () => {},
   PlayerMatches: null,
-  PlayerLeaderBoard: null
+  PlayerLeaderBoard: null,
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
@@ -232,11 +230,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     }
   };
 
+
   useEffect(() => {
     fetchCurrentUserDetails();
     fetchPlayers();
-    fetchNotifications();
-    fetchChats();
     fetchNotifications();
     fetchChats();
     fetchPlayerMatches();
