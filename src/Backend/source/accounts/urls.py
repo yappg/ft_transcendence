@@ -49,6 +49,7 @@ urlpatterns = [
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
 # user-management
+    path('users/me/update/', UpdateUserInfos.as_view(), name='UpdateInfos'),
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
@@ -65,8 +66,6 @@ urlpatterns = [
 # search views
     path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
     # path ('search-friends', Search)
-
-
 ]
 # TODO auth with Oauth username And Vice #########
 
@@ -80,5 +79,5 @@ urlpatterns = [
     # path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
 
 # update user details
-    # path('users/me/update/', UpdateUserInfos.as_view(), name='playerUpdate'),
 
+# access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NTAzODkwLCJpYXQiOjE3MzUxNDM4OTAsImp0aSI6IjdmZTAwM2E1ODNhNjQ5ZTZiYjRiNDNlZDg3Nzg0MGQyIiwidXNlcl9pZCI6M30.BCsu8AEappIOWoofnZsCQuFHxV0zpgvqG-rDrDKaNkE;csrftoken=H1caEQ3oab7WsHdhix1I09vDNWjBlNUi;refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczNTQwMzA5MCwiaWF0IjoxNzM1MTQzODkwLCJqdGkiOiJiMzRlYTM3ZWViNTA0MDA1OTVkN2JhMTgxNmQ3NWRhMyIsInVzZXJfaWQiOjN9.ND9X_FlUHIDPJPtORHgy875HyGjqVudlQvey-YUiJmg
