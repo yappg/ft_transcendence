@@ -6,7 +6,7 @@ import FriendServices from '@/services/friendServices';
 type FriendRequestCardProps = {
   name: string;
   ProfilePhoto: string;
-  vari: Date;
+  vari: string;
   actions?: JSX.Element[];
   customStyles?: React.CSSProperties;
   onRequestAccepted?: (username: string) => void;

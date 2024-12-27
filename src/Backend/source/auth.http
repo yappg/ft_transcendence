@@ -66,6 +66,17 @@ Content-Type: application/json
     "password2": "thisisapassword"
 }
 
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client8",
+    "email": "client8@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
 ###################### LOGIN ################################################################################################################################################################
 
 ##########
@@ -73,8 +84,8 @@ POST http://localhost:8080/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "kadigh",
-    "password": "AbcdEfgh"
+    "username": "client1",
+    "password": "thisisapassword"
 }
 
 ###################### GET TOKEN ################################################################################################################################################################
