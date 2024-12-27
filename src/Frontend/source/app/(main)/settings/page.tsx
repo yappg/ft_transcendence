@@ -56,7 +56,7 @@ export default function Settings() {
           </div>
           <div className="flex lg:flex-col flex-row items-start justify-start  w-full h-full lg:w-full lg:h-2/3">
             {fields.map((field, index) => (
-              <div className="lg:w-full w-1/4 lg:h-1/6 h-full">
+              <div key={index} className="lg:w-full w-1/4 lg:h-1/6 h-full">
                 <Card key={index} title={field.title} Icon={field.Icon} path={field.path} />
               </div>
             ))}

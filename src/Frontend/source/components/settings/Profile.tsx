@@ -4,6 +4,8 @@ import { Switch } from '@/components/ui/switch';
 import { ImageCard } from './ImageCard';
 import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
+import ProfileInformations from './ProfileInformayions';
+import { SecurityComponent }from './SecurityComponent';
 
 export default function ProfileInfo() {
   const { user } = useUser();
@@ -122,84 +124,9 @@ export default function ProfileInfo() {
   return (
     <div className="size-full py-8 px-6 lg:p-10">
       <div className="custom-scrollbar-container overflow-y-scroll">
-      <div className="gap-10">
-        <div className="w-full h-[12%] flex items-center">
-          <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200 ">
-            Profile Information
-          </h1>
-        </div>
-        <div className="w-full 2xl:px-20 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
-          <ImageCard
-            selectedImage={profileState.ProfilePhoto1}
-            handleImageChange={handleImageChange}
-            profileError={profileState.profileError}
-          />
-
-          <CoverCard
-            coverImage={profileState.coverImage}
-            handleCoverChange={handleCoverChange}
-            coverError={profileState.coverError}
-          />
-        </div>
-        <div className="w-full h-fit 2xl:px-20 py-6 flex flex-wrap 2xl:gap-32 xl:gap-10 lg:gap-7 items-start justify-start px-12">
-          <div className="w-fit flex flex-col gap-4">
-            <label className="text-white text-sm">Username</label>
-            <input
-              type="text"
-              value="username123"
-              disabled
-              className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
-            />
-            <label className="text-white text-sm">Email</label>
-            <input
-              type="email"
-              value="user@example.com"
-              disabled
-              className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
-            />
-          </div>
-
-          <div className="w-fit h-full  flex flex-col gap-4">
-            <label className="text-white text-sm">Display name</label>
-            <input
-              type="text"
-              value={profileState.fullName}
-              onChange={(e) => {
-                updateState('fullName', e.target.value);
-              }}
-              className="py-2 px-4 bg-white text-black rounded-md outline-none"
-            />
-            {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>}
-          </div>
-        </div>
-      </div>
+        <ProfileInformations  user={user}/>
       <div className="h-fit gap-[200px]">
-        <div className="w-full py-6 flex flex-wrap items-center justify-start h-[40%] gap-10">
-          <div className="w-full h-[8%] flex items-center">
-            <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
-              Security
-            </h1>
-          </div>
-          <div className="w-fit flex flex-col gap-4 2xl:px-20 px-12">
-            <label className="text-white text-sm">Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={profileState.password}
-              onChange={(e) => updateState('password', e.target.value)}
-              className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none"
-            />
-            <label className="text-white text-sm">New Password</label>
-            <input
-              type="password"
-              placeholder="Enter your new password"
-              value={profileState.NewPassword}
-              onChange={(e) => updateState('NewPassword', e.target.value)}
-              className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none"
-            />
-            {errors.NewPassword && <p className="text-red-500 text-sm">{errors.NewPassword}</p>}
-          </div>
-        </div>
+        <SecurityComponent user={user}/>
         <div className="flex flex-col w-full h-fit gap-[50px] py-6 justify-between">
           <div className="2xl:w-[50%] h-full flex justify-start flex-col gap-10">
             <div className="w-full h-[12%] flex items-center">
