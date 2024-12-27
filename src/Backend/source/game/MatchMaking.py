@@ -88,11 +88,9 @@ class MatchMakingSystem:
 
     @database_sync_to_async
     def create_game(self, player1, player2):
-        """Create a new game instance in the database."""
         return Game.objects.create(player1=player1, player2=player2)
 
     async def notify_players(self, player1, player2, game_id):
-        """Notify players about the game match"""
         await self.channel_layer.send(
             player1.channel_name,
             {
@@ -113,9 +111,20 @@ class MatchMakingSystem:
                 'message': "Game found, Get Ready to play!!"
             }
         )
+    # async def broadcast_game_state(self, opponent_id, gameId, game):
+    #     # if not self.game:
+    #     #     return 
+    #     # print(f'\n{YELLOW}[Broadcasting {self.user.username}]{RESET}\n')
+    #     print(f"game _ id : {gameId}")
+    #     await self.channel_layer.group_send(
+    #         f'game_{gameId}',
+    #         {
+    #             'type': 'game_update',    
+    #             'game_state': game.get_state(opponent_id)
+    #         }
+    #     )
 
     async def add_player_to_queue(self, player_id, username, channel_name):
-        """Add a player to the matchmaking queue"""
         if player_id in self.players_queue:
             print(f'Player {player_id} already in Queue')
             return
@@ -123,6 +132,7 @@ class MatchMakingSystem:
         self.players_queue[player_id] = GamePlayer(player_id, username, channel_name, None, None)
 
     async def remove_player_from_queue(self, player_id):
-        """Remove a player from the matchmaking queue"""
         if player_id in self.players_queue:
             del self.players_queue[player_id]
+    
+

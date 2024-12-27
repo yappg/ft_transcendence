@@ -84,7 +84,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
                     await self.start_game_loop()
-                    await self.broadcast_game_state()
+                    # await matchmake_system.broadcast_game_state()
             elif action == 'move_paddle':
                 print(self.game)
                 if not self.game or self.game.status != 'playing' :
@@ -95,7 +95,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game:
                     new_x = data.get('position', 50)
                     self.game.move_paddle(self.user.id, new_x)
-                    await self.broadcast_game_state()
+                    # await self.broadcast_game_state()
         except Exception as e:
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
@@ -110,9 +110,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'message': event['message'],
                     'opponent': event['opponent'],
                     'game_id': event['game_id']
-                }
+                } 
             }))
-    # async def game_update(self, event):
+    # async def game_update(self, event): 
     #     # Send the updated game state to the player
     #     await self.send(text_data=json.dumps({
     #         'game_state': event['game_state']
@@ -137,46 +137,50 @@ class GameConsumer(AsyncWebsocketConsumer):
         if opponent_profile.status == 'ready':
             return True
         return False
+   
+    async def start_game_loop(self): 
+        # import time
 
-    async def start_game_loop(self):
-        import time
-        i = 0
         while self.game and self.game.status == 'playing':
-            if i%100 == 0:
-                print(f'\n{YELLOW}[Game Loop Running]{RESET}\n')
             # delta_time = time.perf_counter()
-            delta_time = 0.5 #1/60  # 60 FPS
-            updated = self.game.update(delta_time)
-
-            print(f'\n{YELLOW}[Game Loop Updated {updated}]{RESET}\n')
-            if updated:
+            delta_time = 1 #1/60  # 60 FPS
+            if await self.game.update(delta_time): 
                 await self.broadcast_game_state(self.get_opponent_id())
-            i += 1
+                await self.self_send_game_state() 
             await asyncio.sleep(delta_time)
         if self.game and self.game.status == 'finished':
-            await self.broadcast_game_state()
+            await self.broadcast_game_state(self.get_opponent_id())
+            await self.self_send_game_state()
             await self.handle_game_end()
- 
-    async def broadcast_game_state(self, opponent_id):
+
+    async def self_send_game_state(self):
         if not self.game:
             return
-        print(f'\n{YELLOW}[Broadcasting {self.user.username}]{RESET}\n')
+        await self.send(text_data=json.dumps({
+            'game_state': self.game.get_state(self.user.id)
+        }))
+
+    async def broadcast_game_state(self, opponent_id):
+        if not self.game:
+            return 
+        # print(f'\n{YELLOW}[Broadcasting FROM LOOP RENNUER {self.user.username}]{RESET}\n')
         await matchmake_system.channel_layer.group_send(
             f'game_{self.game_id}',
             {
-                'type': 'game_update',    
+                'type': 'game.update',
                 'game_state': self.game.get_state(opponent_id)
             }
         )
+
     async def game_update(self, event):
+        # print (event)  
         await self.send(text_data=json.dumps({
             "type": "gameUpdate",
             'game_state': event['game_state']
         }))
 
-    # async self 
     # async def send_self_game_state(self):
-    #     if not self.game:
+    #     if not self.game: 
     #         return
     #     await self.send(text_data=json.dumps(self.game.get_state(self.user.id, self.user.username)))
         # self.send(text_data=json.dumps(self.game.get_state(opponent_id, self.user.username)))
