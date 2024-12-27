@@ -142,7 +142,7 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {Requests.length > 0 ? (
-          Requests.map((invitation: any, index) => (
+          Requests.map((invitation: any, index: any) => (
             <FriendRequestCard
               key={index}
               name={invitation.sender}

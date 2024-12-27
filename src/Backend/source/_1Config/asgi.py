@@ -24,12 +24,12 @@ django.setup()  # Ensure Django is set up before accessing any models
 # Get the ASGI application
 django_asgi_app = get_asgi_application()
 
-# # Define the ASGI application routing
 import chat.routing
 import relations.routing
+import accounts.routing
 
 # Combine WebSocket URL patterns from different apps
-websocket_urlpatterns = chat.routing.websocket_urlpatterns + relations.routing.websocket_urlpatterns
+websocket_urlpatterns = chat.routing.websocket_urlpatterns + relations.routing.websocket_urlpatterns + accounts.routing.websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,

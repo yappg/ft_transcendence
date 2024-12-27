@@ -35,7 +35,6 @@ export default function Page() {
               : chat
           );
           setChats(updatedChats);
-          console.log('++++++++++++______++++++++', fetchedMessages);
           setMessages(fetchedMessages);
         }
       } else {

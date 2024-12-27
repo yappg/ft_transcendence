@@ -3,12 +3,16 @@ from asgiref.sync import sync_to_async
 from django.utils import timezone
 from .models import PlayerProfile
 
+
+
+
 # TODO need the frontend to trigger this conusmer for setting the online status and last login
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope["user"]
         if self.user.is_authenticated:
+            print(f'----------- I M HERE ____{self.user}')
             await self.set_logging_status(self.user, True)
             await self.accept()
         else:
@@ -22,6 +26,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     def set_logging_status(self, user, is_online):
         try:
             profile = PlayerProfile.objects.get(player=user)
+            print()
             profile.is_online = is_online
             if is_online:
                 profile.last_login = timezone.now()
