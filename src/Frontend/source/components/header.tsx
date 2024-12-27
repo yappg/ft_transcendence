@@ -9,6 +9,7 @@ import { IoMdNotifications } from "react-icons/io";
 import NotificationBell from  '@/components/notifications/notifications'
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Input } from './ui/input';
 
 
 export const Header = () => {
@@ -25,7 +26,7 @@ export const Header = () => {
   ];
 
   const { isActivated } = useContext(SideBarContext);
-
+  const [value, setValue] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
 
   const {user, isLoading} = useUser();
@@ -36,9 +37,14 @@ export const Header = () => {
       Loading...
     </h1>
     );
+    function handleChange(e:any) {
+      setValue(e.value.target);
+    }
+  
   function handleClick() {
     setShowSearchBar(true);
   }
+  console.log('value: ', value);
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
       <div className="md:hidden flex size-[50px]">
@@ -81,7 +87,16 @@ export const Header = () => {
         <Command
           className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px] w-[120px]' : 'w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
         >
-          <CommandInput placeholder="Search..." />
+          <Input
+            placeholder="Search..."
+            className={`${
+              showSearchBar
+                ? 'md:w-[300px] sm:w-[200px] w-[120px]'
+                : 'w-[0px]'
+            } transition-all duration-300`}
+            value={value}
+            onChange={handleChange(e)}
+          />
           <CommandList />
         </Command>
         <div className="flex size-[23px] sm:size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
