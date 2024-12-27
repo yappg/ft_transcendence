@@ -110,23 +110,23 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
         <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd lg:flex">
           {/* rounds  */}
           <div className="flex size-full flex-col items-center justify-start overflow-auto h-[200px]">
-            <div className="flex h-[50px] w-full items-center justify-around border-b border-white-crd text-[18px] text-white-crd">
+            <div className="flex h-[50px] w-full items-center justify-around border-b border-black-crd dark:border-white-crd text-[18px] text-black-crd dark:text-white-crd">
               <div className="w-1/3 h-full flex justify-center items-center">{'Round'}</div>
-              <div className="w-1/3 h-full border-l border-white-crd flex justify-center items-center">
+              <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">
                 {'Winner'}
               </div>
-              <div className="w-1/3 h-full border-l border-white-crd flex justify-center items-center">
+              <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">
                 {'score'}
               </div>
             </div>
             {game.Rounds.map((round, index) => (
               <div
                 key={index}
-                className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? '' : 'border-b border-white-crd'} text-[18px] text-white-crd`}
+                className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? '' : 'border-b border-black-crd dark:border-white-crd'} text-[18px] text-black-crd dark:text-white-crd`}
               >
                 <div className="w-1/3 h-full flex justify-center items-center">{`${round.round}`}</div>
-                <div className="w-1/3 h-full border-l border-white-crd flex justify-center items-center">{`${round.winner}`}</div>
-                <div className="w-1/3 h-full border-l border-white-crd flex justify-center items-center">{`${round.score[0]}/${round.score[1]}`}</div>
+                <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">{`${round.winner}`}</div>
+                <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">{`${round.score[0]}/${round.score[1]}`}</div>
               </div>
             ))}
           </div>

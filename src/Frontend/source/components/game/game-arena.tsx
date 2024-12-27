@@ -26,7 +26,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     } else {
-      socketRef.current = new socketManager('ws://localhost:8080/ws/game');
+      socketRef.current = new socketManager('ws://localhost:8080/ws/game/');
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,

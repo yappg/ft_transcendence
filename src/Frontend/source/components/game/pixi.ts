@@ -347,7 +347,8 @@ export class OnlineGameManager extends PixiManager {
     }
   }
   updateToppaddlePosition(x: number) {
-    this.topRacket.x = x;
+    if (x >= 0 && x <= this.screenWidth - this.paddleWidth) // TODO: adapt screenwidth and paddlewidth to backend
+      this.topRacket.x = x;
   }
 
   updatePaddlePosition() {

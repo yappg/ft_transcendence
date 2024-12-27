@@ -9,5 +9,5 @@ urlpatterns = [
     
     
     path('friends/block/', BlockedFriendsView.as_view(), name='block_friend'),
-    path('notifications/', NotificationListView.as_view(), name='notification_list'),
+    # path('notifications/', NotificationListView.as_view(), name='notification_list'),
 ]
