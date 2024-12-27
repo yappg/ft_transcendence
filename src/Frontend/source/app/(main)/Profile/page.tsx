@@ -9,7 +9,7 @@ export default function page() {
     
     <div className="size-full md:py-4 md:pl-6 overflow-auto">
       <div className="costum-little-shadow size-full overflow-hidden md:rounded-[50px] gap-8">
-        <div className="relative col-start-1 col- flex items-center justify-center w-full h-[40%] md:h-[50%] min-h-[300px]">
+        <div className="relative col-start-1 flex items-center justify-center w-full h-[400px] lg:h-[50%]">
           <div
             className="absolute h-full w-full -z-0"
             style={{
@@ -23,7 +23,7 @@ export default function page() {
           <UserInfo 
           userProfile={userProfile}/>
         </div>
-        <div className="flex items-center justify-center w-full h-[60%] md:h-[50%] ">
+        <div className="flex items-center justify-center w-full h-[calc(100%-400px)] lg:h-[50%] ">
           <UserSummary 
           user={userProfile} />
         </div>
