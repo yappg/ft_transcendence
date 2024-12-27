@@ -13,16 +13,15 @@ const AchievementsPage: React.FC = () => {
     const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
 
+  const userApi = axios.create({
+      baseURL: USER_BASE_URL,
+      withCredentials: true,
+  });
 
-    const userApi = axios.create({
-        baseURL: USER_BASE_URL,
-        withCredentials: true,
-    });
-
-    const getAchievements = async (): Promise<Achievement[]> => {
-        const response = await userApi.get(`/rest-achievements/`);
-        return response.data;
-    };
+  const getAchievements = async (): Promise<Achievement[]> => {
+      const response = await userApi.get(`/user-achievements/`);
+      return response.data;
+  };
     
   const fetchAchievements = async () => {
     setIsLoading(true);
@@ -34,8 +33,9 @@ const AchievementsPage: React.FC = () => {
         title: data.achievement.name,
         description: data.achievement.description,
         points: data.achievement.xp_gain,
-        progress: data.progress,
         xpReward: data.achievement.xp_gain,
+        ratio: data.achievement.condition,
+        progress: data.progress,
         iconUrl: data.image,
         gained: data.gained,
         dateEarned: data.date_earned,
@@ -61,15 +61,16 @@ const AchievementsPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full overflow-auto h-full p-4 gap-7">
-      {achievements.map((achievement) => (
+    <div className="overflow-auto flex items-start justify-start flex-wrap p-4 gap-[25xp] h-full w-full bg-black-crd ">
+      {achievements.map((achievement: any) => (
         <AchievementBadge 
           key={achievement.id} 
           title={achievement.title} 
           description={achievement.description} 
           points={achievement.points} 
           progress={achievement.progress} 
-          xpReward={achievement.xpReward} 
+          xpReward={achievement.xpReward}
+          ratio= {achievement.ratio} 
           iconUrl={"http://localhost:8080" + achievement.iconUrl} 
         />
       ))}
