@@ -50,32 +50,32 @@ services:
     #   restart: unless-stopped
 
 
-#     frontend:
-#       container_name: frontend
-#       build:
-#         context: ./Frontend
-#         target: ${ENV:-development}
-#         dockerfile: Dockerfile
-#       image: frontend
-# # DEV ==============>
-#       volumes:
-#         - ./Frontend/source:/app:rw
-#         - /app/.next
-#         - /app/node_modules
-# # ==================>
-#       networks:
-#         - transcendence
-#       ports:
-#         - 3000:3000
-#       # depends_on:
-#       #     backend:
-#       #         condition: service_healthy
-#       # healthcheck:
-#       #     test: ["CMD", ""]
-#       #     interval: 1m30s
-#       #     timeout: 30s
-#       #     retries: 5
-#       #     start_period: 30s
+    frontend:
+      container_name: frontend
+      build:
+        context: ./Frontend
+        target: ${ENV:-development}
+        dockerfile: Dockerfile
+      image: frontend
+# DEV ==============>
+      volumes:
+        - ./Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
+      networks:
+        - transcendence
+      ports:
+        - 3000:3000
+      # depends_on:
+      #     backend:
+      #         condition: service_healthy
+      # healthcheck:
+      #     test: ["CMD", ""]
+      #     interval: 1m30s
+      #     timeout: 30s
+      #     retries: 5
+      #     start_period: 30s
 #       restart: always
 
 
@@ -205,7 +205,7 @@ services:
     #   image: prom/alertmanager
     #   volumes:
     #     - alert-manager-data:/alertmanager
-    #     - "./Services/alert-manager:/etc/alertmanager:ro"
+    #     - "./Services/alert-manager:/etc/alertmanager:ro"\
     #   networks:
     #     - transcendence
     #   depends_on:

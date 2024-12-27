@@ -100,7 +100,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
- 
+
     async def game_found(self, event):
         # Send a message to the player that a game has been found
         await self.send(text_data=json.dumps(
@@ -109,6 +109,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "data": { 
                     'message': event['message'],
                     'opponent': event['opponent'],
+                    'top_paddle': event['top_paddle'],
                     'game_id': event['game_id']
                 } 
             }))
@@ -143,10 +144,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         while self.game and self.game.status == 'playing':
             # delta_time = time.perf_counter()
-            delta_time = 1 #1/60  # 60 FPS
-            if await self.game.update(delta_time): 
-                await self.broadcast_game_state(self.get_opponent_id())
-                await self.self_send_game_state() 
+            delta_time = 0.1 #1/60  # 60 FPS
+            await self.game.update(delta_time)
+            await asyncio.create_task(self.broadcast_game_state(self.get_opponent_id()))
+            # await self.broadcast_game_state(self.get_opponent_id())
+            await asyncio.create_task(self.self_send_game_state() )
+            # await self.self_send_game_state()
             await asyncio.sleep(delta_time)
         if self.game and self.game.status == 'finished':
             await self.broadcast_game_state(self.get_opponent_id())
@@ -175,7 +178,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def game_update(self, event):
         # print (event)  
         await self.send(text_data=json.dumps({
-            "type": "gameUpdate",
+            'type': 'gameUpdate',
             'game_state': event['game_state']
         }))
 
@@ -203,7 +206,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         if not self.game:
             return
 
-        await self.save_game_result(self.game.get_state())
+        # await self.save_game_result(self.game.get_state(self.user.id))
 
         # await matchmake_system.channel_layer.group_send(
         #     f'game_{self.game_id}',
@@ -212,7 +215,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         #         'game_state': self.game.get_state()
         #     }
         # )
-        try:
+        try: 
             print (f'\n{RED}[Game End {self.game_id}]{RESET}\n')
             a =  matchmake_system.games[self.game_id]
             print (f'\n{RED}[Game End {a}]{RESET}\n')
@@ -221,7 +224,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{RED}[Error in Game End {str(e)}]{RESET}\n')
         self.game = None
         self.game_id = None
-
+  
     @database_sync_to_async
     def save_game_result(self, game_state):
         pass
