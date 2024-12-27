@@ -164,8 +164,11 @@ class PingPongGame:
             return True
         return False
     
-    def get_state(self) -> Dict:
+    def get_state(self, opponent_id) -> Dict:
         """Get the current game state as a dictionary"""
+        
+        player = self.player1 if opponent_id == self.player1.id else self.player2
+        
         return {
             'game_id': self.game_id,
             'status': self.status,
@@ -174,20 +177,9 @@ class PingPongGame:
                 'x': self.ball.position.x, # / self.game_width,
                 'y': self.ball.position.y # / self.game_height
             },
-            'players': 
+            'opponent_paddle': 
             {
-                self.player1.username:
-                {
-                    'id': self.player1.id,
-                    'paddle_x': self.player1.paddle.position.x, # / self.game_height,
-                    'score': self.player1.score
-                },
-                self.player2.username:
-                {
-                    'id': self.player2.id,
-                    'paddle_x': self.player2.paddle.position.x,
-                    'score': self.player2.score
-                }
+                    'paddle_x': player.paddle.position.x, # / self.game_height,
             },
             'winner': self.winner.username if self.winner else None
         }

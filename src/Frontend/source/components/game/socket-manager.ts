@@ -12,8 +12,8 @@ class SocketManager extends WebSocket {
     };
 
     this.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      this.handleSocketMessage(data);
+      const message = JSON.parse(event.data);
+      this.handleSocketMessage(message);
     };
 
     this.onclose = () => {
@@ -33,23 +33,25 @@ class SocketManager extends WebSocket {
     this.send(JSON.stringify({ data }));
   }
   
-  handleSocketMessage(data: any) {
-    switch (data.type) {
+  async handleSocketMessage(message: any) {
+    switch (message.type) {
       case 'acknowledgeOpponent':
-        this.pixiManager.game.gameId = data.gameId;
-        this.pixiManager.game.opponent = data.opponent;
-        this.pixiManager.game.setGameId(data.gameId);
-        this.pixiManager.game.setOpponent(data.opponent);
+        this.pixiManager.game.gameId = message.data.game_id;
+        this.pixiManager.game.opponent = message.data.opponent;
+        this.pixiManager.game.setGameId(message.data.gameId);
+        this.pixiManager.game.setOpponent(message.data.opponent);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        this.send(JSON.stringify({action: "ready", game_id: message.data.game_id}))
       case 'gameUpdate':
-        this.pixiManager.updateToppaddlePosition(data);
-        this.pixiManager.updateBallPosition(data);
+        this.pixiManager.updateToppaddlePosition(message.opponent_paddle);
+        this.pixiManager.updateBallPosition(message.ball);
         break;
       case 'scoreUpdate':
-        this.pixiManager.updateScore(data);
+        this.pixiManager.updateScore(message);
         break;
       case 'gameState':
-        this.pixiManager.game.gameState = data.state;
-        this.pixiManager.game.setGameState(data.state);
+        this.pixiManager.game.gameState = message.state;
+        this.pixiManager.game.setGameState(message.state);
         break;
       default:
         break;

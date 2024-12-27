@@ -1,5 +1,5 @@
 export class AuthClient {
-  private static readonly BASE_URL = 'http://localhost:8080/api/auth';
+  private static readonly BASE_URL = 'http://localhost:8080/accounts/auth';
   private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
     delete data.password2;
     console.log(data);

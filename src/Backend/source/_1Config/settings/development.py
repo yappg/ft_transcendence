@@ -15,12 +15,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR.parent.parent / ".env") 
 
 # ===========================
-# SECURITY SETTINGS
+# SECURITY SETTINGS 
 # ===========================
-
+ 
 # Secret key for cryptographic signing
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-
+  
 # Enable debug mode for development only (disable in production)
 DEBUG = True
 
@@ -34,14 +34,14 @@ ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = False  # Restrict origins
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://frontend:3000',
-    # 'http://127.0.0.1:3000',
-    # 'http://localhost:3000',
+    # 'http://frontend:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
 ]
-  
+    
 # ===========================
 # APPLICATION CONFIGURATION
-# ===========================
+# ===========================  
 
 INSTALLED_APPS = [
     # API documentation
