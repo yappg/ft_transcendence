@@ -205,7 +205,7 @@ services:
     #   image: prom/alertmanager
     #   volumes:
     #     - alert-manager-data:/alertmanager
-    #     - "./Services/alert-manager:/etc/alertmanager:ro"
+    #     - "./Services/alert-manager:/etc/alertmanager:ro"\
     #   networks:
     #     - transcendence
     #   depends_on:

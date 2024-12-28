@@ -16,11 +16,14 @@ class Vector2D:
     def __mul__(self, scalar):
         return Vector2D(self.x * scalar, self.y * scalar)
 
-@dataclass
 class Ball:
     position: Vector2D
     velocity: Vector2D
     radius: float = 2.0
+    def __init__(self, position: Vector2D, velocity: Vector2D, Radius:float): 
+        self.position = position
+        self.velocity = velocity
+        self.radius = Radius
     
     async def update(self, delta_time: float):
         self.position = self.position + (self.velocity * delta_time)
@@ -28,6 +31,8 @@ class Ball:
     async def reset(self):
         self.position = Vector2D(37.5, 50)
         self.velocity = Vector2D(20, 20)# Pixels per second
+        self.position = Vector2D(37.5, 50)
+        self.velocity = Vector2D(20, -20)# Pixels per second
 
 @dataclass
 class Paddle:
@@ -54,12 +59,13 @@ class PingPongGame:
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
         self.game_id = game_model_id
         self.ball = Ball(Vector2D(37.5, 50), Vector2D(20, 20))
+        self.ball = Ball(Vector2D(self.game_width/2, self.game_height/2), Vector2D(-20, 20), self.game_width/35)
 
         # Initialize players with paddles at opposite sides
         self.player1 = player1
         self.player1.game_id = game_model_id
         self.player1.status = 'ready'
-        self.player1.paddle = Paddle(Vector2D(37.5, 5))  # Lower paddle
+        self.player1.paddle = Paddle(Vector2D(50, 5))  # Lower paddle 
         self.player2 = player2
         self.player2.game_id = game_model_id
         self.player2.status = 'ready'
@@ -69,7 +75,7 @@ class PingPongGame:
         self.game_height = 100
         self.status = 'waiting'  # waiting, playing, finished
         self.winner = None
-        self.winning_score = 1
+        self.winning_score = 10
 
     def start_game(self):
         self.status = 'playing'
@@ -97,10 +103,12 @@ class PingPongGame:
     async def _check_collisions(self) -> bool:
         changed = False
 
-        # Wall collisions (top/bottom)
+        # Wall collisions (right and left)
         if self.ball.position.x <= self.ball.radius or \
-           self.ball.position.x >= self.game_width - self.ball.radius:
+            self.ball.position.x >= self.game_width - self.ball.radius:
             self.ball.velocity.x *= -1
+            await self.ball.update(0.25)
+
             changed = True
 
         # Paddle collisions
@@ -108,12 +116,16 @@ class PingPongGame:
         if await self._check_paddle_collision(self.player1.paddle):
             self.ball.velocity.y = abs(self.ball.velocity.y)  # Move right
             # await self._adjust_ball_angle(self.player1.paddle) 
+            await self.ball.update(0.25)
+
             changed = True
         # Upper paddle (player2)
         elif await self._check_paddle_collision(self.player2.paddle):
             self.ball.velocity.y = -abs(self.ball.velocity.y)  # Move left
             # await self._adjust_ball_angle(self.player2.paddle)
             changed = True
+            await self.ball.update(0.25)
+
         return changed
 
     async def _check_paddle_collision(self, paddle: Paddle) -> bool:
@@ -137,7 +149,7 @@ class PingPongGame:
             self.player2.score += 1
             await self.ball.reset()
             return True
-        elif self.ball.position.y >= self.game_height:  # Player 1 scores
+        elif self.ball.position.y >= 100:  # Player 1 scores
             self.player1.score += 1
             await self.ball.reset()
             return True
@@ -150,7 +162,7 @@ class PingPongGame:
             self.winner = self.player1 if self.player1.score > self.player2.score else self.player2
             return True
         return False
-    
+
     def move_paddle(self, player_id: str, new_y: float) -> bool:
         """Move a player's paddle to a new y position"""
         if player_id == self.player1.id:
@@ -180,3 +192,4 @@ class PingPongGame:
             },
             'winner': self.winner.username if self.winner else None
         }
+
