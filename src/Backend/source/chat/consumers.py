@@ -11,14 +11,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.chatId = self.scope['url_route']['kwargs']['chatId']
         self.chat_group_name = f'chat_{self.chatId}'
-        print("chatId: " , self.chatId)
 
+        print("chatId: " , self.chatId)
         await self.channel_layer.group_add(
             self.chat_group_name,
             self.channel_name
         )
-        print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
         await self.accept()
+        print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
 
         await self.send(text_data=json.dumps({
             'type':'connection_establish',
@@ -41,7 +41,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"-----------------[DEBUG] Received message data: {text_data}")
 
         text_data_json = json.loads(text_data)
-        content = text_data_json.get('contfrom asgiref.sync import sync_to_asyncent')
+        content = text_data_json.get('content')
         sender_id = text_data_json.get('sender')
         receiver_id = text_data_json.get('receiver')
 
@@ -93,6 +93,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'content': content,
             'chatId': chatId,
             'sender': sender_id,
-            'receiver': receiver_id
+            'receiver': receiver_id,
         }))
         print(f"-----------------[[DEBUG] Message sent to WebSocket: {event['content']} from sender {event['sender']}")

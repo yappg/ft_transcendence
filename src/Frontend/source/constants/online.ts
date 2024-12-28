@@ -8,5 +8,3 @@ export interface OnlineStatus {
     type: string
     data: OnlineStatus
   }
-  
-  
