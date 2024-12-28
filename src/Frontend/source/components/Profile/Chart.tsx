@@ -9,7 +9,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
+import { Statistics } from "@/context/GlobalContext";
 
 const chartConfig = {
   visitors: {
@@ -35,40 +35,31 @@ const chartConfig = {
 
 export const Chart = ({
   total_games,
-  statistics,
-} : {
-  total_games?: number;
-  statistics?: {
-    earth_ratio: number;
-    fire_ratio: number;
-    water_ratio: number;
-    ice_ratio: number;
-    graph_data: {
-      date: string;
-      wins: number;
-      losses: number;
-    }[];
-  };
+  stats,
+} :
+{
+  total_games: number,
+  stats: Statistics
 }) => {
-  console.log(statistics, total_games);
-  if (!statistics?.earth_ratio && !statistics?.ice_ratio && !statistics?.water_ratio && !statistics?.fire_ratio) {
+  console.log(stats, total_games);
+  if (!stats?.earth_ratio && !stats?.ice_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
     return <div className="w-full h-full flex items-center justify-center">
       <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
     </div>;
   }
   const chartData = [
-    { browser: "Earth", visitors:  statistics?.earth_ratio , fill: "var(--color-chrome)" },
-    { browser: "Ice", visitors:  statistics?.ice_ratio , fill: "var(--color-safari)" },
-    { browser: "Water", visitors:  statistics?.water_ratio , fill: "var(--color-firefox)" },
-    { browser: "Fire", visitors:  statistics?.fire_ratio , fill: "var(--color-edge)" },
+    { browser: "Earth", visitors:  stats?.earth_ratio , fill: "var(--color-chrome)" },
+    { browser: "Ice", visitors:  stats?.ice_ratio , fill: "var(--color-safari)" },
+    { browser: "Water", visitors:  stats?.water_ratio , fill: "var(--color-firefox)" },
+    { browser: "Fire", visitors:  stats?.fire_ratio , fill: "var(--color-edge)" },
   ];
 
   return (
-    <div className="flex items-start justify-start w-[50%] h-[300px]">
-      <div className="flex-1 pb-0">
+    <div className="flex items-start justify-start size-full">
+      <div className="flex items-center justify-center size-full">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="mx-auto size-full aspect-square max-h-[250px]"
         >
           <PieChart>
             <ChartTooltip
@@ -95,7 +86,7 @@ export const Chart = ({
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          className="fill-foreground text-3xl text-white font-bold"
                         >
                           {total_games}
                         </tspan>
