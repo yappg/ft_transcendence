@@ -10,14 +10,15 @@ from urllib.parse import parse_qs
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        query_string = self.scope['query_string'].decode()
-        query_params = parse_qs(query_string)
-        user_id = query_params.get('user_id', [None])[0]
-
+        user = self.scope['user']
+        if (user.is_authenticated):
+            await self.accept()
+        else:
+            await self.close()
+        user_id = user.id
         if user_id is not None:
             self.group_name = f"user_{user_id}"
             await self.channel_layer.group_add(self.group_name, self.channel_name)
-            await self.accept()
             print(f'Connected to group: {self.group_name}')
         else:
             await self.close()

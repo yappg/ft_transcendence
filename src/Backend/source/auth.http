@@ -84,7 +84,7 @@ POST http://localhost:8080/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "client1",
+    "username": "client2",
     "password": "thisisapassword"
 }
 

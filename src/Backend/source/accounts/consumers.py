@@ -26,7 +26,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     def set_logging_status(self, user, is_online):
         try:
             profile = PlayerProfile.objects.get(player=user)
-            print()
+            print() 
             profile.is_online = is_online
             if is_online:
                 profile.last_login = timezone.now()

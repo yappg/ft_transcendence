@@ -1,16 +1,26 @@
 import { OnlineStatus, WebSocketMessage } from '@/types/online'
 
+
+const getAccessToken = () => {
+  const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
+    const [name, value] = cookie.trim().split('=');
+    acc[name] = value;
+    return acc;
+  }, {});
+  
+  return cookies['access_token'] || '';
+};
+
 class OnlineService {
   private socket: WebSocket | undefined
-  // private reconnectAttempts = 0
 
-  async createWebSocketConnection(userId: number): Promise<WebSocket> {
+  async createWebSocketConnection(): Promise<WebSocket> {
     try {
 
-      this.closeConnection()
+      this.closeConnection();
 
-
-      this.socket = new WebSocket(`ws://localhost:8080/ws/online/${userId}`)
+      const token = getAccessToken();
+      this.socket = new WebSocket(`ws://localhost:8080/ws/online/?token=${token}`)
 
       this.socket.onopen = () => {
         console.log('Connected to WebSocket server')
@@ -21,12 +31,11 @@ class OnlineService {
       }
 
       this.socket.onerror = (error) => {
-        console.error('WebSocket error:', error)// change to log
+        console.log('WebSocket error:', error)// change to log
       }
 
       this.socket.onmessage = (event) => {
         try {
-          // console.log('Received message:', event)
         } catch (error) {
           console.log('Failed to parse WebSocket message:', error)
         }
