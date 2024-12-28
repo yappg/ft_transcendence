@@ -31,14 +31,7 @@ export const Messages: React.FC<MessagesProps> = ({
   const [isPartnerOnline, setIsPartnerOnline] = useState(false)
   const { user, setChats } = useUser()
 
-   useChatWebSocket({
-    chatId,
-    currentUserId,
-    receiverId,
-    setMessages,
-    setChats,
-  })
-
+  
   const handleBlockUser = async () => {
     try {
       console.log('Blocking user:', chatPartner?.receiver.id)
@@ -47,7 +40,7 @@ export const Messages: React.FC<MessagesProps> = ({
       console.log('Failed to block user', error)
     }
   }
-
+  
   const handleGameInvite = async () => {
     try {
       console.log('Sending game invite to:', chatPartner?.receiver.id)
@@ -56,7 +49,15 @@ export const Messages: React.FC<MessagesProps> = ({
       console.log('Failed to send game invite', error)
     }
   }
-
+  
+  useChatWebSocket({
+   chatId,
+   currentUserId,
+   receiverId,
+   setMessages,
+   setChats,
+ })
+ 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newMessage.trim()) return
@@ -69,7 +70,7 @@ export const Messages: React.FC<MessagesProps> = ({
       console.error('Failed to send message', error)
     }
   }
-
+  
   React.useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({

@@ -7,6 +7,7 @@ from .models import PlayerProfile
 
 
 # TODO need the frontend to trigger this conusmer for setting the online status and last login
+
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -33,3 +34,6 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
             profile.save(update_fields=['is_online', 'last_login'] if is_online else ['is_online'])
         except PlayerProfile.DoesNotExist:
             pass
+
+    # def send_the_updated_status(self, user):
+    #     # here I need to se
