@@ -8,6 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Statistics } from '@/context/GlobalContext';
 
 
 const chartConfig = {
@@ -24,17 +25,7 @@ const chartConfig = {
 export const ChartLine = ({
   statistics
 }: {
-  statistics: {
-    earth_ratio: number;
-    fire_ratio: number;
-    water_ratio: number;
-    ice_ratio: number;
-    graph_data: {
-      date: string;
-      wins: number;
-      losses: number;
-    }[];
-  };
+  statistics: Statistics;
 }) => {
   if (!statistics?.graph_data[0].wins && !statistics?.graph_data[0].losses && !statistics?.graph_data[1].wins && !statistics?.graph_data[1].losses && !statistics?.graph_data[2].wins && !statistics?.graph_data[2].losses && !statistics?.graph_data[3].wins && !statistics?.graph_data[3].losses && !statistics?.graph_data[4].wins && !statistics?.graph_data[4].losses && !statistics?.graph_data[5].wins && !statistics?.graph_data[5].losses && !statistics?.graph_data[6].wins && !statistics?.graph_data[6].losses) {
     return <div className="w-full h-full flex items-center justify-center">
@@ -51,8 +42,8 @@ export const ChartLine = ({
     { day: 'Sunday', Wins: statistics?.graph_data[6]?.wins , Losses: statistics?.graph_data[6]?.losses  },
   ];
   return (
-    <div className="w-[500px] h-[300px] ">
-        <ChartContainer config={chartConfig}>
+    <div className="size-full p-0 flex items-center justify-center">
+        <ChartContainer className='size-[90%]' config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={chartData}

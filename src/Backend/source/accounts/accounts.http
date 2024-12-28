@@ -8,7 +8,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/rest-profiles/2/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTM2MDA2LCJpYXQiOjE3MzUxMzM2MDYsImp0aSI6IjQ0MGUxNGNiNTYwOTRhNjc5NjZmNGQ4NjQ0MWUzODliIiwidXNlcl9pZCI6M30.iGN2WjYSyL0eXWJh04GRGsZXrrXB3Cz-KwPHh5yNhWE
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NDA4Nzc2LCJpYXQiOjE3MzU0MDYzNzYsImp0aSI6IjU1MDM0NDQ3ZWU4MDRhZTdhN2VjMmM1ODFlZDgxYWIzIiwidXNlcl9pZCI6NH0.Qls4VCJnLoV4BdfaaG0xHcON8kln85c_RW7yijHtiZ4
 
 #########
 PUT http://localhost:8080/accounts/rest-profiles/1/
@@ -137,15 +137,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/leaderboard
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMzMjg1LCJpYXQiOjE3MzUwMzA4ODUsImp0aSI6IjZjOGQ5ZGEzYjQ5ZjQxMGFhZWEwZjljNmQ3MzdiMjEzIiwidXNlcl9pZCI6Mn0.cUhuPLEVSvF85yNsPXFSdKEnXQLDJnmj4p4ro3O33fc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NDAyOTkyLCJpYXQiOjE3MzU0MDA1OTIsImp0aSI6IjEzODZmMzA4ZmE5MzQ0YzU5ZTFjNWRkYWVlMDYzNzY5IiwidXNlcl9pZCI6NH0.e9MkwleeM1Mi35iTL5Lb_UZshcDc1mXZSWclYJpE8Z8
 
 
 ############################################################
 ######### SEARCH SPECS === GET === ONLY ######################################################################################
 ############################################################
 #########
-GET http://localhost:8080/accounts/search-users/?search=yous
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDMzMjg1LCJpYXQiOjE3MzUwMzA4ODUsImp0aSI6IjZjOGQ5ZGEzYjQ5ZjQxMGFhZWEwZjljNmQ3MzdiMjEzIiwidXNlcl9pZCI6Mn0.cUhuPLEVSvF85yNsPXFSdKEnXQLDJnmj4p4ro3O33fc
+GET http://localhost:8080/accounts/search-users/?search=c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NDAyOTkyLCJpYXQiOjE3MzU0MDA1OTIsImp0aSI6IjEzODZmMzA4ZmE5MzQ0YzU5ZTFjNWRkYWVlMDYzNzY5IiwidXNlcl9pZCI6NH0.e9MkwleeM1Mi35iTL5Lb_UZshcDc1mXZSWclYJpE8Z8
 
 # ######### search friends
 # GET http://localhost:8080/accounts/search-users/?search=admin
