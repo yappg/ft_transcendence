@@ -22,7 +22,7 @@ const AchievementBadge = ({
 }) => {
 
   return (
-    <div className="relative flex h-[132px] w-[423px] items-center rounded-3xl bg-black-crd p-4">
+    <div className="relative flex h-[132px] w-full items-center rounded-3xl bg-black-crd p-4">
       <div className="flex size-20 shrink-0 items-center justify-center rounded-full overflow-hidden bg-black-crd">
         <img src={iconUrl} alt="Icon" className="size-full object-cover" />
       </div>

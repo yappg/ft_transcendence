@@ -41,7 +41,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"-----------------[DEBUG] Received message data: {text_data}")
 
         text_data_json = json.loads(text_data)
-        content = text_data_json.get('content')
+        content = text_data_json.get('contfrom asgiref.sync import sync_to_asyncent')
         sender_id = text_data_json.get('sender')
         receiver_id = text_data_json.get('receiver')
 

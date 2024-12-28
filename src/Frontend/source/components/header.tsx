@@ -25,16 +25,26 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
 
   const [showSearchBar, setShowSearchBar] = useState(false);
-
   const handleClick = () => {
     setShowSearchBar(true);
   };
 
   const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
+  
+  const getAccessToken = () => {
+    const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      acc[name] = value;
+      return acc;
+    }, {});
+    
+    return cookies['access_token'] || '';
+  };
 
   useEffect(() => {
     if (user) {
-      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}`);
+      const token_ = getAccessToken();
+      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}&token=${token_}`);
       console.log('WebSocket connection established');
   
       ws.onopen = () => {
