@@ -1,8 +1,4 @@
 'use client';
-import UserActivityBoard from './UserActivityBoard';
-import Link from 'next/link';
-import FriendServices from '@/services/friendServices';
-import MatchHistoryBoard from './MatchHistoryBoard';
 import { Chart } from "@/components/Profile/Chart";
 import { ChartLine } from '@/components/Profile/ChartLine';
 import Rating from './rating';
@@ -12,9 +8,9 @@ import { JSX } from 'react';
 import { MatchHistory } from './MatchHistory';
 import { Friends } from './Friends';
 const UserSummary = ({user, is_private} : {user: User, is_private:boolean}): JSX.Element => {
-  const { user: userProfile } = useUser();
-  if (!userProfile) return <div>Loading...</div>; 
-  const {total_games, achievements } = userProfile;
+  // const { user: userProfile } = useUser();
+  if (!user) return <div>Loading...</div>; 
+  const {total_games, achievements } = user;
   const {PlayerMatches, players} = useUser();
   return (
     <div className="bg-[#242627]/90 w-full h-fit lg:h-full flex lg:flex-row flex-col items-center pb-3">
@@ -35,12 +31,12 @@ const UserSummary = ({user, is_private} : {user: User, is_private:boolean}): JSX
       <div className="w-full h-[600px] lg:w-[40%] lg:h-full bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl  flex flex-col items-center justify-start">
         <div className='w-full h-1/2 flex items-center justify-center'>
           <div className='w-1/2  h-full'>
-            <Chart total_games={total_games} stats={userProfile?.statistics} />
+            <Chart total_games={total_games} stats={user?.statistics} />
           </div>
-            <Rating />
+            <Rating statistics={user?.statistics}/>
         </div>
         <div className='w-full h-1/2 flex items-center justify-center'>
-             <ChartLine statistics={userProfile?.statistics} />
+             <ChartLine statistics={user?.statistics} />
           </div>
       </div>
     </div>
@@ -117,7 +113,7 @@ export default UserSummary;
 //     </div>
 //     <div className="size-full xl:w-[35%] lg:h-[500px] xl:h-[300px] h-[300px] flex items-center justify-center rounded-[50px] bg-[#4C4D4E] flex-row md:flex-col  gap-7 xl:m-4 xl:p-4">
 //       <div className="w-full h-2/5 xl:w-full xl:h-[45%] flex items-center justify-between pt-7">
-//         <Chart total_games={total_games} statistics={userProfile?.statistics} />
+//         <Chart total_games={total_games} statistics={user?.statistics} />
 //         <Rating />
 //       </div>
 //       <div className="xl:w-[90%] w-full h-3/5 flex items-start justify-start overflow-hidden">

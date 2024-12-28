@@ -7,34 +7,30 @@ export const MatchHistory = ({
     PlayerMatches: History[] | null,
 }) => {
     return (
-      <div className='w-full h-[300px] lg:h-full lg:w-[49%] bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl'>
+      <div className='relative w-full h-[300px] lg:h-full lg:w-[49%] bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl'>
                 <div className='w-full h-[85%] overflow-y-scroll'>
                   {
-                    !PlayerMatches && (
+                    !PlayerMatches ? (
                       <div className="w-full h-full flex items-center justify-center">
                         <h1 className="text-white font-bold text-center">No Match History</h1>
                       </div>
-                    )
-                  }
-                {PlayerMatches && PlayerMatches.map((user, index) => (
-                    <MatchHistoryBoard
+                    ) : ( PlayerMatches.map((user, index) => (
+                      <MatchHistoryBoard
                       key={index}
                       name={user.player2.display_name}
                       Profile={user.player2.avatar}
                       Player1score={user.player1_score || 0}
                       Player2score={user.player2_score || 0}
                     />
-                  ))}
+                    )))
+                  }
                 </div>
-                {
-                  PlayerMatches &&
-                <div className="w-full  bg-[#4C4D4E] h-[15%] border-t-2 border-[#B8B8B8] flex items-center justify-end gap-4 px-10">
+                <div className="w-full bg-[#4C4D4E] h-[15%] border-t-2 border-[#B8B8B8] flex items-center justify-end gap-4 px-10">
                       <h1 className="2xl:text-[20px] lg:text-[15px] font-dayson text-[#B8B8B8]">
                         Match History
                       </h1>
                       <h1 className="2xl:text-[25px] lg:text-[20px] font-dayson text-[#B8B8B8]">{'>'}</h1>
                 </div>
-                }
               </div>
 
     );

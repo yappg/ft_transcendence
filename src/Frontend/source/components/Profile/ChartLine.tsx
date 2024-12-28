@@ -27,11 +27,11 @@ export const ChartLine = ({
 }: {
   statistics: Statistics;
 }) => {
-  if (!statistics?.graph_data[0].wins && !statistics?.graph_data[0].losses && !statistics?.graph_data[1].wins && !statistics?.graph_data[1].losses && !statistics?.graph_data[2].wins && !statistics?.graph_data[2].losses && !statistics?.graph_data[3].wins && !statistics?.graph_data[3].losses && !statistics?.graph_data[4].wins && !statistics?.graph_data[4].losses && !statistics?.graph_data[5].wins && !statistics?.graph_data[5].losses && !statistics?.graph_data[6].wins && !statistics?.graph_data[6].losses) {
-    return <div className="w-full h-full flex items-center justify-center">
-      <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
-    </div>;
-  }
+  // if (!statistics?.graph_data[0].wins && !statistics?.graph_data[0].losses && !statistics?.graph_data[1].wins && !statistics?.graph_data[1].losses && !statistics?.graph_data[2].wins && !statistics?.graph_data[2].losses && !statistics?.graph_data[3].wins && !statistics?.graph_data[3].losses && !statistics?.graph_data[4].wins && !statistics?.graph_data[4].losses && !statistics?.graph_data[5].wins && !statistics?.graph_data[5].losses && !statistics?.graph_data[6].wins && !statistics?.graph_data[6].losses) {
+  //   return <div className="w-full h-full flex items-center justify-center">
+  //     <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
+  //   </div>;
+  // }
   const chartData = [
     { day: 'Monday', Wins: statistics?.graph_data[0]?.wins , Losses: statistics?.graph_data[0]?.losses  },
     { day: 'Tuesday', Wins: statistics?.graph_data[1]?.wins , Losses: statistics?.graph_data[1]?.losses},

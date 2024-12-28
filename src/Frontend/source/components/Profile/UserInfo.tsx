@@ -6,6 +6,9 @@ import { Avatar } from './Avatar';
 import { ProfileInfo } from './ProfileInfo';
 import { InfoTitle } from './InfoTitle';
 import { Separator } from '../ui/separator';
+import { AddButton } from './AddButton';
+import { PendingButton } from './AddButton';
+import { BlockButton } from './AddButton';
 import { EditProfile } from './EditProfile';
 const UserInfo = ({
   userProfile,
@@ -14,6 +17,17 @@ const UserInfo = ({
   userProfile: User
   state: string
 }) => {
+
+  const renderContent = () => {
+    switch (state) {
+      case 'none':
+        return <AddButton name={userProfile?.display_name} />;
+      case 'pending':
+        return <PendingButton name={userProfile?.display_name}/>;
+      case 'friends':
+        return <BlockButton name={userProfile?.display_name}/>;
+    }
+  };
   return (
     <div className="size-full z-99 absolute flex lg:flex-row flex-col items-center justify-between px-6 py-4 2xl:px-10">
       <div className="lg:w-fit w-full h-fit lg:h-full flex flex-col items-center justify-start lg:flex-row lg:items-end lg:justify-start gap-12">
@@ -33,11 +47,13 @@ const UserInfo = ({
           <InfoTitle title={'Winrate: '} value='55%' />
         </div>
         {
-          state === 'null' && (
+          state === 'null' ? (
             <EditProfile />
+          ) : (
+        <div className="w-[270px] h-[70px]">{renderContent()}</div>
           )
         }
-      </div>
+    </div>
     </div>
   );
 };
