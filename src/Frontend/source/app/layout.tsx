@@ -36,8 +36,8 @@ export default function RootLayout({
         <UserProvider>
 
           <SideBarProvider>
-              <Providers>{children}</Providers>
-              <Toaster />
+            <Providers>{children}</Providers>
+            <Toaster />
           </SideBarProvider>
           </UserProvider>
 
