@@ -43,7 +43,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.profile.status = 'waiting'
         await database_sync_to_async(self.profile.save)()
 
-        print(f'\n{GREEN}[User Profile {self.profile.status}]{RESET}\n')
+        # print(f'\n{GREEN}[User Profile {self.profile.status}]{RESET}\n')
         if self.profile.status == 'waiting':
             print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
             await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
@@ -102,7 +102,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
  
     async def game_found(self, event):
-        # Send a message to the player that a game has been found
         await self.send(text_data=json.dumps(
             {
                 "type": "acknowledgeOpponent",
@@ -112,12 +111,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'game_id': event['game_id']
                 } 
             }))
-    # async def game_update(self, event): 
-    #     # Send the updated game state to the player
-    #     await self.send(text_data=json.dumps({
-    #         'game_state': event['game_state']
-    #     }))
-    def get_opponent_id(self):
+
+    def get_opponent_id(self): 
         return (
             self.game.player1 if self.game.player1.id == self.user.id else self.game.player2
         ).id
@@ -143,7 +138,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         while self.game and self.game.status == 'playing':
             # delta_time = time.perf_counter()
-            delta_time = 1 #1/60  # 60 FPS
+            delta_time = 0.25 #1/60  # 60 FPS
             if await self.game.update(delta_time): 
                 await self.broadcast_game_state(self.get_opponent_id())
                 await self.self_send_game_state() 
@@ -162,8 +157,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def broadcast_game_state(self, opponent_id):
         if not self.game:
-            return 
-        # print(f'\n{YELLOW}[Broadcasting FROM LOOP RENNUER {self.user.username}]{RESET}\n')
+            return
         await matchmake_system.channel_layer.group_send(
             f'game_{self.game_id}',
             {
@@ -179,43 +173,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             'game_state': event['game_state']
         }))
 
-    # async def send_self_game_state(self):
-    #     if not self.game: 
-    #         return
-    #     await self.send(text_data=json.dumps(self.game.get_state(self.user.id, self.user.username)))
-        # self.send(text_data=json.dumps(self.game.get_state(opponent_id, self.user.username)))
-        # matchmake_system.channel_layer.send(
-        #     self.game.player1.channel_name,
-        #     {
-        #         'type': 'game.update',
-        #         'game_state': self.game.get_state(self.game.player1.id)
-        #     }
-        # )
-        # matchmake_system.channel_layer.send(
-        #     self.game.player2.channel_name,
-        #     {
-        #         'type': 'game.update',
-        #         'game_state': self.game.get_state(self.game.player2.id)
-        #     }
-        # )
-
     async def handle_game_end(self):
         if not self.game:
             return
 
         await self.save_game_result(self.game.get_state())
-
-        # await matchmake_system.channel_layer.group_send(
-        #     f'game_{self.game_id}',
-        #     {
-        #         'type': 'game.update',
-        #         'game_state': self.game.get_state()
-        #     }
-        # )
         try:
             print (f'\n{RED}[Game End {self.game_id}]{RESET}\n')
-            a =  matchmake_system.games[self.game_id]
-            print (f'\n{RED}[Game End {a}]{RESET}\n')
             del matchmake_system.games[self.game_id]
         except Exception as e:
             print(f'\n{RED}[Error in Game End {str(e)}]{RESET}\n')
