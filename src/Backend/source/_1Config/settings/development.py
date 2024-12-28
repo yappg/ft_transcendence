@@ -6,7 +6,7 @@ from dotenv import load_dotenv
  
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
-# ===========================
+# =========================== 
     
 # Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,7 +103,7 @@ MIDDLEWARE = [
 # ===========================
  
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=6000),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
