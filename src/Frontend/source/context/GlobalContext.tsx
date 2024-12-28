@@ -6,7 +6,9 @@ import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
+import {Achievement} from '@/constants/achivemement';
 import { LeaderBoard } from '@/constants/LeaderBoard';
+import { onlineService } from '@/services/onlineService';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
 const USER_PROFILE_BASE_URL = '/user-profile/';
@@ -60,15 +62,18 @@ interface UserContextType {
   chats: Chat[] | null;
   notifications: Notification[];
   messages: Message[];
+  setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   notificationCount: number;
   fetchCurrentUserDetails: () => Promise<void>;
+  setOnlineStatus: () => Promise<void>;
   fetchPlayers: () => Promise<User[]>;
   fetchNotifications: () => Promise<void>;
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
   PlayerMatches: User[] | null;
   PlayerLeaderBoard: User[] | null;
+  achievements: Achievement[] | null;
 }
 
 interface UserProfile extends User {
@@ -77,12 +82,7 @@ interface UserProfile extends User {
   totalWins: number;
   totalGames: number;
 }
-
-const userService = {
-  // async getUserDetailsByUsername(username: string): Promise<User> {
-  //   const response = await userApi.get(`/user-profile/}`);
-  //   return response.data;
-  // },
+ const userService = {
 
   async getCurrentUserId(): Promise<User> {
     const response = await userApi.get(`/user-profile/`);
@@ -99,7 +99,8 @@ const userService = {
   async getPlayerLeaderBoard(): Promise<User>{
     const response = await userApi.get(`/leaderboard/`);
     return response.data;
-  }
+  },
+
 };
 
 const UserContext = createContext<UserContextType>({
@@ -111,15 +112,17 @@ const UserContext = createContext<UserContextType>({
   players: null,
   messages: [],
   setMessages: () => {},
+  setChats: () => {},
   notifications: [],
   notificationCount: 0,
   fetchCurrentUserDetails: async () => {},
+  setOnlineStatus: async () => {},
   fetchPlayers: async () => [],
   fetchNotifications: async () => {},
   setNotifications: () => {},
   setNotificationCount: () => {},
   PlayerMatches: null,
-  PlayerLeaderBoard: null
+  PlayerLeaderBoard: null,
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
@@ -130,10 +133,18 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
   const [players, setPlayers] = useState<User[] | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [notificationCount, setNotificationCount] = useState<number | null>(null);  
+  const [notificationCount, setNotificationCount] = useState<number | null>(null); 
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<User[] | null>(null);
+
+  const setOnlineStatus = async () => {
+    try {
+      const ws = onlineService.createWebSocketConnection();
+    } catch (err) {
+      console.log('err');
+    }
+  }
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -158,7 +169,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
       console.log('this is the fetched chat: ', fetchedChats);
       setChats(fetchedChats);
     } catch (error) {
-      console.error('Failed to fetch chats or user details', error);
+      console.log('Failed to fetch chats or user details', error);
     }
   };
 
@@ -171,32 +182,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         console.log(data.data);
         setPlayers(data.data);
         setIsLoading(false);
+        return data.data;
       }
-      return data.data;
+      else if (data.error)
+      {
+        console.error(data.error)
+        setPlayers(null);
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
       setPlayers(null);
     } finally {
       setIsLoading(false);
     }
-    return [];
   };
-  const fetchNotifications = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const fetchedNotifications = await notificationsService.getNotifications();
-      setNotifications(fetchedNotifications as Notification[]);
-      setNotificationCount(fetchedNotifications.length);
-      console.log(fetchNotifications);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch notifications'));
-      setNotifications([]);
-      setNotificationCount(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
   const fetchPlayerMatches = async () => {
     setIsLoading(true);
     setError(null);
@@ -210,20 +210,37 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
       setIsLoading(false);
     }
   };
+
   const fetchPlayerLeaderBoard = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const fetchedLeaderBoard = await userService.getPlayerLeaderBoard();
-      console.log('this is the fetched leaderboard: ', fetchedLeaderBoard);
-      setPlayerLeaderBoard(fetchedLeaderBoard);
+      const fetchPlayerLeaderBoard = await userService.getPlayerLeaderBoard();
+      setPlayerLeaderBoard(fetchPlayerLeaderBoard);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch LeaderBoard'));
+      setError(err instanceof Error ? err : new Error('Failed to fetch player leaderBoard'));
       setPlayerLeaderBoard(null);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const fetchNotifications = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const fetchedNotifications = await notificationsService.getNotifications();
+      setNotifications(fetchedNotifications as Notification[]);
+      setNotificationCount(fetchedNotifications.length);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch notifications'));
+      setNotifications([]);
+      setNotificationCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     fetchCurrentUserDetails();
@@ -232,6 +249,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     fetchChats();
     fetchPlayerMatches();
     fetchPlayerLeaderBoard();
+    setOnlineStatus();
   }, [user?.username]);
 
   return (
@@ -247,6 +265,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         chats,
         messages,
         setMessages,
+        setChats,
+        setOnlineStatus,
         fetchCurrentUserDetails,
         fetchPlayers,
         fetchNotifications,
@@ -264,12 +284,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
 export const useUser = () => {
   const context = useContext(UserContext);
 
+
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
 
+
   return context;
 };
-
-// Export the userApi and userService for use in other parts of the application
 export { userApi, userService };

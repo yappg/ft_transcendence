@@ -6,7 +6,7 @@ class ChatRoom(models.Model):
     from relations.models import Friends
 
     name = models.CharField(max_length=100, unique=True)
-    senders = models.ManyToManyField(Player)
+    senders = models.ManyToManyField(Player)# participents
     is_private = models.BooleanField(default=False)
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE, related_name='friends_chats')
     created_at = models.DateTimeField(auto_now_add=True)

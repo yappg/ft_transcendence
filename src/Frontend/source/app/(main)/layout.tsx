@@ -23,7 +23,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <UserProvider>
-      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient sm:p-8 dark:bg-linear-gradient-dark">
+      <div className=" grid h-screen w-full grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient lg:p-8 dark:bg-linear-gradient-dark">
         <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
@@ -49,7 +49,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
         <RightBar handleRightClick={handleRightClick} />
       </div>
 
-      <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr]">
+      <div className="md:col-span-10 md:col-start-2 col-start-0  col-span-full row-span-8 row-start-2 col-end-11 grid grid-cols-[1fr] grid-rows-[1fr]">
         {children}
       </div>
     </div>
@@ -61,6 +61,5 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
 function useEffect(arg0: () => () => void, arg1: never[]) {
   throw new Error('Function not implemented.');
 }
-
 
 export default withAuth(RootLayout as ComponentType<{}>, true);
