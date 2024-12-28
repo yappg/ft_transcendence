@@ -42,14 +42,14 @@ export const Chart = ({
   stats: Statistics
 }) => {
   console.log(stats, total_games);
-  if (!stats?.earth_ratio && !stats?.ice_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
+  if (!stats?.earth_ratio && !stats?.air_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
     return <div className="w-full h-full flex items-center justify-center">
       <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
     </div>;
   }
   const chartData = [
     { browser: "Earth", visitors:  stats?.earth_ratio , fill: "var(--color-chrome)" },
-    { browser: "Ice", visitors:  stats?.ice_ratio , fill: "var(--color-safari)" },
+    { browser: "Ice", visitors:  stats?.air_ratio , fill: "var(--color-safari)" },
     { browser: "Water", visitors:  stats?.water_ratio , fill: "var(--color-firefox)" },
     { browser: "Fire", visitors:  stats?.fire_ratio , fill: "var(--color-edge)" },
   ];

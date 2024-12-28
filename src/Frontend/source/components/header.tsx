@@ -11,6 +11,27 @@ import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from './ui/input';
 import axios from 'axios';
+import { Avatar } from './ui/avatar';
+import { useRouter } from 'next/navigation';
+
+
+const search = axios.create({
+  baseURL: 'http://localhost:8080/accounts/',
+  withCredentials: true,
+});
+
+
+export interface Root {
+  count: number
+  results: Result[]
+}
+
+export interface Result {
+  id: number
+  display_name: string
+  avatar: string
+  is_online: boolean
+}
 
 
 export const Header = () => {
@@ -29,8 +50,9 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [value, setValue] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [filteredPlayers, setFilteredPlayers] = useState<any>([]);
+  const [filteredPlayers, setFilteredPlayers] = useState<Result>([]);
   const {user, isLoading} = useUser();
+  const router = useRouter();
 
   const mockPlayers = [
     { id: 1, avatar: '/ProfilePhoto.svg', display_name: 'PlayerOne' },
@@ -50,19 +72,25 @@ export const Header = () => {
 
   const fetchUsers = async (value: string) => {
     try {
-      const res = await axios.get(`http://localhost:8080/accounts/search-users/?search=${value}`);
+      const res = await search.get(`search-users/?search=${value}`);
       return res.data;
     }  catch (error) {
       console.error('Error fetching users:', error);
     }
   }
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;
     setValue(searchValue);
-
+  
     if (searchValue) {
-      const filteredPlayersList = fetchUsers(searchValue);
-      setFilteredPlayers(filteredPlayersList);
+      try {
+        const resData = await fetchUsers(searchValue); 
+        if (resData && resData.results) {
+          setFilteredPlayers(resData.results);
+        }
+      } catch (error) {
+        console.error('Error processing fetched users:', error);
+      }
     } else {
       setFilteredPlayers([]);
     }
@@ -110,7 +138,7 @@ export const Header = () => {
             <IconSearch className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
           </div>
         </button>
-          <div className={` ${showSearchBar === false ? 'w-[300px]' : 'md:w-[300px] sm:w-[200px] w-[120px] flex px-2'} xl:flex items-center justify-center bg-[rgba(28,28,28,0.4)] rounded-full shadow-xl xl:px-2`}>
+          <div className={` ${showSearchBar === false ? 'w-[300px]' : 'md:w-[300px] sm:w-[200px] w-[120px] flex px-2'} relative  xl:flex items-center justify-center bg-[rgba(28,28,28,0.4)] rounded-full shadow-xl xl:px-2`}>
             <IconSearch className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex size-[12px] sm:size-[15px] text-[#B8B8B8] md:size-[30px] transition-all duration-300`} />
             <Input
               value={value}
@@ -118,31 +146,20 @@ export const Header = () => {
               className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex w-full h-full bg-transparent outline-none text-white placeholder:text-white text-[15px] border-none`}
               placeholder="Search ... "
             />
-            {/* <Command
-          className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px] w-[120px]' : 'w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
-        >
-          <Input
-              value={value}
-              onChange={handleChange}
-              className={`w-full h-full bg-transparent outline-none text-white placeholder:text-white text-[15px] border-none`}
-              placeholder="Search ... "
-            />
-          <CommandList />
-        </Command> */}
             {filteredPlayers.length > 0 && (
               <div className="absolute overflow-hidden top-full mt-2 w-full rounded-lg shadow-md border-b-2 border-[#B8B8B8]">
-                {filteredPlayers.map((player : any) => (
+                {filteredPlayers.map((player : Result) => (
                   <div
                     key={player.id}
-                    onClick={() => setShowSearchBar(false)}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer bg-[rgba(28,28,28,0.4)] border-b-2 border-[#B8B8B8]"
+                    onClick={() => { router.push(`/Profile/${player.id}`); setFilteredPlayers([]); setValue(''); }}
                   >
                     <img
-                      src={player.avatar}
-                      alt={`${player.display_name}'s avatar`}
+                      src={"http://localhost:8080" + player?.avatar}
+                      // alt={`${player?.display_name}'s avatar`}
                       className="size-10 rounded-full"
                     />
-                    <span className="text-white">{player.display_name}</span>
+                    <span className="text-white">{player?.display_name}</span>
                   </div>
                 ))}
               </div>
