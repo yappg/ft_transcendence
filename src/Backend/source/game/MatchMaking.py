@@ -97,6 +97,7 @@ class MatchMakingSystem:
                 'type': 'game.found',
                 'opponent': player2.username,
                 'opponent_id': player1.id,
+                'top_paddle': False,
                 'game_id': game_id,
                 'message': "Game found, Get Ready to play!!"
             }
@@ -108,6 +109,7 @@ class MatchMakingSystem:
                 'opponent': player1.username,
                 'opponent_id': player1.id,
                 'game_id': game_id,
+                'top_paddle': True,
                 'message': "Game found, Get Ready to play!!"
             }
         )
