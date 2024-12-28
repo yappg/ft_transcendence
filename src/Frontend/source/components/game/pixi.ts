@@ -121,6 +121,8 @@ export abstract class PixiManager {
         this.handleWaitingState();
       }
       if (this.game.gameState === 'start') {
+        this.app.stage.removeChild(this.waitingText);
+        this.app.stage.addChild(this.ball);
         // this.handleStartState();
         if (this.round < 3) {
           this.updateBallPosition();
@@ -331,8 +333,8 @@ export class OnlineGameManager extends PixiManager {
     this.socketManager = socketManager;
     this.socketManager.setPixiManager(this);
     this.user = user;
-    // this.game.gameState = 'start';
-    // this.game.setGameState('start');
+    this.game.gameState = 'waiting';
+    this.game.setGameState('waiting');
   }
 
   updateBottompaddlePosition() {
@@ -407,10 +409,10 @@ export class OnlineGameManager extends PixiManager {
   async handleWaitingState() {
     // const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
     // sleepmoment.then(() => {
-      this.app.stage.removeChild(this.waitingText);
-      this.app.stage.addChild(this.ball);
-      this.game.gameState = 'start';
-      this.game.setGameState('start');
+      // this.app.stage.removeChild(this.waitingText);
+      // this.app.stage.addChild(this.ball);
+      // this.game.gameState = 'start';
+      // this.game.setGameState('start');
   //   });
   }
 }
