@@ -61,7 +61,7 @@ const AchievementsPage: React.FC = () => {
   }
 
   return (
-    <div className="overflow-auto flex items-start justify-start flex-wrap p-4 gap-[25xp] h-full w-full bg-black-crd ">
+    <div className="overflow-y-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 bg-green-300 flex-wrap p-4 gap-2 size-full bg-black-crd">
       {achievements.map((achievement: any) => (
         <AchievementBadge 
           key={achievement.id} 
