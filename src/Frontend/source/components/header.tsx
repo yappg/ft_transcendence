@@ -2,14 +2,12 @@ import { IconSearch } from '@tabler/icons-react';
 import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
-
 import { useUser } from '@/context/GlobalContext';
 import { RiMenu2Fill } from "react-icons/ri";
 import { IoMdNotifications } from "react-icons/io";
 import NotificationBell from  '@/components/notifications/notifications'
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-
 
 export const Header = () => {
   const paths = [
@@ -27,8 +25,54 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
 
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const handleClick = () => {
+    setShowSearchBar(true);
+  };
 
-  const {user, isLoading} = useUser();
+  const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
+  
+  const getAccessToken = () => {
+    const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      acc[name] = value;
+      return acc;
+    }, {});
+    
+    return cookies['access_token'] || '';
+  };
+
+  useEffect(() => {
+    if (user) {
+      const token_ = getAccessToken();
+      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}&token=${token_}`);
+      console.log('WebSocket connection established');
+  
+      ws.onopen = () => {
+        console.log('WebSocket connection opened');
+      };
+  
+      ws.onmessage = (event) => {
+        console.log('WebSocket message received:', event.data);
+        const data = JSON.parse(event.data);
+        console.log("----------HERE IS THE NEW EVET", data)
+        setNotifications((prev) => [data, ...prev]);
+        setNotificationCount((prev) => prev + 1);
+      };
+  
+      ws.onerror = (error) => {
+        console.log('WebSocket error:', error);
+      };
+  
+      ws.onclose = (event) => {
+        console.log('WebSocket connection closed:', event);
+      };
+  
+      return () => {
+        ws.close();
+        console.log('WebSocket connection closed by component unmount');
+      };
+    }
+  }, [user, setNotifications, setNotificationCount]);
 
   if (!user)
     return (
@@ -36,9 +80,7 @@ export const Header = () => {
       Loading...
     </h1>
     );
-  function handleClick() {
-    setShowSearchBar(true);
-  }
+
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
       <div className="md:hidden flex size-[50px]">
@@ -84,9 +126,7 @@ export const Header = () => {
           <CommandInput placeholder="Search..." />
           <CommandList />
         </Command>
-        <div className="flex size-[23px] sm:size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
-          <IoMdNotifications className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
-        </div>
+        <NotificationBell notifications={notifications} notificationCount={notificationCount} />
       </div>
     </div>
   );

@@ -25,10 +25,13 @@ class PlayerListView(APIView):
         from accounts.models import PlayerProfile
         profiles = PlayerProfile.objects.get(player=request.user)
         friends = profiles.all_friends()
+        invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
+        # players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends)[:10]
+        players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends).exclude(id=request.user.id).exclude()[:10]
 
-        players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends)[:10]
         serializer = PlayerRelationsSerializer(players, many=True)
         return Response({'message': 'Success', 'data': serializer.data})
+    
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -39,7 +42,6 @@ class FriendsListView(APIView):
             Q(friend_requester=user) | Q(friend_responder=user)
         ).distinct()
 
-        # Filter to ensure each friendship is only included once
         unique_friends = []
         seen_pairs = set()
         for friend in friends:
