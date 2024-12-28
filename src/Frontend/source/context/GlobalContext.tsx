@@ -6,7 +6,6 @@ import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
-import { LeaderBoard } from '@/constants/LeaderBoard';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
 const USER_PROFILE_BASE_URL = '/user-profile/';
@@ -34,6 +33,7 @@ export interface User {
   games_loss:   number;
   win_ratio:    number;
   created_at:   Date;
+  relation: string;
 }
 
 export interface Statistics {
@@ -50,25 +50,54 @@ export interface GraphDatum {
   losses: number;
 }
 
+export interface History {
+  id: number
+  result: string
+  map_played: string
+  player1: Player
+  player2: Player
+  player1_score: number
+  player2_score: number
+  date: string
+}
+
+export interface Player {
+  id: number
+  display_name: string
+  level: number
+  avatar: string
+}
+
+export interface LeaderBoard {
+  id: number
+  display_name: string
+  level: number
+  avatar: string
+  games_won: number
+  games_loss: number
+}
+
 
 interface UserContextType {
   user: User | null;
-  userId: number | null;
+  userId: number;
   isLoading: boolean;
   error: Error | null;
   players: User[] | null;
   chats: Chat[] | null;
-  notifications: Notification[];
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  notifications: Notification[] | null;
+  messages: Message[] | null;
+  setMessages: React.Dispatch<React.SetStateAction<Message[] | null>>;
   notificationCount: number;
   fetchCurrentUserDetails: () => Promise<void>;
   fetchPlayers: () => Promise<User[]>;
   fetchNotifications: () => Promise<void>;
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[] | null>>;
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
-  PlayerMatches: User[] | null;
-  PlayerLeaderBoard: User[] | null;
+  PlayerMatches: History[] | null;
+  PlayerLeaderBoard: LeaderBoard[] | null;
+  fetchPlayerMatches: () => {};
+  fetchPlayerLeaderBoard: () => {}
 }
 
 
@@ -86,11 +115,11 @@ const userService = {
     const response = await userApi.get(`${USER_PROFILE_BASE_URL}`);
     return response.data;
   },
-  async getPlayerMatches(): Promise<User> {
+  async getPlayerMatches(): Promise<History[]> {
     const response = await userApi.get(`/user-history/`);
     return response.data;
   },
-  async getPlayerLeaderBoard(): Promise<User>{
+  async getPlayerLeaderBoard(): Promise<LeaderBoard[]>{
     const response = await userApi.get(`/leaderboard/`);
     return response.data;
   }
@@ -98,7 +127,7 @@ const userService = {
 
 const UserContext = createContext<UserContextType>({
   user: null,
-  userId: null,
+  userId: 0,
   isLoading: false,
   error: null,
   chats: null,
@@ -113,21 +142,23 @@ const UserContext = createContext<UserContextType>({
   setNotifications: () => {},
   setNotificationCount: () => {},
   PlayerMatches: null,
-  PlayerLeaderBoard: null
+  PlayerLeaderBoard: null,
+  fetchPlayerMatches: async () => {},
+  fetchPlayerLeaderBoard: async () => {},
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number>(0);
   const [players, setPlayers] = useState<User[] | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [notificationCount, setNotificationCount] = useState<number | null>(null);  
+  const [notificationCount, setNotificationCount] = useState<number>(0);  
   const [messages, setMessages] = useState<Message[] | null>(null);
-  const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
-  const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<User[] | null>(null);
+  const [PlayerMatches, setPlayerMatches] = useState<History[] | null>(null);
+  const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<LeaderBoard[] | null>(null);
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -140,7 +171,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch current user'));
       setUser(null);
-      setUserId(null);
+      setUserId(0);
     } finally {
       setIsLoading(false);
     }
@@ -219,15 +250,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     }
   };
 
-  useEffect(() => {
-    fetchCurrentUserDetails();
-    fetchPlayers();
-    fetchNotifications();
-    fetchChats();
-    fetchPlayerMatches();
-    fetchPlayerLeaderBoard();
-  }, [userId]);
-
   return (
     <UserContext.Provider
       value={{
@@ -236,6 +258,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         isLoading,
         players,
         error,
+        fetchPlayerMatches,
+        fetchPlayerLeaderBoard,
         notifications,
         notificationCount,
         chats,

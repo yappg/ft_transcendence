@@ -4,14 +4,23 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
+import { useUser } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
 import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
-import { ComponentType, useContext } from 'react';
+import { ComponentType, useContext, useEffect } from 'react';
 
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const {userId, fetchCurrentUserDetails, fetchPlayers, fetchNotifications, fetchPlayerMatches, fetchPlayerLeaderBoard} = useUser();
+  useEffect(() => {
+    fetchCurrentUserDetails();
+    fetchPlayers();
+    fetchNotifications();
+    fetchPlayerMatches();
+    fetchPlayerLeaderBoard();
+  }, [userId]);
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
     setIsActivated(id);                                                                                              
@@ -51,10 +60,6 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// to be reviewed
-function useEffect(arg0: () => () => void, arg1: never[]) {
-  throw new Error('Function not implemented.');
-}
 
 
 export default withAuth(RootLayout as ComponentType<{}>, true);

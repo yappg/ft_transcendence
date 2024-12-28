@@ -1,5 +1,4 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserActivityBoard from './UserActivityBoard';
 import Link from 'next/link';
 import FriendServices from '@/services/friendServices';
@@ -7,14 +6,44 @@ import MatchHistoryBoard from './MatchHistoryBoard';
 import { Chart } from "@/components/Profile/Chart";
 import { ChartLine } from '@/components/Profile/ChartLine';
 import Rating from './rating';
-import { useUser } from '@/context/GlobalContext';
-const UserSummary = ({user, is_private} : {is_private:boolean}): JSX.Element => {
+import { User, useUser } from '@/context/GlobalContext';
+import { Achievments } from './Achievments';
+import { JSX } from 'react';
+import { MatchHistory } from './MatchHistory';
+import { Friends } from './Friends';
+const UserSummary = ({user, is_private} : {user: User, is_private:boolean}): JSX.Element => {
   const { user: userProfile } = useUser();
   if (!userProfile) return <div>Loading...</div>; 
   const {total_games, achievements } = userProfile;
-  const {PlayerMatches} = useUser();
+  const {PlayerMatches, players} = useUser();
   return (
-    <div className="bg-black size-full"></div>
+    <div className="bg-[#242627]/90 w-full h-fit lg:h-full flex lg:flex-row flex-col items-center pb-3">
+      <div className="w-full h-fit lg:w-[60%] lg:h-full  flex flex-col items-start justify-start px-2 lg:px-1">
+          <Achievments achievements={achievements} />
+          {
+            !is_private ? (
+          <div className='w-full h-fit lg:h-[calc(100%-100px)] py-2 flex lg:flex-row flex-col items-center justify-start gap-4 lg:justify-between'>
+              <MatchHistory PlayerMatches={PlayerMatches} />
+              <Friends players={players} />
+          </div>
+            ) : (
+              <div className='w-full h-fit lg:h-[calc(100%-100px)] py-2 flex lg:flex-row flex-col items-center justify-start gap-4 lg:justify-between'>
+                this profile is private
+              </div>
+          )}
+      </div>
+      <div className="w-full h-[600px] lg:w-[40%] lg:h-full bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl  flex flex-col items-center justify-start">
+        <div className='w-full h-1/2 flex items-center justify-center'>
+          <div className='w-1/2  h-full'>
+            <Chart total_games={total_games} stats={userProfile?.statistics} />
+          </div>
+            <Rating />
+        </div>
+        <div className='w-full h-1/2 flex items-center justify-center'>
+             <ChartLine statistics={userProfile?.statistics} />
+          </div>
+      </div>
+    </div>
   );
 };
 export default UserSummary;

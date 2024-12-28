@@ -1,5 +1,5 @@
 import { IconSearch } from '@tabler/icons-react';
-import { Command, CommandInput, CommandList } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
 
@@ -10,6 +10,7 @@ import NotificationBell from  '@/components/notifications/notifications'
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from './ui/input';
+import axios from 'axios';
 
 
 export const Header = () => {
@@ -28,8 +29,16 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [value, setValue] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
-
+  const [filteredPlayers, setFilteredPlayers] = useState<any>([]);
   const {user, isLoading} = useUser();
+
+  const mockPlayers = [
+    { id: 1, avatar: '/ProfilePhoto.svg', display_name: 'PlayerOne' },
+    { id: 2, avatar: '/ProfilePhoto.svg', display_name: 'PlayerTwo' },
+    { id: 3, avatar: '/ProfilePhoto.svg', display_name: 'PlayerThree' },
+    { id: 4, avatar: '/ProfilePhoto.svg', display_name: 'PlayerFour' },
+
+  ];
 
   if (!user)
     return (
@@ -37,14 +46,31 @@ export const Header = () => {
       Loading...
     </h1>
     );
-    function handleChange(e:any) {
-      setValue(e.value.target);
-    }
   
+
+  const fetchUsers = async (value: string) => {
+    try {
+      const res = await axios.get(`http://localhost:8080/accounts/search-users/?search=${value}`);
+      return res.data;
+    }  catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = event.target.value;
+    setValue(searchValue);
+
+    if (searchValue) {
+      const filteredPlayersList = fetchUsers(searchValue);
+      setFilteredPlayers(filteredPlayersList);
+    } else {
+      setFilteredPlayers([]);
+    }
+  };
+
   function handleClick() {
     setShowSearchBar(true);
   }
-  console.log('value: ', value);
   return (
     <div className="flex h-fit w-full items-center justify-between px-4">
       <div className="md:hidden flex size-[50px]">
@@ -74,7 +100,7 @@ export const Header = () => {
           </div>
         ))}
       <div className="flex w-fit items-center justify-center xl:gap-12 gap-1">
-        <button
+      <button
           className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 xl:hidden items-center justify-center`}
         >
           <div
@@ -84,21 +110,51 @@ export const Header = () => {
             <IconSearch className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
           </div>
         </button>
-        <Command
+          <div className={` ${showSearchBar === false ? 'w-[300px]' : 'md:w-[300px] sm:w-[200px] w-[120px] flex px-2'} xl:flex items-center justify-center bg-[rgba(28,28,28,0.4)] rounded-full shadow-xl xl:px-2`}>
+            <IconSearch className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex size-[12px] sm:size-[15px] text-[#B8B8B8] md:size-[30px] transition-all duration-300`} />
+            <Input
+              value={value}
+              onChange={handleChange}
+              className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex w-full h-full bg-transparent outline-none text-white placeholder:text-white text-[15px] border-none`}
+              placeholder="Search ... "
+            />
+            {/* <Command
           className={`${showSearchBar ? 'md:w-[300px] sm:w-[200px] w-[120px]' : 'w-[0px]'} transition-all duration-300 xl:flex xl:w-[400px]`}
         >
           <Input
-            placeholder="Search..."
-            className={`${
-              showSearchBar
-                ? 'md:w-[300px] sm:w-[200px] w-[120px]'
-                : 'w-[0px]'
-            } transition-all duration-300`}
-            value={value}
-            onChange={handleChange(e)}
-          />
+              value={value}
+              onChange={handleChange}
+              className={`w-full h-full bg-transparent outline-none text-white placeholder:text-white text-[15px] border-none`}
+              placeholder="Search ... "
+            />
           <CommandList />
-        </Command>
+        </Command> */}
+            {filteredPlayers.length > 0 && (
+              <div className="absolute overflow-hidden top-full mt-2 w-full rounded-lg shadow-md border-b-2 border-[#B8B8B8]">
+                {filteredPlayers.map((player : any) => (
+                  <div
+                    key={player.id}
+                    onClick={() => setShowSearchBar(false)}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                  >
+                    <img
+                      src={player.avatar}
+                      alt={`${player.display_name}'s avatar`}
+                      className="size-10 rounded-full"
+                    />
+                    <span className="text-white">{player.display_name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {
+              filteredPlayers.length === 0 && value.length > 0 && (
+                <div className="absolute top-full mt-2 w-full h-[100px] bg-white rounded-lg shadow-md flex items-center justify-center">
+              <h1>No players found</h1>
+            </div>
+              )
+            }
+          </div>
         <div className="flex size-[23px] sm:size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
           <IoMdNotifications className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]" />
         </div>
