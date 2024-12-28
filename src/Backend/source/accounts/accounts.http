@@ -150,8 +150,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/leaderboard
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjM2MTgzLCJpYXQiOjE3MzUyMzM3ODMsImp0aSI6IjllNTI5NWRlYjZjYjRkYzQ4ZDcwYjYwMmQ0YzczZTg2IiwidXNlcl9pZCI6N30.SQqEn4KABXtj-Mwi5f6o5MXkEhC5_fNIDSTENOeyOhA
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1Njg3MTA1LCJpYXQiOjE3MzU0Mjc5MDUsImp0aSI6IjFiNTEwZGE1ZDE0ZjRjZjA5YzliZmZjNDBiODZjNGIxIiwidXNlcl9pZCI6M30.CEwR0KvvoF43nWWKJdDiswbiUtVputPTgMQpcSMAjLo
 
 
 ############################################################
