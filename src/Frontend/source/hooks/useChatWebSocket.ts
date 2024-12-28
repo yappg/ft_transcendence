@@ -1,11 +1,11 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Message, Chat } from '@/constants/chat'
 import { chatService } from '@/services/chatService'
 
 interface UseChatWebSocketProps {
   chatId: number
-  currentUserId: number | null
-  receiverId: number | undefined
+  currentUserId: number
+  receiverId: number
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
   setChats: (chats: Chat[]) => void
 }
@@ -47,7 +47,7 @@ export function useChatWebSocket({
     })
   }, [chatId, setMessages, setChats])
 
-  // --------------------------------------------------------------------
+  // ---------------------------------CHAT-----------------------------------
 
   useEffect(() => {
     const setupWebSocket = async () => {
@@ -69,9 +69,8 @@ export function useChatWebSocket({
       }
     }
   }, [chatId, handleWebSocketMessage])
-
-  // ---------------------------------------------------------------------
-
+  
+  //-------------------------------------------------------------------------
   return {
     chatSocket: socketRef.current
   }
