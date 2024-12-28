@@ -13,11 +13,12 @@ import { ComponentType, useContext, useEffect } from 'react';
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const {userId, fetchCurrentUserDetails, fetchPlayers, fetchNotifications, fetchPlayerMatches, fetchPlayerLeaderBoard} = useUser();
+  const {userId, fetchCurrentUserDetails, fetchChats,fetchPlayers, fetchNotifications, fetchPlayerMatches, fetchPlayerLeaderBoard} = useUser();
   useEffect(() => {
     fetchCurrentUserDetails();
     fetchPlayers();
     fetchNotifications();
+    fetchChats();
     fetchPlayerMatches();
     fetchPlayerLeaderBoard();
   }, [userId]);
@@ -28,6 +29,8 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
       <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] md:gap-[8px] overflow-auto bg-linear-gradient md:p-8 dark:bg-linear-gradient-dark">
+    <UserProvider>
+      <div className=" grid h-screen w-full grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient lg:p-8 dark:bg-linear-gradient-dark">
         <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
@@ -53,13 +56,17 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
         <RightBar handleRightClick={handleRightClick} />
       </div>
 
-      <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr]">
+      <div className="md:col-span-10 md:col-start-2 col-start-0  col-span-full row-span-8 row-start-2 col-end-11 grid grid-cols-[1fr] grid-rows-[1fr]">
         {children}
       </div>
     </div>
   );
 }
 
+// to be reviewed
+function useEffect(arg0: () => () => void, arg1: never[]) {
+  throw new Error('Function not implemented.');
+}
 
 
 export default withAuth(RootLayout as ComponentType<{}>, true);
