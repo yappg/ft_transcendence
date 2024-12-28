@@ -5,6 +5,7 @@ import { User, useUser } from '@/context/GlobalContext';
 import { useEffect } from 'react';
 export default function page() {
   const { user: userProfile } = useUser();
+  console.log(userProfile);
   if (!userProfile) {
     return <div>Loading...</div>;
   }

@@ -8,7 +8,7 @@ import fetcherestprofiles from '@/services/fetcherestprofiles';
 import { useParams } from 'next/navigation';
 export default function Page() {
   const params = useParams();
-  const id = Number(params.UserId); // Convert the id to a number
+  const id = Number(params.UserId);
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
   useEffect(() => {
     try {

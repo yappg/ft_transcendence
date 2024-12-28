@@ -7,12 +7,10 @@ import { MyButton } from '@/components/generalUi/Button';
 import { useQRCode } from 'next-qrcode';
 import { fetchQrCode, sendOtp } from '@/services/fetch-otp';
 import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
 import withAuth from '@/context/requireAhuth';
 import { toast } from '@/hooks/use-toast';
 
 const Signup2fa = () => {
-  const router = useRouter();
   const myString = 'Submit';
   const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');

@@ -37,7 +37,7 @@ export interface User {
 }
 
 export interface Statistics {
-  ice_ratio:   number;
+  air_ratio:   number;
   water_ratio: number;
   fire_ratio:  number;
   earth_ratio: number;
