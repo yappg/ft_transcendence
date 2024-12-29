@@ -6,7 +6,6 @@ from relations.serializers import ProfileFriendsSerializer
 
 ########################################################################################
 
-# KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
 class PlayerSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
@@ -48,8 +47,6 @@ class PlayerRelationsSerializer(serializers.ModelSerializer):
             'username',
             'avatar',
         ]
-
-    # ge
 
     def get_avatar(self, obj):
         return obj.profile.avatar.url
@@ -110,7 +107,6 @@ class FriendsSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'display_name', 'avatar', 'level']
 
 
-# fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     xp = serializers.SerializerMethodField()
@@ -318,24 +314,22 @@ class MatchHistorySerializer(serializers.ModelSerializer):
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
-        fields = [ "id", "name", "description", "condition", "xp_gain"]
-        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"]
-
-
+        fields = [ "name", "description", "condition", "xp_gain"]
+        read_only_fields = [ "name", "description", "condition", "xp_gain"]
 
 
 class PlayerAchievementSerializer(serializers.ModelSerializer):
     achievement = AchievementSerializer(read_only=True)
-    date_earned = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    date_earned = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerAchievement
-        fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
-        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
-
-    def get_date_earned(self, obj):
-        return obj.date_earned.date().isoformat() if obj.date_earned else None
+        fields = ["player", "achievement", "gained", "progress", "date_earned", "image"]
+        read_only_fields = ["player", "achievement", "gained", "progress", "date_earned", "image"]
 
     def get_image(self, obj):
         return obj.achievement.get_image(obj.gained)
+
+    def get_date_earned(self, obj):
+        return obj.date_earned.date().isoformat() if obj.date_earned else None
