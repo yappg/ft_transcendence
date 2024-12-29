@@ -9,8 +9,14 @@ export const PendingButton = ({ name }: { name: string }) => {
         }, 2000);
     }
     return (
-        <button className={` bg-[#00000026] text-white rounded-md w-[130px] flex justify-center py-2 font-coustard transition-all duration-300`} onClick={handleClick} >
-            {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]" /> : 'Pending'}
-        </button>
+        <div className="size-full gap-2">
+           <button className={` bg-red-200 shadow-2xl text-white rounded-md w-[50%] flex justify-center py-2 font-coustard transition-all duration-300`} onClick={handleClick} >
+           {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Decline'}
+            </button>
+            <button className={` bg-[#00000026] text-white rounded-md w-[50%] flex justify-center py-2 font-coustard transition-all duration-300`} onClick={handleClick} >
+            {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Accept'}
+            </button>
+        </div>
+
     )
 }

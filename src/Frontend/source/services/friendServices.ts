@@ -62,7 +62,26 @@ const FriendServices = {
             throw error;
         }
     },
-
+    async getBlocked() {
+        try {
+            const response = await frindsApi.get('/friends/block/')
+            return response.data;
+        }
+        catch(error) {
+            throw error;
+        }
+    },
+    async unblockFriend(name: string){
+        try {
+            const response = await frindsApi.delete('/friends/block/', {
+                data: { unblock_user: name },
+            });
+            return response.data;
+        }
+        catch(error) {
+            throw error;
+        }
+    }
 };
 
 

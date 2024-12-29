@@ -8,6 +8,9 @@ import { NavSecondary } from '@/components/ui/nav-secondary';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 import { FaComments } from 'react-icons/fa6';
 import { IconCarambolaFilled } from '@tabler/icons-react';
+import { IconUserScan } from '@tabler/icons-react';
+import { IconConeFilled } from '@tabler/icons-react';
+import { FaUsers } from 'react-icons/fa';
 // This is sample data.
 const data = {
   teams: [
@@ -21,13 +24,13 @@ const data = {
     {
       title: 'Home',
       url: 'home',
-      icon: Home,
+      icon: IconConeFilled,
       isActive: true,
     },
     {
       title: 'Friends',
       url: '/friends',
-      icon: Users,
+      icon: FaUsers,
     },
     {
       title: 'Leader Board',
@@ -53,6 +56,11 @@ const data = {
   ],
   navSecondary: [
     {
+      title: 'Profile',
+      url: '/profile',
+      icon: IconUserScan,
+    },
+    {
       title: 'Settings',
       url: '/settings',
       icon: Settings2,
@@ -67,11 +75,11 @@ const data = {
 export function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="gap-10 bg-[#28AFB08C]">
-        <h1 className="font-dayson text-[25px]">Ping Pong</h1>
-        <NavMain items={data.navMain} />
+      <SidebarHeader className="gap-10 ">
+        <h1 className="font-dayson text-[25px] dark:text-white text-black">Ping Pong</h1>
+        <NavMain items={data.navMain}/>
       </SidebarHeader>
-      <SidebarContent className="bg-[#28AFB08C]">
+      <SidebarContent className="">
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarRail />

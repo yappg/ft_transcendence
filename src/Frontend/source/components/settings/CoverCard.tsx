@@ -9,7 +9,7 @@ export const CoverCard = ({
     handleCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     coverError: string,
 }) => {
-    return (        <div className='w-fit h-full flex items-center justify-center gap-6'>
+    return (        <div className='w-fit h-full flex items-center justify-center gap-6 flex-wrap'>
     <Image
       src={coverImage || '/ProfilePicture.svg'}
       alt='Cover picture'

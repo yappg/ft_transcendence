@@ -176,7 +176,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
       const userData = await userService.getUserProfile();
       setUser(userData);
       setUserId(userData.id);
-      console.log('userData fetched :', userData);
+      console.log('userData fetched :', userData.display_name);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch current user'));
       setUser(null);
@@ -202,7 +202,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     try {
       const data = await FriendServices.getPlayers();
       if (data.message) {
-        console.log(data.data);
         setPlayers(data.data);
         setIsLoading(false);
         return data.data;
@@ -263,6 +262,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
       setIsLoading(false);
     }
   };
+    useEffect(() => {
+      fetchCurrentUserDetails();
+      fetchPlayers();
+      fetchNotifications();
+      fetchChats();
+      fetchPlayerMatches();
+      fetchPlayerLeaderBoard();
+    }, [userId]);
 
   return (
     <UserContext.Provider

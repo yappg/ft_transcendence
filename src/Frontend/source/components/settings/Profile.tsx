@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CoverCard } from './CoverCard';
-import { Switch } from '@/components/ui/switch';
+import { Activate_2fa } from './Activate_2fa';
 import { ImageCard } from './ImageCard';
 import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
@@ -118,34 +118,12 @@ export default function ProfileInfo() {
       }, 4000);
     }
   };
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
   return (
-    <div className="size-full py-8 px-6 lg:p-10">
-      <div className="custom-scrollbar-container overflow-y-scroll">
+    <div className="size-full py-8 px-6 2xl:p-10 flex flex-col gap-8">
         <ProfileInformations  user={user}/>
-      <div className="h-fit gap-[200px]">
         <SecurityComponent user={user}/>
-        <div className="flex flex-col w-full h-fit gap-[50px] py-6 justify-between">
-          <div className="2xl:w-[50%] h-full flex justify-start flex-col gap-10">
-            <div className="w-full h-[12%] flex items-center">
-              <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
-                Two Factor Authentication
-              </h1>
-            </div>
-            <div className="w-full h-[50%] 2xl:pl-16 xl:pl-10 flex items-start justify-between flex-col">
-              <p className="font-coustard text-lg text-white opacity-[80%]">
-                Two Factor Authentication protects your account by <br />
-                requiring an additional code when you log in on a new device.<br />
-              </p>
-              <div className="w-full h-[50%] flex items-center justify-start flex-row gap-5">
-                <h1 className="font-coustard text-xl text-white">Activate 2FA</h1>
-                <Switch />
-              </div>
-            </div>
-          </div>
-          <div className="w-[30%] h-full flex items-center justify-center">
+        <Activate_2fa />
+        <div className="w-[30%] h-[5%] flex items-center justify-center">
             <button
               className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[200px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
               onClick={handleClick}
@@ -153,9 +131,6 @@ export default function ProfileInfo() {
               {isClicked ? 'Updated' : 'Update'}
             </button>
           </div>
-          </div>
-          </div>
-      </div>
     </div>
   );
 }

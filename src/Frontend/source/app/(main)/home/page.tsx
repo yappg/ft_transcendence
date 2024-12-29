@@ -28,7 +28,6 @@ const Home = () => {
     fetchLogout();
     auth.logout();
   };
-  console.log('user: ', user);
   useEffect(() => {
     setIsActivated(1);
   }, [setIsActivated]);

@@ -207,7 +207,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <div className="flex h-full w-full flex-col dark:bg-linear-gradient-dark bg-linear-gradient">{children}</div>
           </SheetContent>
         </Sheet>
       )
@@ -282,7 +282,7 @@ const SidebarTrigger = React.forwardRef<
       <IconMenu2 style={{
         width: "1.75rem",
         height: "1.75rem"
-      }} stroke={1.5} className="text-[rgba(28,28,28,0.9)] size-[70px] border-2"/>
+      }} stroke={1.5} className="text-[rgba(28,28,28,0.9)] size-[70px] border-none text-white"/>
     </Button>
   )
 })

@@ -42,7 +42,6 @@ const UserFriendsNav = (): JSX.Element => {
       
       try {
         const response = await FriendServices.getFriendRequests();
-        console.log('Friends Requests\n', response.data);
         if (response.message)
         {
           setRequests(response.data);
@@ -67,7 +66,6 @@ const UserFriendsNav = (): JSX.Element => {
       
       try {
         const response = await FriendServices.getFriends();
-        console.log('Friends:',response.data);
         if (response.message){
           setFriends(response.data);
         }
@@ -77,7 +75,7 @@ const UserFriendsNav = (): JSX.Element => {
       } catch (error) {
         toast({
           title: 'Authentication failed',
-          description: 'Oups Somthing went wrong !',
+          description: 'Oups Something went wrong !',
           variant: 'destructive',
           className: 'bg-primary-dark border-none text-white',
         });
@@ -158,9 +156,9 @@ const UserFriendsNav = (): JSX.Element => {
         </div>
       );
     }
-    // } else if (activeIndex === 2) {
-    //   return <AddFriends />;
-    // }
+   else if (activeIndex === 2) {
+      return <AddFriends />;
+    }
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">
