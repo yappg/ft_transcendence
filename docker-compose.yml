@@ -24,7 +24,7 @@ services:
         - transcendence
       ports:
         # - 8080:80
-        - 4433:443
+        - "4433:443"
       # depends_on:
       #   frontend:
       #       condition: service_healthy
@@ -39,6 +39,9 @@ services:
         retries: 3
         start_period: 5s
       restart: always
+      volumes:
+        - static_files:/app/staticfiles:ro
+        - media_files:/app/UsersMedia:ro
 
     # web-exporter:
     #   container_name: nginx-exporter
@@ -102,6 +105,8 @@ services:
       volumes:
         - ./src/Backend/source:/app/source:rw
         - ./src/Backend/config:/app/config:rw
+        - static_files:/app/staticfiles
+        - media_files:/app/UsersMedia
 # ==================>
       networks:
         - transcendence
@@ -279,6 +284,9 @@ volumes:
 
   grafana-data:
     name: grafana
+
+  static_files:
+  media_files:
 
 networks:
   transcendence:
