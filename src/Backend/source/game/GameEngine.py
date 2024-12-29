@@ -3,8 +3,12 @@ from dataclasses import dataclass
 from typing import Dict, Tuple, Optional
 import json
 import math
-import uuid
-
+# import uuid
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+RESET = '\033[0m'
 @dataclass
 class Vector2D:
     x: float
@@ -48,7 +52,7 @@ class GamePlayer:
     status: str = 'waiting' # waiting, ready, playing, 'finished'
     paddle: Paddle = None
     score: int = 0
-
+  
 class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
@@ -58,11 +62,11 @@ class PingPongGame:
         # Initialize players with paddles at opposite sides
         self.player1 = player1
         self.player1.game_id = game_model_id
-        self.player1.status = 'ready'
+        # self.player1.status = ''
         self.player1.paddle = Paddle(Vector2D(50, 5))  # Lower paddle 
         self.player2 = player2
         self.player2.game_id = game_model_id
-        self.player2.status = 'ready'
+        # self.player2.status = ''
         self.player2.paddle = Paddle(Vector2D(37.5, 95))  # Upper paddle
 
         self.game_width = 75
@@ -71,8 +75,12 @@ class PingPongGame:
         self.winner = None
         self.winning_score = 10
 
-    def start_game(self):
-        self.status = 'playing'
+    async def start_game(self):
+        import time
+        while self.player1.status != 'ready' or self.player2.status != 'ready':
+            print(f'{YELLOW}Player 1: {self.player1.status} Player 2: {self.player2.status} | Game status :{self.status}\n{RESET}')
+            time.sleep(0.2)
+        self.status = 'playing' 
         self.ball.reset()
 
     async def update(self, delta_time: float):
@@ -82,7 +90,7 @@ class PingPongGame:
         # print(f'Ball Position: ({self.ball.position.x}, {self.ball.position.y})')
 
         if self.status != 'playing':
-            return False
+            return False 
         await self.ball.update(delta_time)
 
         if await self._check_collisions():
@@ -90,7 +98,7 @@ class PingPongGame:
         if await self._check_scoring():
             return True
         if await self._check_game_end():
-            return True
+            return True 
         return False
 
     #TODO remove _ from functions
@@ -138,7 +146,7 @@ class PingPongGame:
         self.ball.velocity.x = speed * math.cos(bounce_angle)
         self.ball.velocity.y = speed * math.sin(bounce_angle)
 
-    async def _check_scoring(self) -> bool:
+    async def _check_scoring(self) -> bool: 
         if self.ball.position.y <= 0: # Player 2 scores
             self.player2.score += 1
             await self.ball.reset()
@@ -148,7 +156,7 @@ class PingPongGame:
             await self.ball.reset()
             return True
         return False
-    
+
     async def _check_game_end(self) -> bool:
         if self.player1.score >= self.winning_score or \
            self.player2.score >= self.winning_score:
