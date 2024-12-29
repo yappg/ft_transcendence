@@ -3,7 +3,6 @@ import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
 import SocketManager from './socket-manager';
 import { User } from '@/context/GlobalContext';
-import { X } from 'lucide-react';
 
 export abstract class PixiManager {
   app: PIXI.Application;

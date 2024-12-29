@@ -88,6 +88,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
+                    await self.broadcast_ready()
+                    await self.self_send_start_game()
+                    await asyncio.sleep(2)
                     await self.start_game_loop()
                     # await matchmake_system.broadcast_game_state()
             elif action == 'move_paddle':
@@ -96,9 +99,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     return
                 if self.game.player1.status != 'ready' or self.game.player2.status != 'ready':
                     return
-                print(f'\n{BLUE}[Moving Paddle Position[{data.get('position')}]]{RESET}\n')
+                print(f'\n{BLUE}[Moving Paddle Position[{data.get('new_x')}]]{RESET}\n')
                 if self.game:
-                    new_x = data.get('position', 50)
+                    new_x = data.get('new_x')#, 50)
                     self.game.move_paddle(self.user.id, new_x)
                     # await self.broadcast_game_state()
         except Exception as e:
@@ -128,24 +131,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         else :
             self.opponent = self.game.player2 
             self.Gameplayer = self.game.player1
-
-    # def players_ready(self):
-
-    #     # print(f'ope {opponent_id} self {self.user.id}')
-        
-    #     # opponent_profile = (await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)).profile
-    #     # print(f'\n{YELLOW}[Opponent status {opponent_profile.status}]{RESET}\n')
-    #     import time
-
-    #     while self.opponent.status != 'ready':
-    #         print("Ollalalllalla")
-    #         time.sleep(0.1) 
-    #         # await asyncio.sleep(0.2) #TODO to check
-    #     return True
    
     async def start_game_loop(self): 
         # import time
-
         while self.game and self.game.status == 'playing':
             # delta_time = time.perf_counter()
             delta_time = 0.1 #1/60  # 60 FPS
@@ -196,10 +184,18 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def acknowledge_ready(self, event):
-        await self.send(text_data=json.dump({
+        await self.send(text_data=json.dumps({
             'type': 'gameState',
             'state': event['state']
         }))
+    async def self_send_start_game(self):
+        if not self.game:
+            return
+        await self.send(text_data=json.dumps({
+            'type': 'gameState',
+            'state': 'start'
+        }))
+
 
     async def game_update(self, event):
         # print (event)  
