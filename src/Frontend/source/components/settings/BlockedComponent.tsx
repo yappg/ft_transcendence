@@ -2,20 +2,28 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Button from '../2fa/Button';
 import { useState } from 'react';
 import { AiOutlineLoading } from "react-icons/ai";
+import FriendServices from '@/services/friendServices';
 
 const BlockedComponent = ({
     name,
     ProfilePhoto,
+    onUnblock,
 }: {
     name: string;
     ProfilePhoto: string;
+    onUnblock: (name: string) => void;
 }) => {
   const [clicked, setClicked] = useState(false);
-  function handleClick() {
+  async function handleClick() {
     setClicked(true);
-    setTimeout(() => {
+    try {
+      await FriendServices.unblockFriend(name);
+      onUnblock(name);
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+    } finally {
       setClicked(false);
-    }, 2000);
+    }
   }
     return (
         <div className="h-[100px] w-full flex items-center justify-between border-b border-[#C4C4C4] lg:p-8 p-3">

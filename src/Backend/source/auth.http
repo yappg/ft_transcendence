@@ -27,7 +27,7 @@ POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "client3",
+    "username": "client7",
     "email": "client3@gmail.com",
     "password": "thisisapassword",
     "password2": "thisisapassword"
@@ -84,7 +84,7 @@ POST http://localhost:8080/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "client2",
+    "username": "client8",
     "password": "thisisapassword"
 }
 
@@ -95,8 +95,8 @@ POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "bxbx",
-    "password": "AbcdEfgh"
+    "username": "client8",
+    "password": "thisisapassword"
 }
 ##########
 POST http://localhost:8080/accounts/JWT/token/refresh/

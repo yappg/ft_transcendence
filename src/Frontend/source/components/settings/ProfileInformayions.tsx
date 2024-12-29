@@ -37,13 +37,13 @@ const ProfileInformations = (user) => {
         }
       };
     return(
-              <div className="gap-10">
+              <div className="gap-10 border-2 bg-[#00000099] h-fit rounded-[50px] shadow-2xl md:p-6 sm:p-9 p-14 border-[#B8B8B8]">
                 <div className="w-full h-[12%] flex items-center">
                   <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
                     Profile Information
                   </h1>
                 </div>
-                <div className="w-full 2xl:px-20 py-6 flex gap-[100px] items-center justify-start flex-wrap ">
+                <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
                   <ImageCard
                     selectedImage={user.avatar}
                     handleImageChange={handleImageChange}
@@ -56,7 +56,7 @@ const ProfileInformations = (user) => {
                     coverError={user.coverError}
                   />
                 </div>
-                <div className="w-full h-fit 2xl:px-20 py-6 flex flex-wrap 2xl:gap-32 xl:gap-10 lg:gap-7 items-start justify-start px-12">
+                <div className="w-full h-fit 2xl:px-20 py-6 flex 2xl:gap-20 xl:gap-10 lg:gap-7 items-start justify-start sm:px-12 lg:flex-row flex-col">
                   <div className="w-fit flex flex-col gap-4">
                     <label className="text-white text-sm">Username</label>
                     <input

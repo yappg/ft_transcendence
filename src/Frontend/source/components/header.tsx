@@ -8,6 +8,8 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Input } from './ui/input';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import NotificationBell from './notifications/notifications';
+import { IoCloseOutline } from "react-icons/io5";
 
 
 const search = axios.create({
@@ -46,21 +48,14 @@ export const Header = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [filteredPlayers, setFilteredPlayers] = useState<Result>([]);
   const router = useRouter();
-
-  const mockPlayers = [
-    { id: 1, avatar: '/ProfilePhoto.svg', display_name: 'PlayerOne' },
-    { id: 2, avatar: '/ProfilePhoto.svg', display_name: 'PlayerTwo' },
-    { id: 3, avatar: '/ProfilePhoto.svg', display_name: 'PlayerThree' },
-    { id: 4, avatar: '/ProfilePhoto.svg', display_name: 'PlayerFour' },
-
-  ];
   const handleClick = () => {
-    setShowSearchBar(true);
+    setShowSearchBar(!showSearchBar);
   };
 
 
   // ------Omar's code
-  const { user, setNotifications, setNotificationCount } = useUser();
+  const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
+  console.log('hereeeee', user);
   
   const getAccessToken = () => {
     const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
@@ -144,7 +139,7 @@ export const Header = () => {
     <div className="flex h-fit w-full items-center justify-between px-4">
       <div className="md:hidden flex size-[50px]">
         <SidebarProvider >
-        <SidebarLeft className="bg-transparent" />
+        <SidebarLeft />
         <SidebarInset className="bg-transparent">
           <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2">
             <div>
@@ -168,7 +163,7 @@ export const Header = () => {
             )}
           </div>
         ))}
-      <div className="flex w-fit items-center justify-center xl:gap-12 gap-1">
+      <div className="flex w-fit items-center justify-center xl:gap-12 gap-1 ">
       <button
           className={`${showSearchBar === false ? 'flex' : 'hidden'} flex transition-all duration-300 xl:hidden items-center justify-center`}
         >
@@ -179,14 +174,15 @@ export const Header = () => {
             <IconSearch className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300" />
           </div>
         </button>
-          <div className={` ${showSearchBar === false ? 'w-[300px]' : 'md:w-[300px] sm:w-[200px] w-[120px] flex px-2'} relative  xl:flex items-center justify-center bg-[rgba(28,28,28,0.4)] rounded-full shadow-xl xl:px-2`}>
+          <div className={` ${showSearchBar === false ? 'xl:w-[300px] w-[0px]' : 'md:w-[300px] sm:w-[200px] w-[120px] flex px-2'} relative  xl:flex items-center justify-center bg-[rgba(28,28,28,0.4)] rounded-full shadow-xl xl:px-2`}>
             <IconSearch className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex size-[12px] sm:size-[15px] text-[#B8B8B8] md:size-[30px] transition-all duration-300`} />
             <Input
               value={value}
               onChange={handleChange}
-              className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex w-full h-full bg-transparent outline-none text-white placeholder:text-white text-[15px] border-none`}
+              className={`${showSearchBar === false ? 'hidden' : 'flex'} xl:flex w-full h-full bg-transparent outline-none text-white placeholder:text-[#B8B8B8] text-[10px] border-none font-dayson`}
               placeholder="Search ... "
             />
+            <IoCloseOutline onClick={handleClick} className={`${showSearchBar === false ? 'hidden' : 'flex'} text-[#B8B8B8]`}/>
             {filteredPlayers.length > 0 && (
               <div className="absolute overflow-hidden top-full mt-2 w-full rounded-lg shadow-md border-b-2 border-[#B8B8B8]">
                 {filteredPlayers.map((player : Result) => (
@@ -197,7 +193,7 @@ export const Header = () => {
                   >
                     <img
                       src={"http://localhost:8080" + player?.avatar}
-                      // alt={`${player?.display_name}'s avatar`}
+                      alt={`${player?.display_name}'s avatar`}
                       className="size-10 rounded-full"
                     />
                     <span className="text-white">{player?.display_name}</span>
