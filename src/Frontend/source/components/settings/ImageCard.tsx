@@ -10,7 +10,7 @@ export const ImageCard = ({
     profileError: string,
 }) => {
     return (        
-    <div className='w-fit h-full flex items-center justify-center gap-6'>
+    <div className='w-fit h-full flex items-center justify-center gap-6 flex-wrap'>
     <Image
       src={selectedImage || '/ProfilePicture.svg'}
       alt='Profile picture'

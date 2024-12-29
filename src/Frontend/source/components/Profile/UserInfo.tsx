@@ -7,8 +7,8 @@ import { ProfileInfo } from './ProfileInfo';
 import { InfoTitle } from './InfoTitle';
 import { Separator } from '../ui/separator';
 import { AddButton } from './AddButton';
-import { PendingButton } from './AddButton';
-import { BlockButton } from './AddButton';
+import { PendingButton } from './PendingButton';
+import { BlockButton } from './BlockButton';
 import { EditProfile } from './EditProfile';
 const UserInfo = ({
   userProfile,
@@ -22,10 +22,12 @@ const UserInfo = ({
     switch (state) {
       case 'none':
         return <AddButton name={userProfile?.display_name} />;
-      case 'pending':
+      case 'received_invite':
         return <PendingButton name={userProfile?.display_name}/>;
       case 'friends':
         return <BlockButton name={userProfile?.display_name}/>;
+      case 'sent_invite':
+          return <InviteSentButton name={userProfile?.display_name}/>;
     }
   };
   return (
