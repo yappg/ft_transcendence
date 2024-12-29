@@ -36,12 +36,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             await matchmake_system.start()
 
         await self.accept()
-        await self.channel_layer.group_add(
-            f'game_{self.user.id}',
-            self.channel_name
-        )
+        # await self.channel_layer.group_add(
+        #     f'game_{self.user.id}',
+        #     self.channel_name
+        # )
 
-        #TODO ths two lines are temporary must be deleted later
+        #TODO ths two lines are temporary must be deleted later 
         self.profile.status = 'waiting'
         await database_sync_to_async(self.profile.save)()
 
@@ -49,8 +49,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.profile.status == 'waiting':
             print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
             await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
-            self.profile.status = 'inqueue'
-            await database_sync_to_async(self.profile.save)()
+            # self.profile.status = 'inqueue'
+            # await database_sync_to_async(self.profile.save)()
         else:
             print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
         # else:
@@ -61,6 +61,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
+            print(f'\n{BLUE}[Received Data {data}]{RESET}\n')  
             action  = data.get('action')
             # print (f'\n{YELLOW}[Received Data {data}]{RESET}\n')
 
@@ -73,16 +74,20 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if not self.game:
                     return
                 await self.set_Gameplayers_to_consumer()
-                self.Gameplayer.status = 'ready'
-                self.broadcast_ready()
+                self.Gameplayer.status = 'ready' 
+                # self.broadcast_ready()
+                if self.user.id == self.game.player1.id:
+                    print(f'\n{YELLOW}[Player 1 Ready]{RESET}\n')
+                else:
+                    print(f'\n{RED}[Player 2 Ready]{RESET}\n')
                 await asyncio.sleep(2)
 
-                players_ready = self.players_ready()
-                print(players_ready)
-                if players_ready and self.game.status == 'waiting':
+                # players_ready = self.players_ready()
+                # print(players_ready)
+                if self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
-                    self.game.start_game()
-                    await self.start_game_loop()
+                    await self.game.start_game()
+                    # await self.start_game_loop()
                     # await matchmake_system.broadcast_game_state()
             elif action == 'move_paddle':
                 print(self.game)
@@ -101,7 +106,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def game_found(self, event):
-        await self.send(text_data=json.dumps(
+        await self.send(text_data=json.dumps( 
             {
                 "type": "acknowledgeOpponent",
                 "data": { 
@@ -123,17 +128,19 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.opponent = self.game.player2 
             self.Gameplayer = self.game.player1
 
-    async def players_ready(self):
+    # def players_ready(self):
 
-        print(f'ope {opponent_id} self {self.user.id}')
+    #     # print(f'ope {opponent_id} self {self.user.id}')
         
-        opponent_profile = (await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)).profile
-        print(f'\n{YELLOW}[Opponent status {opponent_profile.status}]{RESET}\n')
+    #     # opponent_profile = (await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)).profile
+    #     # print(f'\n{YELLOW}[Opponent status {opponent_profile.status}]{RESET}\n')
+    #     import time
 
-        while self.opponent.status != 'ready':
-            print("Ollalalllalla")
-            await asyncio.sleep(0.2) #TODO to check
-        return True
+    #     while self.opponent.status != 'ready':
+    #         print("Ollalalllalla")
+    #         time.sleep(0.1) 
+    #         # await asyncio.sleep(0.2) #TODO to check
+    #     return True
    
     async def start_game_loop(self): 
         # import time
@@ -188,7 +195,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def acknowledge_ready(self, event):
-        await self.channel_layer.send(text_data=json.dump({
+        await self.send(text_data=json.dump({
             'type': 'gameState',
             'state': event['state']
         }))
