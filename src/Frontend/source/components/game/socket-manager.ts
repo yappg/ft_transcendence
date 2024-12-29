@@ -1,4 +1,4 @@
-import { OnlineGameManager } from './pixi';
+import { OnlineGameManager } from './pixi-manager';
 
 class SocketManager extends WebSocket {
   // socket: WebSocket;
@@ -33,6 +33,39 @@ class SocketManager extends WebSocket {
     this.send(JSON.stringify({ data }));
   }
 
+  updateBallPosition(data: any) {
+    if (data) {
+      const scale_x = this.pixiManager.screenWidth / 75;
+      const scale_y = this.pixiManager.screenHeight / 100;
+  
+      const new_x = scale_x * data.x;
+      const new_y = scale_y * data.y;
+      
+      console.log('scale_x:', data?.x, scale_x);
+      console.log('scale_y:', data?.y, scale_y);
+      // console.log(`Calculated positions - new_x: ${new_x}, new_y: ${new_y}`);
+      // console.log(`Screen dimensions - width: ${this.screenWidth}, height: ${this.screenHeight}`);
+      if (this.pixiManager.isTopPaddle) {
+        this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
+        this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
+      }
+      if (!this.pixiManager.isTopPaddle) {
+        this.pixiManager.ball.x = new_x;
+        this.pixiManager.ball.y = new_y;
+      }
+  }
+  }
+
+  updatePaddlePosition(data: any) {
+    if (data) {
+      const scale_x = this.pixiManager.screenWidth / 75;
+  
+      const new_x = scale_x * data.x;
+  
+      this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x;
+    }
+  }
+  
   async handleSocketMessage(message: any) {
     switch (message.type) {
       case 'acknowledgeOpponent':
@@ -48,11 +81,13 @@ class SocketManager extends WebSocket {
           console.log('updating game', message);
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
           // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-          this.pixiManager.updateBallPosition(message.game_state?.ball);
+          
+          this.updateBallPosition(message.game_state?.ball);
+          this.updatePaddlePosition(message.game_state?.opponent_paddle);
         // });
         break;
       case 'scoreUpdate':
-        this.pixiManager.updateScore(message);
+        // this.pixiManager.updateScore(message);
         break;
       case 'gameState':
         this.pixiManager.game.gameState = message.state;

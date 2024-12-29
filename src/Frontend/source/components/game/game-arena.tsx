@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/game/pixi';
+import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/game/pixi-manager';
 import { useGame } from '@/context/GameContext';
 import React, { useRef, useEffect } from 'react';
 import socketManager from './socket-manager';
@@ -26,13 +26,11 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     } else {
-      socketRef.current = new socketManager('ws://localhost:8080/ws/game/');
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
           `/${map}.png`,
           game,
-          socketRef.current,
           user?.user
         );
       }

@@ -3,6 +3,7 @@ import { GlowFilter } from 'pixi-filters';
 import { Assets, Sprite, Graphics } from 'pixi.js';
 import SocketManager from './socket-manager';
 import { User } from '@/context/GlobalContext';
+import socketManager from './socket-manager';
 
 // Global Game Manager
 
@@ -22,6 +23,7 @@ export abstract class PixiManager {
   ballMovementSpeed: number = 0;
   waitingText!: PIXI.Text;
   game: any;
+  isTopPaddle: boolean = false;
   round = 0;
   dx = 0;
   dy = 1;
@@ -56,7 +58,7 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
     this.app.stage.addChild(background);
     this.drawGameElements();
   }
-// 75 / 5 
+
   drawGameElements() {
     this.topRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
@@ -85,8 +87,9 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
   }
 
   abstract handleGameStates(): void;
-  // abstract updatePaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateBallPosition(x: number, y: number): void;
+  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
+  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
+  // abstract updateGame(x: number, y: number): void;
   abstract handlegameupdates(): void;
   abstract handleWaitingState(): void;
 
@@ -178,11 +181,10 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
   }
 }
 
-
 // Local Game Manager
 
 export class LocalGameManager extends PixiManager {
-  handlegameupdates(): void {
+  async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
     const baseSpeed = 5;
@@ -195,7 +197,6 @@ export class LocalGameManager extends PixiManager {
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
       this.dx *= -1;
-      this.ball.x += this.dx * this.ballMovementSpeed;
     }
 
     if (
@@ -205,7 +206,11 @@ export class LocalGameManager extends PixiManager {
       this.ball.x <= this.topRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * this.ballMovementSpeed;
+
+      const collisionPoint = this.ball.x - this.topRacket.x;
+      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+    
+      this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
 
     if (
@@ -215,38 +220,48 @@ export class LocalGameManager extends PixiManager {
       this.ball.x <= this.bottomRacket.x + this.paddleWidth
     ) {
       this.dy *= -1;
-      this.ball.y += this.dy * this.ballMovementSpeed;
+      const collisionPoint = this.ball.x - this.bottomRacket.x;
+      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+
+      this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
     if (this.ball.y <= 0 || this.ball.y >= this.screenHeight) {
       const score1 = this.game.GameScore[0];
       const score2 = this.game.GameScore[1];
+      this.dx = 0;
+      this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
+      this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
+      const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
+      await sleepmoment;
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
-        this.dy = 1;
       } else {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
-        this.dy = -1;
       }
+      this.dy = (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1? 1 : -1;
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
         this.app.stage.removeChild(this.ball);
         this.ball.x = this.screenWidth / 2;
         this.ball.y = this.screenHeight / 2;
-        this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
-        this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
         this.round += 1;
         if (this.round < 3) {
           this.game.gameState = 'waiting';
           this.game.setGameState('waiting');
         }
+        else {
+          this.game.gameState = 'over';
+          this.game.setGameState('over');
+        }
       }
       this.ball.x = this.screenWidth / 2;
       this.ball.y = this.screenHeight / 2;
-    }
 
+    }
   }
+
   handleWaitingState(): void {
     const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
     sleepmoment.then(() => {
@@ -256,6 +271,47 @@ export class LocalGameManager extends PixiManager {
       this.game.setGameState('start');
     });
   }
+
+  handlepaddlesMouvements() {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    if (!bottomRacket || !app) return;
+
+    const baseScreenWidth = 75;
+    const movementSpeed = (baseScreenWidth / this.screenWidth ) * 15;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        this.screenWidth - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+    }
+
+    if (
+      (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
+      !this.keysPressed.has('d') &&
+      !this.keysPressed.has('D')
+    ) {
+      this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
+    }
+
+    if (
+      (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
+      !this.keysPressed.has('a') &&
+      !this.keysPressed.has('A')
+    ) {
+      this.topRacket.x = Math.min(
+        this.screenWidth - this.topRacket.width,
+        this.topRacket.x + movementSpeed
+      );
+    }
+  }
+
   handleGameStates(): void {
     if (this.game.gameState === 'waiting') {
       this.displayText('Get\nReady');
@@ -263,6 +319,7 @@ export class LocalGameManager extends PixiManager {
     }
     if (this.game.gameState === 'start') {
       this.handlegameupdates();
+      this.handlepaddlesMouvements();
     }
     if (this.game.gameState === 'over') {
       this.removeGameElements();
@@ -275,26 +332,73 @@ export class LocalGameManager extends PixiManager {
 
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
-  user: User;
+  user: User | null;
 
   constructor(
     container: HTMLElement,
     backgroundImage: string,
     game: any,
-    socketManager: SocketManager,
-    user: User
+    user: User | null
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = socketManager;
+    this.socketManager = new socketManager('ws://localhost:8080/ws/game/');
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
 
-  handleGameStates(): void {
-    // implement this to accept data from socket and do the same as local game manager
-    // this.app.stage.removeChild(this.waitingText);
+  moveMyPaddle() {
+    const bottomRacket = this.bottomRacket;
+    const app = this.app;
+
+    const baseScreenWidth = 75;
+    const scale_x = baseScreenWidth / this.screenWidth;
+
+    if (!bottomRacket || !app) return;
+
+    const movementSpeed = (baseScreenWidth / this.screenWidth) * 4;
+
+    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+      bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
+      this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+    }
+
+    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+      bottomRacket.x = Math.min(
+        this.screenWidth - bottomRacket.width,
+        bottomRacket.x + movementSpeed
+      );
+      this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+    }
   }
 
-  handlegameupdates(): void {
+  handlepaddlesMouvements() {
+    this.moveMyPaddle();
+  }
+
+  handleGameStates(): void {
+    if (this.game.gameState === 'waiting') {
+      this.handleWaitingState();
+    }
+    if (this.game.gameState === 'start') {
+      if (this.app.stage.children.includes(this.waitingText)) {
+        this.app.stage.removeChild(this.waitingText);
+      }
+      if (!this.app.stage.children.includes(this.ball)) {
+        this.app.stage.addChild(this.ball);
+      }
+      this.handlegameupdates();
+      this.handlepaddlesMouvements();
+    }
+    if (this.game.gameState === 'over') {
+      this.removeGameElements();
+      this.displayText('Game\nOver');
+    }
+  }
+
+  handlegameupdates() {
+    // this.updateBallPosition()
+  }
+  handleWaitingState() {
+    this.displayText('Get\nReady');
   }
 }
