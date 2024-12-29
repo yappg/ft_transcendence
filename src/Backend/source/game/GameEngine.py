@@ -75,8 +75,9 @@ class PingPongGame:
         self.winner = None
         self.winning_score = 10
 
-    async def start_game(self):
+    def start_game(self):
         import time
+        # print("statuses:", self.player1.status, self.player2.status)
         while self.player1.status != 'ready' or self.player2.status != 'ready':
             print(f'{YELLOW}Player 1: {self.player1.status} Player 2: {self.player2.status} | Game status :{self.status}\n{RESET}')
             time.sleep(0.2)

@@ -67,6 +67,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             if action == 'ready':
                 game_id = data.get('game_id', None)
+                print(f'\n{YELLOW}data: [{data}]{RESET}\n')
                 if not game_id :
                     return
                 self.game_id = game_id 
@@ -86,8 +87,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                 # print(players_ready)
                 if self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
-                    await self.game.start_game()
-                    # await self.start_game_loop()
+                    self.game.start_game()
+                    await self.start_game_loop()
                     # await matchmake_system.broadcast_game_state()
             elif action == 'move_paddle':
                 print(self.game)
