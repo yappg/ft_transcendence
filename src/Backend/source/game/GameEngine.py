@@ -36,8 +36,8 @@ class Ball:
 @dataclass
 class Paddle:
     position: Vector2D
-    width: float = 75.0 #15.0
-    height: float = 3.0
+    width: float = 15.0 #15.0 
+    height: float = 2.5
 
     async def move(self, new_x: float):
         # Clamp paddle position within game bounds
@@ -63,11 +63,11 @@ class PingPongGame:
         self.player1 = player1
         self.player1.game_id = game_model_id
         # self.player1.status = ''
-        self.player1.paddle = Paddle(Vector2D(50, 5))  # Lower paddle 
+        self.player1.paddle = Paddle(Vector2D(50, 1.5))  # Lower paddle 
         self.player2 = player2
         self.player2.game_id = game_model_id
         # self.player2.status = ''
-        self.player2.paddle = Paddle(Vector2D(37.5, 95))  # Upper paddle
+        self.player2.paddle = Paddle(Vector2D(37.5, 98.5))  # Upper paddle
 
         self.game_width = 75
         self.game_height = 100
@@ -79,7 +79,7 @@ class PingPongGame:
         import time
         # print("statuses:", self.player1.status, self.player2.status)
         while self.player1.status != 'ready' or self.player2.status != 'ready':
-            print(f'{YELLOW}Player 1: {self.player1.status} Player 2: {self.player2.status} | Game status :{self.status}\n{RESET}')
+            # print(f'{YELLOW}Player 1: {self.player1.status} Player 2: {self.player2.status} | Game status :{self.status}\n{RESET}')
             time.sleep(0.2)
         self.status = 'playing' 
         self.ball.reset()
@@ -166,13 +166,13 @@ class PingPongGame:
             return True
         return False
 
-    def move_paddle(self, player_id: str, new_y: float) -> bool:
+    def move_paddle(self, player_id: str, new_x: float) -> bool:
         """Move a player's paddle to a new y position"""
         if player_id == self.player1.id:
-            self.player1.paddle.move(new_y)
+            self.player1.paddle.move(new_x)
             return True
         elif player_id == self.player2.id:
-            self.player2.paddle.move(new_y)
+            self.player2.paddle.move(new_x)
             return True
         return False
     
