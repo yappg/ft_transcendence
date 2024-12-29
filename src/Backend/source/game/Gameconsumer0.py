@@ -76,9 +76,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.Gameplayer.status = 'ready'
                 self.broadcast_ready()
                 await asyncio.sleep(2)
-                # #TODO is this way to be implemented 
-                # import time 
-                # time.sleep(1)
 
                 players_ready = self.players_ready()
                 print(players_ready)
@@ -126,14 +123,14 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.opponent = self.game.player2 
             self.Gameplayer = self.game.player1
 
-    # async def players_ready(self):
+    async def players_ready(self):
 
-        # print(f'ope {opponent_id} self {self.user.id}')
+        print(f'ope {opponent_id} self {self.user.id}')
         
-        # opponent_profile = (await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)).profile
-        # print(f'\n{YELLOW}[Opponent status {opponent_profile.status}]{RESET}\n')
+        opponent_profile = (await database_sync_to_async(Player.objects.select_related('profile').get)(id=opponent_id)).profile
+        print(f'\n{YELLOW}[Opponent status {opponent_profile.status}]{RESET}\n')
 
-        while opponent.status != 'ready':
+        while self.opponent.status != 'ready':
             print("Ollalalllalla")
             await asyncio.sleep(0.2) #TODO to check
         return True
@@ -147,7 +144,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.game.update(delta_time)
             await asyncio.create_task(self.broadcast_game_state(self.get_opponent_id()))
             # await self.broadcast_game_state(self.get_opponent_id())
-            await asyncio.create_task(self.self_send_game_state() )
+            await asyncio.create_task(self.self_send_game_state())
             # await self.self_send_game_state()
             await asyncio.sleep(delta_time)
         if self.game and self.game.status == 'finished':
@@ -176,19 +173,20 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def broadcast_ready(self): # broadcast ready to players then start the game
         await matchmake_system.channel_layer.send(
-            player1.channel_name,
+            self.game.player1.channel_name,
             {
                 'type': 'acknowledge.ready',
                 'state': "start"
             }
         )
         await matchmake_system.channel_layer.send(
-            player2.channel_name,
+            self.game.player2.channel_name,
             {
                 'type': 'acknowledge.ready',
                 'state': "start"
             }
         )
+
     async def acknowledge_ready(self, event):
         await self.channel_layer.send(text_data=json.dump({
             'type': 'gameState',
@@ -215,14 +213,15 @@ class GameConsumer(AsyncWebsocketConsumer):
         #         'game_state': self.game.get_state()
         #     }
         # )
-        try: 
+        try:
             print (f'\n{RED}[Game End {self.game_id}]{RESET}\n')
+            self.game.status = 'finished'
             del matchmake_system.games[self.game_id]
         except Exception as e:
             print(f'\n{RED}[Error in Game End {str(e)}]{RESET}\n')
         self.game = None
         self.game_id = None
-  
+
     @database_sync_to_async
     def save_game_result(self, game_state):
         pass
@@ -230,8 +229,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     # Implement game result saving lo   gic here
     async def disconnect(self, close_code):
     # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
-        # if self.game:
-        #     self.game.status = 'finished'
+        if self.game:
+            self.game.status = 'finished'
         #     del matchmake_system.games[self.game_id]
         # self.profile.status = 'waiting'
         # await database_sync_to_async(self.profile.save)()
