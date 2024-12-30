@@ -9,9 +9,9 @@ class FriendsAdmin(admin.ModelAdmin):
 
 @admin.register(FriendInvitation)
 class FriendInvitationAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'receiver', 'status', 'created_at')
+    list_display = ('sender', 'receiver', 'created_at')
     search_fields = ('sender__username', 'receiver__username')
-    list_filter = ('status', 'created_at')
+    list_filter = ('created_at',)
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):

@@ -10,8 +10,6 @@ import random
 
 # from relations.models import Friends
 
-
-
 def validate_file_size(value):
     filesize = value.size
 
@@ -87,7 +85,6 @@ class PlayerProfile(models.Model):
         MaxValueValidator(100.0)
     ])
 
-
     air_games =  models.PositiveIntegerField(default=0)
     water_games =  models.PositiveIntegerField(default=0)
     fire_games =  models.PositiveIntegerField(default=0)
@@ -119,7 +116,6 @@ class PlayerProfile(models.Model):
     def all_achievements(self):
         return PlayerAchievement.objects.filter(player=self).order_by('-gained', '-date_earned')
 
-
     def all_friends(self):
         from relations.models import Friends
         friends = Friends.objects.filter(
@@ -135,7 +131,6 @@ class PlayerProfile(models.Model):
                 friend_players.append(friendship.friend_responder.profile)
             else:
                 friend_players.append(friendship.friend_requester.profile)
-
         return friend_players
 
     def all_achievements_gained(self):
