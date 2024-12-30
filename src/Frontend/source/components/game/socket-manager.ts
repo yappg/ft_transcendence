@@ -38,20 +38,22 @@ class SocketManager extends WebSocket {
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
   
-      const new_x = scale_x * data.x;
-      const new_y = scale_y * data.y;
+      const new_x = scale_x * data.position.x;
+      const new_y = scale_y * data.position.y;
       
-      console.log('scale_x:', data?.x, scale_x);
-      console.log('scale_y:', data?.y, scale_y);
-      // console.log(`Calculated positions - new_x: ${new_x}, new_y: ${new_y}`);
-      // console.log(`Screen dimensions - width: ${this.screenWidth}, height: ${this.screenHeight}`);
+      // console.log('scale_x:', data?.x, scale_x);
+      // console.log('scale_y:', data?.y, scale_y);
+      // console.log('new_x:', data);
+      this.pixiManager.dx = data.dx * scale_x;
       if (this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
         this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
+        this.pixiManager.dy = -data.dy;
       }
       if (!this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = new_x;
         this.pixiManager.ball.y = new_y;
+        this.pixiManager.dy = data.dy;
       }
   }
   }
@@ -60,7 +62,7 @@ class SocketManager extends WebSocket {
     if (data) {
       const scale_x = this.pixiManager.screenWidth / 75;
   
-      const new_x = scale_x * data.x;
+      const new_x = scale_x * data.new_x;
   
       this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x;
     }
@@ -76,16 +78,17 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         this.send(JSON.stringify({ action: 'ready', game_id: message.data.game_id }));
-      case 'gameUpdate':
+      case 'UpdateBall': 
         // this.pixiManager.app.ticker.add(() => {
-          console.log('updating game', message);
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
           // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-          
-          this.updateBallPosition(message.game_state?.ball);
-          this.updatePaddlePosition(message.game_state?.opponent_paddle);
-        // });
-        break;
+          console.log('data:', message);
+          this.updateBallPosition(message.ball_position);
+          // });
+          break;
+      // case 'UpdatePaddle':
+        // this.updatePaddlePosition(message);
+        // break;
       case 'scoreUpdate':
         // this.pixiManager.updateScore(message);
         break;

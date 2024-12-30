@@ -31,7 +31,7 @@ class Ball:
 
     async def reset(self):
         self.position = Vector2D(37.5, 50)
-        self.velocity = Vector2D(20, 20)# Pixels per second
+        self.velocity = Vector2D(2, 2)# Pixels per second
 
 @dataclass
 class Paddle:
@@ -48,7 +48,7 @@ class GamePlayer:
     id: int
     username: str
     channel_name: str 
-    game_id: str 
+    game_id: str
     status: str = 'waiting' # waiting, ready, playing, 'finished'
     paddle: Paddle = None
     score: int = 0
@@ -57,7 +57,7 @@ class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
         self.game_id = game_model_id
-        self.ball = Ball(Vector2D(37.5, 50), Vector2D(20, 20))
+        self.ball = Ball(Vector2D(37.5, 50), Vector2D(2, 2))
 
         # Initialize players with paddles at opposite sides
         self.player1 = player1
@@ -175,28 +175,29 @@ class PingPongGame:
             self.player2.paddle.move(new_x)
             return True
         return False
-    
-    def get_state(self, opponent_id) -> Dict:
-        """Get the current game state as a dictionary"""
-        
-        player = self.player1 if opponent_id == self.player1.id else self.player2
+     
+    def get_state(self) -> Dict:
         
         return {
-            'game_id': self.game_id,
-            'status': self.status,
-            'ball':
+            'dx': self.ball.velocity.x,
+            'dy': self.ball.velocity.y,
+            'position':
             {
                 'x': self.ball.position.x, # / self.game_width,
                 'y': self.ball.position.y # / self.game_height
             },
-            'opponent_paddle': 
-            {
-                    'paddle_x': player.paddle.position.x, # / self.game_height,
-            },
-            'winner': self.winner.username if self.winner else None
         }
-        def game_state(self):
-            return {
-                
-            }
+
+    def paddle_update(self, opponent_id: int) -> Dict:
+        player = self.player1 if self.player1.id == opponent_id else self.player2
+        return {
+            self.player.username: {
+            {
+                'paddle_x': self.player1.paddle.position.x, # / self.game_height,
+            },
+            }}
+            # self.player2.username: {
+            #     'paddle_x': self.player2.paddle.position.x, # / self.game_height,
+            # },
+            # }
 
