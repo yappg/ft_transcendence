@@ -35,14 +35,15 @@ class SocketManager extends WebSocket {
 
   updateBallPosition(data: any) {
     if (data) {
+      console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
   
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
       
-      // console.log('scale_x:', data?.x, scale_x);
-      // console.log('scale_y:', data?.y, scale_y);
+      console.log('scale_x:', scale_x);
+      console.log('scale_y:', scale_y);
       // console.log('new_x:', data);
       this.pixiManager.dx = data.dx * scale_x;
       if (this.pixiManager.isTopPaddle) {
@@ -74,6 +75,13 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.gameId = message.data.game_id;
         this.pixiManager.game.opponent = message.data.opponent;
         this.pixiManager.isTopPaddle = message.data.top_paddle;
+        const scale_y = this.pixiManager.screenHeight / 100;
+        console.log('scale_y: ', scale_y);
+        if (this.pixiManager.isTopPaddle) {
+          this.pixiManager.dy = -2 * scale_y;
+        } else {
+          this.pixiManager.dy = 2 * scale_y;
+        }
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));

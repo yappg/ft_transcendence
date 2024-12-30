@@ -31,43 +31,42 @@ class Ball:
 
     async def reset(self):
         self.position = Vector2D(37.5, 50)
-        self.velocity = Vector2D(2, 2)# Pixels per second
+        self.velocity = Vector2D(0, 1)# Pixels per second
 
-@dataclass
+@dataclass 
 class Paddle:
     position: Vector2D
     width: float = 15.0 #15.0 
     height: float = 2.5
 
     async def move(self, new_x: float):
-        # Clamp paddle position within game bounds
         self.position.x = max(self.width / 2, min(75 - self.width / 2, new_x))
 
 @dataclass
 class GamePlayer:
     id: int
     username: str
-    channel_name: str 
+    channel_name: str  
     game_id: str
     status: str = 'waiting' # waiting, ready, playing, 'finished'
     paddle: Paddle = None
     score: int = 0
-  
+
 class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
         self.game_id = game_model_id
-        self.ball = Ball(Vector2D(37.5, 50), Vector2D(2, 2))
+        self.ball = Ball(Vector2D(37.5, 50), Vector2D(0, 1)) 
 
         # Initialize players with paddles at opposite sides
         self.player1 = player1
         self.player1.game_id = game_model_id
         # self.player1.status = ''
-        self.player1.paddle = Paddle(Vector2D(50, 1.5))  # Lower paddle 
+        self.player1.paddle = Paddle(Vector2D(37.5, 3))  # Lower paddle 
         self.player2 = player2
         self.player2.game_id = game_model_id
         # self.player2.status = ''
-        self.player2.paddle = Paddle(Vector2D(37.5, 98.5))  # Upper paddle
+        self.player2.paddle = Paddle(Vector2D(37.5, 97))  # Upper paddle
 
         self.game_width = 75
         self.game_height = 100
@@ -93,6 +92,9 @@ class PingPongGame:
         if self.status != 'playing':
             return False 
         await self.ball.update(delta_time)
+        import asyncio
+        # await asyncio.sleep(delta_time)
+
 
         if await self._check_collisions():
             return True
@@ -110,6 +112,7 @@ class PingPongGame:
         if self.ball.position.x <= self.ball.radius or \
             self.ball.position.x >= self.game_width - self.ball.radius:
             self.ball.velocity.x *= -1
+            print(f'\033[31;1mBall Position: ({self.ball.position.x}, {self.ball.position.y})\033[0m')
             # await self.ball.update(0.25)
 
             changed = True
@@ -119,15 +122,14 @@ class PingPongGame:
         if await self._check_paddle_collision(self.player1.paddle):
             self.ball.velocity.y = abs(self.ball.velocity.y)  # Move right
             # await self._adjust_ball_angle(self.player1.paddle) 
-            # await self.ball.update(0.25)
-
+            print(f'\033[31;1m[PADDLE COLLISION ] Ball Position: ({self.ball.position.x}, {self.ball.position.y})\033[0m')
             changed = True
-        # Upper paddle (player2)
+        # Upper paddle (player2)   
         elif await self._check_paddle_collision(self.player2.paddle):
             self.ball.velocity.y = -abs(self.ball.velocity.y)  # Move left
             # await self._adjust_ball_angle(self.player2.paddle)
+            print(f'\033[31;1m[PADDLE COLLISION ] Ball Position: ({self.ball.position.x}, {self.ball.position.y})\033[0m')
             changed = True
-            # await self.ball.update(0.25)
 
         return changed
 
