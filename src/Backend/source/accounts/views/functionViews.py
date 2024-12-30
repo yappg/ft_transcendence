@@ -68,6 +68,7 @@ class LeaderboardView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
 # class SettingsView(APIView):
 #     permission_classes = [IsAuthenticated]
 
