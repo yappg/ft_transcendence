@@ -4,50 +4,29 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import FriendServices from '@/services/friendServices';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
 import { useUser } from '@/context/GlobalContext';
 
-
 const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
-  const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
   };
-  const {user } = useUser();
-
-  useEffect(() => {
-      try {
-        setCurrentUserName(user?.display_name);
-        console.log(user?.display_name)
-      } catch (error) {
-        console.error('Failed to fetch current user ID', error);
-      }
-  }, []);
-
-
-  const player = {
-    name: currentUserUserName,
-    level: 22,
-  };
-
+  const { user } = useUser();
   useEffect(() => {
     const displayInvit = async () => {
-      
       try {
         const response = await FriendServices.getFriendRequests();
-        if (response.message)
-        {
+        if (response.message) {
           setRequests(response.data);
-        }
-        else if (response.error){
-          console.log(response.error)
+        } else if (response.error) {
+          console.log(response.error);
         }
       } catch (error) {
         toast({
@@ -57,33 +36,10 @@ const UserFriendsNav = (): JSX.Element => {
           className: 'bg-primary-dark border-none text-white',
         });
       }
-    }
+    };
     displayInvit();
   }, []);
-  
-  useEffect(() => {
-    const displayFriends = async () => {
-      
-      try {
-        const response = await FriendServices.getFriends();
-        if (response.message){
-          setFriends(response.data);
-        }
-        else if (response.error) { 
-          console.log(response.error)
-        }
-      } catch (error) {
-        toast({
-          title: 'Authentication failed',
-          description: 'Oups Something went wrong !',
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white',
-        });
-      }
-    }
-    displayFriends();
-  }, []);
-  
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   const headers = [
@@ -91,13 +47,15 @@ const UserFriendsNav = (): JSX.Element => {
     { title: 'Invitations', href: '' },
     { title: 'Add New', href: '' },
   ];
-  
+
   const handleRequestAccepted = (username: string) => {
     // Find the accepted request
     const acceptedRequest = Requests.find((req: any) => req.sender === username);
     if (acceptedRequest) {
       // Remove the accepted request from the Requests list
-      setRequests((prevRequests: any) => prevRequests.filter((req: any) => req.sender !== username));
+      setRequests((prevRequests: any) =>
+        prevRequests.filter((req: any) => req.sender !== username)
+      );
       // Add the new friend to the Friends list
       const newFriend = {
         friend_requester: currentUserUserName,
@@ -106,33 +64,33 @@ const UserFriendsNav = (): JSX.Element => {
         level: acceptedRequest.level,
         wins: acceptedRequest.wins,
       };
-      setFriends((prevFriends: any) => [...prevFriends, newFriend]);
+      // setFriends((prevFriends: any) => [...prevFriends, newFriend]);
     }
   };
-
   const renderContent = () => {
     if (activeIndex === 0) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Friends.length > 0 ? (
-          Friends.map((friend: any, index) => (
-            <FriendsComponent
-              key={index}
-              name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
-              ProfilePhoto={friend.friend_requester.avatar}
-              level={friend.level}
-              wins={friend.wins}
-              messagesLink={
-                <div className="flex items-center justify-center">
-                  <Link href="/messages">
-                    <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
-                  </Link>
-                </div>
-              }
-            />
-          ))
+          {user?.friends.length === 0 ? (
+            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">
+              No Friends to display{' '}
+            </div>
           ) : (
-            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
+            user?.friends.map((friend) => (
+              <FriendsComponent
+                key={friend.id}
+                name={friend?.display_name}
+                ProfilePhoto={'http://localhost:8080' + friend?.avatar}
+                level={friend?.level}
+                messagesLink={
+                  <div className="flex items-center justify-center">
+                    <Link href="/messages">
+                      <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
+                    </Link>
+                  </div>
+                }
+              />
+            ))
           )}
         </div>
       );
@@ -140,43 +98,42 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {Requests.length > 0 ? (
-          Requests.map((invitation: any, index: any) => (
-            <FriendRequestCard
-              key={index}
-              name={invitation.sender}
-              ProfilePhoto={invitation.sender.avatar}
-              vari={formatDate(invitation.created_at)}
-              onRequestAccepted={handleRequestAccepted}
-            />
-          ))
+            Requests.map((invitation: any, index: any) => (
+              <FriendRequestCard
+                key={index}
+                name={invitation.sender}
+                ProfilePhoto={invitation.sender.avatar}
+                vari={formatDate(invitation.created_at)}
+                onRequestAccepted={handleRequestAccepted}
+              />
+            ))
           ) : (
-            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No invitations </div>
-          )
-        }
+            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">
+              No invitations{' '}
+            </div>
+          )}
         </div>
       );
-    }
-   else if (activeIndex === 2) {
+    } else if (activeIndex === 2) {
       return <AddFriends />;
     }
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10">
-        <div className="flex h-fit flex-row items-center justify-between w-[250px] md:w-[300px]">
-          <Avatar className="max-w-[120px] md:size-auto sm:size-[60px]">
-            //
-            <AvatarImage src="" />
+      <div className="friend-bar-bg flex h-[110px] w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10">
+        <div className="flex h-fit flex-row items-center justify-between w-[250px] md:w-[300px] gap-8">
+          <Avatar className="max-w-[120px] md:size-[80px] sm:size-[60px]">
+            <AvatarImage src={user?.avatar} />
             <AvatarFallback className="font-dayson m-2 md:size-[80px] size-[60px] bg-[rgba(28,28,28,0.5)] text-lg text-white">
               CN
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col ">
             <h1 className="font-dayson text-[15px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
-              {player.name}
+              {user?.display_name}
             </h1>
             <h1 className="font-coustard text-white opacity-[40%] md:text-[17px] text-[15px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
-              Level {player.level}
+              Level {user?.level}
             </h1>
           </div>
         </div>

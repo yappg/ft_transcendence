@@ -36,6 +36,7 @@ const ProfileInformations = (user) => {
           const imageUrl = URL.createObjectURL(file);
         }
       };
+      console.log("hhhhhhhhhhhhhhhhhh", user);
     return(
               <div className="gap-10 border-2 bg-[#00000099] h-fit rounded-[50px] shadow-2xl md:p-6 sm:p-9 p-14 border-[#B8B8B8]">
                 <div className="w-full h-[12%] flex items-center">
@@ -61,7 +62,7 @@ const ProfileInformations = (user) => {
                     <label className="text-white text-sm">Username</label>
                     <input
                       type="text"
-                      value="username123"
+                      value={user?.username}
                       disabled
                       className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
                     />

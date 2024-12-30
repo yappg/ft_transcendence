@@ -50,11 +50,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1MTc3LCJpYXQiOjE3MzUyNTI3NzcsImp0aSI6ImUyMDE0NDNlNTc4ODQ4YjVhMGFmNThkNGUyYTA5NTFlIiwidXNlcl9pZCI6Mn0.9emNlxflx58iu7GEDSVwtvj1yVocpq0T7b89ZdNLkUg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODQ2MjgwLCJpYXQiOjE3MzU1ODcwODAsImp0aSI6ImI4ZjJiZDcyMDQzMDQ4Y2RhZDExZTQ4ZDc1ZDU1ZjFhIiwidXNlcl9pZCI6M30.JmCjBmfV3friHqSEm2oJCsm9xk3uyhDbcBJUGpRjfCY
 Content-Type: application/json
 
 {
-    "receiver":"client7_3x9k32g7yc2c"
+    "receiver":"meryeme_rv5e4wx1t0ft"
 }
 
 #########
