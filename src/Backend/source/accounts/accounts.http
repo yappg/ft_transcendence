@@ -4,7 +4,7 @@
 
 #########
 GET http://localhost:8080/accounts/rest-profiles
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NzQ3OTIwLCJpYXQiOjE3MzU0ODg3MjAsImp0aSI6IjNlZjYyNTUyOWUyZTQ1NTE5YTk1Y2M2ZTgyMDRiMzBlIiwidXNlcl9pZCI6Nn0.G0EMiEMWa6fQATAlSzCJ_eFdjKMXylJ_w4ugmrR01os
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODQ2Mzk4LCJpYXQiOjE3MzU1ODcxOTgsImp0aSI6ImViMzZlZGQzZDk5NjRlZTViZWFhNWMwM2E0YTAxMTEzIiwidXNlcl9pZCI6M30.h6AOc1Jotf9-N_xY-WJ66y9C7yfBUIZMHLKC_95Nryk
 
 #########
 GET http://localhost:8080/accounts/rest-profiles/4/
