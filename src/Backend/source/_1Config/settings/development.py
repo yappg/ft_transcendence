@@ -111,7 +111,7 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',   
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'accounts.authenticate.CotumAuthentication',
@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-   
+       
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

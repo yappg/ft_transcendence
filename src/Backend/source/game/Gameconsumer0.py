@@ -80,7 +80,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     self.game.start_game()
                     await self.broadcast_ready()
                     await self.self_send_start_game()
-                    await asyncio.sleep(2)
+                    # await asyncio.sleep(2)
                     await self.start_game_loop()
                     # await matchmake_system.broadcast_ball_move()
             elif action == 'move_paddle':
@@ -141,19 +141,23 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.opponent = self.game.player2 
             self.Gameplayer = self.game.player1
 
-    async def start_game_loop(self): 
+    async def start_game_loop(self):   
         # import time
         await asyncio.create_task(self.broadcast_ball_move())
         await asyncio.create_task(self.self_send_game_state())
         while self.game and self.game.status == 'playing':
+            #print the ball position
+            # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
             # delta_time = time.perf_counter()
-            delta_time = 0.1 #1/60  # 60 FPS
+            delta_time = 0.1  # 60 FPS 1/90=0.0111
             if await self.game.update(delta_time):
+                #ball position
+                # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
                 await asyncio.create_task(self.broadcast_ball_move())
                 await asyncio.create_task(self.self_send_game_state())
             # await self.broadcast_ball_move()
             # await self.self_send_game_state()
-            await asyncio.sleep(delta_time)
+            # await asyncio.sleep(delta_time)
         if self.game and self.game.status == 'finished':
             await self.broadcast_ball_move(self.get_opponent_id())
             await self.self_send_game_state()

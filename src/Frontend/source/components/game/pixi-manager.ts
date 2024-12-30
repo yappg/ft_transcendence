@@ -4,6 +4,8 @@ import { Assets, Sprite, Graphics } from 'pixi.js';
 import SocketManager from './socket-manager';
 import { User } from '@/context/GlobalContext';
 import socketManager from './socket-manager';
+import { basename } from 'path';
+import { Scale } from 'lucide-react';
 
 // Global Game Manager
 
@@ -188,8 +190,8 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 5;
-    const baseScreenDiagonal = Math.sqrt(800 ** 2 + 1080 ** 2);
+    const baseSpeed = 0.5;
+    const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
 
     this.ballMovementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
@@ -232,8 +234,6 @@ export class LocalGameManager extends PixiManager {
       this.dx = 0;
       this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
       this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
-      const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
-      await sleepmoment;
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
@@ -259,7 +259,8 @@ export class LocalGameManager extends PixiManager {
       }
       this.ball.x = this.screenWidth / 2;
       this.ball.y = this.screenHeight / 2;
-
+      const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
+      await sleepmoment;
     }
   }
 
@@ -280,7 +281,7 @@ export class LocalGameManager extends PixiManager {
     if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 75;
-    const movementSpeed = (baseScreenWidth / this.screenWidth ) * 15;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -397,11 +398,24 @@ export class OnlineGameManager extends PixiManager {
     }
   }
 
-  handlegameupdates() {
-    // console.log('handlegameupdates');
-    this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
-  }
-  handleWaitingState() {
-    this.displayText('Get\nReady');
-  }
+
+  
+    handlegameupdates() {
+
+      if (!this.ball || !this.app) return;
+
+      // const baseSpeed = 0.5;
+      const baseSpeed = Math.sqrt(this.dx**2 + this.dy**2);
+      // this.ballMovementSpeed = Math.sqrt(this.dx**2 + this.dy**2);
+
+      const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
+      const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
+      
+      this.ballMovementSpeed = (baseScreenDiagonal / currentScreenDiagonal) * baseSpeed;
+      this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
+    }
+
+    handleWaitingState() {
+      this.displayText('Get\nReady');
+    }
 }
