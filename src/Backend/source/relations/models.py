@@ -6,7 +6,6 @@ class Friends(models.Model):
     friend_responder = models.ForeignKey(Player, related_name='friend_requests_received', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return f"{self.friend_requester} and {self.friend_responder} are friends"
 
@@ -34,13 +33,9 @@ class Friends(models.Model):
             chat.senders.add(self.friend_requester, self.friend_responder)
 
 
-
-
-# if he accept the invitation remove the fucking model and same if he declines
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
     receiver = models.ForeignKey(Player, related_name='received_invitations', on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('declined', 'Declined')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -55,7 +50,7 @@ class BlockedUsers(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user}'s blocked users"
+        return f"{self.user}"
 
     class Meta:
         verbose_name = 'Blocked User'
@@ -70,7 +65,7 @@ class BlockedUsers(models.Model):
         return self.blocked.all()
 
     def block_user(self, user_to_block):
-        if user_to_block != self.user and self.is_blocked(user_to_block) == False:
+        if user_to_block != self.user and user_to_block.profile and self.is_blocked(user_to_block) == False:
             self.blocked.add(user_to_block)
             return True
         return False

@@ -93,13 +93,8 @@ class PendingInvitationsView(APIView):
             return Response({"message": "Invitation declined"}, status=status.HTTP_200_OK)
         return Response({"error": "Invitation not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class FriendInvitationView(APIView):
+class FriendInvitationView(APIView): # cant invite yourself cant invite friend cant invite blocked or blocked by
     permission_classes = [IsAuthenticated]
-
-    @swagger_auto_schema(
-        request_body=FriendInvitationSerializer,
-        responses={200: 'Success', 400: 'Invalid input'}
-    )
 
     def post(self, request):
         sender = request.user
@@ -129,6 +124,7 @@ class FriendInvitationView(APIView):
     def delete(self, request):
         sender = request.user
         receiver_display_name = request.data.get('cancel_invite')
+
         try:
             receiver = Player.objects.get(profile__display_name=receiver_display_name)
         except Player.DoesNotExist:
@@ -146,6 +142,7 @@ class AcceptInvitationView(APIView):
         request_body=FriendInvitationSerializer,
         responses={200: 'Success', 400: 'Invalid input'}
     )
+
     def post(self, request):
         receiver = request.user
         sender_display_name = request.data.get('sender')
@@ -154,16 +151,11 @@ class AcceptInvitationView(APIView):
         except Player.DoesNotExist:
             return Response({"error": "User not found"}, status=200)
 
-        invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver, status='pending').first()
+        invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver).first()
         if not invitation:
             return Response({"error": "Invitation not found or already accepted"}, status=200)
 
-
         invitation.delete()
-        # invitation.status = 'accepted'
-        # invitation.save()
-#########################
-
         Friends.objects.create(friend_requester=sender, friend_responder=receiver)
 
         return Response({"message": "Invitation accepted and friendship established"}, status=status.HTTP_200_OK)
@@ -178,9 +170,9 @@ class BlockedUsersView(APIView):
         blocked_list = blocked_users.get_blocked_users()
 
         serializer = PlayerRelationsSerializer(blocked_list, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request):
+    def post(self, request):
         blocker = request.user
         blocked_display_name = request.data.get('block_user')
 
@@ -191,9 +183,10 @@ class BlockedUsersView(APIView):
 
         block_list = BlockedUsers.objects.get(user=blocker)
         if block_list.block_user(blocked):
+            Friends.objects.filter(Q(friend_requester=blocker, friend_responder=blocked) | Q(friend_requester=blocked, friend_responder=blocker)).delete()
             return Response({"message": "User blocked successfully"}, status=status.HTTP_201_CREATED)
         else:
-            return Response({"error": "User already blocked"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cant block user"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         blocker = request.user
@@ -208,4 +201,4 @@ class BlockedUsersView(APIView):
         if block_list.unblock_user(blocked):
             return Response({"message": "User unblocked successfully"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "User not blocked"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "User not blocked"}, status=status.HTTP_404_NOT_FOUND)

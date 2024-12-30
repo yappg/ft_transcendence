@@ -6,7 +6,7 @@ from .views.userManagment import *
 from .views.functionViews import *
 
 router = DefaultRouter()
-router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id} 
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id}
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
 router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user game history
 
@@ -69,6 +69,7 @@ urlpatterns = [
     # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
+    # path('settings/', SettingsView.as_view(), name='settings'),
 
 # TODO implemetation may differ change_password , change_email , change_username , disable_account, delete_account
     # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
