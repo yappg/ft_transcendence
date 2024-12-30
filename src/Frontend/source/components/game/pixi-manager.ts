@@ -164,6 +164,7 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
   }
 
   updateBallPosition(x: number, y: number): void {
+    // console.log('updateBallPosition', x, y, this.screenHeight, this.screenWidth);
     this.ball.x = x;
     this.ball.y = y;
   }
@@ -386,6 +387,7 @@ export class OnlineGameManager extends PixiManager {
       if (!this.app.stage.children.includes(this.ball)) {
         this.app.stage.addChild(this.ball);
       }
+      // console.log('start event');
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
@@ -396,7 +398,8 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handlegameupdates() {
-    // this.updateBallPosition()
+    // console.log('handlegameupdates');
+    this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
   }
   handleWaitingState() {
     this.displayText('Get\nReady');
