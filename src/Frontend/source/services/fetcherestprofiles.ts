@@ -8,7 +8,7 @@ const friendsrestprofilesAPI = axios.create({
     withCredentials: true,
 });
 const fetcherestprofiles = {
-    async getPlayers(id:number) {
+    async getRestUser(id:number) {
         try {
             const response = await friendsrestprofilesAPI.get(`/rest-profiles/${id}`);
             return response.data;
