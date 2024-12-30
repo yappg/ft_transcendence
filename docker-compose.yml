@@ -14,34 +14,34 @@ services:
     #   restart: unless-stopped
 
 
-    web:
-      container_name: nginx
-      build:
-        context: ./src/Services/nginx
-        dockerfile: Dockerfile
-      image: nginx
-      networks:
-        - transcendence
-      ports:
-        # - 8080:80
-        - "4433:443"
-      # depends_on:
-      #   frontend:
-      #       condition: service_healthy
-      #   backend:
-      #       condition: service_healthy
-      #   grafana:
-      #       condition: service_healthy
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
-      restart: always
-      volumes:
-        - static_files:/app/staticfiles:ro
-        - media_files:/app/UsersMedia:ro
+    # web:
+    #   container_name: nginx
+    #   build:
+    #     context: ./src/Services/nginx
+    #     dockerfile: Dockerfile
+    #   image: nginx
+    #   networks:
+    #     - transcendence
+    #   ports:
+    #     # - 8080:80
+    #     - "4433:443"
+    #   # depends_on:
+    #   #   frontend:
+    #   #       condition: service_healthy
+    #   #   backend:
+    #   #       condition: service_healthy
+    #   #   grafana:
+    #   #       condition: service_healthy
+    #   healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
+    #     interval: 10s
+    #     timeout: 5s
+    #     retries: 3
+    #     start_period: 5s
+    #   restart: always
+    #   volumes:
+    #     - static_files:/app/staticfiles:ro
+    #     - media_files:/app/UsersMedia:ro
 
     # web-exporter:
     #   container_name: nginx-exporter
@@ -55,33 +55,33 @@ services:
     #   restart: unless-stopped
 
 
-#     frontend:
-#       container_name: frontend
-#       build:
-#         context: ./src/Frontend
-#         target: ${ENV:-production}
-#         dockerfile: Dockerfile
-#       image: frontend
-# # DEV ==============>
-#       volumes:
-#         - ./src/Frontend/source:/app:rw
-#         - /app/.next
-#         - /app/node_modules
-# # ==================>
-#       networks:
-#         - transcendence
-#       ports:
-#         - 3000:3000
-#       # depends_on:
-#       #     backend:
-#       #         condition: service_healthy
-#       # healthcheck:
-#       #     test: ["CMD", ""]
-#       #     interval: 1m30s
-#       #     timeout: 30s
-#       #     retries: 5
-#       #     start_period: 30s
-#       restart: always
+    frontend:
+      container_name: frontend
+      build:
+        context: ./src/Frontend
+        target: ${ENV:-production}
+        dockerfile: Dockerfile
+      image: frontend
+# DEV ==============>
+      volumes:
+        - ./src/Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
+      networks:
+        - transcendence
+      ports:
+        - 3000:3000
+      # depends_on:
+      #     backend:
+      #         condition: service_healthy
+      # healthcheck:
+      #     test: ["CMD", ""]
+      #     interval: 1m30s
+      #     timeout: 30s
+      #     retries: 5
+      #     start_period: 30s
+      restart: always
 
 
     backend:
@@ -230,28 +230,28 @@ services:
     #     - alert-manager
     #   restart: always
 
-    grafana:
-      container_name: grafana
-      image: grafana/grafana
-      environment:
-        GF_SERVER_ROOT_URL: https://localhost/monitoring
-        GF_SERVER_SERVE_FROM_SUB_PATH: true
-        GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
-        GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-      volumes:
-        - grafana-data:/var/lib/grafana
-        - "./src/Services/grafana:/etc/grafana/provisioning:ro"
-      networks:
-        - transcendence
-      # depends_on:
-      #   - prometheus
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:3000"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
-      restart: unless-stopped
+    # grafana:
+    #   container_name: grafana
+    #   image: grafana/grafana
+    #   environment:
+    #     GF_SERVER_ROOT_URL: https://localhost/monitoring
+    #     GF_SERVER_SERVE_FROM_SUB_PATH: true
+    #     GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+    #     GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    #   volumes:
+    #     - grafana-data:/var/lib/grafana
+    #     - "./src/Services/grafana:/etc/grafana/provisioning:ro"
+    #   networks:
+    #     - transcendence
+    #   # depends_on:
+    #   #   - prometheus
+    #   healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
+    #     interval: 10s
+    #     timeout: 5s
+    #     retries: 3
+    #     start_period: 5s
+    #   restart: unless-stopped
 
 
 volumes:

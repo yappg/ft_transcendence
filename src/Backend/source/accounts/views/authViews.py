@@ -264,7 +264,6 @@ class OAuth42CallbackView(APIView):
         if (provider != '42' and provider != 'google'):
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
-        # code = request.GET.get('code')
         code = request.get('code')
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
