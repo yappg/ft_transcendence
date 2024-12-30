@@ -26,8 +26,8 @@ const UserInfo = ({
         return <PendingButton name={userProfile?.display_name}/>;
       case 'friends':
         return <BlockButton name={userProfile?.display_name}/>;
-      case 'sent_invite':
-          return <InviteSentButton name={userProfile?.display_name}/>;
+      // case 'sent_invite':
+      //     return <InviteSentButton name={userProfile?.display_name}/>;
     }
   };
   return (
