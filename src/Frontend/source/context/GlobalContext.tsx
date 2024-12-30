@@ -6,7 +6,7 @@ import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
-import {Achievement} from '@/constants/achivemement';
+import { Achievement } from '@/constants/achivemement';
 import { onlineService } from '@/services/onlineService';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
@@ -18,67 +18,71 @@ const userApi = axios.create({
 });
 
 export interface User {
-  id:           number;
-  username:     string;
-  xp:           number;
+  id: number;
+  username: string;
+  xp: number;
   achievements: any[];
-  statistics:   Statistics;
-  last_login:   number;
-  is_online:    boolean;
+  statistics: Statistics;
+  last_login: number;
+  is_online: boolean;
   display_name: string;
-  bio:          string;
-  avatar:       string;
-  cover:        string;
-  level:        number;
-  total_games:  number;
-  games_won:    number;
-  games_loss:   number;
-  win_ratio:    number;
-  created_at:   Date;
+  bio: string;
+  avatar: string;
+  cover: string;
+  level: number;
+  total_games: number;
+  games_won: number;
+  games_loss: number;
+  win_ratio: number;
+  created_at: Date;
   relation: string;
+  friends: Player[];
+  matches_history: History[];
 }
 
 export interface Statistics {
-  air_ratio:   number;
+  air_ratio: number;
   water_ratio: number;
-  fire_ratio:  number;
+  fire_ratio: number;
   earth_ratio: number;
-  graph_data:  GraphDatum[];
+  graph_data: GraphDatum[];
 }
 
 export interface GraphDatum {
-  date:   Date;
-  wins:   number;
+  date: Date;
+  wins: number;
   losses: number;
 }
 
 export interface History {
-  id: number
-  result: string
-  map_played: string
-  player1: Player
-  player2: Player
-  player1_score: number
-  player2_score: number
-  date: string
+  map(arg0: (user: any, index: any) => React.JSX.Element): React.ReactNode;
+  length: number;
+  id: number;
+  result: string;
+  map_played: string;
+  player1: Player;
+  player2: Player;
+  player1_score: number;
+  player2_score: number;
+  date: string;
 }
 
 export interface Player {
-  id: number
-  display_name: string
-  level: number
-  avatar: string
+  length: number;
+  id: number;
+  display_name: string;
+  level: number;
+  avatar: string;
 }
 
 export interface LeaderBoard {
-  id: number
-  display_name: string
-  level: number
-  avatar: string
-  games_won: number
-  games_loss: number
+  id: number;
+  display_name: string;
+  level: number;
+  avatar: string;
+  games_won: number;
+  games_loss: number;
 }
-
 
 interface UserContextType {
   user: User | null;
@@ -101,12 +105,11 @@ interface UserContextType {
   PlayerMatches: History[] | null;
   PlayerLeaderBoard: LeaderBoard[] | null;
   fetchPlayerMatches: () => {};
-  fetchPlayerLeaderBoard: () => {}
+  fetchPlayerLeaderBoard: () => {};
   achievements: Achievement[] | null;
 }
 
- const userService = {
-
+const userService = {
   async getCurrentUserId(): Promise<User> {
     const response = await userApi.get(`/user-profile/`);
     return response.data;
@@ -119,11 +122,10 @@ interface UserContextType {
     const response = await userApi.get(`/user-history/`);
     return response.data;
   },
-  async getPlayerLeaderBoard(): Promise<LeaderBoard[]>{
+  async getPlayerLeaderBoard(): Promise<LeaderBoard[]> {
     const response = await userApi.get(`/leaderboard/`);
     return response.data;
   },
-
 };
 
 const UserContext = createContext<UserContextType>({
@@ -148,7 +150,11 @@ const UserContext = createContext<UserContextType>({
   PlayerLeaderBoard: null,
 });
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -167,7 +173,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     } catch (err) {
       console.log('err');
     }
-  }
+  };
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -205,10 +211,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         setPlayers(data.data);
         setIsLoading(false);
         return data.data;
-      }
-      else if (data.error)
-      {
-        console.error(data.error)
+      } else if (data.error) {
+        console.error(data.error);
         setPlayers(null);
       }
     } catch (err) {
@@ -262,14 +266,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
       setIsLoading(false);
     }
   };
-    useEffect(() => {
-      fetchCurrentUserDetails();
-      fetchPlayers();
-      fetchNotifications();
-      fetchChats();
-      fetchPlayerMatches();
-      fetchPlayerLeaderBoard();
-    }, [userId]);
+  useEffect(() => {
+    fetchCurrentUserDetails();
+    fetchPlayers();
+    fetchNotifications();
+    fetchChats();
+    fetchPlayerMatches();
+    fetchPlayerLeaderBoard();
+  }, [userId]);
 
   return (
     <UserContext.Provider
@@ -306,11 +310,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
 export const useUser = () => {
   const context = useContext(UserContext);
 
-
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
-
 
   return context;
 };
