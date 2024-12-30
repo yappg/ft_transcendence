@@ -4,18 +4,18 @@
 
 #########
 GET http://localhost:8080/relations/players/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1MTc3LCJpYXQiOjE3MzUyNTI3NzcsImp0aSI6ImUyMDE0NDNlNTc4ODQ4YjVhMGFmNThkNGUyYTA5NTFlIiwidXNlcl9pZCI6Mn0.9emNlxflx58iu7GEDSVwtvj1yVocpq0T7b89ZdNLkUg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
 ######### i dont see why u gonna need 2 fileds returned where one is ur self
 
 GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
 
 
 #############
 DELETE http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
@@ -24,11 +24,11 @@ Content-Type: application/json
 
 ######### protect api against sending a friend request to from both users me pending him pending
 GET http://localhost:8080/relations/friends/pending/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
 #############
 DELETE http://localhost:8080/relations/friends/pending/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 #########
 GET http://localhost:8080/relations/notifications/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
 ############################
 ######### invite #############
@@ -83,24 +83,24 @@ Content-Type: application/json
 
 #########
 GET http://localhost:8080/relations/friends/block/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
 #########
-POST http://localhost:8080/relations/friends/block/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+PATCH http://localhost:8080/relations/friends/block/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
-    "block_user" : "client2_ya52hhkjc6wl"
+    "block_user" : "client2_yfc20omadp0d"
 }
 
 #########
 DELETE http://localhost:8080/relations/friends/block/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
-    "unblock_user" : "client2_ya52hhkjc6wl"
+    "unblock_user" : "client2_yfc20omadp0d"
 }
 
 

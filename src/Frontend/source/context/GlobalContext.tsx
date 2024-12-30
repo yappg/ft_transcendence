@@ -131,12 +131,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
   const [error, setError] = useState<Error | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [players, setPlayers] = useState<User[] | null>(null);
-  const [chats, setChats] = useState<Chat[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
   const [notificationCount, setNotificationCount] = useState<number | null>(null); 
-  const [messages, setMessages] = useState<Message[] | null>(null);
   const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<User[] | null>(null);
+  
+  const [chats, setChats] = useState<Chat[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
+  
 
   const setOnlineStatus = async () => {
     try {
