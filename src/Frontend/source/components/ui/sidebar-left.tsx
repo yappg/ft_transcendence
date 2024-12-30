@@ -57,7 +57,7 @@ const data = {
   navSecondary: [
     {
       title: 'Profile',
-      url: '/profile',
+      url: '/Profile',
       icon: IconUserScan,
     },
     {

@@ -4,7 +4,7 @@ import UserSummary from '@/components/Profile/UserSummary';
 import { User, useUser } from '@/context/GlobalContext';
 import { useEffect } from 'react';
 export default function page() {
-  const { user: userProfile } = useUser();
+  const { user: userProfile, PlayerMatches, players } = useUser();
   console.log(userProfile);
   if (!userProfile) {
     return <div>Loading...</div>;
@@ -30,7 +30,7 @@ export default function page() {
           />
         </div>
         <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll">
-          <UserSummary user={userProfile as User} is_private={false} />
+          <UserSummary user={userProfile as User} userFriends={players} userHistory={PlayerMatches} is_private={false} />
         </div>
       </div>
     </div>

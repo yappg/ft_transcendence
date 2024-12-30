@@ -12,7 +12,7 @@ export default function Page() {
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
   useEffect(() => {
     try {
-      fetcherestprofiles.getPlayers(id).then((data) => {
+      fetcherestprofiles.getRestUser(id).then((data) => {
         setPlayerRestProfile(data);
       });
     } catch (error) {
@@ -41,7 +41,7 @@ export default function Page() {
             />
         </div>
         <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll">
-          <UserSummary user={PlayerRestProfile as User} is_private={false} />
+          <UserSummary user={PlayerRestProfile as User} userFriends={PlayerRestProfile?.friends} userHistory={PlayerRestProfile?.matches_history} is_private={false} />
         </div>
       </div>
     </div>
