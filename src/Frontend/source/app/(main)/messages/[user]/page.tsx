@@ -19,7 +19,7 @@ export default function Page() {
     if (chats === null) {
       return null;
     }
-    const temp = chats.find((chat) => chat.id === id);
+    const temp = chats.find((chat: Chat) => chat.id === id);
     return temp;
   };
 
@@ -29,7 +29,7 @@ export default function Page() {
       if (fetchedMessages.length > 0) {
         const lastMessage = fetchedMessages[fetchedMessages.length - 1];
         if (chats) {
-          const updatedChats = chats.map(chat => 
+          const updatedChats = chats.map((chat: Chat) => 
             chat.id === chat_id 
               ? { ...chat, last_message: lastMessage }
               : chat
@@ -62,7 +62,7 @@ export default function Page() {
     <div className="flex size-full flex-row items-center justify-center">
       <Messages
         chatId={chat_id}
-        chatPartner={chatSelected}
+        currentChat={chatSelected}
         messages={messages}
         setMessages={setMessages}
         receiverId={chatSelected?.receiver.id}
