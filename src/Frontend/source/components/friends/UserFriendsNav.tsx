@@ -95,12 +95,9 @@ const UserFriendsNav = (): JSX.Element => {
   ];
   
   const handleRequestAccepted = (username: string) => {
-    // Find the accepted request
     const acceptedRequest = Requests.find((req: any) => req.sender === username);
     if (acceptedRequest) {
-      // Remove the accepted request from the Requests list
       setRequests((prevRequests: any) => prevRequests.filter((req: any) => req.sender !== username));
-      // Add the new friend to the Friends list
       const newFriend = {
         friend_requester: currentUserUserName,
         friend_responder: username,
@@ -120,10 +117,9 @@ const UserFriendsNav = (): JSX.Element => {
           Friends.map((friend: any, index) => (
             <FriendsComponent
               key={index}
-              name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
-              ProfilePhoto={friend.friend_requester.avatar}
+              name={friend.display_name}
+              ProfilePhoto={`http://localhost:8080${friend.avatar}`}
               level={friend.level}
-              wins={friend.wins}
               messagesLink={
                 <div className="flex items-center justify-center">
                   <Link href="/messages">
