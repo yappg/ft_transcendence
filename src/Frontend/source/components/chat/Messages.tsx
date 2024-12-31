@@ -31,10 +31,9 @@ export const Messages: React.FC<MessagesProps> = ({
   const [currentUserId, setCurrentUserId] = useState<number | null>(null)
   const [showMoreOptions, setShowMoreOptions] = useState(false)
   const { chats, user, setChats } = useUser()
-  const [isBlocked, setIsBlocked] = useState(false)
   
   const handleBlockUser = async () => {
-    if (isBlocked) {
+    if (isBlocked === true) {
         console.log('Unblocking user:', currentChat?.receiver.username)
         try {
           await FriendServices.unblockFriend(currentChat?.receiver.username)
@@ -64,8 +63,8 @@ export const Messages: React.FC<MessagesProps> = ({
       }
     }
     
-  const handleGameInvite = async () => {
-    try {
+    const handleGameInvite = async () => {
+      try {
       console.log('Sending game invite to:', currentChat?.receiver.id)
       setShowMoreOptions(false)
     } catch (error) {
@@ -80,7 +79,7 @@ export const Messages: React.FC<MessagesProps> = ({
     setMessages,
     setChats,
   })
- 
+  
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newMessage.trim()) return
@@ -104,6 +103,8 @@ export const Messages: React.FC<MessagesProps> = ({
   }, [messages])
 
   const [chatBar, setChatBar] = useState(true);
+  const [isBlocked, setIsBlocked] = useState(false);
+
   React.useEffect(() => {
     if (user) setCurrentUserId(user.id);
     if (chats) {
@@ -111,7 +112,7 @@ export const Messages: React.FC<MessagesProps> = ({
       if (currentchat && (currentchat.is_blocked || currentchat.blocked_by)) {
         setChatBar(false);
       }
-      if (currentchat && currentchat.is_blocked) {
+      if (currentchat && currentchat.is_blocked === true) {
           setIsBlocked(true);
       }
     }
@@ -158,7 +159,7 @@ export const Messages: React.FC<MessagesProps> = ({
                 className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
               >
                 <BiBlock className="size-5" />
-                {isBlocked ? 'Unblock User' : 'Block User'}
+                {isBlocked === true ? 'Unblock User' : 'Block User'}
               </button>
             </div>
           )}
