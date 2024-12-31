@@ -6,30 +6,29 @@ import FriendRequestCard from './FriendRequestCard';
 import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
-import {chatService} from '@/services/chatService';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
+import { useUser } from '@/context/GlobalContext';
+
 
 const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
   const [Friends, setFriends] = useState([]);
   const [currentUserUserName, setCurrentUserName] = useState<number | null>(null);
-  
-  
-  // need a fetch from the parent component... this is tmp fetch
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
+  const {user } = useUser();
+
   useEffect(() => {
-    // Fetch the current user's ID
-    const fetchCurrentUserId = async () => {
       try {
-        const response = await chatService.getCurrentUserId();
-        setCurrentUserName(response.username);
-        console.log(response.username)
+        setCurrentUserName(user?.display_name);
+        console.log(user?.display_name)
       } catch (error) {
         console.error('Failed to fetch current user ID', error);
       }
-    };
-    
-    fetchCurrentUserId();
   }, []);
 
 
@@ -96,12 +95,9 @@ const UserFriendsNav = (): JSX.Element => {
   ];
   
   const handleRequestAccepted = (username: string) => {
-    // Find the accepted request
     const acceptedRequest = Requests.find((req: any) => req.sender === username);
     if (acceptedRequest) {
-      // Remove the accepted request from the Requests list
       setRequests((prevRequests: any) => prevRequests.filter((req: any) => req.sender !== username));
-      // Add the new friend to the Friends list
       const newFriend = {
         friend_requester: currentUserUserName,
         friend_responder: username,
@@ -121,10 +117,9 @@ const UserFriendsNav = (): JSX.Element => {
           Friends.map((friend: any, index) => (
             <FriendsComponent
               key={index}
-              name={friend.friend_requester ===  currentUserUserName ? friend.friend_responder : friend.friend_requester}
-              ProfilePhoto={friend.profilePhoto}
+              name={friend.display_name}
+              ProfilePhoto={`http://localhost:8080${friend.avatar}`}
               level={friend.level}
-              wins={friend.wins}
               messagesLink={
                 <div className="flex items-center justify-center">
                   <Link href="/messages">
@@ -143,12 +138,12 @@ const UserFriendsNav = (): JSX.Element => {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
           {Requests.length > 0 ? (
-          Requests.map((invitation: any, index) => (
+          Requests.map((invitation: any, index: any) => (
             <FriendRequestCard
               key={index}
               name={invitation.sender}
-              ProfilePhoto={invitation.senderProfilePhoto}
-              vari={invitation.created_at}
+              ProfilePhoto={invitation.sender.avatar}
+              vari={formatDate(invitation.created_at)}
               onRequestAccepted={handleRequestAccepted}
             />
           ))
@@ -158,9 +153,10 @@ const UserFriendsNav = (): JSX.Element => {
         }
         </div>
       );
-    } else if (activeIndex === 2) {
-      return <AddFriends />;
     }
+    // } else if (activeIndex === 2) {
+    //   return <AddFriends />;
+    // }
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">

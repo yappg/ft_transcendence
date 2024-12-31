@@ -8,7 +8,7 @@ from .views.functionViews import *
 router = DefaultRouter()
 router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id}
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
-router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user game history
+router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user achivements
 
 UserProfileView = UserProfileViewSet.as_view({
     'get': 'retrieve',
@@ -55,7 +55,8 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
-# restful endpoint
+# user-management
+    path('users/me/update/', UpdateUserInfos.as_view(), name='UpdateInfos'),
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
 
 # user-management
@@ -71,11 +72,15 @@ urlpatterns = [
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     # path('settings/', SettingsView.as_view(), name='settings'),
 
-# TODO implemetation may differ change_password , change_email , change_username , disable_account, delete_account
-    # path('change_username/',UpdateUserInfos.as_view(), name='acount-updater'),
-    # path('change_email/', UserHistoryView , name='user_game_history'), # verification confirm mail maybe in future
-    # path('change_password/', UserHistoryView , name='user_game_history'), # verficiation from front
+# implemetation may differ change_password , change_email , change_username
+    # path
+
+# TODO disable_account, delete_account
     # path('disable_account/', UserHistoryView , name='user_game_history'), #
     # path('delete_account/', UserHistoryView , name='user_game_history'), #
 
+# search views
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
+    # path ('search-friends', Search)
 ]
+# TODO auth with Oauth username And Vice #########
