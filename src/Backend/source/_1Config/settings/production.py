@@ -125,6 +125,8 @@ REST_FRAMEWORK = {
 # CHANNELS CONFIGURATION
 # ===========================
 
+
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -133,6 +135,22 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     },
+    # 'matchmaking': {
+    #     'BACKEND': 'django_redis.cache.RedisCache',
+    #     'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
+    #     'OPTIONS': {
+    #         'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+    #     }
+    # }
+# }
 
 # ===========================
 # DATABASE CONFIGURATION
