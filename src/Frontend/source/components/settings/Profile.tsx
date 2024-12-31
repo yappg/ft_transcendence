@@ -18,13 +18,12 @@ export default function ProfileInfo() {
   }
   const [isClicked, setIsClicked] = useState(false);
   const [profileState, setProfileState] = useState({
-    selectedImage: user.avatar,
-    coverImage: user.cover,
+    avatar: user?.avatar,
+    cover: user?.cover,
     profileError: '',
     coverError: '',
-    fullName: user.display_name,
-    password: '',
-    NewPassword: '',
+    username: user?.username,
+    display_name: user?.display_name,
   });
   const [profile, setProfile] = useState({
     selectedImage: null as string | null,
@@ -81,20 +80,18 @@ export default function ProfileInfo() {
     }
   };
   const handleClick = () => {
-    const Updateschema = z.object({
-      fullname: z.string().min(3, 'Full name must be at least 3 characters'),
-      password: z.string().min(6, 'Password must be at least 6 characters'),
-      NewPassword: z.string().min(6, 'Password must be at least 6 characters'),
+    const Nameschema = z.object({
+      display_name: z.string().min(3, 'Full name must be at least 3 characters'),
+      password: z.string().min(6, 'Password must be at least 6 character'),
     });
 
-    const result = Updateschema.safeParse({
-      fullname: profileState.fullName,
+    const validationResult = Nameschema.safeParse({
+      display_name: profileState.display_name,
       password: profileState.password,
-      NewPassword: profileState.NewPassword,
     });
 
-    if (!result.success) {
-      const errorMap = result.error.errors.reduce(
+    if (!validationResult.success) {
+      const errorMap = validationResult.error.errors.reduce(
         (acc, err) => {
           acc[err.path[0]] = err.message;
           return acc;
@@ -106,9 +103,9 @@ export default function ProfileInfo() {
     } else {
       setErrors({});
       const updatedProfile = {
-        selectedImage: profileState.selectedImage,
-        coverImage: profileState.coverImage,
-        fullName: profileState.fullName,
+        selectedImage: profileState.avatar,
+        coverImage: profileState.cover,
+        username: profileState.username,
         password: profileState.password,
         NewPassword: profileState.NewPassword,
       };
@@ -121,8 +118,8 @@ export default function ProfileInfo() {
   };
   return (
     <div className="size-full py-8 px-6 2xl:p-10 flex flex-col gap-8">
-      <ProfileInformations />
-      <SecurityComponent user={user} />
+      <ProfileInformations profileState={profileState} setProfileState={setProfileState} errors={errors} setErrors={setErrors} />
+      <SecurityComponent  profileState={profileState} setProfileState={setProfileState} errors={errors} setErrors={setErrors}/>
       <Activate_2fa />
       <div className="w-[30%] h-[5%] flex items-center justify-center">
         <button
