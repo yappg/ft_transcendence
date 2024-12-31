@@ -3,17 +3,18 @@ import { CoverCard } from './CoverCard';
 import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
 import { useState } from 'react';
-const ProfileInformations = () => {
+const ProfileInformations = ({profileState, setProfileState, errors, setErrors}: {
+  profileState: {
+    avatar: string, 
+    cover: string,
+    profileError: string,
+    coverError: string,
+    username: string,
+    display_name: string,
+  }, setProfileState: Function,
+  errors: Record<string, string>, setErrors: Function}
+) => {
   const { user } = useUser();
-  const [profileState, setProfileState] = useState({
-    avatar: user?.avatar,
-    cover: user?.cover,
-    profileError: '',
-    coverError: '',
-    username: '',
-    display_name: user?.display_name,
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
   if (!user) {
     return null;
   }
@@ -40,6 +41,7 @@ const ProfileInformations = () => {
       
       const imageUrl = URL.createObjectURL(file);
       updateState('avatar', imageUrl);
+      updateState('profileError', '');
     }
   };
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +60,7 @@ const ProfileInformations = () => {
 
       const imageUrl = URL.createObjectURL(file);
       updateState('cover', imageUrl);
+      updateState('coverError', '');
     }
   };
   function handleNamechange (e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,9 +69,11 @@ const ProfileInformations = () => {
   function handleClick() {
     const Nameschema = z.object({
       display_name: z.string().min(3, 'Full name must be at least 3 characters'),
+
     });
     const validationResult = Nameschema.safeParse({
       display_name: profileState.display_name,
+
     });
     if (!validationResult.success) {
       const errorMap = validationResult.error.errors.reduce(
@@ -94,15 +99,15 @@ const ProfileInformations = () => {
       </div>
       <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
         <ImageCard
-          selectedImage={user?.avatar}
+          selectedImage={profileState?.avatar}
           handleImageChange={handleImageChange}
-          profileError={user.profileError}
+          profileError={profileState.profileError}
         />
 
         <CoverCard
-          coverImage={user.cover}
+          coverImage={profileState.cover}
           handleCoverChange={handleCoverChange}
-          coverError={user.coverError}
+          coverError={profileState.coverError}
         />
       </div>
       <div className="w-full h-fit 2xl:px-20 py-6 flex 2xl:gap-20 xl:gap-10 lg:gap-7 items-start justify-start sm:px-12 lg:flex-row flex-col">
@@ -110,7 +115,7 @@ const ProfileInformations = () => {
           <label className="text-white text-sm">Username</label>
           <input
             type="text"
-            value={user.username}
+            value={profileState.username}
             disabled
             className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
           />
@@ -136,14 +141,6 @@ const ProfileInformations = () => {
             )
           }
         </div>
-        <div className="w-full h-fit flex items-center justify-center">
-          <button
-            className="w-[200px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg bg-white hover:bg-[#28AFB0] hover:bg-opacity-[90%] transition-all duration-200"
-            onClick={handleClick}
-          >
-            Save
-          </button>
-          </div>
       </div>
     </div>
   );
