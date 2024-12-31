@@ -24,7 +24,7 @@ const Home = () => {
       }
     };
     fetchLogout();
-    router.push('/home');
+    router.push('/auth/login');
   };
 
   useEffect(() => {

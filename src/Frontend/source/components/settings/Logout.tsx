@@ -32,7 +32,7 @@ const Logout = () => {
       }
     };
     fetchLogout();
-    router.push('/home');
+    router.push('/auth/login');
   };
   return (
     <AlertDialog>
