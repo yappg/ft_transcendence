@@ -92,7 +92,7 @@ export default function ProfileInfo() {
 
     if (!validationResult.success) {
       const errorMap = validationResult.error.errors.reduce(
-        (acc, err) => {
+        (acc: any, err: any) => {
           acc[err.path[0]] = err.message;
           return acc;
         },
