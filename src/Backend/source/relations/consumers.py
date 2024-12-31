@@ -3,41 +3,36 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Notification
 from channels.db import database_sync_to_async
 
+from asgiref.sync import async_to_sync
+
+
+from urllib.parse import parse_qs
+
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user = self.scope['user']
-        self.group_name = f'notifications_{self.user.id}'
-
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
-        await self.accept()
+        user = self.scope['user']
+        if (user.is_authenticated):
+            await self.accept()
+        else:
+            await self.close()
+        user_id = user.id
+        if user_id is not None:
+            self.group_name = f"user_{user_id}"
+            await self.channel_layer.group_add(self.group_name, self.channel_name)
+            print(f'Connected to group: {self.group_name}')
+        else:
+            await self.close()
+            print('User ID not provided')
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.group_name,
-            self.channel_name
-        )
-
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        action = text_data_json.get('action')
-
-        if action == 'mark_as_read':
-            notification_id = text_data_json.get('notification_id')
-            await self.mark_notification_as_read(notification_id)
+        if hasattr(self, 'group_name'):
+            await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def send_notification(self, event):
-        await self.send(text_data=json.dumps(event['notification']))
-        
-    @database_sync_to_async
-    def get_notification(self, notification_id):
-        return Notification.objects.get(id=notification_id, recipient=self.user)
-
-    @database_sync_to_async
-    def save_notification(self, notification):
-        notification.save()
+        await self.send(text_data=json.dumps({
+            'message': event['message']
+        }))
+    
     # async def mark_notification_as_read(self, notification_id):
     #     try:
     #         notification = await self.get_notification(notification_id)
@@ -52,3 +47,4 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     #             'status': 'error',
     #             'message': 'Notification not found'
     #         }))
+    

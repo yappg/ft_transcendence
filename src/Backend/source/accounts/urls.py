@@ -6,8 +6,9 @@ from .views.userManagment import *
 from .views.functionViews import *
 
 router = DefaultRouter()
-router.register(r'profiles', PlayerProfileViewSet, basename="profiles")
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id} 
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
+router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user achivements
 
 UserProfileView = UserProfileViewSet.as_view({
     'get': 'retrieve',
@@ -27,6 +28,12 @@ UserHistoryView = UserHistoryViewSet.as_view({
     'get': 'list',
     'options': 'options',
 })
+
+UserAchivementView = UserAchivementViewSet.as_view({
+    'get': 'list',
+    'options': 'options',
+})
+
 
 urlpatterns = [
 # regular auth
@@ -51,9 +58,17 @@ urlpatterns = [
 # user-management
     path('users/me/update/', UpdateUserInfos.as_view(), name='UpdateInfos'),
     path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
+
+# user-management
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
+    path('user-achievements/', UserAchivementView , name='user_achievements'),
+
+# search views
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
+    # path ('search-friends', Search)
+
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
 # implemetation may differ change_password , change_email , change_username 
@@ -68,16 +83,3 @@ urlpatterns = [
     # path ('search-friends', Search)
 ]
 # TODO auth with Oauth username And Vice #########
-
-
-#list users
-    # path('list/all/', PlayersViewList.as_view(), name='playersList'),
-
-# get user details
-    # path('users/me/', PlayerProfileView.as_view(), name='playerDetails'),
-    # path('users/<int:userId>', PlayerProfileViewWithId.as_view(), name='playerDetailsWithId'),
-    # path('users/<slug:username>', PlayerProfileViewWithUserName.as_view(), name='playerDetailsWithName'),
-
-# update user details
-
-# access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NTAzODkwLCJpYXQiOjE3MzUxNDM4OTAsImp0aSI6IjdmZTAwM2E1ODNhNjQ5ZTZiYjRiNDNlZDg3Nzg0MGQyIiwidXNlcl9pZCI6M30.BCsu8AEappIOWoofnZsCQuFHxV0zpgvqG-rDrDKaNkE;csrftoken=H1caEQ3oab7WsHdhix1I09vDNWjBlNUi;refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczNTQwMzA5MCwiaWF0IjoxNzM1MTQzODkwLCJqdGkiOiJiMzRlYTM3ZWViNTA0MDA1OTVkN2JhMTgxNmQ3NWRhMyIsInVzZXJfaWQiOjN9.ND9X_FlUHIDPJPtORHgy875HyGjqVudlQvey-YUiJmg

@@ -23,29 +23,21 @@ schema_view = get_schema_view(
 
 )
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
     path('schema-viewer/', include('schema_viewer.urls')),
     path('prometheus/', include('django_prometheus.urls')),
 
-    #all entrys go to one point
-    path('accounts/', include('accounts.urls')),
-    path('chat/', include('chat.urls')),
-    path('game/', include('game.urls')),
-    path('relations/', include('relations.urls')),
-]
-
-    # structering api endpoints
-    # path('api')
+    path('accounts/', include('accounts.urls'), name='accounts'),
+    path('relations/', include('relations.urls'), name='relations'),
+    path('chat/', include('chat.urls'), name='chat'),
+    path('game/', include('game.urls'), name='game'),
 
     # path('health/', health_checkup, name='health_checkup'),
+]
 
-# def health_checkup(request):
-#     return JsonResponse({'status', 'healty'}, status=200)
-
-# django would take resp of serving media files only in dev mode, and in production NGINX should serve them
+# TODO django would take resp of serving media files only in dev mode, and in production NGINX should serve them
 if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -139,7 +139,7 @@ const Game_modes = () => {
   }, [setIsActivated]);
 
   return (
-    <div className="col-start-2 col-end-12 row-start-2 row-end-10 flex flex-col px-3 py-2">
+    <div className="w-full flex flex-col px-3 py-2 overflow-auto">
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>

@@ -14,25 +14,34 @@ from django.urls import path
 django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+from _1Config.middlwares import JWTtokenCustomMiddlware
+from django.urls import path
 from channels.security.websocket import AllowedHostsOriginValidator
 from .middleware import TokenAuthMiddleware
 from .routing import websockets_urlpatterns
 
 # Set the default settings module for the 'django' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings.developments')
-
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # Initialize Django
 django.setup()  # Ensure Django is set up before accessing any models
 
-# TODO what the AllowedHostsOriginValidator is for.
+# Get the ASGI application
+django_asgi_app = get_asgi_application()
+
+import chat.routing
+import relations.routing
+import accounts.routing
+
+# Combine WebSocket URL patterns from different apps
+websocket_urlpatterns = chat.routing.websocket_urlpatterns + relations.routing.websocket_urlpatterns + accounts.routing.websocket_urlpatterns
+
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
-    'websocket':AllowedHostsOriginValidator(
-        TokenAuthMiddleware(
+    "websocket": AllowedHostsOriginValidator(
+        JWTtokenCustomMiddlware(
             URLRouter(
-                websockets_urlpatterns
-            )
-        ),
+                websocket_urlpatterns,
+            ))
     ),
 })

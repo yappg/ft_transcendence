@@ -8,8 +8,8 @@ from django.contrib.auth.models import AnonymousUser
 def returnUser(token_string):
     try:
         user = Token.objects.get(key=token_string).user
-    except:
-        user = AnonymousUser()
+    except Exception as e:
+        print(f'DEBUG-----{e}-------')
     return user
 
 

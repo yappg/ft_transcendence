@@ -43,6 +43,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         except :
             raise serializers.ValidationError("User Could not be created")
 
+
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True)
@@ -67,9 +68,11 @@ class GenerateOTPSerializer(serializers.Serializer):
     pass
     # username = serializers.CharField()
 
+
 class VerifyOTPSerializer(serializers.Serializer):
     # username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6, required=True)
+
 
 class ValidateOTPSerializer(serializers.Serializer):
     # username = serializers.CharField()
@@ -78,6 +81,8 @@ class ValidateOTPSerializer(serializers.Serializer):
     def validate(self, attrs):
         if not attrs.get('otp_token'):# or not attrs.get('username'):
             raise serializers.ValidationError({"error":"OTP Token required"})
+
+
 
 ###################### [.] It needs To be Optimized
 # class UpdateUserInfosSerializer(serializers.Serializer):

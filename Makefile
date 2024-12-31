@@ -2,7 +2,7 @@
 
 PROJECT := "transandance"
 
-COMPOSE := "./src/docker-compose.yml"
+COMPOSE := "./docker-compose.yml"
 
 RED := \033[31m
 GREEN := \033[32m
@@ -13,7 +13,7 @@ RESET := \033[0m
 ##########################################    BUILD    ##########################################
 
 build: down
-	docker-compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
+	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
 	$(MAKE) logs
 
 up: down
@@ -30,24 +30,31 @@ list:
 	@echo "$(YELLOW)\n<========= containers =========>\n$(RESET)"  && \
 	docker-compose -p $(PROJECT) ps  && \
 	echo "$(YELLOW)\n<=========   images   =========>\n$(RESET)"  && \
-	docker compose -p $(PROJECT) images  && \
+	docker compose -p $(PROJECT) images
 
-clean: data-reset
+clean:
 	@docker compose -p $(PROJECT) down --volumes --remove-orphans
 
 fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
-
+	@$(MAKE) data-reset
 
 re: clean build
 
 ########################################## DEVELOPMENT ##########################################
 
 compose:
-	@docker compose -f $(COMPOSE) "$(filter-out $@, $(MAKECMDGOALS))"
+	@docker compose -f $(COMPOSE) $(filter-out $@, $(MAKECMDGOALS))
 
 it:
 	@docker compose -p $(PROJECT) exec -it "$(filter-out $@, $(MAKECMDGOALS))" "/bin/sh"
+
+migrations:
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "makemigrations"
+	@docker compose -p $(PROJECT) exec backend "python" "manage.py" "migrate"
+
+kill:
+	@docker compose -p $(PROJECT) kill "$(filter-out $@, $(MAKECMDGOALS))"
 
 restart:
 	@docker compose -p $(PROJECT) restart "$(filter-out $@, $(MAKECMDGOALS))"
@@ -65,6 +72,8 @@ prune:
 	@echo "$(GREEN)>$(YELLOW) Starting the pruning process: $(RESET)"
 	@docker kill $$(docker ps -aq) 2>/dev/null || true
 	@docker rm $$(docker ps -aq) 2>/dev/null || true
+	@echo "$(GREEN)>$(YELLOW) removing all containers...$(RESET)"
+	@sleep 2
 	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
 	@docker network rm $$(docker network ls -q) 2>/dev/null || true
 	@docker rmi $$(docker images -aq) 2>/dev/null || true
