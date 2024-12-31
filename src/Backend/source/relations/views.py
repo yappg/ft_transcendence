@@ -17,99 +17,40 @@ class NotificationListView(ListAPIView):
     def get_queryset(self):
         return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
 
-
-############################ main code #########################################################
-
 # class PlayerListView(APIView):
 #     permission_classes = [IsAuthenticated]
 
 #     def get(self, request):
-#         from accounts.models import PlayerProfile
-#         profiles = PlayerProfile.objects.get(player=request.user)
-#         friends = profiles.all_friends()
-#         invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
-#         # players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends)[:10]
-#         players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends).exclude(id=request.user.id).exclude()[:10]
+#         try:
+#             from accounts.models import PlayerProfile
+#             profiles = PlayerProfile.objects.get(player=request.user)
+#             friends = profiles.all_friends()
+#             invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
 
-#         serializer = PlayerRelationsSerializer(players, many=True)
-#         return Response({'message': 'Success', 'data': serializer.data})
+#             players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends).exclude(profile__in=invites)[:10]
+#             serializer = PlayerRelationsSerializer(players, many=True)
+#             return Response({'message': 'Success', 'data': serializer.data})
+#         except PlayerProfile.DoesNotExist:
+#             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+#         except Exception as e:
+#             return Response({'error': 'An error occurred' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class PlayerListView(APIView): # TODO this needs work too
+class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
             from accounts.models import PlayerProfile
-            profiles = PlayerProfile.objects.get(player=request.user)
-            friends = profiles.all_friends()
-            # invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
+            from accounts.serializers.userManagmentSerlizers import FriendsSerializer
 
-            players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends)[:10]
-            # .exclude(profile__in=invites)[:10]
-            serializer = PlayerRelationsSerializer(players, many=True)
+            user = request.user
+            profile = PlayerProfile.objects.get(player=user)
+            friends = profile.all_friends()
+
+            serializer = FriendsSerializer(friends, many=True)
             return Response({'message': 'Success', 'data': serializer.data})
         except PlayerProfile.DoesNotExist:
             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': 'An error occurred' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-################################################## main code #########################################################
-
-# class FriendsListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         from accounts.models import PlayerProfile
-#         from accounts.serializers.userManagmentSerlizers import FriendsSerializer
-#         user = request.user
-#         profile = PlayerProfile.objects.get(player=user)
-#         # print(f"profile is {profile}")
-#         friends = profile.all_friends()
-#         serializer =  FriendsSerializer(friends, many=True)
-
-#         return Response({'message': 'Success', 'data': serializer.data})
-
-#     def delete(self, request):
-#         user = request.user
-#         remove_friend = request.data.get('remove_friend')
-
-#         try:
-#             remove_player = Player.objects.get(profile__display_name=remove_friend)
-
-#             if remove_player == user:
-#                 return Response({"error": "You cannot remove yourself"}, status=status.HTTP_400_BAD_REQUEST)
-
-#             Friends.objects.filter(
-#                 Q(friend_requester=user, friend_responder=remove_player) |
-#                 Q(friend_requester=remove_player, friend_responder=user)
-#             ).delete()
-
-#             return Response({"message": "Friend removed"}, status=status.HTTP_200_OK)
-#         except Player.DoesNotExist:
-#             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class FriendsListView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request): # TODO this should be improved
-        user = request.user
-        friends = Friends.objects.filter(
-            Q(friend_requester=user) | Q(friend_responder=user)
-        ).distinct()
-
-        unique_friends = []
-        seen_pairs = set()
-        for friend in friends:
-            pair = tuple(sorted([friend.friend_requester.username, friend.friend_responder.username]))
-            if pair not in seen_pairs:
-                seen_pairs.add(pair)
-                unique_friends.append(friend)
-
-        if not unique_friends:
-            return Response({"error": "No Friends Found"}, status=200)
-
-        serializer = FriendsSerializer(unique_friends, many=True)
-        return Response({'message': 'Success', 'data': serializer.data})
 
     def delete(self, request):
         user = request.user
@@ -129,28 +70,6 @@ class FriendsListView(APIView):
             return Response({"message": "Friend removed"}, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
-# class PendingInvitationsView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-#         pending_invitations = FriendInvitation.objects.filter(receiver=user, status='pending')
-#         if not pending_invitations:
-#             return Response({"error": "No Invitaions Found"}, status=200);
-#         serializer = FriendInvitationSerializer(pending_invitations, many=True)
-#         return Response({'message': 'Success', 'data': serializer.data})
-
-#     def delete(self, request):
-#         user = request.user
-#         decline_pending = request.data.get('decline_pending')
-#         player = Player.objects.get(profile__display_name=decline_pending)
-#         deleted = FriendInvitation.objects.filter(receiver=user, sender=player).delete()
-#         if deleted:
-#             return Response({"message": "Invitation declined"}, status=status.HTTP_200_OK)
-#         return Response({"error": "Invitation not found"}, status=status.HTTP_404_NOT_FOUND)
-
 
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -183,51 +102,6 @@ class PendingInvitationsView(APIView):
         return Response({"message": "Friend invitation declined successfully"}, status=status.HTTP_200_OK)
 
 
-######################################### main code #########################################################
-
-# class FriendInvitationView(APIView):
-
-
-#     def post(self, request):
-#         sender = request.user
-#         receiver_display_name = request.data.get('receiver')
-#         try:
-#             receiver = Player.objects.get(profile__display_name=receiver_display_name)
-#         except Player.DoesNotExist:
-#             return Response({"error": "User not found"}, status=200)
-
-#         if sender == receiver:
-#             return Response({"error": "You cannot send a friend request to yourself"}, status=200)
-
-#         # Check if they are already friends
-#         if Friends.objects.filter(
-#             (Q(friend_requester=sender) & Q(friend_responder=receiver)) |
-#             (Q(friend_requester=receiver) & Q(friend_responder=sender))
-#         ).exists():
-#             return Response({"error": "You are already friends"}, status=200)
-
-#         invitation, created = FriendInvitation.objects.get_or_create(sender=sender, receiver=receiver)
-#         if not created:
-#             return Response({"error": "Friend request already sent"}, status=200)
-
-#         serializer = FriendInvitationSerializer(invitation)
-#         return Response({"message":"Invitation sent","data":serializer.data}, status=status.HTTP_201_CREATED)
-
-#     def delete(self, request):
-#         sender = request.user
-#         receiver_display_name = request.data.get('cancel_invite')
-#         try:
-#             receiver = Player.objects.get(profile__display_name=receiver_display_name)
-#         except Player.DoesNotExist:
-#             return Response({"error": "User not found"}, status=200)
-
-#         FriendInvitation.objects.filter(sender=sender, receiver=receiver).delete()
-#         return Response({"message": "Invitation canceled"}, status=status.HTTP_200_OK)
-
-
-
-
-
 class FriendInvitationView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -240,33 +114,36 @@ class FriendInvitationView(APIView):
         serializer = FriendInvitationSerializer(invitations, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
     def post(self, request):
         sender = request.user
         receiver_display_name = request.data.get('receiver')
+
+        if not receiver_display_name:
+            return Response({"error": "Missing receiver parameter"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             receiver = Player.objects.get(profile__display_name=receiver_display_name)
         except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=200)
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if sender == receiver:
-            return Response({"error": "You cannot send a friend request to yourself"}, status=200)
+            return Response({"error": "You cannot send a friend request to yourself"}, status=status.HTTP_400_BAD_REQUEST)
 
         if Friends.objects.filter(
             Q(friend_requester=sender , friend_responder=receiver) |
             Q(friend_requester=receiver , friend_responder=sender)
         ).exists():
-            return Response({"error": "You are already friends"}, status=200)
+            return Response({"error": "You are already friends"}, status=status.HTTP_400_BAD_REQUEST)
 
         if BlockedUsers.objects.filter(
             Q(user=sender, blocked=receiver) |
             Q(user=receiver, blocked=sender)
         ).exists():
-            return Response({"error": "cant invite blocked user"}, status=200)
+            return Response({"error": "cant invite blocked user"}, status=status.HTTP_400_BAD_REQUEST)
 
         created = FriendInvitation.objects.get_or_create(sender=sender, receiver=receiver)
         if not created:
-            return Response({"error": "Friend request already sent"}, status=200)
+            return Response({"error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = FriendInvitationSerializer(created)
         return Response({"message":"Invitation sent","data":serializer.data}, status=status.HTTP_201_CREATED)
@@ -278,12 +155,14 @@ class FriendInvitationView(APIView):
         try:
             receiver = Player.objects.get(profile__display_name=receiver_display_name)
         except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=200)
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        FriendInvitation.objects.filter(sender=sender, receiver=receiver).delete()
+        invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver).first()
+        if not invitation:
+            return Response({"error": "Invitation not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        invitation.delete()
         return Response({"message": "Invitation canceled"}, status=status.HTTP_200_OK)
-
-
 
 # @swagger_auto_schema(
 #     request_body=FriendInvitationSerializer,
@@ -299,11 +178,11 @@ class AcceptInvitationView(APIView):
         try:
             sender = Player.objects.get(profile__display_name=sender_display_name)
         except Player.DoesNotExist:
-            return Response({"error": "User not found"}, status=200)
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         invitation = FriendInvitation.objects.filter(sender=sender, receiver=receiver).first()
         if not invitation:
-            return Response({"error": "Invitation not found or already accepted"}, status=200)
+            return Response({"error": "Invitation not found or already accepted"}, status=status.HTTP_400_BAD_REQUEST)
 
         invitation.delete()
         Friends.objects.create(friend_requester=sender, friend_responder=receiver)
@@ -325,7 +204,7 @@ class BlockedUsersView(APIView):
             return Response({'error': 'An error occurred'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def post(self, request):
+    def patch(self, request):
         blocker = request.user
         blocked_display_name = request.data.get('block_user')
 
@@ -343,7 +222,7 @@ class BlockedUsersView(APIView):
         try:
             block_list = BlockedUsers.objects.get(user=blocker)
         except BlockedUsers.DoesNotExist:
-            return Response({"error": "Block list not found"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": "Block list not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if block_list.block_user(blocked):
             Friends.objects.filter(
@@ -356,25 +235,9 @@ class BlockedUsersView(APIView):
                 Q(sender=blocked, receiver=blocker)
             ).delete()
 
-            return Response({"message": "User blocked successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "User blocked successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User is already blocked"}, status=status.HTTP_400_BAD_REQUEST)
-
-################## main code #########################################################
-    # def patch(self, request):
-    #     blocker = request.user
-    #     blocked_display_name = request.data.get('block_user')
-
-    #     try:
-    #         blocked = Player.objects.get(profile__display_name=blocked_display_name)
-    #     except Player.DoesNotExist:
-    #         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    #     block_list = BlockedUsers.objects.get(user=blocker)
-    #     if block_list.block_user(blocked):
-    #         return Response({"message": "User blocked successfully"}, status=status.HTTP_201_CREATED)
-    #     else:
-    #         return Response({"error": "User already blocked"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         blocker = request.user
@@ -389,4 +252,4 @@ class BlockedUsersView(APIView):
         if block_list.unblock_user(blocked):
             return Response({"message": "User unblocked successfully"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "User not blocked"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "User not blocked"}, status=status.HTTP_400_BAD_REQUEST)

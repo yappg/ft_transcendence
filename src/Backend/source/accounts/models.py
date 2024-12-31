@@ -18,12 +18,10 @@ def validate_file_size(value):
 
 # auth user
 class Player(AbstractUser):
-
     enabled_2fa=models.BooleanField(default=False)
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
-    #this model needs to have a profilefield which refers to the playerprofile model
-    # profile=models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name='player')
+
 
     def __str__(self):
         if self.is_superuser:
@@ -127,20 +125,10 @@ class PlayerProfile(models.Model):
 
     def all_friends(self):
         from relations.models import Friends
-        friends = Friends.objects.filter(
-            Q(friend_requester=self.player) |
-            Q(friend_responder=self.player)
-        ).order_by('-created_at').select_related('friend_requester', 'friend_responder').distinct()
-
-        print(f"all friends relations for {self.display_name} are : {friends}")
-
-        friend_players = []
-        for friendship in friends:
-            if friendship.friend_requester == self.player:
-                friend_players.append(friendship.friend_responder.profile)
-            else:
-                friend_players.append(friendship.friend_requester.profile)
-        return friend_players
+        return PlayerProfile.objects.filter(
+            Q(player__friend_requests_sent__friend_responder=self.player) |
+            Q(player__friend_requests_received__friend_requester=self.player)
+        ).select_related('player').distinct().order_by('-created_at')
 
     def all_achievements_gained(self):
         return PlayerAchievement.objects.filter(player=self, gained=True).order_by('-date_earned')
@@ -176,7 +164,6 @@ class PlayerProfile(models.Model):
 
     def calculate_level_up_xp(self):
         return 50 * (self.level + 1)
-
 
     def check_level_up(self):
         level_up_xp = self.calculate_level_up_xp()
