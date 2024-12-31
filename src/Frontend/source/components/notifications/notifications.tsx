@@ -11,7 +11,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ notifications, noti
   const [notifClicked, setNotifClicked] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <div className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
         <IoMdNotifications
           className="size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px]"
@@ -25,8 +25,8 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ notifications, noti
       </div>
       {notifClicked && (
         <div className="absolute top-10 right-0 w-80 bg-white shadow-lg rounded-lg">
-          {notifications.map((notification) => (
-            <div key={notification.id} className="p-4 border-b border-gray-200">
+          {notifications.map((notification,index) => (
+            <div key={index} className="p-4 border-b border-gray-200">
               <p>{notification.message}</p>
             </div>
           ))}

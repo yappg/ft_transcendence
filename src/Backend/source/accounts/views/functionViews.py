@@ -5,30 +5,50 @@ from rest_framework import status
 from ..models import PlayerProfile
 from ..serializers.functionSerlizers import *
 
-from django.core.cache import cache
-
 class SearchUsersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        search_term = request.query_params.get('search', '')
+        search_term = request.query_params.get('search', '').strip()
 
-        players = PlayerProfile.objects.filter(
-            display_name__istartswith=search_term
-        )
+        if not search_term:
+            return Response({'message': 'Search term is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(search_term) > 50:
+            return Response({'message': 'Search term too long'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = SearchUsersSerializer(players, many=True)
+        try:
+            players = PlayerProfile.objects.filter(
+                display_name__istartswith=search_term
+            ).exclude(player=request.user)[:10] # exlude block list
 
-        return Response({'count': players.count(), 'results': serializer.data}, status=status.HTTP_200_OK)
+            serializer = SearchUsersSerializer(players, many=True)
+            return Response({
+                'count': len(players),
+                'results': serializer.data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'message': 'An error occurred while searching users'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 class LeaderboardView(APIView):
-    permission_classes = [IsAuthenticated] # maybe do a formulat for this
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        leaderboard = cache.get('top_100_leaderboard')
-        if not leaderboard:
-            top_players = PlayerProfile.objects.all().order_by('-games_won')[:100]
+        try:
+            top_players = PlayerProfile.objects.all().order_by(
+                '-level',
+                '-win_ratio',
+                '-games_won',
+                '-total_games',
+            )[:100]
+
             serializer = LeaderBoardSerializer(top_players, many=True)
-            leaderboard = serializer.data
-            cache.set('top_100_leaderboard', leaderboard, timeout=60*5)  # Cache for 5 minutes
-        return Response(leaderboard, status=200)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'message': 'An error occurred while fetching leaderboard'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

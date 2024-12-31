@@ -15,6 +15,9 @@ const nextConfig = {
   devIndicators: {
     reactRefresh: false,
   },
+  images: {
+    domains: ['localhost'], // Allow images to be loaded from localhost
+  },
 };
 
 export default nextConfig;
