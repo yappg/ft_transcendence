@@ -9,6 +9,10 @@ Player = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.user = self.scope['user']
+        if not self.user.is_authenticated:
+            await self.close()
+        await self.accept()
         self.chatId = self.scope['url_route']['kwargs']['chatId']
         self.chat_group_name = f'chat_{self.chatId}'
 
@@ -17,7 +21,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.chat_group_name,
             self.channel_name
         )
-        await self.accept()
         print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
 
         await self.send(text_data=json.dumps({

@@ -38,7 +38,7 @@ export default function ProfileInfo() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const updateState = (key: keyof typeof profileState, value: any) => {
-    setProfileState((prev) => ({ ...prev, [key]: value }));
+    setProfileState((prev: any) => ({ ...prev, [key]: value }));
   };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

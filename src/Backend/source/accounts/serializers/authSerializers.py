@@ -3,7 +3,7 @@ from ..models import *
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
 # from django.core.exceptions import Validate_email
-
+ 
 ########################################################################################
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if Player.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username is already in use")
-        if len(value) < 3 or len(value) > 30:
+        if len(value) < 3 or len(value) > 30: #it has been checked on the fronrtend
             raise serializers.ValidationError("Username should be between 3 and 30 characters long")
         return value
 
@@ -40,13 +40,13 @@ class SignUpSerializer(serializers.ModelSerializer):
             user.set_password(validated_data['password'])
             user.save()
             return user
-        except IntegrityError:
+        except :
             raise serializers.ValidationError("User Could not be created")
 
 
 class SignInSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
     extra_kwargs = {
         'password':{'write_only':True}
     }
@@ -65,20 +65,21 @@ class SignInSerializer(serializers.Serializer):
         return attrs
 
 class GenerateOTPSerializer(serializers.Serializer):
-        username = serializers.CharField()
+    pass
+    # username = serializers.CharField()
 
 
 class VerifyOTPSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    otp_token = serializers.CharField(max_length=6)
+    # username = serializers.CharField()
+    otp_token = serializers.CharField(max_length=6, required=True)
 
 
 class ValidateOTPSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    # username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
     def validate(self, attrs):
-        if not attrs.get('otp_token') or not attrs.get('username'):
+        if not attrs.get('otp_token'):# or not attrs.get('username'):
             raise serializers.ValidationError({"error":"OTP Token required"})
 
 
@@ -110,3 +111,45 @@ class ValidateOTPSerializer(serializers.Serializer):
     #     if 'cover' in self.validated_data:
     #         player.cover = self.validated_data['cover']
     #     player.save()
+
+class UpdateUserInfosSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model=Player
+        fields=('username', 'email' ,'password', 'new_password')
+
+    def validate(self, attrs):
+        user = self.context['user']
+        if 'username' in attrs:
+            if Player.objects.filter(username=attrs['username']).exists():
+                raise serializers.ValidationError(
+                    {"error": "Username is already in use"}
+                )
+        # if 'email' in attrs:
+            # if Player.objects.filter(email=attrs['email']).exists():
+            #     raise serializers.ValidationError(
+            #         {"error": "email is already in use"}
+            #     )
+        if 'password' in attrs and 'new_password' in attrs:
+            #check for new_password validity 8alphaNumes and 1 special char etc
+            if not user.check_password(raw_password=attrs['password']):
+                raise serializers.ValidationError(
+                    {"error": "Invalid password"}
+                )
+        return attrs
+
+    def save(self, **kwargs):
+        user = self.context['user']
+        player = Player.objects.get(username=user.username)
+        if 'username' in self.validated_data:
+            player.username = self.validated_data['username']
+        if 'email' in self.validated_data:
+            player.email = self.validated_data['email']
+        # if 'avatar' in self.validated_data:
+        #     player.avatar = self.validated_data['avatar']
+        # if 'cover' in self.validated_data:
+        #     player.cover = self.validated_data['cover']
+        if 'password' in self.validated_data:
+            player.set_password(self.validated_data['new_password'])
+        player.save()

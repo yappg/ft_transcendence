@@ -10,12 +10,12 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { TbLogout2 } from 'react-icons/tb';
-// import { div } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
 import { Card } from '@/components/settings/Card';
+import { useRouter } from 'next/navigation';
+
 
 const Logout = () => {
-  const auth = useAuth();
+  const router = useRouter();
 
   const handleClick = () => {
     const fetchLogout = async () => {
@@ -33,7 +33,7 @@ const Logout = () => {
       }
     };
     fetchLogout();
-    auth.logout();
+    router.push('/home');
   };
   return (
     <AlertDialog>

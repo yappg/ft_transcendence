@@ -7,43 +7,65 @@ import { Chat, Message } from '@/constants/chat'
 import { useUser } from '@/context/GlobalContext'
 import { MessageBubble } from '@/components/chat/MessageBubb'
 import { chatService } from '@/services/chatService'
+import FriendServices from '@/services/friendServices'
 import { useChatWebSocket } from '@/hooks/useChatWebSocket'
-
+import { toast } from '@/hooks/use-toast';
 interface MessagesProps {
   chatId: number
-  chatPartner: Chat | null
-  receiverId: number | undefined
+  currentChat: Chat
+  receiverId: number
   messages: Message[]
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
 }
 
 export const Messages: React.FC<MessagesProps> = ({
   chatId,
-  chatPartner,
+  currentChat,
   messages,
   setMessages,
   receiverId,
 }) => {
-  const [newMessage, setNewMessage] = useState<string>('')
-  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const [newMessage, setNewMessage] = useState<string>('');
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [isPartnerOnline, setIsPartnerOnline] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null)
   const [showMoreOptions, setShowMoreOptions] = useState(false)
-  const [isPartnerOnline, setIsPartnerOnline] = useState(false)
-  const { user, setChats } = useUser()
-
+  const { chats, user, setChats } = useUser()
   
   const handleBlockUser = async () => {
-    try {
-      console.log('Blocking user:', chatPartner?.receiver.id)
-      setShowMoreOptions(false)
-    } catch (error) {
-      console.log('Failed to block user', error)
+    if (isBlocked === true) {
+        console.log('Unblocking user:', currentChat?.receiver.username)
+        try {
+          await FriendServices.unblockFriend(currentChat?.receiver.username)
+          setIsBlocked(false)
+        } catch (error) {
+          toast({
+            title: 'User is already unblocked',
+            description: 'You cannot unblock this user',
+            variant: 'destructive',
+            className: 'bg-primary-dark border-none text-white',
+          });
+        }
+      } else {
+        console.log('Blocking user:', currentChat?.receiver.username)
+        try {
+          await FriendServices.blockFriend(currentChat?.receiver.username)
+          setIsBlocked(true)
+        } catch (error) {
+          // need to overide the alert and show it like a toast
+          toast({
+            title: 'User is already blocked',
+            description: 'You cannot block this user',
+            variant: 'destructive',
+            className: 'bg-primary-dark border-none text-white',
+          });
+        }
+      }
     }
-  }
-  
-  const handleGameInvite = async () => {
-    try {
-      console.log('Sending game invite to:', chatPartner?.receiver.id)
+    
+    const handleGameInvite = async () => {
+      try {
+      console.log('Sending game invite to:', currentChat?.receiver.id)
       setShowMoreOptions(false)
     } catch (error) {
       console.log('Failed to send game invite', error)
@@ -51,13 +73,13 @@ export const Messages: React.FC<MessagesProps> = ({
   }
   
   useChatWebSocket({
-   chatId,
-   currentUserId,
-   receiverId,
-   setMessages,
-   setChats,
- })
- 
+    chatId,
+    currentUserId,
+    receiverId,
+    setMessages,
+    setChats,
+  })
+  
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newMessage.trim()) return
@@ -80,10 +102,23 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   }, [messages])
 
+  const [chatBar, setChatBar] = useState(true);
+  const [isBlocked, setIsBlocked] = useState(false);
+
   React.useEffect(() => {
-    if (user) setCurrentUserId(user.id)
+    if (user) setCurrentUserId(user.id);
+    if (chats) {
+      const currentchat = chats.find((chat: Chat) => chat.id === chatId)
+      if (currentchat && (currentchat.is_blocked || currentchat.blocked_by)) {
+        setChatBar(false);
+      }
+      if (currentchat && currentchat.is_blocked === true) {
+          setIsBlocked(true);
+      }
+    }
+
     setIsPartnerOnline(true);
-  }, [user])
+  }, [user], [chats])
 
   return (
     <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
@@ -91,13 +126,13 @@ export const Messages: React.FC<MessagesProps> = ({
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
-              src={'http://localhost:8080' + chatPartner?.receiver.avatar}
-              alt={`${chatPartner?.receiver.username}'s profile`}
+              src={'http://localhost:8080' + currentChat?.receiver.avatar}
+              alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
             />
           </div>
           <div>
-            <h2>{chatPartner?.receiver.username}</h2>
+            <h2>{currentChat?.receiver.username}</h2>
             <h3 className={`text-sm ${isPartnerOnline ? 'text-green-500' : 'text-gray-400'}`}>
               {isPartnerOnline ? 'online' : 'offline'}
             </h3>
@@ -124,7 +159,7 @@ export const Messages: React.FC<MessagesProps> = ({
                 className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
               >
                 <BiBlock className="size-5" />
-                <span>Block User</span>
+                {isBlocked === true ? 'Unblock User' : 'Block User'}
               </button>
             </div>
           )}
@@ -135,7 +170,7 @@ export const Messages: React.FC<MessagesProps> = ({
           <MessageBubble
             key={index}
             message={message}
-            isCurrentUser={chatPartner?.receiver.username === message.receiver}
+            isCurrentUser={currentChat?.receiver.username === message.receiver}
           />
         ))}
       </div>
@@ -145,12 +180,14 @@ export const Messages: React.FC<MessagesProps> = ({
       >
         <div className="flex size-full items-center gap-3 px-4">
           <FiPlus className="dark: size-[30px] text-white" />
-          <input
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+          {chatBar && (
+            <input
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Start a new conversation"
             className="size-full bg-transparent text-white focus:outline-none"
-          />
+            />
+          )}
         </div>
         <button
           type="submit"

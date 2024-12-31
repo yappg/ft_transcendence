@@ -1,31 +1,151 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
-import EarthModeCard from '@/components/game/theme-card';
 import { SideBarContext } from '@/context/SideBarContext';
-import { useContext } from 'react';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { MapsCard, ModesCard } from '@/components/game/theme-card';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/modules';
+
+const MapsSwiper = ({ mode }: { mode: string }) => {
+  return (
+    <Swiper
+      effect={'coverflow'}
+      grabCursor={true}
+      centeredSlides={true}
+      loop={true}
+      slidesPerView={2}
+      spaceBetween={60}
+      coverflowEffect={{
+        rotate: 0,
+        stretch: 0,
+        depth: 100,
+        modifier: 2.5,
+      }}
+      autoplay={true}
+      pagination={{ el: '.swiper-pagination', clickable: true }}
+      modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
+      className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
+    >
+      <SwiperSlide className="overflow-visible">
+        <MapsCard
+          height="100px"
+          imageUrl="/earth.png"
+          title="Earth"
+          description="earth could shake or make or fake"
+          url={`/Game-Arena?mode=${mode}&map=earth`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <MapsCard
+          height="100px"
+          imageUrl="/air.png"
+          title="Air"
+          description="Air: The invisible killer we can not live without"
+          url={`/Game-Arena?mode=${mode}&map=air`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <MapsCard
+          height="100px"
+          imageUrl="/fire.png"
+          title="Fire"
+          description="Because sometimes, you just need to watch the world burn."
+          url={`/Game-Arena?mode=${mode}&map=fire`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <MapsCard
+          height="100px"
+          imageUrl="/water.png"
+          title="Water"
+          description="The slippery element that makes sure your Pong ball never stays on course."
+          url={`/Game-Arena?mode=${mode}&map=water`}
+        />
+      </SwiperSlide>
+    </Swiper>
+  );
+};
+
+const GameModeSwiper = () => {
+  return (
+    <Swiper
+      effect={'coverflow'}
+      grabCursor={true}
+      centeredSlides={true}
+      loop={true}
+      slidesPerView={2}
+      spaceBetween={60}
+      coverflowEffect={{
+        rotate: 0,
+        stretch: 0,
+        depth: 100,
+        modifier: 2.5,
+      }}
+      autoplay={true}
+      pagination={{ el: '.swiper-pagination', clickable: true }}
+      modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
+      className="swiper-container flex h-[70%] w-full items-center justify-center overflow-auto py-4"
+    >
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="toutnement"
+          description=""
+          url={`/games?mode=tournoment`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="Local Tournement"
+          description=""
+          url={`/games?mode=tournoment-local`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="One Vs One"
+          description=""
+          url={`/games?mode=one-vs-one`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="Local One vs One"
+          description="The slippery element that makes sure your Pong ball never stays on course."
+          url={`/games?mode=one-vs-one-local`}
+        />
+      </SwiperSlide>
+    </Swiper>
+  );
+};
+
 const Game_modes = () => {
   const { setIsActivated } = useContext(SideBarContext);
+  const searchParams = useSearchParams();
+  const mode = searchParams.get('mode');
+
   useEffect(() => {
     setIsActivated(2);
   }, [setIsActivated]);
+
   return (
-    <div className="col-start-2 col-end-12 row-start-2 row-end-10 flex flex-col px-3 py-2">
+    <div className="w-full flex flex-col px-3 py-2 overflow-auto">
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>
       <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
-        <div className="flex w-[calc(100%+100px)] gap-5 overflow-hidden py-10">
-          <div className="scroll-container">
-            <EarthModeCard height="100px" imageUrl="/earth.png" />
-            <EarthModeCard height="100px" imageUrl="/air.png" />
-            <EarthModeCard height="100px" imageUrl="/fire.png" />
-            <EarthModeCard height="100px" imageUrl="/water.png" />
-            <EarthModeCard height="100px" imageUrl="/earth.png" />
-            <EarthModeCard height="100px" imageUrl="/air.png" />
-            <EarthModeCard height="100px" imageUrl="/fire.png" />
-            <EarthModeCard height="100px" imageUrl="/water.png" />
-          </div>
+        <div className="flex size-full items-center">
+          {mode ? <MapsSwiper mode={mode} /> : <GameModeSwiper />}
         </div>
       </div>
     </div>

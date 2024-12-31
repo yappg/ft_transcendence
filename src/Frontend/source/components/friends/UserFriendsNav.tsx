@@ -51,14 +51,9 @@ const UserFriendsNav = (): JSX.Element => {
   ];
 
   const handleRequestAccepted = (username: string) => {
-    // Find the accepted request
     const acceptedRequest = Requests.find((req: any) => req.sender === username);
     if (acceptedRequest) {
-      // Remove the accepted request from the Requests list
-      setRequests((prevRequests: any) =>
-        prevRequests.filter((req: any) => req.sender !== username)
-      );
-      // Add the new friend to the Friends list
+      setRequests((prevRequests: any) => prevRequests.filter((req: any) => req.sender !== username));
       const newFriend = {
         friend_requester: currentUserUserName,
         friend_responder: username,
@@ -73,26 +68,24 @@ const UserFriendsNav = (): JSX.Element => {
     if (activeIndex === 0) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {user?.friends.length === 0 ? (
-            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">
-              No Friends to display{' '}
-            </div>
+          {Friends.length > 0 ? (
+          Friends.map((friend: any, index) => (
+            <FriendsComponent
+              key={index}
+              name={friend.display_name}
+              ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+              level={friend.level}
+              messagesLink={
+                <div className="flex items-center justify-center">
+                  <Link href="/messages">
+                    <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
+                  </Link>
+                </div>
+              }
+            />
+          ))
           ) : (
-            user?.friends.map((friend) => (
-              <FriendsComponent
-                key={friend.id}
-                name={friend?.display_name}
-                ProfilePhoto={'http://localhost:8080' + friend?.avatar}
-                level={friend?.level}
-                messagesLink={
-                  <div className="flex items-center justify-center">
-                    <Link href="/messages">
-                      <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 xl:size-[50px] 2xl:size-[55px] dark:text-[#B8B8B8] mr-4" />
-                    </Link>
-                  </div>
-                }
-              />
-            ))
+            <div className="text-center font-bold text-white h-full flex items-center justify-center bg-black-crd">No Friends to display </div>
           )}
         </div>
       );
