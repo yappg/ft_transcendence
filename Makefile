@@ -28,13 +28,12 @@ logs:
 
 list:
 	@echo "$(YELLOW)\n<========= containers =========>\n$(RESET)"  && \
-	docker compose -p $(PROJECT) ps  && \
+	docker-compose -p $(PROJECT) ps  && \
 	echo "$(YELLOW)\n<=========   images   =========>\n$(RESET)"  && \
 	docker compose -p $(PROJECT) images
 
 clean:
 	@docker compose -p $(PROJECT) down --volumes --remove-orphans
-	@$(MAKE) data-reset
 
 fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans

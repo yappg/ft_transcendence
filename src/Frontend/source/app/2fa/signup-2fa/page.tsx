@@ -6,20 +6,17 @@ import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import { MyButton } from '@/components/generalUi/Button';
 import { useQRCode } from 'next-qrcode';
 import { fetchQrCode, sendOtp } from '@/services/fetch-otp';
-import { useAuth } from '@/context/AuthContext';
-import withAuth from '@/context/requireAhuth';
 import { toast } from '@/hooks/use-toast';
 
 const Signup2fa = () => {
   const myString = 'Submit';
-  const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
   const [isValid, setIsValid] = React.useState(true);
   const [QRcode, setQRcode] = React.useState('e');
   const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
-    fetchQrCode(setIsLoading, setQRcode, user?.username || null);
+    fetchQrCode(setIsLoading, setQRcode, 'user?.username || null'); // also this
   }, []);
 
   const { Canvas } = useQRCode();
@@ -29,7 +26,7 @@ const Signup2fa = () => {
       return;
     } else {
       const valid = async () => {
-        const response = await sendOtp('verifiy-otp', value, user?.username || null);
+        const response = await sendOtp('verifiy-otp', value, 'user?.username || null'); // need to edit this after talking to kadigh
         console.log(response);
       if (response.data.message) {
         toast({
@@ -37,8 +34,6 @@ const Signup2fa = () => {
           description: response.data.message,
           className: 'bg-primary border-none text-white bg-opacity-20',
         });
-        updateUser({ is2FAEnabled: true, is2FAvalidated: true });
-        console.log('hjdfshjfhjsb', user?.is2FAEnabled, user?.is2FAvalidated)
         return;
       } else if (response.data.error) {
         toast({
@@ -88,4 +83,4 @@ const Signup2fa = () => {
   );
 };
 
-export default withAuth(Signup2fa, true);
+export default Signup2fa;

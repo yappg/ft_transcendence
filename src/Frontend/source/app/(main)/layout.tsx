@@ -4,14 +4,12 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
-import { UserProvider, useUser } from '@/context/GlobalContext';
+import { UserProvider } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
-import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
-import { ComponentType, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
-
-export function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
   const { isActivated, setIsActivated } = useContext(SideBarContext);
@@ -55,10 +53,3 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// to be reviewed
-// function useEffect(arg0: () => () => void, arg1: never[]) {
-//   throw new Error('Function not implemented.');
-// }
-
-
-export default withAuth(RootLayout as ComponentType<{}>, true);

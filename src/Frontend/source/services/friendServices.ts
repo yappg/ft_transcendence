@@ -1,10 +1,11 @@
 
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 const frindsApi = axios.create({
     baseURL: 'http://localhost:8080/relations/',
-    withCredentials: true,
+    withCredentials: true
 });
 
 
@@ -71,17 +72,31 @@ const FriendServices = {
             throw error;
         }
     },
-    async unblockFriend(name: string){
+
+    async unblockFriend(unblockedUsername: string) {
         try {
+            console.log('Unblocking user:', unblockedUsername, 'called in friendServices')
             const response = await frindsApi.delete('/friends/block/', {
-                data: { unblock_user: name },
+                 data: { unblock_user: unblockedUsername }
             });
             return response.data;
         }
-        catch(error) {
+        catch (error) {
             throw error;
         }
-    }
+    },
+
+    async blockFriend(blockedUsername: string) {
+        try {
+            const response = await frindsApi.patch('/friends/block/', {
+                 block_user: blockedUsername 
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
 };
 
 

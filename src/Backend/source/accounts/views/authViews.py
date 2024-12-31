@@ -1,7 +1,7 @@
 import pyotp
 import requests
 from drf_yasg.utils import swagger_auto_schema
-
+ 
 # from django.conf import settings
 # from django.shortcuts import redirect
 # from django.core.cache import cache
@@ -130,16 +130,17 @@ class LogoutView(APIView):
 #------------------------------------- 2FA ------------------------------------
 
 class GenerateURI(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = GenerateOTPSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         user = Player.objects.get(username=request.data['username'])
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
+        if user == None:  
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK) 
         if user.enabled_2fa == True:
             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
@@ -154,7 +155,7 @@ class GenerateURI(APIView):
             status=status.HTTP_200_OK)
 
 class VerifyOTP(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = VerifyOTPSerializer
     authentication_classes = []
 
@@ -163,9 +164,12 @@ class VerifyOTP(APIView):
         serializer = self.serializer_class(data=request.data)
         # if not serializer.is_valid():
         #     return Response(serializer.errors, status=400)
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
+        user = request.user
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         totp = pyotp.TOTP(user.otp_secret_key)
@@ -186,9 +190,12 @@ class ValidateOTP(APIView):
         serializer = self.serializer_class(request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
         otp_token = request.data['otp_token']
         user = Player.objects.get(username=username)
+        user = request.user
         if user == None:
             return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         totp = pyotp.TOTP(user.otp_secret_key)
@@ -210,12 +217,14 @@ class ValidateOTP(APIView):
         return resp
 
 class DisableOTP(APIView):
-    permission_classes = [AllowAny]#while testing
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
+
+        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
         user = Player.objects.get(username=username)
+        user = request.user
         if user is None:
             return Response({'error' : 'invalid user'})
         if user.enabled_2fa is False:
@@ -229,6 +238,7 @@ class DisableOTP(APIView):
             status=status.HTTP_200_OK)
 
 #---------------------------------- OAuth2.0 ----------------------------------
+
 
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
@@ -253,8 +263,12 @@ class OAuth42LoginView(APIView):
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
         return Response({'url': authorization_url}, status=status.HTTP_200_OK)
-        # return redirect(authorization_url)
 
+#this must be in a settings file
+Oauth2_Providers_URLToken = {
+    '42': settings.OAUTH2_PROVIDER_42['TOKEN_URL'],
+    'google': settings.OAUTH2_PROVIDER_GOOGLE['TOKEN_URL'],
+}
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -269,8 +283,8 @@ class OAuth42CallbackView(APIView):
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 
-        token_url, data = APIdata(code, provider)
-        response = requests.post(token_url, data=data)
+        data = APIdata(code, provider)
+        response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
         token_data = response.json()
         print(token_data)
 
@@ -293,3 +307,18 @@ class OAuth42CallbackView(APIView):
             httponly=False
         )
         return resp
+
+#--------------------------User Infos Update ------------------------------
+
+class UpdateUserInfos(APIView):
+    serializer_class = UpdateUserInfosSerializer
+
+    def post(self, request):
+        serializer = UpdateUserInfosSerializer(
+            data=request.data,
+            context={'user':request.user}
+            )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_200_OK)

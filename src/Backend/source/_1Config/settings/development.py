@@ -3,24 +3,24 @@ from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
 from dotenv import load_dotenv
-
+ 
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
-# ===========================
-
+# =========================== 
+    
 # Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from the .env file if it exists will be added after TODO
-load_dotenv(BASE_DIR.parent.parent / ".env")
+load_dotenv(BASE_DIR.parent.parent / ".env") 
 
 # ===========================
-# SECURITY SETTINGS
+# SECURITY SETTINGS 
 # ===========================
-
+ 
 # Secret key for cryptographic signing
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-
+  
 # Enable debug mode for development only (disable in production)
 DEBUG = True
 
@@ -38,10 +38,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 ]
-
+    
 # ===========================
 # APPLICATION CONFIGURATION
-# ===========================
+# ===========================  
 
 INSTALLED_APPS = [
     # API documentation
@@ -75,6 +75,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     # Security middleware
     'django.middleware.security.SecurityMiddleware',
+    'accounts.middleware.AccessTokenMiddleware',
 
     # WhiteNoise for serving static files will be removed in production
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -106,11 +107,11 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
-}
+} 
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',   
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'accounts.authenticate.CotumAuthentication',
@@ -124,7 +125,7 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-
+       
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -160,7 +161,21 @@ CACHES = {
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
-    }
+    },
+    'players_queue': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
+    'games_pool': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/3",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions
@@ -293,3 +308,9 @@ USE_TZ = True
 
 # Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#TODO fixing tokens being sent in the Authorization header
+#TODO implement the jwt sliding token 
+#TODO finalise the oauth2 implementation
+#TODO understand the asyncio role
+

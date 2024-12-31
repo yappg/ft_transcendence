@@ -160,12 +160,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [error, setError] = useState<Error | null>(null);
   const [userId, setUserId] = useState<number>(0);
   const [players, setPlayers] = useState<User[] | null>(null);
-  const [chats, setChats] = useState<Chat[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
   const [notificationCount, setNotificationCount] = useState<number>(0);
-  const [messages, setMessages] = useState<Message[] | null>(null);
   const [PlayerMatches, setPlayerMatches] = useState<History[] | null>(null);
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<LeaderBoard[] | null>(null);
+  const [chats, setChats] = useState<Chat[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
+  
 
   const setOnlineStatus = async () => {
     try {
@@ -316,4 +317,5 @@ export const useUser = () => {
 
   return context;
 };
+
 export { userApi, userService };

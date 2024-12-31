@@ -3,8 +3,6 @@ const FriendsComponent = ({
   name,
   ProfilePhoto,
   level,
-  wins,
-  losses,
   messagesLink,
   customStyles = {},
 }: {
@@ -62,11 +60,6 @@ const FriendsComponent = ({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
-        </div>
-        <div className="w-fit">
-          <h1 className="font-coustard text-[#28AFB0] transition-all duration-300 text-[9px] md:text-[12px] lg:text-[23px] xl:text-[26px] 2xl:text-[30px] dark:text-[#E43222]">
-            Wins {wins}/{losses }
-          </h1>
         </div>
       </div>
       <div className="flex items-center justify-end w-[23%] -mr-[20px]">{messagesLink}</div>

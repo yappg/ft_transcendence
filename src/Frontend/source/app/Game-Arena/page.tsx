@@ -1,22 +1,34 @@
+/* eslint-disable tailwindcss/classnames-order */
 'use client';
 
 import React from 'react';
 import GameTable from '@/components/game/game-arena';
+import { useSearchParams } from 'next/navigation';
+import { GameProvider } from '@/context/GameContext';
+import ScoreTable from '@/components/game/game-score';
 
 const GameArena = () => {
-  return (
-    <div className="w-full h-screen bg-linear-gradient p-8 dark:bg-linear-gradient-dark grid grid-cols-7 gap-4">
-      {/* chat section */}
-      <div className="hidden lg:block col-start-1 col-end-4 bg-slate-400"></div>
-      {/* game table */}
-      <div className="col-start-4 col-end-7 bg-slate-400 rounded-[20px] overflow-hidden border-[10px] border-black" id="table">
-        <GameTable />
-      </div>
-      {/* gameplay abilities */}
-      <div className="col-start-7 col-end-8 bg-slate-400">
+  const searchParams = useSearchParams();
+  const map = searchParams.get('map');
+  const mode = searchParams.get('mode');
 
+  return (
+    <GameProvider>
+      <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-auto flex-col xl:gap-8 xl:px-8 lg:flex-row">
+        <div className="h-[100px] lg:h-full w-full xl:w-auto flex justify-center items-center">
+          <ScoreTable mode={mode || ''} map={map || ''}></ScoreTable>
+        </div>
+        {/* game table */}
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="size-full overflow-hidden max-w-[calc(3*(100vh-200px)/4)] lg:max-w-[calc(280vh/4)] xl:w-5/6 justify-center items-center flex">
+            {/* still one bug in small screens when width is smaller than height need to limit height */}
+            <GameTable mode={mode || ''} map={map || ''} />
+          </div>
+        </div>
+          {/* abilities */}
+          <div className="col-start-7 col-end-8 h-[100px] bg-black"></div>
       </div>
-    </div>
+    </GameProvider>
   );
 };
 

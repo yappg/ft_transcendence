@@ -1,14 +1,13 @@
 'use client';
-import { useAuth } from '@/context/AuthContext';
-import { useUser } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
+import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { useEffect } from 'react';
 
 const Home = () => {
-  const auth = useAuth();
   const { setIsActivated } = useContext(SideBarContext);
-  const { user } = useUser();
+  const router = useRouter();
+
   const handleClick = () => {
     const fetchLogout = async () => {
       try {
@@ -26,7 +25,7 @@ const Home = () => {
       }
     };
     fetchLogout();
-    auth.logout();
+    router.push('/home');
   };
   useEffect(() => {
     setIsActivated(1);
