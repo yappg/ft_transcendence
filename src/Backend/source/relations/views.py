@@ -26,13 +26,16 @@ class PlayerListView(APIView):
             from accounts.models import PlayerProfile
             profiles = PlayerProfile.objects.get(player=request.user)
             friends = profiles.all_friends()
+            # invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
+
             players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends)[:10]
+            # .exclude(profile__in=invites)[:10]
             serializer = PlayerRelationsSerializer(players, many=True)
             return Response({'message': 'Success', 'data': serializer.data})
         except PlayerProfile.DoesNotExist:
             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'An error occurred' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
