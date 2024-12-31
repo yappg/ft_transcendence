@@ -13,7 +13,6 @@ services:
     #     - transcendence
     #   restart: unless-stopped
 
-
     # web:
     #   container_name: nginx
     #   build:
@@ -55,30 +54,30 @@ services:
     #   restart: unless-stopped
 
 
-    frontend:
-      container_name: frontend
-      build:
-        context: ./src/Frontend
-        target: ${ENV:-production}
-        dockerfile: Dockerfile
-      image: frontend
-# DEV ==============>
-      volumes:
-        - ./src/Frontend/source:/app:rw
-        - /app/.next
-        - /app/node_modules
-# ==================>
-      networks:
-        - transcendence
-      ports:
-        - 3000:3000
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
-      restart: always
+#     frontend:
+#       container_name: frontend
+#       build:
+#         context: ./src/Frontend
+#         target: ${ENV:-production}
+#         dockerfile: Dockerfile
+#       image: frontend
+# # DEV ==============>
+#       volumes:
+#         - ./src/Frontend/source:/app:rw
+#         - /app/.next
+#         - /app/node_modules
+# # ==================>
+#       networks:
+#         - transcendence
+#       ports:
+#         - 3000:3000
+#       healthcheck:
+#         test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+#         interval: 10s
+#         timeout: 5s
+#         retries: 3
+#         start_period: 5s
+#       restart: always
 
 
     backend:
@@ -102,8 +101,8 @@ services:
       volumes:
         - ./src/Backend/source:/app/source:rw
         - ./src/Backend/config:/app/config:rw
-        - static_files:/app/staticfiles
-        - media_files:/app/UsersMedia
+        # - static_files:/app/staticfiles
+        # - media_files:/app/UsersMedia
 # ==================>
       networks:
         - transcendence
@@ -268,26 +267,26 @@ volumes:
     #     type: none
     #     device: ${PWD}/volumes/postgres
 
-  prometheus-data:
-    name: prometheus
-    # driver: local
-    # driver_opts:
-    #     o: bind
-    #     type: none
-    #     device: ${PWD}/volumes/prometheus
+  # prometheus-data:
+  #   name: prometheus
+  #   # driver: local
+  #   # driver_opts:
+  #   #     o: bind
+  #   #     type: none
+  #   #     device: ${PWD}/volumes/prometheus
 
-  alert-manager-data:
-    name: alert-manager
+  # alert-manager-data:
+  #   name: alert-manager
 
-  grafana-data:
-    name: grafana
+  # grafana-data:
+  #   name: grafana
 
-  static_data:
-    name: static_files
+  # static_data:
+  #   name: static_files
 
 
-  media_data:
-    name: media_files
+  # media_data:
+  #   name: media_files
 
 networks:
   transcendence:
