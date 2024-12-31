@@ -54,10 +54,10 @@ class LeaderboardView(APIView):
     def get(self, request):
         try:
             top_players = PlayerProfile.objects.all().order_by(
-                '-win_ratio',
-                '-total_games',
                 '-level',
-                '-games_won'
+                '-win_ratio',
+                '-games_won',
+                '-total_games',
             )[:100]
 
             serializer = LeaderBoardSerializer(top_players, many=True)

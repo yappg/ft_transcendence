@@ -1,46 +1,87 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-
 import React from 'react';
 import { MyButton } from '../generalUi/Button';
+import { useRouter } from 'next/navigation';
 
-const EarthModeCard = ({
-  title = 'Earth',
-  description = 'in this mode the map could behave like earth sometime',
-  imageUrl = '/image.png',
-  height = '480',
-}) => {
+interface GameCardProps {
+  title: string;
+  description: string;
+  imageUrl: string;
+  url: string;
+  height: string;
+}
+
+const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) => {
+  const router = useRouter();
   return (
-    <div className="group relative size-[350px]" style={{ height: `${height}px` }}>
-      <div
-        className="costum-big-shadow absolute inset-0 overflow-hidden rounded-3xl transition-all duration-700 
-                    ease-in group-hover:opacity-0"
-      >
-        <img src={imageUrl} alt={title} className="size-full object-cover" />
-      </div>
-      <div
-        className="absolute inset-0 overflow-hidden rounded-3xl bg-[rgba(0,0,0,0.7)] 
-        opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100"
-      >
-        <div className="flex size-full flex-col">
-          {/* Background Image (darker version) */}
-          <img
-            src={imageUrl}
-            alt={title}
-            className="absolute left-0 top-0 size-full object-cover brightness-50"
-          />
-
-          {/* Content Overlay */}
-          <div className="absolute inset-0 flex h-full flex-col justify-center p-8">
-            <h2 className="mb-4 text-4xl font-bold text-white">{title}</h2>
-            <p className="mb-6 text-lg text-gray-300">{description}</p>
-            {/* Play Now Button */}
+    <div
+      className="costum-little-shadow group relative size-full overflow-hidden rounded-3xl"
+      style={{
+        height: `${height}px`,
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.7)]">
+        <div className="absolute inset-0 flex h-full flex-col justify-center p-8 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+          <h2 className="mb-4 text-4xl font-bold text-white">{title}</h2>
+          <p className="mb-6 text-lg text-gray-300">{description}</p>
+          <div className="flex w-full justify-center lg:justify-start lg:pl-8">
+            <MyButton
+              className="min-w-[120px]"
+              onClick={() => {
+                router.push(`${url}`);
+              }}
+            >
+              Select Map
+            </MyButton>
           </div>
-          <MyButton>play now</MyButton>
         </div>
       </div>
     </div>
   );
 };
 
-export default EarthModeCard;
+interface ModesCardProps {
+  title: string;
+  description: string;
+  url: string;
+  height: string;
+}
+
+const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
+  const router = useRouter();
+  return (
+    <div
+      className="costum-little-shadow group relative size-full rounded-3xl py-[20px] overflow-visible"
+      style={{
+        height: `${height}px`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Background container with hover darkening */}
+      <div className="absolute inset-0 overflow-hidden rounded-3xl bg-[rgb(40,40,40)] bg-gradient-to-t transition-all duration-700 ease-in group-hover:bg-black"></div>
+
+      {/* Content (Title, Description, Button) */}
+      <div className="absolute inset-0 flex h-full flex-col justify-center p-8 opacity-100 transition-opacity duration-300 ease-in-out">
+        <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">{title}</h2>
+        <p className="mb-6 text-lg text-[rgb(180,180,180)]">{description}</p>
+        <div className="flex w-full justify-center lg:justify-start lg:pl-8">
+          <MyButton
+            className="min-w-[120px]"
+            onClick={() => {
+              router.push(`${url}`);
+            }}
+          >
+            Select Map
+          </MyButton>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { MapsCard, ModesCard };

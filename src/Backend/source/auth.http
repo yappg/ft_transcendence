@@ -65,6 +65,17 @@ Content-Type: application/json
     "password2": "password"
 }
 
+##########
+POST http://localhost:8080/accounts/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "client8",
+    "email": "client8@gmail.com",
+    "password": "thisisapassword",
+    "password2": "thisisapassword"
+}
+
 ###################### LOGIN ################################################################################################################################################################
 
 ##########
@@ -73,7 +84,7 @@ Content-Type: application/json
 
 {
     "username": "client1",
-    "password": "password"
+    "password": "thisisapassword"
 }
 
 ###################### GET TOKEN ################################################################################################################################################################
@@ -83,8 +94,8 @@ POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "client1",
-    "password": "password"
+    "username": "bxbx",
+    "password": "AbcdEfgh"
 }
 
 ##########

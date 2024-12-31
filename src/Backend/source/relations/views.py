@@ -40,7 +40,30 @@ class PlayerListView(APIView):
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
 
+    # def get(self, request):
+    #     user = request.user
+    #     friends = Friends.objects.filter(
+    #         Q(friend_requester=user) | Q(friend_responder=user)
+    #     ).distinct()
+
+    #     unique_friends = []
+    #     seen_pairs = set()
+    #     for friend in friends:
+    #         pair = tuple(sorted([friend.friend_requester.username, friend.friend_responder.username]))
+    #         if pair not in seen_pairs:
+    #             seen_pairs.add(pair)
+    #             unique_friends.append(friend)
+
+    #     if not unique_friends:
+    #         return Response({"error": "No Friends Found"}, status=200)
+
+    #     serializer = FriendsSerializer(unique_friends, many=True)
+    #     return Response({'message': 'Success', 'data': serializer.data})
+
+
     def get(self, request):
+        from accounts.models import PlayerProfile
+        from accounts.serializers.userManagmentSerlizers import FriendsSerializer
         user = request.user
         friends = Friends.objects.filter(
             Q(friend_requester=user) | Q(friend_responder=user)
@@ -58,6 +81,11 @@ class FriendsListView(APIView):
             return Response({"error": "No Friends Found"}, status=200)
 
         serializer = FriendsSerializer(unique_friends, many=True)
+        profile = PlayerProfile.objects.get(player=user)
+        # print(f"profile is {profile}")
+        friends = profile.all_friends()
+        serializer =  FriendsSerializer(friends, many=True)
+
         return Response({'message': 'Success', 'data': serializer.data})
 
     def delete(self, request):

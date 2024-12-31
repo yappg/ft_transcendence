@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
-from accounts.models import Player
+from accounts.models import Player, PlayerProfile
 from .models import ChatRoom, Message
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
@@ -9,36 +9,38 @@ Player = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.user = self.scope['user']
+        if not self.user.is_authenticated:
+            await self.close()
+        await self.accept()
         self.chatId = self.scope['url_route']['kwargs']['chatId']
         self.chat_group_name = f'chat_{self.chatId}'
-        print("chatId: " , self.chatId)
 
+        print("chatId: " , self.chatId)
         await self.channel_layer.group_add(
             self.chat_group_name,
             self.channel_name
         )
         print(f"-----------------[DEBUG] Added to group: {self.chat_group_name}")
-        await self.accept()
 
         await self.send(text_data=json.dumps({
             'type':'connection_establish',
             'message':'you\'re now connected'
         }))
-        # print(f"-----------------[DEBUG] WebSocket connection established for chat ID: {self.chatId}")
+        print(f"-----------------[DEBUG] WebSocket connection established for chat ID: {self.chatId}")
 
 
     async def disconnect(self, close_code):
-        # Leave the chat group
+        print(f"WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
+        if close_code == 1006:
+            print(f"Abnormal closure for chat ID: {self.chatId}, Close code: {close_code}")
         await self.channel_layer.group_discard(
             self.chat_group_name,
             self.channel_name
         )
-
-        # Debug: Print when the WebSocket is disconnected
-        # print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
+        print(f"-----------------[DEBUG] WebSocket connection closed for chat ID: {self.chatId}, Close code: {close_code}")
 
     async def receive(self, text_data):
-        # Debug: Print the received WebSocket message data
         print(f"-----------------[DEBUG] Received message data: {text_data}")
 
         text_data_json = json.loads(text_data)
@@ -46,50 +48,54 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = text_data_json.get('sender')
         receiver_id = text_data_json.get('receiver')
 
-        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id}--")
+        print(f"-----------------[DEBUG] Parsed message: {content}, Sender ID: {sender_id}, receiver ID: {receiver_id} |")
 
         try:
-            sender = await sync_to_async(Player.objects.get)(id=sender_id)
-            receiver = await sync_to_async(Player.objects.get)(id=receiver_id)
+            sender = await sync_to_async(PlayerProfile.objects.get)(id=sender_id)
+            receiver = await sync_to_async(PlayerProfile.objects.get)(id=receiver_id)
             chat = await sync_to_async(ChatRoom.objects.get)(id=self.chatId)
-        except Player.DoesNotExist:
+        except PlayerProfile.DoesNotExist:
             print(f"-----------------[DEBUG] Sender or Reciever with ID {sender_id} does not exist")
             return
         except ChatRoom.DoesNotExist:
             print(f"-----------------[DEBUG] Chat with ID {self.chatId} does not exist")
             return
 
-        print(f"-----------------[DEBUG] Valid sender {sender.username} and chat {self.chatId} found")
+        print(f"-----------------[DEBUG] ==================== Valid sender {sender.display_name} and chat {self.chatId} found")
 
-        # Save the message to the database
-        new_message = await sync_to_async(Message.objects.create)(
-            chatroom=chat, sender=sender,receiver=receiver, content=content
-        )
+        # The lambda function is used here to wrap the Message.objects.create() call
+        # This is necessary because sync_to_async needs a callable (function) to convert to async
+        # The lambda creates an anonymous function that, when called, will execute the database create
+        # Without lambda, sync_to_async would try to convert the result of create() directly
+        # rather than converting the operation itself to be async
+        new_message = await sync_to_async(lambda: Message.objects.create(
+            chatroom=chat, sender=sender.player, receiver=receiver.player, content=content
+        ))()
 
-        # Debug: Print after the message is saved
-        print(f"-----------------[DEBUG] Message saved: {content} from {sender.username}")
+        print(f"-----------------[DEBUG] =============================================dssss")
 
         await self.channel_layer.group_send(
             self.chat_group_name,
             {
                 'type': 'chat_message',
                 'content': new_message.content,
-                'sender': sender.username,
-                'receiver': receiver.username,
+                'sender': sender.display_name,
+                'receiver': receiver.display_name,
                 'chatId': chat.id,
             }
         )
+        
     async def chat_message(self, event):
         content = event['content']
         sender_id = event['sender']
         chatId = event['chatId']
         receiver_id = event['receiver']
 
-        # Send message to WebSocket
+        print(f"-----------------[[DEBUG] Sending message [---|---]to WebSocket: {content} from sender {sender_id} to receiver {receiver_id}")
         await self.send(text_data=json.dumps({
             'content': content,
-            'sender': sender_id,
             'chatId': chatId,
-            'receiver': receiver_id
+            'sender': sender_id,
+            'receiver': receiver_id,
         }))
         print(f"-----------------[[DEBUG] Message sent to WebSocket: {event['content']} from sender {event['sender']}")

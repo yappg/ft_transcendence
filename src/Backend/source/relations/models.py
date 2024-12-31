@@ -38,6 +38,9 @@ class FriendInvitation(models.Model):
     receiver = models.ForeignKey(Player, related_name='received_invitations', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"sender = {self.sender} | reciver = {self.receiver}"
+
     class Meta:
         verbose_name = 'Friend Invitation'
         verbose_name_plural = 'Friend Invitations'
@@ -79,7 +82,7 @@ class BlockedUsers(models.Model):
 
 class Notification(models.Model):
     recipient = models.ForeignKey(Player, related_name='notifications', on_delete=models.CASCADE)
-    Type = models.TextField(max_length=25, default='')
+    Type = models.TextField(max_length=45, default='')
     message = models.TextField(max_length=255, default='Default notification')
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
