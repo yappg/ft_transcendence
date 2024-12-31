@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import FriendServices from '@/services/friendServices';
 import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
@@ -108,7 +107,6 @@ const UserContext = createContext<UserContextType>({
   isLoading: false,
   error: null,
   chats: null,
-  players: null,
   messages: [],
   setMessages: () => {},
   setChats: () => {},
@@ -116,7 +114,6 @@ const UserContext = createContext<UserContextType>({
   notificationCount: 0,
   fetchCurrentUserDetails: async () => {},
   setOnlineStatus: async () => {},
-  fetchPlayers: async () => [],
   fetchNotifications: async () => {},
   setNotifications: () => {},
   setNotificationCount: () => {},
@@ -129,7 +126,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
-  const [players, setPlayers] = useState<User[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
   const [notificationCount, setNotificationCount] = useState<number | null>(null); 
   const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
@@ -174,29 +170,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     }
   };
 
-  const fetchPlayers = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await FriendServices.getPlayers();
-      if (data.message) {
-        console.log(data.data);
-        setPlayers(data.data);
-        setIsLoading(false);
-        return data.data;
-      }
-      else if (data.error)
-      {
-        console.error(data.error)
-        setPlayers(null);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
-      setPlayers(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const fetchPlayerMatches = async () => {
     setIsLoading(true);
@@ -245,7 +218,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
 
   useEffect(() => {
     fetchCurrentUserDetails();
-    fetchPlayers();
     fetchNotifications();
     fetchChats();
     fetchPlayerMatches();
@@ -259,7 +231,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         user,
         userId,
         isLoading,
-        players,
         error,
         notifications,
         notificationCount,
@@ -269,7 +240,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         setChats,
         setOnlineStatus,
         fetchCurrentUserDetails,
-        fetchPlayers,
         fetchNotifications,
         setNotifications,
         setNotificationCount,
