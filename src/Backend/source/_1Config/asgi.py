@@ -7,14 +7,13 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 import os
-import django  # Import django to call django.setup()
+import django 
 
 from django.core.asgi import get_asgi_application
 from django.urls import path
 django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
-from _1Config.middlwares import JWTtokenCustomMiddlware
 from django.urls import path
 from channels.security.websocket import AllowedHostsOriginValidator
 from .middleware import TokenAuthMiddleware
@@ -29,19 +28,12 @@ django.setup()  # Ensure Django is set up before accessing any models
 # Get the ASGI application
 django_asgi_app = get_asgi_application()
 
-import chat.routing
-import relations.routing
-import accounts.routing
-
-# Combine WebSocket URL patterns from different apps
-websocket_urlpatterns = chat.routing.websocket_urlpatterns + relations.routing.websocket_urlpatterns + accounts.routing.websocket_urlpatterns
-
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     "websocket": AllowedHostsOriginValidator(
-        JWTtokenCustomMiddlware(
+        TokenAuthMiddleware(
             URLRouter(
-                websocket_urlpatterns,
+                websockets_urlpatterns,
             ))
     ),
 })
