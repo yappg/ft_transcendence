@@ -76,9 +76,9 @@ export const Header = () => {
 
   if (!user)
     return (
-      <h1 className="size-[200px] flex justify-center items-center font-dayson rounded-md text-[30px] text-gray-600">
-      Loading...
-    </h1>
+      <h1 className="flex size-[200px] items-center justify-center rounded-md font-dayson text-[30px] text-gray-600">
+        Loading...
+      </h1>
     );
 
   return (

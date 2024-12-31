@@ -4,17 +4,13 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
-import { useAuth } from '@/context/AuthContext';
 import { UserProvider } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
-import withAuth from '@/context/requireAhuth';
 import { usePathname } from 'next/navigation';
-import { ComponentType, useContext } from 'react';
+import { useContext } from 'react';
 
-
-export function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, updateUser } = useAuth();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
     console.log('Clicked on ID:', id);
@@ -57,5 +53,3 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-
-export default withAuth(RootLayout as ComponentType<{}>, true);

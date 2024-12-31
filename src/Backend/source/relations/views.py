@@ -172,7 +172,6 @@ class AcceptInvitationView(APIView):
         if not invitation:
             return Response({"error": "Invitation not found or already accepted"}, status=200)
 
-
         invitation.delete()
         # invitation.status = 'accepted'
         # invitation.save()
