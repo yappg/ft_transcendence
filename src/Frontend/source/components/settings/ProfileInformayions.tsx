@@ -6,22 +6,20 @@ import { useState } from 'react';
 const ProfileInformations = () => {
   const { user } = useUser();
   const [profileState, setProfileState] = useState({
-    avatar: '',
-    cover: '',
+    avatar: user?.avatar,
+    cover: user?.cover,
     profileError: '',
     coverError: '',
     username: '',
-    display_name: '',
+    display_name: user?.display_name,
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   if (!user) {
     return null;
   }
   const imageSchema = z.object({
     type: z.enum(['image/jpeg', 'image/png']),
     size: z.number().max(5 * 1024 * 1024),
-  });
-  const Nameschema = z.object({
-    name: z.string().min(3, 'Full name must be at least 3 characters'),
   });
   const updateState = (key: keyof typeof profileState, value: any) => {
     setProfileState((prev) => ({ ...prev, [key]: value }));
@@ -39,7 +37,7 @@ const ProfileInformations = () => {
         updateState('avatar', null);
         return;
       }
-
+      
       const imageUrl = URL.createObjectURL(file);
       updateState('avatar', imageUrl);
     }
@@ -51,7 +49,7 @@ const ProfileInformations = () => {
         type: file.type,
         size: file.size,
       });
-
+      
       if (!validationResult.success) {
         updateState('coverError', 'Invalid file type or size. Max size 5MB.');
         updateState('cover', null);
@@ -62,16 +60,31 @@ const ProfileInformations = () => {
       updateState('cover', imageUrl);
     }
   };
-  const handleNamechange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const validationResult = Nameschema.safeParse({
-      name: e.target.value,
-    });
-    if (!validationResult.success) {
-      updateState('display_name', e.target.value);
-      return;
-    }
+  function handleNamechange (e: React.ChangeEvent<HTMLInputElement>) {
     updateState('display_name', e.target.value);
   };
+  function handleClick() {
+    const Nameschema = z.object({
+      display_name: z.string().min(3, 'Full name must be at least 3 characters'),
+    });
+    const validationResult = Nameschema.safeParse({
+      display_name: profileState.display_name,
+    });
+    if (!validationResult.success) {
+      const errorMap = validationResult.error.errors.reduce(
+        (acc, err) => {
+          acc[err.path[0]] = err.message;
+          return acc;
+        },
+        {} as Record<string, string>
+      );
+      setErrors(errorMap);
+      return;
+    }
+    else {
+      setErrors({});
+    }
+  }
   return (
     <div className="gap-10 border-2 bg-[#00000099] h-fit rounded-[50px] shadow-2xl md:p-6 sm:p-9 p-14 border-[#B8B8B8]">
       <div className="w-full h-[12%] flex items-center">
@@ -110,16 +123,27 @@ const ProfileInformations = () => {
           />
         </div>
 
-        <div className="w-fit h-full  flex flex-col gap-4">
+        <div className="w-fit h-full  flex flex-col gap-4 ">
           <label className="text-white text-sm">Display name</label>
           <input
             type="text"
-            value={user.display_name}
-            onChange={handleNamechange(e)}
+            value={profileState.display_name}
+            onChange={handleNamechange}
             className="py-2 px-4 bg-white text-black rounded-md outline-none"
-          />
-          {/* {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>} */}
+          />{
+            errors.display_name && (
+              <p className="text-red-500 text-sm">{errors.display_name}</p>
+            )
+          }
         </div>
+        <div className="w-full h-fit flex items-center justify-center">
+          <button
+            className="w-[200px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg bg-white hover:bg-[#28AFB0] hover:bg-opacity-[90%] transition-all duration-200"
+            onClick={handleClick}
+          >
+            Save
+          </button>
+          </div>
       </div>
     </div>
   );
