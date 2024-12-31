@@ -11,14 +11,6 @@ const frindsApi = axios.create({
     }
 });
 
-// const achivementsApi = axios.create({
-//     baseURL: 'http://localhost:8080/accounts/relations/achivments',
-//     headers: {
-//         'Content-Type': 'application',
-//         'Authorization': `Bearer ${Cookies.get('access_token')}`
-
-//     }
-// });
 
 const FriendServices = {
     async getPlayers() {
@@ -74,7 +66,40 @@ const FriendServices = {
             throw error;
         }
     },
+    async BlockFriend(blockedUsername: string) {
+        try {
+            const response = await frindsApi.get('/friends/block/');
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
 
+    async unblockFriend(unblockedUsername: string) {
+        try {
+            console.log('Unblocking user:', unblockedUsername, 'called in friendServices')
+            const response = await frindsApi.delete('/friends/block/', {
+                 data: { unblock_user: unblockedUsername }
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
+
+    async blockFriend(blockedUsername: string) {
+        try {
+            const response = await frindsApi.patch('/friends/block/', {
+                 block_user: blockedUsername 
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
 };
 
 

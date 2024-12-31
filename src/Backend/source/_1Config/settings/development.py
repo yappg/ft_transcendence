@@ -100,10 +100,10 @@ MIDDLEWARE = [
 
 # ===========================
 # DRF & JWT CONFIGURATION
-# ===========================
+# ==========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=6000),  
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,
@@ -204,7 +204,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,  # Enforces a minimum length of 8 characters
+            'min_length': 12,  # Enforces a minimum length of 8 characters
         },
     },
     {
@@ -292,8 +292,8 @@ TEMPLATES = [
 # ===========================
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia/')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/UsersMedia/'
+MEDIA_ROOT = os.path.join(Path(__file__).resolve().parent.parent.parent, 'UsersMedia/')
 
 
 # ===========================

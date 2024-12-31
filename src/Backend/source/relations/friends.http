@@ -38,70 +38,141 @@ Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
 
 
 ## ### ## ### # ##### #####
+###########################
+######### GET #############
+###########################
 
 #########
+GET http://localhost:8080/relations/players/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 
+######### i dont see why u gonna need 2 fileds returned where one is ur self
+
+GET http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+
+
+
+#############
+DELETE http://localhost:8080/relations/friends/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+Content-Type: application/json
+
+{
+    "remove_friend":"client5_2pml18r8gmtb"
+}
+
+######### protect api against sending a friend request to from both users me pending him pending
+GET http://localhost:8080/relations/friends/pending/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+
+#############
+DELETE http://localhost:8080/relations/friends/pending/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+Content-Type: application/json
+
+{
+    "decline_pending":"youssra_t3f2ol679ao3"
+}
+
+#########
+GET http://localhost:8080/relations/notifications/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+
+############################
+######### invite #############
+############################
+# client2_oe69mjfydx44
+# client3_wsboq3kn09md
+# youssra_tcolzmmvp7rh
+# client7_3x9k32g7yc2c
+# client8_3u252lhedeg4
+
+#########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc2NTg3LCJpYXQiOjE3MzMyNzQ3ODcsImp0aSI6IjRiYTI0MjNhMGRkZTQyNzFhYzM5NDdlNjY4ZmFlYTg0IiwidXNlcl9pZCI6NX0.FDpLjR5KCKuX5dDfZalN8b8dvIzUpsN0sf34DLzw9j4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1MTc3LCJpYXQiOjE3MzUyNTI3NzcsImp0aSI6ImUyMDE0NDNlNTc4ODQ4YjVhMGFmNThkNGUyYTA5NTFlIiwidXNlcl9pZCI6Mn0.9emNlxflx58iu7GEDSVwtvj1yVocpq0T7b89ZdNLkUg
 Content-Type: application/json
 
 {
-    "receiver":"pipo"
+    "receiver":"client7_3x9k32g7yc2c"
 }
-### #  ## ##
 
+#########
+DELETE http://localhost:8080/relations/friends/invite/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1MTc3LCJpYXQiOjE3MzUyNTI3NzcsImp0aSI6ImUyMDE0NDNlNTc4ODQ4YjVhMGFmNThkNGUyYTA5NTFlIiwidXNlcl9pZCI6Mn0.9emNlxflx58iu7GEDSVwtvj1yVocpq0T7b89ZdNLkUg
+Content-Type: application/json
+
+{
+    "cancel_invite":"client2_28sv4y9f15zg"
+}
+
+
+
+##########################################
 POST http://localhost:8080/relations/friends/accept/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjc1ODg3LCJpYXQiOjE3MzMyNzQwODcsImp0aSI6ImI3ZDc1MzY3NzVkODQwZWE5MjcwYjc2YWI0MzNmNGM1IiwidXNlcl9pZCI6NX0.2z1oWMw5jDMjDTNaIfXx8ymBUkjEXWUlizdfjWQc3Mc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1NjU4LCJpYXQiOjE3MzUyNTMyNTgsImp0aSI6ImNjNjA1OGUxOGVmYzRjYTE5YzBlN2ZiYjZmNWVmMWMwIiwidXNlcl9pZCI6Nn0.KVapdK9_O7ogIyIv4O0GPYw3ejkLau3K7sQWuhPHWw0
 Content-Type: application/json
 
 {
-    "sender":"ali"
+    "sender":"client1_5jaikj2r11z7"
 }
-### ## #
 
+############################################
+########## GET / PATCH / DELETE ############
+############################################
 
+<<<<<<< HEAD
 POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
+=======
+#########
+GET http://localhost:8080/relations/friends/block/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
+>>>>>>> main
 
-
-
-
-
-
-
-
-
-
-
-
-###
-
-POST http://localhost:8080/accounts/JWT/token/refresh
-#
-
-############--------------CHAT-------###############
-
-GET http://localhost:8080/chat/list/
-Cookie eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMTczMjI0LCJpYXQiOjE3MzMxNzE0MjQsImp0aSI6ImJkYjY0MGRiMGM1YzRlMDU5MTE5Nzg3MWE2YWViMjQ0IiwidXNlcl9pZCI6Mn0.bcBgqzclgoWTEt3zOyu5iD8uujmdbgM1cv3P4YVQSZE
-
-####
-POST http://localhost:8080/chat/ch/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
+#########
+PATCH http://localhost:8080/relations/friends/block/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
     "senders":"ali"
 
+=======
+    "block_user" : "client2_yfc20omadp0d"
+>>>>>>> main
 }
 
-######
-POST  http://localhost:8080/chat/1/messages/
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNjk0NjU0LCJpYXQiOjE3MzM2MDgyNTQsImp0aSI6IjkzMWNiZGJhMjJiOTQ2NDdiNjllOGRiMmY5YzQ5OWVhIiwidXNlcl9pZCI6NH0.T03-M8aSTl5RAyPrC5qYnzsnQilodV-Ytx7CE5H3Tks
+#########
+DELETE http://localhost:8080/relations/friends/block/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODUxOTU4LCJpYXQiOjE3MzU1OTI3NTgsImp0aSI6IjdlNTExODE1NjI2OTQ5MGNiNzk0ODg2MjNmNDM4ZmJlIiwidXNlcl9pZCI6Mn0.OlGM5nLVrYLVF54jiswisoiSqauwtpGlE6jKEC58Erw
 Content-Type: application/json
 
 {
-    "receiver":"mery",
-    "content":"WA llalala"
+    "unblock_user" : "client2_yfc20omadp0d"
 }
 
-########
+
+# status for restful profile api     ==== friend, pending, blocked, none
+
+
+# The user should be able to block other users. This way, they will see no more
+# messages from the account they blocked
+
+
+
+
+# none status bottons
+    # add friend
+
+# friend status bottons
+    # remove friend
+    # block
+
+# recived_invite status bottons
+    # accept invite
+    # decline invite
+
+# sent_invite status bottons
+    # cancel invite

@@ -190,7 +190,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 0.5;
+    const baseSpeed = 1;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
 

@@ -1,6 +1,9 @@
-
 from rest_framework import serializers
 from ..models import *
+from relations.models import Friends
+from django.db.models import Q
+from relations.serializers import ProfileFriendsSerializer
+
 ########################################################################################
 
 # KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
@@ -29,15 +32,117 @@ class PlayerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("username must be unique.")
         return value
 
+class PlayerRelationsSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Player
+        fields = [
+            'id',
+            'username',
+            'avatar',
+        ]
+        read_only_fields = [
+            'id',
+            'username',
+            'avatar',
+        ]
+
+    # ge
+
+    def get_avatar(self, obj):
+        return obj.profile.avatar.url
+
+    def get_username(self, obj):
+        return obj.profile.display_name
+
+
+class StatisticsSerializer(serializers.ModelSerializer):
+    air_ratio = serializers.SerializerMethodField()
+    water_ratio = serializers.SerializerMethodField()
+    fire_ratio = serializers.SerializerMethodField()
+    earth_ratio = serializers.SerializerMethodField()
+
+    graph_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PlayerProfile
+        fields = [
+            'air_ratio',
+            'water_ratio',
+            'fire_ratio',
+            'earth_ratio',
+
+            'graph_data',
+        ]
+        read_only_fields = ["__all__"]
+
+    def get_air_ratio(self, obj):
+        if obj.total_games == 0:
+            return 0.0
+        return (obj.air_wins / obj.total_games) * 100
+
+    def get_water_ratio(self, obj):
+        if obj.total_games == 0:
+            return 0.0
+        return (obj.water_wins / obj.total_games) * 100
+
+    def get_fire_ratio(self, obj):
+        if obj.total_games == 0:
+            return 0.0
+        return (obj.fire_wins / obj.total_games) * 100
+
+    def get_earth_ratio(self, obj):
+        if obj.total_games == 0:
+            return 0.0
+        return (obj.earth_wins / obj.total_games) * 100
+
+    def get_graph_data(self, obj):
+        return obj.daily_stats(obj.settings.stats_graph_days)
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PlayerProfile
+        fields = ['id', 'display_name', 'avatar', 'level']
+        read_only_fields = ['id', 'display_name', 'avatar', 'level']
+
 
 # fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     xp = serializers.SerializerMethodField()
+    achievements = serializers.SerializerMethodField()
+
+    statistics = serializers.SerializerMethodField()
+    friends = serializers.SerializerMethodField()
+    matches_history = serializers.SerializerMethodField()
+
+    last_login = serializers.SerializerMethodField()
+    # created_at = serializers.SerializerMethodField()
+    is_private = serializers.SerializerMethodField()
+
+    relation = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
-        exclude = ['player']
+        exclude = [
+            'player' ,
+
+            'air_games',
+            'water_games',
+            'fire_games',
+            'earth_games',
+
+            'air_wins',
+            'water_wins',
+            'fire_wins',
+            'earth_wins',
+
+            'created_at',
+        ]
         read_only_fields = [
             'id',
             'is_online',
@@ -46,19 +151,72 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'xp',
             'level',
 
+            'achievements',
+            'statistics',
+
             'total_games',
             'games_won',
             'games_loss',
             'win_ratio',
 
-            # 'ice_games',
+
+            'friends',
+            'matches_history',
+            # 'air_games',
             # 'water_games',
             # 'fire_games',
             # 'earth_games',
 
+            'is_private',
+
+            'relation',
+
             'last_login',
-            'created_at',
+            # 'created_at',
         ]
+
+    def get_relation(self, obj):
+        from relations.models import FriendInvitation
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return "none"
+
+        user = request.user
+        if obj.player == user:
+            return "self"
+        elif user in obj.all_friends():
+            return "friend"
+        elif FriendInvitation.objects.filter(receiver=user, sender=obj.player, status="pending").exists():
+            return "received_invite"
+        elif FriendInvitation.objects.filter(receiver=obj.player, sender=user, status="pending").exists():
+            return "sent_invite"
+        else:
+            return "none"
+
+    def get_is_private(self, obj):
+        return obj.settings.private_profile
+
+    def get_achievements(self, obj):
+        # from ..serializers import PlayerAchievementSerializer
+        return PlayerAchievementSerializer(obj.all_achievements_gained()[:10], many=True).data
+
+    def get_statistics(self, obj):
+        # from ..serializers import StatisticsSerializer
+        return StatisticsSerializer(obj, read_only=True).data
+
+    def get_friends(self, obj):
+        LIMIT = 4 # for now
+
+        if obj.settings.private_profile == True:
+            return []
+        return FriendsSerializer(obj.all_friends()[:LIMIT], many=True).data
+
+    def get_matches_history(self, obj):
+        LIMIT = 4 # for now
+
+        if obj.settings.private_profile == True:
+            return []
+        return MatchHistorySerializer(obj.all_matches()[:LIMIT], many=True).data
 
     def get_xp(self, obj):
         xp_percentage = (obj.xp / obj.calculate_level_up_xp()) * 100
@@ -66,6 +224,12 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.player.username
+
+    def get_last_login(self, obj):
+        return obj.last_login.date().isoformat() if obj.last_login else None
+
+    # def get_created_at(self, obj):
+    #     return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
         if len(value) < 3 or len(value) > 40:
@@ -80,7 +244,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_avatar(self, value):
-        size_max = 2 * 1024 * 1024  # 2MB for max size of the avatar
+        size_max = 2 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
         if (value.size > size_max):
@@ -92,7 +256,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_cover(self, value):
-        size_max = 5 * 1024 * 1024  # 5MB for max size of the cover
+        size_max = 5 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
         if (value.size > size_max):
@@ -106,10 +270,22 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
 
+    updated_at = serializers.SerializerMethodField()
+
     class Meta:
         model=PlayerSettings
         exclude = ['player_profile']
         read_only_fields = ['id', 'updated_at']
+
+
+    def validate_stats_graph_days(self, value):
+        if value < 1 or value > 30:
+            raise serializers.ValidationError("stats_graph_days must be between 1 and 30")
+
+        return value
+
+    def get_updated_at(self, obj):
+        return obj.updated_at.date().isoformat() if obj.updated_at else None
 
 
 class MatchHistoryProfileSerializer(serializers.ModelSerializer):
@@ -123,6 +299,8 @@ class MatchHistorySerializer(serializers.ModelSerializer):
     player1 = MatchHistoryProfileSerializer(read_only=True)
     player2 = MatchHistoryProfileSerializer(read_only=True)
 
+    date = serializers.SerializerMethodField()
+
     class Meta:
         model = MatchHistory
         fields = [
@@ -133,3 +311,31 @@ class MatchHistorySerializer(serializers.ModelSerializer):
             'id', 'result', 'map_played', 'player1', 'player2',
             'player1_score', 'player2_score', 'date'
         ]
+
+    def get_date(self, obj):
+        return obj.date.date().isoformat() if obj.date else None
+
+class AchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievement
+        fields = [ "id", "name", "description", "condition", "xp_gain"]
+        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"]
+
+
+
+
+class PlayerAchievementSerializer(serializers.ModelSerializer):
+    achievement = AchievementSerializer(read_only=True)
+    date_earned = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PlayerAchievement
+        fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
+        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
+
+    def get_date_earned(self, obj):
+        return obj.date_earned.date().isoformat() if obj.date_earned else None
+
+    def get_image(self, obj):
+        return obj.achievement.get_image(obj.gained)

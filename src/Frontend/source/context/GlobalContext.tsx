@@ -7,7 +7,7 @@ import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
 import {Achievement} from '@/constants/achivemement';
-import { LeaderBoard } from '@/constants/LeaderBoard';
+import { onlineService } from '@/services/onlineService';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
 const USER_PROFILE_BASE_URL = '/user-profile/';
@@ -65,6 +65,7 @@ interface UserContextType {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   notificationCount: number;
   fetchCurrentUserDetails: () => Promise<void>;
+  setOnlineStatus: () => Promise<void>;
   fetchPlayers: () => Promise<User[]>;
   fetchNotifications: () => Promise<void>;
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
@@ -114,6 +115,7 @@ const UserContext = createContext<UserContextType>({
   notifications: [],
   notificationCount: 0,
   fetchCurrentUserDetails: async () => {},
+  setOnlineStatus: async () => {},
   fetchPlayers: async () => [],
   fetchNotifications: async () => {},
   setNotifications: () => {},
@@ -128,12 +130,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
   const [error, setError] = useState<Error | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [players, setPlayers] = useState<User[] | null>(null);
-  const [chats, setChats] = useState<Chat[] | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [notificationCount, setNotificationCount] = useState<number | null>(null);  
-  const [messages, setMessages] = useState<Message[] | null>(null);
+  const [notificationCount, setNotificationCount] = useState<number | null>(null); 
   const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<User[] | null>(null);
+  
+  const [chats, setChats] = useState<Chat[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
+  
+
+  const setOnlineStatus = async () => {
+    try {
+      const ws = onlineService.createWebSocketConnection();
+    } catch (err) {
+      console.log('err');
+    }
+  }
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -238,6 +250,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
     fetchChats();
     fetchPlayerMatches();
     fetchPlayerLeaderBoard();
+    setOnlineStatus();
   }, [user?.username]);
 
   return (
@@ -254,6 +267,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
         messages,
         setMessages,
         setChats,
+        setOnlineStatus,
         fetchCurrentUserDetails,
         fetchPlayers,
         fetchNotifications,
@@ -279,4 +293,5 @@ export const useUser = () => {
 
   return context;
 };
+
 export { userApi, userService };
