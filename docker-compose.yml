@@ -55,33 +55,30 @@ services:
     #   restart: unless-stopped
 
 
-#     frontend:
-#       container_name: frontend
-#       build:
-#         context: ./src/Frontend
-#         target: ${ENV:-production}
-#         dockerfile: Dockerfile
-#       image: frontend
-# # DEV ==============>
-#       volumes:
-#         - ./src/Frontend/source:/app:rw
-#         - /app/.next
-#         - /app/node_modules
-# # ==================>
-#       networks:
-#         - transcendence
-#       ports:
-#         - 3000:3000
-#       # depends_on:
-#       #     backend:
-#       #         condition: service_healthy
-#       # healthcheck:
-#       #     test: ["CMD", ""]
-#       #     interval: 1m30s
-#       #     timeout: 30s
-#       #     retries: 5
-#       #     start_period: 30s
-#       restart: always
+    frontend:
+      container_name: frontend
+      build:
+        context: ./src/Frontend
+        target: ${ENV:-production}
+        dockerfile: Dockerfile
+      image: frontend
+# DEV ==============>
+      volumes:
+        - ./src/Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
+# ==================>
+      networks:
+        - transcendence
+      ports:
+        - 3000:3000
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 5s
+      restart: always
 
 
     backend:
@@ -117,12 +114,12 @@ services:
           condition: service_healthy
         database:
           condition: service_healthy
-      # healthcheck:
-      #     test: ["CMD", ""]
-      #     interval: 1m30s
-      #     timeout: 30s
-      #     retries: 5
-      #     start_period: 30s
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 5s
       restart: always
 
 
@@ -285,8 +282,12 @@ volumes:
   grafana-data:
     name: grafana
 
-  static_files:
-  media_files:
+  static_data:
+    name: static_files
+
+
+  media_data:
+    name: media_files
 
 networks:
   transcendence:
