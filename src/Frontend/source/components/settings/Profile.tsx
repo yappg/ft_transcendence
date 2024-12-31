@@ -5,17 +5,18 @@ import { ImageCard } from './ImageCard';
 import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
 import ProfileInformations from './ProfileInformayions';
-import { SecurityComponent }from './SecurityComponent';
+import { SecurityComponent } from './SecurityComponent';
 
 export default function ProfileInfo() {
   const { user } = useUser();
   if (!user) {
-    return <div className="w-full h-full flex items-center justify-center">
-      <h1 className="text-white text-2xl">Loading...</h1>
-    </div>;
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="text-white text-2xl">Loading...</h1>
+      </div>
+    );
   }
   const [isClicked, setIsClicked] = useState(false);
-  console.log("user settings: ", user);
   const [profileState, setProfileState] = useState({
     selectedImage: user.avatar,
     coverImage: user.cover,
@@ -120,17 +121,17 @@ export default function ProfileInfo() {
   };
   return (
     <div className="size-full py-8 px-6 2xl:p-10 flex flex-col gap-8">
-        <ProfileInformations  user={user}/>
-        <SecurityComponent user={user}/>
-        <Activate_2fa />
-        <div className="w-[30%] h-[5%] flex items-center justify-center">
-            <button
-              className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[200px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
-              onClick={handleClick}
-            >
-              {isClicked ? 'Updated' : 'Update'}
-            </button>
-          </div>
+      <ProfileInformations />
+      <SecurityComponent user={user} />
+      <Activate_2fa />
+      <div className="w-[30%] h-[5%] flex items-center justify-center">
+        <button
+          className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[200px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
+          onClick={handleClick}
+        >
+          {isClicked ? 'Updated' : 'Update'}
+        </button>
+      </div>
     </div>
   );
 }
