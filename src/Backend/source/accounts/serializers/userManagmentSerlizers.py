@@ -120,7 +120,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 
     last_login = serializers.SerializerMethodField()
-    # created_at = serializers.SerializerMethodField()
     is_private = serializers.SerializerMethodField()
 
     relation = serializers.SerializerMethodField()
@@ -140,7 +139,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'fire_wins',
             'earth_wins',
 
-            'created_at',
+            'created_at'
         ]
         read_only_fields = [
             'id',
@@ -158,20 +157,14 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'games_loss',
             'win_ratio',
 
-
             'friends',
             'matches_history',
-            # 'air_games',
-            # 'water_games',
-            # 'fire_games',
-            # 'earth_games',
 
             'is_private',
 
             'relation',
 
             'last_login',
-            # 'created_at',
         ]
 
     def get_relation(self, obj):
@@ -209,22 +202,22 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return obj.avatar.url
 
     def get_achievements(self, obj):
-        # from ..serializers import PlayerAchievementSerializer
-        return PlayerAchievementSerializer(obj.all_achievements_gained()[:10], many=True).data
+        LIMIT = 15
+
+        return PlayerAchievementSerializer(obj.all_achievements_gained()[:LIMIT], many=True).data
 
     def get_statistics(self, obj):
-        # from ..serializers import StatisticsSerializer
         return StatisticsSerializer(obj, read_only=True).data
 
     def get_friends(self, obj):
-        LIMIT = 4 # for now
+        LIMIT = 4
 
         if obj.settings.private_profile == True:
             return []
         return FriendsSerializer(obj.all_friends()[:LIMIT], many=True).data
 
     def get_matches_history(self, obj):
-        LIMIT = 4 # for now
+        LIMIT = 4
 
         if obj.settings.private_profile == True:
             return []
@@ -240,8 +233,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_last_login(self, obj):
         return obj.last_login.date().isoformat() if obj.last_login else None
 
-    # def get_created_at(self, obj):
-    #     return obj.created_at.date().isoformat() if obj.created_at else None
+    def get_created_at(self, obj):
+        return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
         if len(value) < 3 or len(value) > 40:
@@ -349,8 +342,6 @@ class PlayerAchievementSerializer(serializers.ModelSerializer):
 
     def get_date_earned(self, obj):
         return obj.date_earned.date().isoformat() if obj.date_earned else None
-
-
 
 # class ProfileSettingsSerializer(serializers.ModelSerializer):
 #     avatar = serializers.SerializerMethodField()

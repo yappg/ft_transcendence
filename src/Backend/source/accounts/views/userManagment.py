@@ -38,6 +38,7 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
     serializer_class = MatchHistorySerializer
