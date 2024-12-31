@@ -12,13 +12,15 @@ import { useUser } from '@/context/GlobalContext';
 
 const UserFriendsNav = (): JSX.Element => {
   const [Requests, setRequests] = useState([]);
-  const [Friends, setFriends] = useState([]);
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
   };
+  
+  const [Friends, setFriends] = useState([]);
   const { user } = useUser();
+
   useEffect(() => {
     const displayInvit = async () => {
       try {
