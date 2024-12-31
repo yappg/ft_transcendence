@@ -9,12 +9,13 @@ export default function ProfileInfo() {
   const { user } = useUser();
   const [isClicked, setIsClicked] = useState(false);
   console.log(user);
+  // if (!user) return null;
   const [profileState, setProfileState] = useState({
-    selectedImage: user.avatar,
-    coverImage: user.cover,
+    selectedImage: user?.avatar,
+    coverImage: user?.cover,
     profileError: '',
     coverError: '',
-    fullName: user.display_name,
+    fullName: user?.display_name,
     password: '',
     NewPassword: '',
   });
@@ -31,7 +32,7 @@ export default function ProfileInfo() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const updateState = (key: keyof typeof profileState, value: any) => {
-    setProfileState((prev) => ({ ...prev, [key]: value }));
+    setProfileState((prev: any) => ({ ...prev, [key]: value }));
   };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -88,7 +89,7 @@ export default function ProfileInfo() {
 
     if (!result.success) {
       const errorMap = result.error.errors.reduce(
-        (acc, err) => {
+        (acc: any, err: any) => {
           acc[err.path[0]] = err.message;
           return acc;
         },

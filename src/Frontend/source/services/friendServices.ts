@@ -5,10 +5,7 @@ import Cookies from 'js-cookie';
 
 const frindsApi = axios.create({
     baseURL: 'http://localhost:8080/relations/',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Cookies.get('access_token')}`
-    }
+    withCredentials: true
 });
 
 

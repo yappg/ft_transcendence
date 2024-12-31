@@ -3,8 +3,6 @@ import { Command, CommandInput, CommandList } from '@/components/ui/command';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useUser } from '@/context/GlobalContext';
-import { RiMenu2Fill } from "react-icons/ri";
-import { IoMdNotifications } from "react-icons/io";
 import NotificationBell from  '@/components/notifications/notifications'
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -31,20 +29,10 @@ export const Header = () => {
 
   const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
   
-  const getAccessToken = () => {
-    const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
-      const [name, value] = cookie.trim().split('=');
-      acc[name] = value;
-      return acc;
-    }, {});
-    
-    return cookies['access_token'] || '';
-  };
 
   useEffect(() => {
     if (user) {
-      const token_ = getAccessToken();
-      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}&token=${token_}`);
+      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}`);
       console.log('WebSocket connection established');
   
       ws.onopen = () => {
@@ -55,8 +43,8 @@ export const Header = () => {
         console.log('WebSocket message received:', event.data);
         const data = JSON.parse(event.data);
         console.log("----------HERE IS THE NEW EVET", data)
-        setNotifications((prev) => [data, ...prev]);
-        setNotificationCount((prev) => prev + 1);
+        setNotifications((prev: any) => [data, ...prev]);
+        setNotificationCount((prev: any) => prev + 1);
       };
   
       ws.onerror = (error) => {

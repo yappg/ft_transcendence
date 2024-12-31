@@ -28,7 +28,7 @@ export default function ChatLayout({
 
   useEffect(() => {
     if (chats) {
-      const messagesMap = chats.reduce((acc, chat) => ({
+      const messagesMap = chats.reduce((acc: any, chat: any) => ({
         ...acc,
         [chat.id]: chat.last_message?.content
       }), {});
@@ -38,7 +38,7 @@ export default function ChatLayout({
   }, [chats]);
 
  
-  // The tournament system should be able to warn users expected for the next
+  //TO_DO: The tournament system should be able to warn users expected for the next
   //   game.
   
   // The user should be able to access other players profiles through the chat interface.
@@ -77,7 +77,7 @@ export default function ChatLayout({
             </div>
             <div className="custom-scrollbar-container flex size-full flex-col items-center justify-start gap-5">
               {listChat &&
-                listChat.map((chat, index) => <ChatCard key={chat.id} chatContent={chat} lastMessage={lastMessages[chat.id]} />)}
+                listChat.map((chat: Chat, index: number) => <ChatCard key={chat.id} chatContent={chat} lastMessage={lastMessages[chat.id]} />)}
             </div>
           </div>
         </div>

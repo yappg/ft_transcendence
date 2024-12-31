@@ -1,15 +1,4 @@
-// import { OnlineStatus, WebSocketMessage } from '@/types/online'
 
-
-const getAccessToken = () => {
-  const cookies = document.cookie.split(';').reduce<{ [key: string]: string }>((acc, cookie) => {
-    const [name, value] = cookie.trim().split('=');
-    acc[name] = value;
-    return acc;
-  }, {});
-  
-  return cookies['access_token'] || '';
-};
 
 class OnlineService {
   private socket: WebSocket | undefined
@@ -19,8 +8,8 @@ class OnlineService {
 
       this.closeConnection();
 
-      const token = getAccessToken();
-      this.socket = new WebSocket(`ws://localhost:8080/ws/online/?token=${token}`)
+  
+      this.socket = new WebSocket(`ws://localhost:8080/ws/online/`)
 
       this.socket.onopen = () => {
         console.log('Connected to WebSocket server')
