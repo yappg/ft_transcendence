@@ -1,12 +1,12 @@
 'use client';
-import { useAuth } from '@/context/AuthContext';
 import { SideBarContext } from '@/context/SideBarContext';
+import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { useEffect } from 'react';
 
 const Home = () => {
-  const auth = useAuth();
   const { setIsActivated } = useContext(SideBarContext);
+  const router = useRouter();
 
   const handleClick = () => {
     const fetchLogout = async () => {
@@ -24,7 +24,7 @@ const Home = () => {
       }
     };
     fetchLogout();
-    auth.logout();
+    router.push('/home');
   };
 
   useEffect(() => {
