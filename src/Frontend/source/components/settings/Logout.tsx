@@ -10,11 +10,11 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { BsBoxArrowLeft } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
 
 const Logout = () => {
-  const auth = useAuth();
+  const router = useRouter();
 
   const handleClick = () => {
     const fetchLogout = async () => {
@@ -32,7 +32,7 @@ const Logout = () => {
       }
     };
     fetchLogout();
-    auth.logout();
+    router.push('/home');
   };
   return (
     <AlertDialog>

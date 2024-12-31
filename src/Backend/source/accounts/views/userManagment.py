@@ -11,7 +11,6 @@ from ..permissions import (
 )
 from ..models import *
 from ..serializers.userManagmentSerlizers import *
-
 #--------------------------Players RESTFUL API ------------------------------
 
 ## add a point for disabling account and activating it for abstract user
@@ -38,7 +37,6 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
             return super().get_object()
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
-
 
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()

@@ -5,26 +5,29 @@ import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
+
+Oauth2_Providers = {
+    '42': {
+        'code': 'code',
+        'grant_type': 'authorization_code',
+        'client_id': settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
+        'client_secret': settings.OAUTH2_PROVIDER_42['CLIENT_SECRET'],
+        'redirect_uri': settings.OAUTH2_PROVIDER_42['CALLBACK_URL'],
+        },
+    'google': {
+        'code': 'code',
+        'grant_type': 'authorization_code',
+        'client_id': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
+        'client_secret': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_SECRET'],
+        'redirect_uri': settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
+        },
+}
+
 def APIdata(code, provider):
-    if provider == '42':
-        token_url = settings.OAUTH2_PROVIDER_42['TOKEN_URL']
-        data = {
-            'code': code,
-            'grant_type': 'authorization_code',
-            'client_id': settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
-            'client_secret': settings.OAUTH2_PROVIDER_42['CLIENT_SECRET'],
-            'redirect_uri': settings.OAUTH2_PROVIDER_42['CALLBACK_URL'],
-        }
-    elif provider == 'google':
-        token_url = settings.OAUTH2_PROVIDER_GOOGLE['TOKEN_URL']
-        data = {
-            'code': code,
-            'grant_type': 'authorization_code',
-            'client_id': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
-            'client_secret': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_SECRET'],
-            'redirect_uri': settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
-        }
-    return (token_url, data)
+    data = Oauth2_Providers[provider]
+    data[provider]['code'] = code
+
+    return (data)
 
 def fetch_user_data(access_token, provider):
     if provider == '42':

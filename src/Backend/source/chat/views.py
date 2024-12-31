@@ -10,45 +10,15 @@ from accounts.models import Player
 from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
-
-
-# class ChatView(APIView):
-
-#     @swagger_auto_schema(request_body=ChatRoomSerializer)
-#     def post(self, request):
-#         current_user = request.user
-#         friend_display_name = request.data.get('senders')
-
-#         # Ensure the friend exists
-#         try:
-#             friend = Player.objects.get(profile__display_name=friend_display_name)
-#         except Player.DoesNotExist:
-#             return Response({"error": "User not found"}, status=404)
-
-#         # Stop the user from chatting with themselves
-#         if current_user == friend:
-#             return Response({"error": "You cannot start a chat with yourself"}, status=400)
-#         # Check if a chat between the two participants already exists
-#         chat_name = f"{current_user}_{friend}_room"
-#         chat = ChatRoom.objects.filter(name=chat_name).first()
-
-#         # Create a new chat and add both senders
-#         if chat is None:
-#             chat = ChatRoom.objects.create(name=chat_name)
-#             chat.senders.add(current_user, friend)
-#         # Serialize and return the chat
-#         serializer = ChatRoomSerializer(chat)
-#         return Response(serializer.data)
-
+from .models import ChatRoom
 
 class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
-
+    
     def get(self, request):
         user = request.user
         chats = ChatRoom.objects.filter(senders=user)
-        serializer = ChatRoomSerializer(chats, many=True)
+        serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -59,45 +29,7 @@ class ChatMessagesView(APIView):
         try:
             chat = ChatRoom.objects.get(id=chatId)
         except ChatRoom.DoesNotExist:
-            return Response({"error": "Chat se7ra"}, status=404)
-        # obtain all the history
+            return Response({"error": "Chat Not Found"}, status=404)
         messages = Message.objects.filter(chatroom=chat).order_by('send_at')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
-
-    @swagger_auto_schema(request_body=MessageSerializer)
-    def post(self, request, chatId):
-        sender = request.user
-        print(f"-----------------{sender}-----------------------------------1")
-        receiver = request.data.get('receiver')
-        print(f"-----------------{receiver}-----------------------------------2")
-        content = request.data.get('content')
-        print(f"-----------------{content}-----------------------------------3")
-
-        #validate that chat exists
-        try:
-            chat = ChatRoom.objects.get(id=chatId)
-        except ChatRoom.DoesNotExist:
-            return Response({"error": "Chat makynsh"}, status=404)
-
-        print(f"-----------------{chat}-----------------------------------4")
-        #validate that receiver exists and is a participants of the chat
-
-        try:
-            receiver = Player.objects.get(profile__display_name=receiver)
-        except Player.DoesNotExist:
-            return Response({"error": "Receiver makynsh"}, status=404)
-        print(f"-----------------{receiver}-----------------------------------5")
-
-        if receiver not in chat.senders.all():
-            return Response({"error": "Receiver is not a sender of this chat"}, status=404)
-        #create save
-        message = Message.objects.create(
-            chatroom = chat,
-            sender=sender,
-            receiver=receiver,
-            content=content
-        )
-
-        serializer = MessageSerializer(message)
-        return Response(serializer.data, status=201)
