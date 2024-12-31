@@ -1,7 +1,7 @@
 import pyotp
 import requests
 from drf_yasg.utils import swagger_auto_schema
- 
+
 # from django.conf import settings
 # from django.shortcuts import redirect
 # from django.core.cache import cache
@@ -139,8 +139,8 @@ class GenerateURI(APIView):
             return Response(serializer.errors, status=status.HTTP_200_OK)
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         user = Player.objects.get(username=request.data['username'])
-        if user == None:  
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK) 
+        if user == None:
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         if user.enabled_2fa == True:
             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
@@ -314,10 +314,12 @@ class UpdateUserInfos(APIView):
 
     def post(self, request):
         serializer = UpdateUserInfosSerializer(
+            request.user,
             data=request.data,
-            context={'user':request.user}
+            context={'user':request.user},
+            partial=True
             )
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
