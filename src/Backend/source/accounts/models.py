@@ -20,9 +20,12 @@ def validate_file_size(value):
 
 # auth user
 class Player(AbstractUser):
+
     enabled_2fa=models.BooleanField(default=False)
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
+    #this model needs to have a profilefield which refers to the playerprofile model
+    # profile=models.OneToOneField(PlayerProfile, on_delete=models.CASCADE, related_name='player')
 
     def __str__(self):
         if self.is_superuser:
@@ -50,12 +53,18 @@ class Player(AbstractUser):
                 PlayerAchievement.objects.get_or_create(player=self.profile, achievement=achievement)
 
 class PlayerProfile(models.Model):
+    status_choices = [
+        ('waiting', 'waiting'),
+        ('inqueue', 'inqueue'),
+        ('ready', 'ready'),
+        ('playing', 'playing'),
+    ]
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='profile')
 
+    status=models.CharField(max_length=20, choices=status_choices, default='waiting')
     is_online=models.BooleanField(default=False)
     display_name = models.CharField(validators=[MinLengthValidator(3)], max_length=50, unique=True, blank=False)
     bio = models.TextField(max_length=500, blank=True)
-
 
     avatar = models.ImageField(
         upload_to='avatars/',
@@ -103,7 +112,7 @@ class PlayerProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.display_name} (Level: {self.level})"
+        return f"{self.player.username} Player Profile Model (Level: {self.level})"
 
     class Meta:
         ordering = ['-games_won']
@@ -222,6 +231,7 @@ class PlayerProfile(models.Model):
         if not self.display_name:
             max_attempts = 10
             for attempt in range(max_attempts):
+                # if we could use the uuid4() function we would be better
                 suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
                 potential_name = self.player.username + '_' + suffix
                 if not PlayerProfile.objects.filter(display_name=potential_name).exists():

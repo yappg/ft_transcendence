@@ -7,7 +7,6 @@ import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
 import {Achievement} from '@/constants/achivemement';
-import { LeaderBoard } from '@/constants/LeaderBoard';
 import { onlineService } from '@/services/onlineService';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
@@ -60,7 +59,7 @@ interface UserContextType {
   error: Error | null;
   players: User[] | null;
   chats: Chat[] | null;
-  notifications: Notification[];
+  notifications: Notification[] | null;
   messages: Message[];
   setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -294,4 +293,5 @@ export const useUser = () => {
 
   return context;
 };
+
 export { userApi, userService };

@@ -40,3 +40,4 @@ urlpatterns = [
 # TODO django would take resp of serving media files only in dev mode, and in production NGINX should serve them
 if settings.DEBUG == True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

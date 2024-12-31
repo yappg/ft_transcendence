@@ -8,16 +8,15 @@ import Link from 'next/link';
 import { useState, useEffect, ComponentType } from 'react';
 import { usePathname } from 'next/navigation';
 import Card from '@/components/generalUi/Card';
-import withAuth from '@/context/requireAhuth';
 
-export function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const [isLeft, setIsLeft] = useState(true);
   const pathname = usePathname();
-  const [isAnimating, setIsAnimating] = useState(false); // Controls animation state
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     setIsAnimating(true);
@@ -70,5 +69,3 @@ export function RootLayout({
     </div>
   );
 }
-
-export default withAuth(RootLayout as ComponentType<{}>, false);

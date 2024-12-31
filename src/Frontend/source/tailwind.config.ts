@@ -83,7 +83,7 @@ const config: Config = {
       textColor: ['dark'],
     },
   },
-  plugins: [require('tailwind-scrollbar-hide'), require("tailwindcss-animate")],
+  plugins: [require('tailwind-scrollbar-hide'), require("tailwindcss-animate"), require('@tailwindcss/aspect-ratio')],
   darkMode: 'class',
 };
 

@@ -5,29 +5,26 @@ import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
-
-Oauth2_Providers = {
-    '42': {
-        'code': 'code',
-        'grant_type': 'authorization_code',
-        'client_id': settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
-        'client_secret': settings.OAUTH2_PROVIDER_42['CLIENT_SECRET'],
-        'redirect_uri': settings.OAUTH2_PROVIDER_42['CALLBACK_URL'],
-        },
-    'google': {
-        'code': 'code',
-        'grant_type': 'authorization_code',
-        'client_id': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
-        'client_secret': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_SECRET'],
-        'redirect_uri': settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
-        },
-}
-
 def APIdata(code, provider):
-    data = Oauth2_Providers[provider]
-    data[provider]['code'] = code
-
-    return (data)
+    if provider == '42':
+        token_url = settings.OAUTH2_PROVIDER_42['TOKEN_URL']
+        data = {
+            'code': code,
+            'grant_type': 'authorization_code',
+            'client_id': settings.OAUTH2_PROVIDER_42['CLIENT_ID'],
+            'client_secret': settings.OAUTH2_PROVIDER_42['CLIENT_SECRET'],
+            'redirect_uri': settings.OAUTH2_PROVIDER_42['CALLBACK_URL'],
+        }
+    elif provider == 'google':
+        token_url = settings.OAUTH2_PROVIDER_GOOGLE['TOKEN_URL']
+        data = {
+            'code': code,
+            'grant_type': 'authorization_code',
+            'client_id': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID'],
+            'client_secret': settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_SECRET'],
+            'redirect_uri': settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'],
+        }
+    return (token_url, data)
 
 def fetch_user_data(access_token, provider):
     if provider == '42':
@@ -49,8 +46,8 @@ def store_user_data(user_data, provider):
         email = user_data['email']
         f_name = user_data['given_name']
         l_name = user_data['family_name']
-        username =  str(f_name)+str(l_name)
-        img_url = user_data['picture'] if 'picture' in user_data else None
+        username =  str(f_name)+str(l_name) #add a random number to make it unique
+        img_url = user_data['picture'] if 'picture' in user_data else None 
 
     user, created = Player.objects.get_or_create(
         username=username,
@@ -79,3 +76,5 @@ def store_user_data(user_data, provider):
 def generate_tokens(user):
         refresh_token = RefreshToken.for_user(user)
         return (str(refresh_token.access_token), str(refresh_token))
+
+# for Oauth2 username must check if theres a user with the same username, if so add a random number to make it unique
