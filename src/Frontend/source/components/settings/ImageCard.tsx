@@ -39,3 +39,4 @@ export const ImageCard = ({
     </div>
   );
 };
+

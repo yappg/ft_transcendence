@@ -35,6 +35,7 @@ export interface User {
   games_loss: number;
   win_ratio: number;
   created_at: Date;
+  is_private: boolean;
   relation: string;
   friends: Player[];
   matches_history: History[];

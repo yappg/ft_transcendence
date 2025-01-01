@@ -8,7 +8,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Input } from './ui/input';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import NotificationBell from './notifications/notifications';
 import { IoCloseOutline } from "react-icons/io5";
 
 

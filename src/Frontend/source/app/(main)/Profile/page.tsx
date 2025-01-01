@@ -25,7 +25,7 @@ export default function Page() {
           ></div>
           <UserInfo userProfile={userProfile as User} state="null" />
         </div>
-        <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll">
+        <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll custom-scrollbar-container">
           <UserSummary
             user={userProfile as User}
             userFriends={players}

@@ -4,7 +4,7 @@
 
 #########
 GET http://localhost:8080/accounts/rest-profiles
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODQ2Mzk4LCJpYXQiOjE3MzU1ODcxOTgsImp0aSI6ImViMzZlZGQzZDk5NjRlZTViZWFhNWMwM2E0YTAxMTEzIiwidXNlcl9pZCI6M30.h6AOc1Jotf9-N_xY-WJ66y9C7yfBUIZMHLKC_95Nryk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTUxNDY0LCJpYXQiOjE3MzU2OTIyNjQsImp0aSI6IjMzZDE1YjBjOWRlMzQyNjg5YjNiZDE2Mjc1ZDM1NzEyIiwidXNlcl9pZCI6NH0.eIcLVNu3-AGb8Wt0ac1ISIpyIN6qInR4P_iyFaJuR1k
 
 #########
 GET http://localhost:8080/accounts/rest-profiles/4/
@@ -69,11 +69,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 GET http://localhost:8080/accounts/user-profile/
-Authorization: Bearer access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1NjAzNTAwLCJpYXQiOjE3MzUzNDQzMDAsImp0aSI6IjUwY2FiOWNkMDA0MjQ2YjBhNWVkNzM2OWM3NzlmYTBkIiwidXNlcl9pZCI6M30.aArghzkG4B0SqrDSCeHsLJQkNkxOryPXA8c8SuJvCYY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTQ1ODEyLCJpYXQiOjE3MzU2ODY2MTIsImp0aSI6IjFmZTc4YmM5YjYyMzQ0Mzk4MTRiN2JjOTUzNWYxNjUzIiwidXNlcl9pZCI6M30.Mi76L_QVGdvhPFllfMJVESIkLtX1RgT8n5loWokJ50o
 
 #########
 PUT http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjM2MTgzLCJpYXQiOjE3MzUyMzM3ODMsImp0aSI6IjllNTI5NWRlYjZjYjRkYzQ4ZDcwYjYwMmQ0YzczZTg2IiwidXNlcl9pZCI6N30.SQqEn4KABXtj-Mwi5f6o5MXkEhC5_fNIDSTENOeyOhA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTUxNDY0LCJpYXQiOjE3MzU2OTIyNjQsImp0aSI6IjMzZDE1YjBjOWRlMzQyNjg5YjNiZDE2Mjc1ZDM1NzEyIiwidXNlcl9pZCI6NH0.eIcLVNu3-AGb8Wt0ac1ISIpyIN6qInR4P_iyFaJuR1k
 
 Content-Type: application/json
 
@@ -81,7 +81,7 @@ Content-Type: application/json
   "id": 6,
   "is_online": false,
   "display_name": "droit1223123",
-  "bio": "bsdadsad",
+  "bio": "lklklklk",
   "rank_points": 2,
   "games_played": 3,
   "games_won": 4,
@@ -91,40 +91,40 @@ Content-Type: application/json
 
 #########
 PATCH http://localhost:8080/accounts/user-profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTM5NzI1LCJpYXQiOjE3MzUxMzczMjUsImp0aSI6ImZiZThkNWUyNGFhYzQ3NjA5OGRmNTA1OGZkOWNhZTMyIiwidXNlcl9pZCI6Mn0.CorAmewYjX2ZRpsgf1VBaNpoppzpWKDYaw-Pch4TOiM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTUxNDY0LCJpYXQiOjE3MzU2OTIyNjQsImp0aSI6IjMzZDE1YjBjOWRlMzQyNjg5YjNiZDE2Mjc1ZDM1NzEyIiwidXNlcl9pZCI6NH0.eIcLVNu3-AGb8Wt0ac1ISIpyIN6qInR4P_iyFaJuR1k
 Content-Type: application/json
 
-{"bio":"droitx"}
+{"is_private":"true"}
 
 
 ####################################################################################################################################
 =
 #########
 GET http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjM2MTgzLCJpYXQiOjE3MzUyMzM3ODMsImp0aSI6IjllNTI5NWRlYjZjYjRkYzQ4ZDcwYjYwMmQ0YzczZTg2IiwidXNlcl9pZCI6N30.SQqEn4KABXtj-Mwi5f6o5MXkEhC5_fNIDSTENOeyOhA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTQzOTkyLCJpYXQiOjE3MzU2ODQ3OTIsImp0aSI6IjA4NGUxNDE3NDcwNjRjMDNhZmM1N2JjYmViZDRiNzBhIiwidXNlcl9pZCI6Mn0.puYYIS-kf2F08Mibx8gNaM9eKcci4xwLt2Zp4hIMTuU
 
 
 #########
 PUT http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjM2MTgzLCJpYXQiOjE3MzUyMzM3ODMsImp0aSI6IjllNTI5NWRlYjZjYjRkYzQ4ZDcwYjYwMmQ0YzczZTg2IiwidXNlcl9pZCI6N30.SQqEn4KABXtj-Mwi5f6o5MXkEhC5_fNIDSTENOeyOhA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTUxNDY0LCJpYXQiOjE3MzU2OTIyNjQsImp0aSI6IjMzZDE1YjBjOWRlMzQyNjg5YjNiZDE2Mjc1ZDM1NzEyIiwidXNlcl9pZCI6NH0.eIcLVNu3-AGb8Wt0ac1ISIpyIN6qInR4P_iyFaJuR1k
 
 Content-Type: application/json
 
 {
   "id": "2",
-  "private_profile": true,
+  "private_profile": false,
   "notifications_enabled": false,
   "stats_graph_days": 3
 }
 
 #########
 PATCH http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjM2MTgzLCJpYXQiOjE3MzUyMzM3ODMsImp0aSI6IjllNTI5NWRlYjZjYjRkYzQ4ZDcwYjYwMmQ0YzczZTg2IiwidXNlcl9pZCI6N30.SQqEn4KABXtj-Mwi5f6o5MXkEhC5_fNIDSTENOeyOhA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTUxNDY0LCJpYXQiOjE3MzU2OTIyNjQsImp0aSI6IjMzZDE1YjBjOWRlMzQyNjg5YjNiZDE2Mjc1ZDM1NzEyIiwidXNlcl9pZCI6NH0.eIcLVNu3-AGb8Wt0ac1ISIpyIN6qInR4P_iyFaJuR1k
 
 Content-Type: application/json
 
 {
-    "verified_otp": false
+    "verified_otp": true
 }
 
 ####################################################################################################################################
