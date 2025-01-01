@@ -63,12 +63,12 @@ const FriendServices = {
             throw error;
         }
     },
-    async BlockFriend(blockedUsername: string) {
+    async getBlocked() {
         try {
-            const response = await frindsApi.get('/friends/block/');
+            const response = await frindsApi.get('/friends/block/')
             return response.data;
         }
-        catch (error) {
+        catch(error) {
             throw error;
         }
     },
@@ -97,6 +97,18 @@ const FriendServices = {
             throw error;
         }
     },
+
+    async declineFriendRequest(senderUsername: string) {
+        try {
+            const response = await frindsApi.delete('/friends/decline/', {
+                data: { sender: senderUsername }
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 };
 
 
