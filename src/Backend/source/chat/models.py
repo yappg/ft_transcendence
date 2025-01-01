@@ -6,11 +6,9 @@ class ChatRoom(models.Model):
     from relations.models import Friends
 
     name = models.CharField(max_length=100, unique=True)
-    senders = models.ManyToManyField(Player)# participents
+    senders = models.ManyToManyField(Player)
     is_private = models.BooleanField(default=False)
-    friends = models.ForeignKey(Friends, on_delete=models.CASCADE, related_name='friends_chats')
     created_at = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return f"Chat between {self.senders.all()[0].username} and {self.senders.all()[1].username}"
