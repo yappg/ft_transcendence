@@ -51,6 +51,17 @@ const FriendServices = {
             throw error;
         }
     },
+    async cancelFriendRequest(receiverUsername: string) {
+        try {
+            const response = await frindsApi.delete('/friends/invite/', {
+                data: { cancel_invite: receiverUsername }
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
 
     async acceptFriendRequest(senderUsername: string) {
         try {

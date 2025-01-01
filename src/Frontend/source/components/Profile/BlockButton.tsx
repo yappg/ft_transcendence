@@ -3,14 +3,17 @@ import { useState } from 'react';
 import { AiOutlineLoading } from "react-icons/ai";
 export const BlockButton = ({
     name,
+    setThisState,
 }: {
     name: string;
+    setThisState: (state: string) => void;
 }) => {
     const [clicked, setClicked] = useState(false);
     function handleClick() {
             try{
                 FriendServices.blockFriend(name);
                 setClicked(true);
+                setThisState('blocked');
             }catch{
                 console.log('error')
             }
