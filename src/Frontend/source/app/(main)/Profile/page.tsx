@@ -2,11 +2,9 @@
 import UserInfo from '@/components/Profile/UserInfo';
 import UserSummary from '@/components/Profile/UserSummary';
 import { User, useUser } from '@/context/GlobalContext';
-import { useEffect } from 'react';
 export default function Page() {
-  const { user: userProfile, PlayerMatches, players } = useUser();
-  console.log(userProfile);
-  if (!userProfile) {
+  const { user } = useUser();
+  if (!user) {
     return <div>Loading...</div>;
   }
   return (
@@ -16,20 +14,20 @@ export default function Page() {
           <div
             className="absolute h-full w-full z-[0]"
             style={{
-              backgroundImage: `url(${userProfile?.cover})`,
+              backgroundImage: `url(${user?.cover})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               filter: 'blur(10px)',
             }}
           ></div>
-          <UserInfo userProfile={userProfile as User} state="null" />
+          <UserInfo userProfile={user as User} state="null" />
         </div>
         <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll custom-scrollbar-container">
           <UserSummary
-            user={userProfile as User}
-            userFriends={players}
-            userHistory={PlayerMatches}
+            user={user as User}
+            userFriends={user?.friends}
+            userHistory={user?.matches_history}
             is_private={false}
           />
         </div>

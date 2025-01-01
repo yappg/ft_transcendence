@@ -12,8 +12,8 @@ const UserSummary = ({
   is_private,
 }: {
   user: User;
-  userFriends: Player;
-  userHistory: History;
+  userFriends: Player[];
+  userHistory: History[];
   is_private: boolean;
 }): JSX.Element => {
   if (!user) return <div>Loading...</div>;
