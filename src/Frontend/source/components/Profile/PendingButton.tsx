@@ -1,12 +1,13 @@
 import FriendServices from '@/services/friendServices';
 import { useState } from 'react';
 import { AiOutlineLoading } from "react-icons/ai";
-export const PendingButton = ({ name }: { name: string }) => {
+export const PendingButton = ({ name, setThisState }: { name: string, setThisState: (state: string) => void }) => {
     const [clicked, setClicked] = useState(false);
     function handleClickAccept() {
             try{
                 FriendServices.acceptFriendRequest(name);
                 setClicked(true);
+                setThisState('friend');
             }catch{
                 console.log('error')
             }
@@ -19,6 +20,7 @@ export const PendingButton = ({ name }: { name: string }) => {
         try{
             FriendServices.declineFriendRequest(name);
             setClicked(true);
+            setThisState('none');
         }catch{
             console.log('error')
         }

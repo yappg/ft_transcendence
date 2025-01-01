@@ -1,6 +1,4 @@
 'use client';
-import { HiOutlinePencilSquare } from 'react-icons/hi2';
-import Link from 'next/link';
 import { User } from '@/context/GlobalContext';
 import { Avatar } from './Avatar';
 import { ProfileInfo } from './ProfileInfo';
@@ -11,6 +9,8 @@ import { PendingButton } from './PendingButton';
 import { BlockButton } from './BlockButton';
 import { EditProfile } from './EditProfile';
 import { InviteSentButton } from './InviteSentButton';
+import { UnBlockButton } from './UnBlockButton';
+import { useEffect, useState } from 'react';
 const UserInfo = ({
   userProfile,
   state,
@@ -18,19 +18,29 @@ const UserInfo = ({
   userProfile: User
   state: string
 }) => {
-  console.log('stateeeee', state);
+  const [thisState, setThisState] = useState(state);
+  console.log('thisState', thisState);
+  console.log('state', state);
+
+  useEffect(() => {
+    setThisState(state);
+  }, [state]);
   const renderContent = () => {
-    switch (state) {
+    switch (thisState) {
       case 'none':
-        return <AddButton name={userProfile?.display_name} />;
+        return <AddButton name={userProfile?.display_name} setThisState={setThisState} />;
       case 'received_invite':
-        return <PendingButton name={userProfile?.display_name}/>;
-      case 'friends':
-        return <BlockButton name={userProfile?.display_name}/>;
+        return <PendingButton name={userProfile?.display_name} setThisState={setThisState}/>;
+      case 'friend':
+        return <BlockButton name={userProfile?.display_name} setThisState={setThisState}/>;
       case 'sent_invite':
-          return <InviteSentButton name={userProfile?.display_name}/>;
+          return <InviteSentButton name={userProfile?.display_name} setThisState={setThisState}/>;
       case 'self':
-        return <EditProfile />;
+        return <EditProfile setThisState={setThisState}/>;
+      case 'blocked':
+        return <UnBlockButton name={userProfile?.display_name} setThisState={setThisState}/>;
+      case 'blocked_by_user':
+        return <div>blocked by user</div>;
     }
   };
   return (

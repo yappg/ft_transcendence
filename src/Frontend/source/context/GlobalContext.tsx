@@ -7,6 +7,7 @@ import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
 import { Achievement } from '@/constants/achivemement';
 import { onlineService } from '@/services/onlineService';
+import FriendServices from '@/services/friendServices';
 const USER_BASE_URL = 'http://localhost:8080/accounts/';
 
 const USER_PROFILE_BASE_URL = '/user-profile/';
@@ -55,7 +56,6 @@ export interface GraphDatum {
 }
 
 export interface History {
-  map(arg0: (user: any, index: any) => React.JSX.Element): React.ReactNode;
   length: number;
   id: number;
   result: string;
