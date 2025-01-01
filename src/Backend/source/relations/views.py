@@ -5,10 +5,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework import status
 from .models import *
 from .serializers import *
-from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 from accounts.serializers.userManagmentSerlizers import PlayerRelationsSerializer
 
+# from drf_yasg.utils import swagger_auto_schema
 
 class NotificationListView(ListAPIView):
     serializer_class = NotificationSerializer
