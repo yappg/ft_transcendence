@@ -6,7 +6,6 @@ from relations.serializers import ProfileFriendsSerializer
 
 ########################################################################################
 
-# KEEP IS_ACTIVE AND IS_STAFF LOGIC FOR BACKEND
 class PlayerSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
@@ -48,8 +47,6 @@ class PlayerRelationsSerializer(serializers.ModelSerializer):
             'username',
             'avatar',
         ]
-
-    # ge
 
     def get_avatar(self, obj):
         return obj.profile.avatar.url
@@ -110,7 +107,6 @@ class FriendsSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'display_name', 'avatar', 'level']
 
 
-# fix private profile only give back display name
 class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     xp = serializers.SerializerMethodField()
@@ -119,9 +115,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
     matches_history = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
+    cover = serializers.SerializerMethodField()
+
 
     last_login = serializers.SerializerMethodField()
-    # created_at = serializers.SerializerMethodField()
     is_private = serializers.SerializerMethodField()
 
     relation = serializers.SerializerMethodField()
@@ -141,7 +139,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'fire_wins',
             'earth_wins',
 
-            'created_at',
+            'created_at'
         ]
         read_only_fields = [
             'id',
@@ -159,60 +157,67 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'games_loss',
             'win_ratio',
 
-
             'friends',
             'matches_history',
-            # 'air_games',
-            # 'water_games',
-            # 'fire_games',
-            # 'earth_games',
 
             'is_private',
 
             'relation',
 
             'last_login',
-            # 'created_at',
         ]
 
     def get_relation(self, obj):
-        from relations.models import FriendInvitation
+        from relations.models import FriendInvitation, BlockedUsers
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
-            return "none"
+            return []
+
+        blockedUsers_by = Player.objects.get(id=request.user.id).blocked_by.all()
+        blocked_by = [blocker.user for blocker in blockedUsers_by]
 
         user = request.user
         if obj.player == user:
             return "self"
-        elif user in obj.all_friends():
+        elif user.profile in obj.all_friends():
             return "friend"
-        elif FriendInvitation.objects.filter(receiver=user, sender=obj.player, status="pending").exists():
+        elif FriendInvitation.objects.filter(receiver=user, sender=obj.player).exists():
             return "received_invite"
-        elif FriendInvitation.objects.filter(receiver=obj.player, sender=user, status="pending").exists():
+        elif FriendInvitation.objects.filter(receiver=obj.player, sender=user).exists():
             return "sent_invite"
+        elif BlockedUsers.objects.get(user=user).is_blocked(obj.player):
+            return "blocked"
+        elif obj.player in blocked_by:
+            return "blocked_by_user"
         else:
             return "none"
 
     def get_is_private(self, obj):
         return obj.settings.private_profile
 
+    def get_cover(self, obj):
+        return obj.cover.url
+
+    def get_avatar(self, obj):
+        return obj.avatar.url
+
     def get_achievements(self, obj):
-        # from ..serializers import PlayerAchievementSerializer
-        return PlayerAchievementSerializer(obj.all_achievements_gained()[:10], many=True).data
+        LIMIT = 15
+
+        return PlayerAchievementSerializer(obj.all_achievements_gained()[:LIMIT], many=True).data
 
     def get_statistics(self, obj):
-        # from ..serializers import StatisticsSerializer
         return StatisticsSerializer(obj, read_only=True).data
 
     def get_friends(self, obj):
-        LIMIT = 4 # for now
+        LIMIT = 4
 
         if obj.settings.private_profile == True:
             return []
         return FriendsSerializer(obj.all_friends()[:LIMIT], many=True).data
 
     def get_matches_history(self, obj):
-        LIMIT = 4 # for now
+        LIMIT = 4
 
         if obj.settings.private_profile == True:
             return []
@@ -228,8 +233,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_last_login(self, obj):
         return obj.last_login.date().isoformat() if obj.last_login else None
 
-    # def get_created_at(self, obj):
-    #     return obj.created_at.date().isoformat() if obj.created_at else None
+    def get_created_at(self, obj):
+        return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
         if len(value) < 3 or len(value) > 40:
@@ -318,24 +323,85 @@ class MatchHistorySerializer(serializers.ModelSerializer):
 class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
-        fields = [ "id", "name", "description", "condition", "xp_gain"]
-        read_only_fields = [ "id", "name", "description", "condition", "xp_gain"]
-
-
+        fields = [ "name", "description", "condition", "xp_gain"]
+        read_only_fields = [ "name", "description", "condition", "xp_gain"]
 
 
 class PlayerAchievementSerializer(serializers.ModelSerializer):
     achievement = AchievementSerializer(read_only=True)
-    date_earned = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    date_earned = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerAchievement
-        fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
-        read_only_fields = ["id", "player", "achievement", "gained", "progress", "date_earned", "image"]
+        fields = ["player", "achievement", "gained", "progress", "date_earned", "image"]
+        read_only_fields = ["player", "achievement", "gained", "progress", "date_earned", "image"]
+
+    def get_image(self, obj):
+        return obj.achievement.get_image(obj.gained)
 
     def get_date_earned(self, obj):
         return obj.date_earned.date().isoformat() if obj.date_earned else None
 
-    def get_image(self, obj):
-        return obj.achievement.get_image(obj.gained)
+# class ProfileSettingsSerializer(serializers.ModelSerializer):
+#     avatar = serializers.SerializerMethodField()
+#     cover = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = PlayerProfile
+#         fields = [
+#             'display_name',
+#             'avatar',
+#             'cover',
+#             'bio',
+#         ]
+
+#     def get_avatar(self, obj):
+#         return obj.avatar.url
+
+#     def get_cover(self, obj):
+#         return obj.cover.url
+
+#     def validate_display_name(self, value):
+#         if len(value) < 3 or len(value) > 40:
+#             raise serializers.ValidationError("display name must be between 3 and 40 characters long")
+#         if PlayerProfile.objects.filter(display_name=value).exists():
+#             raise serializers.ValidationError("Display name already exists.")
+#         return value
+
+#     def validate_bio(self, value):
+#         if len(value) > 500:
+#             raise serializers.ValidationError("max bio size is 500 characters")
+#         return value
+
+#     def validate_avatar(self, value):
+#         size_max = 2 * 1024 * 1024
+#         allowed_types = ['image/jpeg', 'image/png']
+
+#         if (value.size > size_max):
+#             raise serializers.ValidationError("Avatar image size should not exceed 2MB.")
+
+#         if (value.content_type not in allowed_types):
+#             raise serializers.ValidationError("Avatar must be a JPEG or PNG image.")
+
+#         return value
+
+#     def validate_cover(self, value):
+#         size_max = 5 * 1024 * 1024
+#         allowed_types = ['image/jpeg', 'image/png']
+
+#         if (value.size > size_max):
+#             raise serializers.ValidationError("Cover image size should not exceed 5MB.")
+
+#         if (value.content_type not in allowed_types):
+#             raise serializers.ValidationError("Cover must be a JPEG or PNG image.")
+
+#         return value
+
+
+# class SecuritySettingsSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = Player
+#         fields = ['username', 'email', 'enabled_2fa']
+#         read_only_fields = ['username', 'email', 'enabled_2fa']

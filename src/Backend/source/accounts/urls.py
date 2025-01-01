@@ -6,7 +6,7 @@ from .views.userManagment import *
 from .views.functionViews import *
 
 router = DefaultRouter()
-router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id} 
+router.register(r'profiles', PlayerProfileViewSet, basename="profiles") # /profiles/{id}
 router.register(r'historys', MatchHistoryViewSet, basename="historys") # history/{id} as for (profile id)  for user game history
 router.register(r'achievements', PlayerAchievementViewSet, basename="achievements") # achievements/{id} as for (profile id)  for user achivements
 
@@ -55,11 +55,11 @@ urlpatterns = [
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),
 
-# user-management
-    path('users/me/update/', UpdateUserInfos.as_view(), name='UpdateInfos'),
-    path('rest-', include(router.urls), name='users-restfulrestful endpoint'),
+# restful endpoints
+    path('rest-', include(router.urls), name='users-restful endpoints'),
 
 # user-management
+    path('user-player/', UpdateUserInfos.as_view(), name='UpdateInfos'),
     path('user-profile/', UserProfileView , name='user_profile'),
     path('user-settings/', UserSettingsView , name='user_settings'),
     path('user-history/', UserHistoryView , name='user_game_history'),
@@ -70,16 +70,11 @@ urlpatterns = [
     # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
-
-# implemetation may differ change_password , change_email , change_username 
-    # path 
+    # path('settings/', SettingsView.as_view(), name='settings'),
 
 # TODO disable_account, delete_account
-    # path('disable_account/', UserHistoryView , name='user_game_history'), #
-    # path('delete_account/', UserHistoryView , name='user_game_history'), #
+    # path('disable_account/', UserHistoryView , name='user_game_history'),
+    # path('delete_account/', UserHistoryView , name='user_game_history'),
 
-# search views
-    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
-    # path ('search-friends', Search)
 ]
 # TODO auth with Oauth username And Vice #########
