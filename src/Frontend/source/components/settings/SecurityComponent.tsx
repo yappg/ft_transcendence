@@ -8,6 +8,9 @@ export const SecurityComponent = ({profileState, setProfileState, errors, setErr
     coverError: string,
     username: string,
     display_name: string,
+    password: string,
+    NewPassword: string,
+    is_private: boolean,
   }, setProfileState: Function,
   errors: Record<string, string>, setErrors: Function}
 ) => {
@@ -30,21 +33,21 @@ export const SecurityComponent = ({profileState, setProfileState, errors, setErr
             onChange={(e) => updateState('password', e.target.value)}
             className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none max-w-[300px]"
           />
-           {errors.NewPassword && <p className="text-red-500 text-sm">{errors.password}</p>}
+           {errors.password && (<p className="text-red-500 text-sm">{errors.password}</p>)}
           <label className="text-white text-sm">New Password</label>
           <input
             type="password"
             placeholder="Enter your new password"
-            // onChange={(e) => updateState('NewPassword', e.target.value)}
+            onChange={(e) => updateState('NewPassword', e.target.value)}
             className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none max-w-[300px]"
           />
-          {errors.NewPassword && <p className="text-red-500 text-sm">{errors.NewPassword}</p>}
+          {errors.NewPassword && (<p className="text-red-500 text-sm">{errors.NewPassword}</p>)}
         </div>
         <div className="md:w-[40%] h-full flex items-center md:justify-center flex-row  pl-9 md:p-9 md:px-12 gap-16">
           <h1 className="font-coustard lg:text-xl md:text-lg text-sm text-white">
             Private Account
           </h1>
-          <Switch />
+          <Switch checked={profileState.is_private} onCheckedChange={() => updateState('is_private', !profileState.is_private)} />
         </div>
       </div>
     </div>

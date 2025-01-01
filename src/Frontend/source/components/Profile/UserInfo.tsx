@@ -10,6 +10,7 @@ import { AddButton } from './AddButton';
 import { PendingButton } from './PendingButton';
 import { BlockButton } from './BlockButton';
 import { EditProfile } from './EditProfile';
+import { InviteSentButton } from './InviteSentButton';
 const UserInfo = ({
   userProfile,
   state,
@@ -17,7 +18,7 @@ const UserInfo = ({
   userProfile: User
   state: string
 }) => {
-
+  console.log('stateeeee', state);
   const renderContent = () => {
     switch (state) {
       case 'none':
@@ -26,8 +27,10 @@ const UserInfo = ({
         return <PendingButton name={userProfile?.display_name}/>;
       case 'friends':
         return <BlockButton name={userProfile?.display_name}/>;
-      // case 'sent_invite':
-      //     return <InviteSentButton name={userProfile?.display_name}/>;
+      case 'sent_invite':
+          return <InviteSentButton name={userProfile?.display_name}/>;
+      case 'self':
+        return <EditProfile />;
     }
   };
   return (
@@ -48,13 +51,7 @@ const UserInfo = ({
           <Separator className="lg:hidden block" orientation="vertical" />
           <InfoTitle title={'Winrate: '} value='55%' />
         </div>
-        {
-          state === 'null' ? (
-            <EditProfile />
-          ) : (
-        <div className="w-[270px] h-[70px]">{renderContent()}</div>
-          )
-        }
+        <div className="w-[270px] h-[70px] flex items-center justify-end">{renderContent()}</div>
     </div>
     </div>
   );
