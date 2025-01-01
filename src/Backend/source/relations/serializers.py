@@ -7,7 +7,7 @@ class FriendInvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendInvitation
-        fields = ['sender', 'id', 'receiver', 'created_at', 'status']
+        fields = ['sender', 'id', 'receiver', 'created_at']
 
 
 class ProfileFriendsSerializer(serializers.ModelSerializer):

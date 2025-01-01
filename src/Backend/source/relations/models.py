@@ -1,11 +1,12 @@
 from django.db import models
 from accounts.models import Player
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 class Friends(models.Model):
     friend_requester = models.ForeignKey(Player, related_name='friend_requests_sent', on_delete=models.CASCADE)
     friend_responder = models.ForeignKey(Player, related_name='friend_requests_received', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return f"{self.friend_requester} and {self.friend_responder} are friends"
@@ -14,33 +15,36 @@ class Friends(models.Model):
         verbose_name = 'Friend'
         verbose_name_plural = 'Friends'
         unique_together = ('friend_requester', 'friend_responder')
+        indexes = [
+            models.Index(fields=['friend_requester', 'created_at']),
+            models.Index(fields=['friend_responder', 'created_at']),
+        ]
 
     def get_friend(self, player):
         if self.friend_requester == player:
             return self.friend_responder
         return self.friend_requester
 
-
     def save(self, *args, **kwargs):
         from chat.models import ChatRoom
+
+        if self.friend_requester == self.friend_responder:
+            raise ValidationError("Cannot be friends with yourself")
 
         super().save(*args, **kwargs)
 
         chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
-        chat_exists = ChatRoom.objects.filter(name=chat_name).exists()
+        chat_room, created = ChatRoom.objects.get_or_create(
+            name=chat_name,
+            defaults={'friends': self}
+        )
+        if created:
+            chat_room.senders.add(self.friend_requester, self.friend_responder)
 
-        if not chat_exists:
-            chat = ChatRoom.objects.create(name=chat_name, friends=self)
-            chat.senders.add(self.friend_requester, self.friend_responder)
 
-
-
-
-# if he accept the invitation remove the fucking model and same if he declines
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
     receiver = models.ForeignKey(Player, related_name='received_invitations', on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('declined', 'Declined')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -51,6 +55,20 @@ class FriendInvitation(models.Model):
         verbose_name_plural = 'Friend Invitations'
         unique_together = ('sender', 'receiver')
 
+    def clean(self):
+        if self.sender == self.receiver:
+            raise ValidationError("Cannot send invitation to yourself")
+
+        if Friends.objects.filter(
+            Q(friend_requester=self.sender, friend_responder=self.receiver) |
+            Q(friend_requester=self.receiver, friend_responder=self.sender)
+        ).exists():
+            raise ValidationError("Users are already friends")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
 
 class BlockedUsers(models.Model):
     user = models.OneToOneField(Player, related_name='blocked_users_list', on_delete=models.CASCADE)
@@ -58,11 +76,14 @@ class BlockedUsers(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user}'s blocked users"
+        return f"{self.user}"
 
     class Meta:
         verbose_name = 'Blocked User'
         verbose_name_plural = 'Blocked Users'
+        indexes = [
+            models.Index(fields=['user', 'created_at']),
+        ]
 
     def is_blocked(self, user):
         if self.blocked.filter(id=user.id).exists():
@@ -73,13 +94,15 @@ class BlockedUsers(models.Model):
         return self.blocked.all()
 
     def block_user(self, user_to_block):
-        if user_to_block != self.user and self.is_blocked(user_to_block) == False:
+        if (user_to_block != self.user and
+            user_to_block.profile and
+            not self.blocked.filter(id=user_to_block.id).exists()):
             self.blocked.add(user_to_block)
             return True
         return False
 
     def unblock_user(self, user_to_unblock):
-        if user_to_unblock in self.blocked.all():
+        if self.blocked.filter(id=user_to_unblock.id).exists():
             self.blocked.remove(user_to_unblock)
             return True
         return False
