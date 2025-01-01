@@ -7,7 +7,7 @@ ENV NODE_ENV=development
 
 WORKDIR /app
 
-COPY ./source/package.json ./
+COPY ./source/package.json ./source/yarn.lock ./
 
 RUN yarn install
 
