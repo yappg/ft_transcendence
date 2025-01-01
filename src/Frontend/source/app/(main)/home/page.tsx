@@ -3,8 +3,10 @@ import { SideBarContext } from '@/context/SideBarContext';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { useEffect } from 'react';
+import { useUser } from '@/context/GlobalContext';
 
 const Home = () => {
+  const { user } = useUser();
   const { setIsActivated } = useContext(SideBarContext);
   const router = useRouter();
 

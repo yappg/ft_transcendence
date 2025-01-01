@@ -49,7 +49,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ######### i dont see why u gonna need 2 fileds returned where one is ur self
 
 GET http://localhost:8080/relations/friends/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTU2OTUyLCJpYXQiOjE3MzU2OTc3NTIsImp0aSI6ImRjNDRlYWMyZjE3NDRkYzBiY2MxZTE1OTExZWFhZGEzIiwidXNlcl9pZCI6OH0.LYmO-QhldC2eTq1fVPvOqpAhtjIl4Ql4IeqwUqVkl5Y
 
 
 
@@ -64,7 +64,7 @@ Content-Type: application/json
 
 ######### protect api against sending a friend request to from both users me pending him pending
 GET http://localhost:8080/relations/friends/pending/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTU3NzE0LCJpYXQiOjE3MzUxNTUzMTQsImp0aSI6IjBhZDRmYTNkNTQ2MjRlYTM4NGEyYzc3NjlhZjMzNjBmIiwidXNlcl9pZCI6M30.KgCORWlgE88cFxR3BPM0D2wGvyPd67FNzyLUxxTfIFU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTU2NzQ1LCJpYXQiOjE3MzU2OTc1NDUsImp0aSI6Ijk1Y2ZkYTQ4MTA3NzRjY2I4ZGNkZGE0NGNkNDM3ZDg2IiwidXNlcl9pZCI6N30.y8kciLL6t9flUZfEQjkP5KZi1O8JAiDuGxk2IQDYVSQ
 
 #############
 DELETE http://localhost:8080/relations/friends/pending/
@@ -90,11 +90,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODQ2MjgwLCJpYXQiOjE3MzU1ODcwODAsImp0aSI6ImI4ZjJiZDcyMDQzMDQ4Y2RhZDExZTQ4ZDc1ZDU1ZjFhIiwidXNlcl9pZCI6M30.JmCjBmfV3friHqSEm2oJCsm9xk3uyhDbcBJUGpRjfCY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTU2NDM4LCJpYXQiOjE3MzU2OTcyMzgsImp0aSI6IjFmMDc0MTQ5MzM0ZTRkNjRiYzY4OTBhZTM0NTY2NGRiIiwidXNlcl9pZCI6N30.E8WteReXVE65vX9b4RGxvY-jhZSaEnhkX6kcdutg_58
 Content-Type: application/json
 
 {
-    "receiver":"meryeme_rv5e4wx1t0ft"
+    "receiver":"salma"
 }
 
 #########
@@ -121,7 +121,6 @@ Content-Type: application/json
 ########## GET / PATCH / DELETE ############
 ############################################
 
-<<<<<<< HEAD
 POST http://localhost:8080/accounts/JWT/token/
 Content-Type: application/json
 =======
