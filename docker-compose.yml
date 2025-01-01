@@ -13,34 +13,34 @@ services:
     #     - transcendence
     #   restart: unless-stopped
 
-    web:
-      container_name: nginx
-      build:
-        context: ./src/Services/nginx
-        dockerfile: Dockerfile
-      image: nginx
-      networks:
-        - transcendence
-      ports:
-        - 8080:80
-        - "4433:443"
-      depends_on:
-        frontend:
-            condition: service_healthy
-        backend:
-            condition: service_healthy
-        grafana:
-            condition: service_healthy
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
-      restart: always
-      volumes:
-        - static_files:/app/staticfiles:ro
-        - media_files:/app/UsersMedia:ro
+    # web:
+    #   container_name: nginx
+    #   build:
+    #     context: ./src/Services/nginx
+    #     dockerfile: Dockerfile
+    #   image: nginx
+    #   networks:
+    #     - transcendence
+    #   ports:
+    #     - 8080:80
+    #     - "4433:443"
+    #   depends_on:
+    #     frontend:
+    #         condition: service_healthy
+    #     backend:
+    #         condition: service_healthy
+    #     grafana:
+    #         condition: service_healthy
+    #   healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
+    #     interval: 10s
+    #     timeout: 5s
+    #     retries: 3
+    #     start_period: 5s
+    #   restart: always
+    #   volumes:
+    #     - static_files:/app/staticfiles:ro
+    #     - media_files:/app/UsersMedia:ro
 
     # web-exporter:
     #   container_name: nginx-exporter
@@ -62,10 +62,10 @@ services:
         dockerfile: Dockerfile
       image: frontend
 # # DEV ==============>
-#       volumes:
-#         - ./src/Frontend/source:/app:rw
-#         - /app/.next
-#         - /app/node_modules
+      volumes:
+        - ./src/Frontend/source:/app:rw
+        - /app/.next
+        - /app/node_modules
 # # ==================>
       networks:
         - transcendence
@@ -99,10 +99,10 @@ services:
         REDIS_PASS: ${REDIS_PASS}
 # DEV ==============>
       volumes:
-        # - ./src/Backend/source:/app/source:rw
-        # - ./src/Backend/config:/app/config:rw
-        - static_files:/app/staticfiles
-        - media_files:/app/UsersMedia
+        - ./src/Backend/source:/app/source:rw
+        - ./src/Backend/config:/app/config:rw
+        # - static_files:/app/staticfiles
+        # - media_files:/app/UsersMedia
 # ==================>
       networks:
         - transcendence
