@@ -54,6 +54,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             sender = await sync_to_async(PlayerProfile.objects.get)(id=sender_id)
             receiver = await sync_to_async(PlayerProfile.objects.get)(id=receiver_id)
             chat = await sync_to_async(ChatRoom.objects.get)(id=self.chatId)
+            
+            sender_player = await sync_to_async(getattr)(sender, 'player')
+            receiver_player = await sync_to_async(getattr)(receiver, 'player')
+
+            new_message = await sync_to_async(Message.objects.create)(
+                chatroom=chat,
+                sender=sender_player,
+                receiver=receiver_player,
+                content=content
+            )
         except PlayerProfile.DoesNotExist:
             print(f"-----------------[DEBUG] Sender or Reciever with ID {sender_id} does not exist")
             return
@@ -63,14 +73,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         print(f"-----------------[DEBUG] ==================== Valid sender {sender.display_name} and chat {self.chatId} found")
 
-        # The lambda function is used here to wrap the Message.objects.create() call
-        # This is necessary because sync_to_async needs a callable (function) to convert to async
-        # The lambda creates an anonymous function that, when called, will execute the database create
-        # Without lambda, sync_to_async would try to convert the result of create() directly
-        # rather than converting the operation itself to be async
-        new_message = await sync_to_async(lambda: Message.objects.create(
-            chatroom=chat, sender=sender.player, receiver=receiver.player, content=content
-        ))()
 
         print(f"-----------------[DEBUG] =============================================dssss")
 
