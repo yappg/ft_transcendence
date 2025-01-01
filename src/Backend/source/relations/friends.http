@@ -43,11 +43,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTU2NDM4LCJpYXQiOjE3MzU2OTcyMzgsImp0aSI6IjFmMDc0MTQ5MzM0ZTRkNjRiYzY4OTBhZTM0NTY2NGRiIiwidXNlcl9pZCI6N30.E8WteReXVE65vX9b4RGxvY-jhZSaEnhkX6kcdutg_58
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTYxNjU1LCJpYXQiOjE3MzU3MDI0NTUsImp0aSI6ImMwMzNhMDFhZjExNzRlMzNhZjhjMzZjYmZlZGZiMzhiIiwidXNlcl9pZCI6OX0.L3XOHB7C5lHIpxA52exx6OeX6Lu0a1SsHUysTuTzb7w
 Content-Type: application/json
 
 {
-    "receiver":"salma"
+    "receiver":"merywwww_p67p2se6moa2"
 }
 
 #########

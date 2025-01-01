@@ -1,3 +1,4 @@
+import FriendServices from '@/services/friendServices';
 import { useState } from 'react';
 import { AiOutlineLoading } from "react-icons/ai";
 export const BlockButton = ({
@@ -7,6 +8,12 @@ export const BlockButton = ({
 }) => {
     const [clicked, setClicked] = useState(false);
     function handleClick() {
+            try{
+                FriendServices.blockFriend(name);
+                setClicked(true);
+            }catch{
+                console.log('error')
+            }
         setClicked(true);
         setTimeout(() => {
             setClicked(false);

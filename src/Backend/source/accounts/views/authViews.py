@@ -310,16 +310,21 @@ class OAuth42CallbackView(APIView):
 #--------------------------User Infos Update ------------------------------
 
 class UpdateUserInfos(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UpdateUserInfosSerializer
+
+    def get(self, request):
+        user = request.user
+        serializer = self.serializer_class(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = UpdateUserInfosSerializer(
             request.user,
             data=request.data,
-            context={'user':request.user},
-            partial=True
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            context={'user': request.user},
+        )
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data , status=status.HTTP_200_OK)

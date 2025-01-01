@@ -97,6 +97,18 @@ const FriendServices = {
             throw error;
         }
     },
+
+    async declineFriendRequest(senderUsername: string) {
+        try {
+            const response = await frindsApi.delete('/friends/decline/', {
+                data: { sender: senderUsername }
+            });
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 };
 
 
