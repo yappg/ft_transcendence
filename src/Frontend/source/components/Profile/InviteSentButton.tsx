@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { AiOutlineLoading } from "react-icons/ai";
+import FriendServices from '@/services/friendServices';
 export const InviteSentButton = () => {
         const [clicked, setClicked] = useState(false);
         function handleClick() {
+            // try{
+            //     FriendServices.cancelFriendRequest(name);
+            //     setClicked(true);
+            // }catch{
+            //     console.log('error')
+            // }
             setClicked(true);
             setTimeout(() => {
                 setClicked(false);

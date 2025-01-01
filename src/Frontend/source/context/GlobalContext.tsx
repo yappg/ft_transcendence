@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import FriendServices from '@/services/friendServices';
 import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
@@ -135,7 +134,6 @@ const UserContext = createContext<UserContextType>({
   isLoading: false,
   error: null,
   chats: null,
-  players: null,
   messages: [],
   setMessages: () => {},
   setChats: () => {},
@@ -143,7 +141,6 @@ const UserContext = createContext<UserContextType>({
   notificationCount: 0,
   fetchCurrentUserDetails: async () => {},
   setOnlineStatus: async () => {},
-  fetchPlayers: async () => [],
   fetchNotifications: async () => {},
   setNotifications: () => {},
   setNotificationCount: () => {},
@@ -270,7 +267,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
   useEffect(() => {
     fetchCurrentUserDetails();
-    fetchPlayers();
     fetchNotifications();
     fetchChats();
     fetchPlayerMatches();
@@ -295,7 +291,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         error,
         setOnlineStatus,
         fetchCurrentUserDetails,
-        fetchPlayers,
         fetchNotifications,
         fetchChats,
         setNotifications,

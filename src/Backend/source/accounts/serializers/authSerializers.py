@@ -3,7 +3,7 @@ from ..models import *
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
 # from django.core.exceptions import Validate_email
- 
+
 ########################################################################################
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -82,74 +82,45 @@ class ValidateOTPSerializer(serializers.Serializer):
         if not attrs.get('otp_token'):# or not attrs.get('username'):
             raise serializers.ValidationError({"error":"OTP Token required"})
 
-
-
-###################### [.] It needs To be Optimized
-# class UpdateUserInfosSerializer(serializers.Serializer):
-    # username = serializers.CharField(required=False)
-    # avatar = serializers.ImageField(required=False)
-    # cover = serializers.ImageField(required=False)
-
-    # def validate(self, attrs):
-    #     if not attrs.get('username') and not attrs.get('avatar') and not attrs.get('cover'):
-    #         raise serializers.ValidationError({"error":"At least one field is required"})
-    #     if Player.objects.filter(username=attrs.get('username')).exists():
-    #             raise serializers.ValidationError({"error":"Username is already in use"})
-    #     return attrs
-
-    # def save(self, **kwargs):
-    #     user = self.context['user']
-    #     player = Player.objects.get(username=user.username)
-    #     if player is None:
-    #         raise serializers.ValidationError({"error":"User not found"})
-
-
-    #     if 'username' in self.validated_data:
-    #         player.username = self.validated_data['username']
-    #     if 'avatar' in self.validated_data:
-    #         player.avatar = self.validated_data['avatar']
-    #     if 'cover' in self.validated_data:
-    #         player.cover = self.validated_data['cover']
-    #     player.save()
-
 class UpdateUserInfosSerializer(serializers.ModelSerializer):
-    new_password = serializers.CharField(write_only=True)
+    old_password = serializers.CharField(write_only=True, required=False)
+    new_password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model=Player
-        fields=('username', 'email' ,'password', 'new_password')
+        model = Player
+        fields = ['username', 'email', 'verified_otp', 'enabled_2fa', 'old_password', 'new_password']
+        read_only_fields = ['username', 'email']
+        extra_kwargs = {
+            'username': {'required': False},
+            'email': {'required': False}
+        }
 
     def validate(self, attrs):
         user = self.context['user']
-        if 'username' in attrs:
-            if Player.objects.filter(username=attrs['username']).exists():
+
+        if ('old_password' in attrs and 'new_password' not in attrs) or \
+           ('new_password' in attrs and 'old_password' not in attrs):
+            raise serializers.ValidationError(
+                {"error": "Both old and new passwords must be provided together"}
+            )
+        if 'old_password' in attrs and 'new_password' in attrs:
+            if not user.check_password(attrs['old_password']):
                 raise serializers.ValidationError(
-                    {"error": "Username is already in use"}
-                )
-        # if 'email' in attrs:
-            # if Player.objects.filter(email=attrs['email']).exists():
-            #     raise serializers.ValidationError(
-            #         {"error": "email is already in use"}
-            #     )
-        if 'password' in attrs and 'new_password' in attrs:
-            #check for new_password validity 8alphaNumes and 1 special char etc
-            if not user.check_password(raw_password=attrs['password']):
-                raise serializers.ValidationError(
-                    {"error": "Invalid password"}
+                    {"error": "Current password is incorrect"}
                 )
         return attrs
 
-    def save(self, **kwargs):
-        user = self.context['user']
-        player = Player.objects.get(username=user.username)
-        if 'username' in self.validated_data:
-            player.username = self.validated_data['username']
-        if 'email' in self.validated_data:
-            player.email = self.validated_data['email']
-        # if 'avatar' in self.validated_data:
-        #     player.avatar = self.validated_data['avatar']
-        # if 'cover' in self.validated_data:
-        #     player.cover = self.validated_data['cover']
-        if 'password' in self.validated_data:
-            player.set_password(self.validated_data['new_password'])
-        player.save()
+    def update(self, instance, validated_data):
+        if not validated_data:
+            raise serializers.ValidationError({"error": "incorrect data"})
+
+        if 'old_password' in validated_data and 'new_password' in validated_data:
+            instance.set_password(validated_data['new_password'])
+            validated_data.pop('old_password')
+            validated_data.pop('new_password')
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
