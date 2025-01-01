@@ -1,6 +1,7 @@
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
-export const EditProfile = () => {
+export const EditProfile = ({setThisState}: {setThisState: (state: string) => void}) => {
+    setThisState('self');
     return (
         <Link
           href={'/settings'}
