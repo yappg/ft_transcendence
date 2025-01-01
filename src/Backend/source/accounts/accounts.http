@@ -148,19 +148,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 
 ######################
+GET http://localhost:8080/accounts/user-player/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTQ1MDgzLCJpYXQiOjE3MzU2ODU4ODMsImp0aSI6ImIzNTI0NmQ0MWVmZjQ2OGE4NTkzMDcyZjliMzViNDlhIiwidXNlcl9pZCI6Mn0.y6brdA78cMbRSmPo0yp3DmAdrDz3oeirbQ_uByGnKfw
+
+
+######################
 POST http://localhost:8080/accounts/user-player/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTQ1MDgzLCJpYXQiOjE3MzU2ODU4ODMsImp0aSI6ImIzNTI0NmQ0MWVmZjQ2OGE4NTkzMDcyZjliMzViNDlhIiwidXNlcl9pZCI6Mn0.y6brdA78cMbRSmPo0yp3DmAdrDz3oeirbQ_uByGnKfw
 Content-Type: application/json
 
 {
-    "new_password": "password2"
+    "email": "dasdsad@fasdasds.com"
 }
 
-
 ###########
-    "password": "password",
-    "username": "clixsadadent1XASDASDASD",
-
-
-###############################
-    # "email": "client1@gmail.com",
