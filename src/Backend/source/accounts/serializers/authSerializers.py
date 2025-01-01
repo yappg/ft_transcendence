@@ -103,13 +103,11 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "Both old and new passwords must be provided together"}
             )
-
         if 'old_password' in attrs and 'new_password' in attrs:
             if not user.check_password(attrs['old_password']):
                 raise serializers.ValidationError(
                     {"error": "Current password is incorrect"}
                 )
-
         return attrs
 
     def update(self, instance, validated_data):
