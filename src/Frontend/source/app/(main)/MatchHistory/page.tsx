@@ -23,8 +23,8 @@ export default function Page() {
       {PlayerMatches?.map((match: any) => (
           <MatchHistoryComponent
             key={match.id}
-            Player1={match.player1.display_name}
-            Player2={match.player2.display_name}
+            Player1={match.pldisplayayer1.display_name}
+            Player2={match.player2._name}
             ProfilePhoto1={match.player1.avatar}
             ProfilePhoto2={match.player2.avatar}
             level1={match.player1.level}

@@ -9,7 +9,7 @@ const FriendsComponent = ({
   name: string;
   ProfilePhoto: string;
   level: number;
-  wins: number;
+  wins?: number;
   losses?: number;
   messagesLink: JSX.Element;
   customStyles?: React.CSSProperties;

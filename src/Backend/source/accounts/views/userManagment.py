@@ -38,6 +38,7 @@ class PlayerProfileViewSet(viewsets.ModelViewSet):
         except PlayerProfile.DoesNotExist:
             raise NotFound("Player profile not found.")
 
+
 class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MatchHistory.objects.all()
     serializer_class = MatchHistorySerializer
@@ -135,7 +136,7 @@ class UserSettingsViewSet(viewsets.ModelViewSet):
             raise NotFound("Error retrieving user settings.")
 
 
-class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
+class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet): # paged better
     serializer_class = MatchHistorySerializer
     permission_classes = [IsAuthenticated]
 
@@ -143,11 +144,11 @@ class UserHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             user = self.request.user
             player_profile = PlayerProfile.objects.select_related('player').get(player=user)
-            return player_profile.all_matches()
+            return player_profile.all_matches()[:100]
         except PlayerProfile.DoesNotExist:
-            return []
+            return Response({"message": "Player profile not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
-            return []
+            return Response({"message": "An error occurred while fetching match history"}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -159,61 +160,6 @@ class UserAchivementViewSet(viewsets.ReadOnlyModelViewSet):
             profile = PlayerProfile.objects.select_related('player').get(player=user)
             return profile.all_achievements()
         except PlayerProfile.DoesNotExist:
-            return []
+            return Response({"message": "Player profile not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
-            return []
-
-# #--------------------------User Infos Update ------------------------------
-
-# class UpdateUserInfos(APIView):
-#     # permission_classes = [Allow]
-#     serializer_class = UpdateUserInfosSerializer
-
-#     def post(self, request):
-#         serializer = UpdateUserInfosSerializer(
-#             data=request.data,
-#             context={'user':request.user}
-#             )
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({'message': 'You Updated your informations'}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_200_OK)
-
-# {"username":"kad","password":"asd123"}
-
-
-# class PlayerProfileView(APIView):
-
-#     def get(self, request):
-#         permission_classes = [IsAuthenticated]
-#         userInfo = request.user
-#         serializer = PlayerSerializer(userInfo)
-#         return Response(serializer.data, status=200)
-
-
-# class PlayerProfileViewWithUserName(APIView):
-
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request, username):
-#         userInfo = get_object_or_404(Player, username=username)
-#         serializer = PlayerSerializer(userInfo)
-#         return Response(serializer.data, status=200)
-# # -----
-
-
-# class PlayerProfileViewWithId(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request, userId):
-#         userInfo = get_object_or_404(Player, id=userId)
-#         serializer = PlayerSerializer(userInfo)
-#         return Response(serializer.data, status=200)
-
-# # ----
-
-# class PlayersViewList(ListAPIView):
-#     permission_classes = [IsAuthenticated]
-#     model = Player
-#     serializer_class=PlayerSerializer
-#     queryset=Player.objects.all()
+            return Response({"message": "An error occurred while fetching achievements"}, status=status.HTTP_400_BAD_REQUEST)

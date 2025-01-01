@@ -22,10 +22,14 @@ load_dotenv(BASE_DIR.parent.parent / ".env")
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
 # Enable debug mode for development only (disable in production)
-DEBUG = True
+DEBUG = False
 
 # Allow all hosts for development (update for production)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'http://frontend:3000',
+    # 'http://127.0.0.1:3000',
+    # 'http://localhost:3000',
+]
 
 # ===========================
 # CORS CONFIGURATION
@@ -75,9 +79,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     # Security middleware
     'django.middleware.security.SecurityMiddleware',
-
-    # WhiteNoise for serving static files will be removed in production
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     # Prometheus monitoring (before other middlewares to capture metrics)
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
@@ -132,6 +133,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/0"],
+            "capacity": 1500,
+            "expiry": 50,
         },
     },
 }
@@ -251,6 +254,8 @@ OAUTH2_PROVIDER_42 = {
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
     # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
     'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
+    # 'CALLBACK_URL': 'https://127.0.0.1:8080/api/oauth/callback/42',
+
     'SCOPE': 'public',
 }
 
@@ -262,6 +267,8 @@ OAUTH2_PROVIDER_GOOGLE = {
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
     'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/google',
+    # 'CALLBACK_URL': 'https://127.0.0.1:8080/api/oauth/callback/google',
+
     # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
@@ -298,6 +305,8 @@ STATIC_URL = 'static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia/')
 MEDIA_URL = '/media/'
 
+# Add static root configuration
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # ===========================
 # MISCELLANEOUS SETTINGS
@@ -310,4 +319,18 @@ USE_I18N = True
 USE_TZ = True
 
 # Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+
+# Add security headers
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

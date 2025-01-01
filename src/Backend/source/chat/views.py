@@ -11,25 +11,34 @@ from django.db import transaction
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .models import ChatRoom
+from rest_framework.exceptions import status
 
 class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request):
-        user = request.user
-        chats = ChatRoom.objects.filter(senders=user)
-        serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
-        return Response(serializer.data)
+        try:
+            user = request.user
+            chats = ChatRoom.objects.filter(senders=user)
+            serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": "Failed to retrieve chats"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ChatMessagesView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request , chatId):
+    def get(self, request, chatId):
         try:
             chat = ChatRoom.objects.get(id=chatId)
+
+            if request.user not in chat.senders.all():
+                return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
+
+            messages = Message.objects.filter(chatroom=chat).order_by('send_at')
+            serializer = MessageSerializer(messages, many=True)
+            return Response(serializer.data)
+
         except ChatRoom.DoesNotExist:
-            return Response({"error": "Chat Not Found"}, status=404)
-        messages = Message.objects.filter(chatroom=chat).order_by('send_at')
-        serializer = MessageSerializer(messages, many=True)
-        return Response(serializer.data)
+            return Response({"error": "Chat Not Found"}, status=status.HTTP_404_NOT_FOUND)

@@ -1,7 +1,7 @@
 import pyotp
 import requests
 from drf_yasg.utils import swagger_auto_schema
- 
+
 # from django.conf import settings
 # from django.shortcuts import redirect
 # from django.core.cache import cache
@@ -139,8 +139,8 @@ class GenerateURI(APIView):
             return Response(serializer.errors, status=status.HTTP_200_OK)
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         user = Player.objects.get(username=request.data['username'])
-        if user == None:  
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK) 
+        if user == None:
+            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
         if user.enabled_2fa == True:
             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
@@ -278,7 +278,6 @@ class OAuth42CallbackView(APIView):
         if (provider != '42' and provider != 'google'):
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
-        # code = request.GET.get('code')
         code = request.get('code')
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
@@ -311,14 +310,21 @@ class OAuth42CallbackView(APIView):
 #--------------------------User Infos Update ------------------------------
 
 class UpdateUserInfos(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UpdateUserInfosSerializer
+
+    def get(self, request):
+        user = request.user
+        serializer = self.serializer_class(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = UpdateUserInfosSerializer(
+            request.user,
             data=request.data,
-            context={'user':request.user}
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'informations Succesfuly Updated'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_200_OK)
+            context={'user': request.user},
+        )
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data , status=status.HTTP_200_OK)
