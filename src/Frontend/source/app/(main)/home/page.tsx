@@ -7,8 +7,8 @@ import { useUser } from '@/context/GlobalContext';
 
 const Home = () => {
   const { user } = useUser();
-  const { setIsActivated } = useContext(SideBarContext);
   const router = useRouter();
+  const { setIsActivated } = useContext(SideBarContext);
 
   const handleClick = () => {
     const fetchLogout = async () => {
@@ -20,7 +20,6 @@ const Home = () => {
             'Content-Type': 'application/json',
           },
         });
-        console.log(response);
         
       } catch (error) {
         console.log(error);

@@ -1,12 +1,14 @@
 import FriendServices from "@/services/friendServices";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useState } from "react";
-export const AddButton = ({ name }: { name: string }) => {
+export const AddButton = ({ name, setThisState }: { name: string, setThisState: (state: string) => void }) => {
     const [clicked, setClicked] = useState(false);
+    console.log('name', name);
     function handleClick () {
         try{
             FriendServices.sendFriendRequest(name);
             setClicked(true);
+            setThisState('sent_invite');
         }catch{
             console.log('error')
         }
