@@ -31,7 +31,7 @@ class Ball:
 
     async def reset(self):
         self.position = Vector2D(37.5, 50)
-        self.velocity = Vector2D(0, 1)# Pixels per second
+        self.velocity = Vector2D(0, 20)# Pixels per second
 
 @dataclass 
 class Paddle:
@@ -55,17 +55,15 @@ class GamePlayer:
 class PingPongGame:
     def __init__(self, player1, player2, game_model_id: int):
         print(f'\033[31;1mCreating game with ID: {game_model_id} BETWEEN {player1.username} AND {player2.username}\033[0m')
-        self.game_id = game_model_id
-        self.ball = Ball(Vector2D(37.5, 50), Vector2D(0, 1)) 
 
-        # Initialize players with paddles at opposite sides
+        self.game_id = game_model_id
+        self.ball = Ball(Vector2D(37.5, 50), Vector2D(0, 20)) 
+
         self.player1 = player1
         self.player1.game_id = game_model_id
-        # self.player1.status = ''
         self.player1.paddle = Paddle(Vector2D(37.5, 3))  # Lower paddle 
         self.player2 = player2
         self.player2.game_id = game_model_id
-        # self.player2.status = ''
         self.player2.paddle = Paddle(Vector2D(37.5, 97))  # Upper paddle
 
         self.game_width = 75
@@ -76,18 +74,13 @@ class PingPongGame:
 
     def start_game(self):
         import time
-        # print("statuses:", self.player1.status, self.player2.status)
+
         while self.player1.status != 'ready' or self.player2.status != 'ready':
-            # print(f'{YELLOW}Player 1: {self.player1.status} Player 2: {self.player2.status} | Game status :{self.status}\n{RESET}')
             time.sleep(0.2)
         self.status = 'playing' 
         self.ball.reset()
 
     async def update(self, delta_time: float):
-        """Update game state. Returns True if the game state changed."""
-
-        # print (f'\033[31;1mUpdating game with ID: {self.status}\033[0m')
-        # print(f'Ball Position: ({self.ball.position.x}, {self.ball.position.y})')
 
         if self.status != 'playing':
             return False 

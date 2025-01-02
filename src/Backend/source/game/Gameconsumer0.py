@@ -18,6 +18,7 @@ RESET = '\033[0m'
 
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
+        self.game = None
         super().__init__(*args, **kwargs)
 
     async def connect(self):
@@ -27,7 +28,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         self.user = self.scope["user"]
         self.profile = await database_sync_to_async(PlayerProfile.objects.get)(player=self.user)
-        self.game = None
         self.opponent = None
         self.Gameplayer = None
         print(f'\n{GREEN}[User Authenticated {self.user}]{RESET}\n')
@@ -78,6 +78,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
+                    #TODO this Shit must be fixed 
                     await self.broadcast_ready()
                     await self.self_send_start_game()
                     # await asyncio.sleep(2)
@@ -95,6 +96,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
+
     async def share_paddle_move(self, new_x):
         await matchmake_system.channel_layer.send(
             self.opponent.channel_name,
@@ -107,16 +109,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             'type': 'UpdatePaddle',
             'new_x': event['new_x']
         }))
-
-
-        # (
-        #     f'game_{self.game_id}',
-        #     {
-        #         'type': 'game.move',
-        #         'opponent_id': opponent_id,
-        #         'new_x': new_x
-        #     }
-        # )
+        # (f'game_{self.game_id}',{'type': 'game.move','opponent_id': opponent_id,'new_x': new_x})
 
     async def game_found(self, event):
         await self.send(text_data=json.dumps( 
@@ -143,21 +136,18 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def start_game_loop(self):   
         # import time
-        await asyncio.create_task(self.broadcast_ball_move())
-        await asyncio.create_task(self.self_send_game_state())
-        while self.game and self.game.status == 'playing':
-            #print the ball position
-            # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
-            # delta_time = time.perf_counter()
-            delta_time = 0.1  # 60 FPS 1/90=0.0111
+        await self.broadcast_ball_move()
+        # await self.self_send_game_state()
+        while self.game and self.game.status == 'playing'\
+            and self.game.player1.status == 'ready' and self.game.player2.status == 'ready':
+
+            delta_time = 0.016 #60 FPS 1/90=0.0111
             if await self.game.update(delta_time):
-                #ball position
-                # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
-                await asyncio.create_task(self.broadcast_ball_move())
-                await asyncio.create_task(self.self_send_game_state())
-            # await self.broadcast_ball_move()
-            # await self.self_send_game_state()
-            # await asyncio.sleep(delta_time)
+                print(f'\n{YELLOW}[ball position :{self.game.ball.position.x}{self.game.ball.position.y}{RESET}\n')
+            #TODO shoulda fix the broadcast ball move to group
+                await self.broadcast_ball_move()
+                await self.self_send_game_state()
+            await asyncio.sleep(delta_time)
         if self.game and self.game.status == 'finished':
             await self.broadcast_ball_move(self.get_opponent_id())
             await self.self_send_game_state()
@@ -176,14 +166,24 @@ class GameConsumer(AsyncWebsocketConsumer):
         }))
 
     async def broadcast_ball_move(self):
-        # print( {
-        #         'type': 'ball.move',
-        #         'ball_position': self.game.get_state()
-        #     })
         if not self.game:
             return
-        await matchmake_system.channel_layer.group_send(
-            f'game_{self.game_id}',
+        # await matchmake_system.channel_layer.group_send(
+        #     f'game_{self.game_id}',
+        #     {
+        #         'type': 'ball.move',
+        #         'ball_position': self.game.get_state()
+        #     }
+        # )
+        await matchmake_system.channel_layer.send(
+            self.game.player1.channel_name,
+            {
+                'type': 'ball.move', 
+                'ball_position': self.game.get_state()
+            }
+        )
+        await matchmake_system.channel_layer.send(
+            self.game.player2.channel_name,
             {
                 'type': 'ball.move',
                 'ball_position': self.game.get_state()
@@ -221,7 +221,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 
     async def ball_move(self, event):
-        # print (event)
         await self.send(text_data=json.dumps({
             'type': 'UpdateBall',
             'ball_position': event['ball_position']
@@ -255,11 +254,29 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     # Implement game result saving lo   gic here
     async def disconnect(self, close_code):
-    # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
+    # TODO handle the unexpeted disconnects or cleanup after normal disconnect
         if self.game:
             self.game.status = 'finished'
-            #TODO update PlayerProfile
+            self.game.player1.status = 'waiting'
+            self.game.player2.status = 'waiting'
             del matchmake_system.games[self.game_id]
+            self.channel_layer.send(
+                self.opponent.channel_name,
+                {
+                    'type': 'game_end',
+                }
+            )
+            #TODO update PlayerProfile
+            print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
         await self.close()
 
+    async def game_end(self, event):
+        print(f'disconnect {self.user.username}')
+        self.close()
+
 # {"username":"kad","password":"qwe123"}
+
+
+#TODO handle asyncrounous ball movs
+#TODO handle the paddle movs
+#TODO handle the game end and disconnections

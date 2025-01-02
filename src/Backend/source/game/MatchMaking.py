@@ -42,7 +42,7 @@ class MatchMakingSystem:
         i = 0
         while self._running:
             try:
-                if i % 100 == 0:
+                if i % 10 == 0:
                     print('Matchmaking Loop')
                     print(f'Players in Queue: {len(self.players_queue)}')
                     print(f'Players indices in Queue: {self.players_queue.keys()}')
@@ -59,6 +59,8 @@ class MatchMakingSystem:
                         game_model = await self.create_game(player1_model, player2_model)
                         # game_model = await database_sync_to_async(Game.objects.create)(player1=player1_model, player2=player2_model)
 
+                        # import uuid
+                        # game = PingPongGame(player1, player2, game_model_id=int(uuid.uuid4()))
                         game = PingPongGame(player1, player2, game_model_id=game_model.id )
                         self.games[game.game_id] = game
 
@@ -91,6 +93,17 @@ class MatchMakingSystem:
         return Game.objects.create(player1=player1, player2=player2)
 
     async def notify_players(self, player1, player2, game_id):
+        # self.send.channel_layer.send(
+        #     f'game_{game_id}',
+        #     {
+        #         'type': 'game.found',
+        #         'opponent': player2.username,
+        #         'opponent_id': player2.id,
+        #         'top_paddle': False,
+        #         'game_id': game_id,
+        #         'message': "Game found, Get Ready to play!!"
+        #     }
+        # )
         await self.channel_layer.send(
             player1.channel_name,
             {
