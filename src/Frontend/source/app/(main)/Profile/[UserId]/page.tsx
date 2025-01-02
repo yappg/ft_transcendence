@@ -1,11 +1,13 @@
 'use client';
 import UserInfo from '@/components/Profile/UserInfo';
 import UserSummary from '@/components/Profile/UserSummary';
-import { useUser, User } from '@/context/GlobalContext';
+import { History, User, Player } from '@/context/GlobalContext';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import fetcherestprofiles from '@/services/fetcherestprofiles';
 import { useParams } from 'next/navigation';
+
+
 export default function Page() {
   const params = useParams();
   const id = Number(params.UserId);
@@ -42,8 +44,8 @@ export default function Page() {
         <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll custom-scrollbar-container">
           <UserSummary
             user={PlayerRestProfile as User}
-            userFriends={PlayerRestProfile?.friends}
-            userHistory={PlayerRestProfile?.matches_history}
+            userFriends={PlayerRestProfile?.friends as Player[]}
+            userHistory={PlayerRestProfile?.matches_history as History[]}
             is_private={false}
           />
         </div>
