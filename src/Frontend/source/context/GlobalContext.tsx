@@ -1,23 +1,12 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
 import { onlineService } from '@/services/onlineService';
 import { Achievement } from '@/constants/achivemement';
-
-
-
-const USER_BASE_URL = 'http://localhost:8080/accounts/';
-
-const USER_PROFILE_BASE_URL = '/user-profile/';
-
-const userApi = axios.create({
-  baseURL: USER_BASE_URL,
-  withCredentials: true,
-});
 
 export interface User {
   id: number;
@@ -110,20 +99,16 @@ interface UserContextType {
 }
 
 const userService = {
-  async getCurrentUserId(): Promise<User> {
-    const response = await userApi.get(`/user-profile/`);
-    return response.data;
-  },
   async getUserProfile(): Promise<User> {
-    const response = await userApi.get(`${USER_PROFILE_BASE_URL}`);
+    const response = await axios.get(`accounts/user-profile/`);
     return response.data;
   },
   async getPlayerMatches(): Promise<History[]> {
-    const response = await userApi.get(`/user-history/`);
+    const response = await axios.get(`accounts/user-history/`);
     return response.data;
   },
   async getPlayerLeaderBoard(): Promise<LeaderBoard[]> {
-    const response = await userApi.get(`/leaderboard/`);
+    const response = await axios.get(`accounts/leaderboard/`);
     return response.data;
   },
 };
@@ -166,7 +151,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<LeaderBoard[] | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  
+
 
   const setOnlineStatus = async () => {
     try {
@@ -297,4 +282,4 @@ export const useUser = () => {
   return context;
 };
 
-export { userApi, userService };
+export { axios, userService };

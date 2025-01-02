@@ -1,15 +1,10 @@
 
-import axios from 'axios';
-
-const frindsApi = axios.create({
-    baseURL: 'http://localhost:8080/relations/',
-    withCredentials: true
-});
+import axios from '@/lib/axios';
 
 const FriendServices = {
     async getPlayers() {
         try {
-            const response = await frindsApi.get('/players/');
+            const response = await axios.get('/relations/players/');
             return response.data;
         }
         catch (error) {
@@ -19,7 +14,7 @@ const FriendServices = {
 
     async getFriends() {
         try {
-            const response = await frindsApi.get('/friends/');
+            const response = await axios.get('/relations/friends/');
             return response.data;
         }
         catch (error) {
@@ -29,7 +24,7 @@ const FriendServices = {
 
     async getFriendRequests() {
         try {
-            const response = await frindsApi.get('/friends/pending/');
+            const response = await axios.get('/relations/friends/pending/');
             return response.data;
         }
         catch (error) {
@@ -39,7 +34,7 @@ const FriendServices = {
 
     async declineFriendRequest(receiverUsername: string) {
         try {
-            const response = await frindsApi.delete('/friends/pending/', {
+            const response = await axios.delete('/relations/friends/pending/', {
                 data: { decline_pending: receiverUsername }
             });
             return response.data;
@@ -51,7 +46,7 @@ const FriendServices = {
 
     async sendFriendRequest(receiverUsername: string) {
         try {
-            const response = await frindsApi.post('/friends/invite/', {
+            const response = await axios.post('/relations/friends/invite/', {
                 receiver: receiverUsername
             });
             return response.data;
@@ -62,7 +57,7 @@ const FriendServices = {
     },
     async cancelFriendRequest(receiverUsername: string) {
         try {
-            const response = await frindsApi.delete('/friends/invite/', {
+            const response = await axios.delete('/relations/friends/invite/', {
                 data: { cancel_invite: receiverUsername }
             });
             return response.data;
@@ -74,7 +69,7 @@ const FriendServices = {
 
     async acceptFriendRequest(senderUsername: string) {
         try {
-            const response = await frindsApi.post('/friends/accept/', {
+            const response = await axios.post('/relations/friends/accept/', {
                 sender: senderUsername
             });
             return response.data;
@@ -85,7 +80,7 @@ const FriendServices = {
     },
     async getBlocked() {
         try {
-            const response = await frindsApi.get('/friends/block/')
+            const response = await axios.get('/relations/friends/block/');
             return response.data;
         }
         catch(error) {
@@ -93,11 +88,10 @@ const FriendServices = {
         }
     },
 
-    async unblockFriend(unblockedUsername: string) {
+    async blockFriend(blockedUsername: string) {
         try {
-            console.log('Unblocking user:', unblockedUsername, 'called in friendServices')
-            const response = await frindsApi.delete('/friends/block/', {
-                 data: { unblock_user: unblockedUsername }
+            const response = await axios.patch('/relations/friends/block/', {
+                block_user: blockedUsername
             });
             return response.data;
         }
@@ -106,10 +100,10 @@ const FriendServices = {
         }
     },
 
-    async blockFriend(blockedUsername: string) {
+    async unblockFriend(unblockedUsername: string) {
         try {
-            const response = await frindsApi.patch('/friends/block/', {
-                 block_user: blockedUsername 
+            const response = await axios.delete('/relations/friends/block/', {
+                data: { unblock_user: unblockedUsername }
             });
             return response.data;
         }

@@ -1,29 +1,21 @@
-import axios from 'axios';
-import { Chat, Message, User } from '@/constants/chat';
-
-const CHAT_BASE_URL = 'http://localhost:8080/chat';
-
-
-const chatApi = axios.create({
-  baseURL: CHAT_BASE_URL,
-  withCredentials: true,
-});
+import axios from '@/lib/axios';
+import { Chat, Message } from '@/constants/chat';
 
 class ChatService {
   private sockets: Map<number, WebSocket> = new Map();
 
   async getChatList(): Promise<Chat[]> {
-    const response = await chatApi.get('/list/');
+    const response = await axios.get('/chat/list/');
     return response.data;
   }
 
   async getChatMessages(chatId: number): Promise<Message[]> {
-    const response = await chatApi.get(`/${chatId}/messages/`);
+    const response = await axios.get(`/chat/${chatId}/messages/`);
     return response.data;
   }
 
   // ------------------------------------------------------------------------
-  
+
   async createWebSocketConnection(
     chatId: number,
     onMessage: (message: any) => void
@@ -63,14 +55,14 @@ class ChatService {
   }
 
   // --------------------------------------------------------------------------
-  
+
   async sendMessage(
     chatId: number,
     content: string,
     userId: number,
     receiverId: number
   ): Promise<void> {
-      console.log('chatService.sendMessage called'); 
+      console.log('chatService.sendMessage called');
       const socket = this.sockets.get(chatId);
       if (!socket || socket.readyState !== WebSocket.OPEN) {
         throw new Error('WebSocket connection is not open');

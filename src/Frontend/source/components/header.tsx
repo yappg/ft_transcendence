@@ -6,16 +6,9 @@ import NotificationBell from  '@/components/notifications/notifications'
 import { SidebarLeft } from '@/components/ui/sidebar-left';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from './ui/input';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { IoCloseOutline } from "react-icons/io5";
-
-
-const search = axios.create({
-  baseURL: 'http://localhost:8080/accounts/',
-  withCredentials: true,
-});
-
 
 export interface Root {
   count: number
@@ -55,17 +48,17 @@ export const Header = () => {
 
   // ------Omar's code
   const { user, notifications, notificationCount, setNotifications, setNotificationCount } = useUser();
-  
+
 
   useEffect(() => {
     if (user) {
       const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}`);
       console.log('WebSocket connection established');
-  
+
       ws.onopen = () => {
         console.log('WebSocket connection opened');
       };
-  
+
       ws.onmessage = (event) => {
         console.log('WebSocket message received:', event.data);
         const data = JSON.parse(event.data);
@@ -73,15 +66,15 @@ export const Header = () => {
         setNotifications((prev: any) => [data, ...prev]);
         setNotificationCount((prev: any) => prev + 1);
       };
-  
+
       ws.onerror = (error) => {
         console.log('WebSocket error:', error);
       };
-  
+
       ws.onclose = (event) => {
         console.log('WebSocket connection closed:', event);
       };
-  
+
       return () => {
         ws.close();
         console.log('WebSocket connection closed by component unmount');
@@ -89,18 +82,18 @@ export const Header = () => {
     }
   }, [user, setNotifications, setNotificationCount]);
   // ----lol
-  
+
   if (!user)
     return (
       <h1 className="flex size-[200px] items-center justify-center rounded-md font-dayson text-[30px] text-gray-600">
         Loading...
       </h1>
     );
-  
+
 
   const fetchUsers = async (value: string) => {
     try {
-      const res = await search.get(`search-users/?search=${value}`);
+      const res = await axios.get(`accounts/search-users/?search=${value}`);
       return res.data;
     }  catch (error) {
       console.error('Error fetching users:', error);
@@ -109,10 +102,10 @@ export const Header = () => {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;
     setValue(searchValue);
-  
+
     if (searchValue) {
       try {
-        const resData = await fetchUsers(searchValue); 
+        const resData = await fetchUsers(searchValue);
         if (resData && resData.results) {
           setFilteredPlayers(resData.results);
         }
