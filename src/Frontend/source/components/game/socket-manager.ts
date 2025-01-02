@@ -78,9 +78,9 @@ class SocketManager extends WebSocket {
         const scale_y = this.pixiManager.screenHeight / 100;
         console.log('scale_y: ', scale_y);
         if (this.pixiManager.isTopPaddle) {
-          this.pixiManager.dy = -2 * scale_y;
+          this.pixiManager.dy = -20;
         } else {
-          this.pixiManager.dy = 2 * scale_y;
+          this.pixiManager.dy = 20;
         }
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
@@ -94,9 +94,9 @@ class SocketManager extends WebSocket {
           this.updateBallPosition(message.ball_position);
           // });
           break;
-      // case 'UpdatePaddle':
-        // this.updatePaddlePosition(message);
-        // break;
+      case 'UpdatePaddle':
+        this.updatePaddlePosition(message);
+        break;
       case 'scoreUpdate':
         // this.pixiManager.updateScore(message);
         break;
