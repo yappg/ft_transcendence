@@ -23,7 +23,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
     size: z.number().max(5 * 1024 * 1024),
   });
   const updateState = (key: keyof typeof profileState, value: any) => {
-    setProfileState((prev) => ({ ...prev, [key]: value }));
+    setProfileState((prev: any) => ({ ...prev, [key]: value }));
   };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -99,7 +99,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
       </div>
       <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
         <ImageCard
-          selectedImage={profileState?.avatar}
+          selectedImage={`http://localhost:8080${profileState?.avatar}`}
           handleImageChange={handleImageChange}
           profileError={profileState.profileError}
         />

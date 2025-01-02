@@ -24,9 +24,8 @@ const AddFriends = () => {
   const [message, setMessage] = useState('');
   const [searchUser, setsearchUser] = useState('');
   const [FiltredUsers, setFiltredUsers] = useState([]);
-  const {players, fetchPlayers}= useUser();
   const [value, setValue] = useState('');
-   const [filteredPlayers, setFilteredPlayers] = useState<Result>([]);
+   const [filteredPlayers, setFilteredPlayers] = useState<Result[]>([]);
   
 
   const sendFriendRequest = async (receiverUsername: string) => {
@@ -36,7 +35,7 @@ const AddFriends = () => {
       if (response.message) {
         console.log(response.message);
         setMessage(`Friend request sent to ${receiverUsername}`)
-        fetchPlayers().then((data)=>{
+        fetchPlayers().then((data: any)=>{
           setFiltredUsers(data)
         });
       } else if (response.error) {
