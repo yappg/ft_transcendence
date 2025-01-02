@@ -7,7 +7,7 @@ export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(4);
-  }, []);
+  }, [setIsActivated]);
   const {PlayerLeaderBoard} = useUser();
   console.log('this is the fetched leaderboard2: ', PlayerLeaderBoard);
   if(!PlayerLeaderBoard)

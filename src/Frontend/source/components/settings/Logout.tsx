@@ -9,9 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { BsBoxArrowLeft } from 'react-icons/bs';
+import { TbLogout2 } from 'react-icons/tb';
+import { Card } from '@/components/settings/Card';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+
 
 const Logout = () => {
   const router = useRouter();
@@ -32,21 +33,17 @@ const Logout = () => {
       }
     };
     fetchLogout();
-    router.push('/home');
+    router.push('/auth/login');
   };
   return (
     <AlertDialog>
       <AlertDialogTrigger
         asChild
-        className="bg-transparent border-none size-full hover:bg-[#000000] transition-all duration-300"
+        className=" bg-transparent size-full p-0"
       >
-        <Button
-          variant="outline"
-          className="size-full flex items-center justify-start gap-11 px-12"
-        >
-          <BsBoxArrowLeft size={30} color="white" />
-          <h1 className="text-white font-dayson xl:flex hidden">Lougout</h1>
-        </Button>
+        <div className="size-full">
+          <Card title="Logout" Icon={TbLogout2}  path="" />
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-[#28AFB0] dark:bg-[#C1382C]">
         <AlertDialogHeader>
