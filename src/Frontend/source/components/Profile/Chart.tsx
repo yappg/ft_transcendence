@@ -41,7 +41,6 @@ export const Chart = ({
   total_games: number,
   stats: Statistics
 }) => {
-  console.log(stats, total_games);
   if (!stats?.earth_ratio && !stats?.air_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
     return <div className="w-full h-full flex items-center justify-center">
       <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
