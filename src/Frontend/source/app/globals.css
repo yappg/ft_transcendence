@@ -93,19 +93,19 @@ body {
 
 /* hide scrollbar */
 
-.custom-scrollbar-container {
+/* .custom-scrollbar-container {
   height: 100%;
   overflow: auto;
-}
-
+} */
+/* 
 .custom-scrollbar-container::-webkit-scrollbar {
   display: none;
-}
+} */
 
-.custom-scrollbar-container {
+/* .custom-scrollbar-container {
   scrollbar-width: none;
   -ms-overflow-style: none;
-}
+} */
 
 @keyframes moveToLeft {
   0% {

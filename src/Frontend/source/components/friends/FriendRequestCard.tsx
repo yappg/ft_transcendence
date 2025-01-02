@@ -111,7 +111,3 @@ const FriendRequestCard = ({
 };
 
 export default FriendRequestCard;
-function toast(arg0: { title: string; description: any; variant: string; className: string; }) {
-  throw new Error('Function not implemented.');
-}
-
