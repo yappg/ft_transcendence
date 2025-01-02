@@ -1,4 +1,4 @@
-import { History } from '@/context/GlobalContext';
+import { History, useUser } from '@/context/GlobalContext';
 import MatchHistoryBoard from './MatchHistoryBoard';
 
 export const MatchHistory = ({ PlayerMatches }: { PlayerMatches: History[] }) => {
@@ -13,8 +13,8 @@ export const MatchHistory = ({ PlayerMatches }: { PlayerMatches: History[] }) =>
           PlayerMatches?.map((user) => (
             <MatchHistoryBoard
               key={user.id}
-              name={user?.display_name}
-              Profile={user?.avatar}
+              name={user.player2.display_name}
+              Profile={user.player2.avatar}
               Player1score={user?.player1_score || 0}
               Player2score={user?.player2_score || 0}
             />
