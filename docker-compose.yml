@@ -5,16 +5,13 @@ services:
     #   privileged: true
     #   volumes:
     #     - /:/rootfs:ro
-    #     - /var/run/:/var/run:ro
+    #     - /var/run:/var/run:ro
     #     - /sys:/sys:ro
+    #     - /var/run/docker.sock:/var/run/docker.sock:ro
     #     - /dev/disk/:/dev/disk:ro
-    #     - /Users/${USER}/.docker/run/:/var/run/:ro
     #   networks:
     #     - transcendence
-    #   ports:
-    #     - 8000:8080
     #   restart: unless-stopped
-
 
     # web:
     #   container_name: nginx
@@ -25,17 +22,15 @@ services:
     #   networks:
     #     - transcendence
     #   ports:
-    #     - 80:80
-    #     - 443:443
-    #   # depends_on:
-    #   #   frontend:
-    #   #       condition: service_healthy
-    #   #   backend:
-    #   #       condition: service_healthy
-    #   #   grafana:
-    #   #       condition: service_healthy
-    #   #   kibana:
-    #   #       condition: service_healthy
+    #     - 8080:80
+    #     - "4433:443"
+    #   depends_on:
+    #     frontend:
+    #         condition: service_healthy
+    #     backend:
+    #         condition: service_healthy
+    #     grafana:
+    #         condition: service_healthy
     #   healthcheck:
     #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
     #     interval: 10s
@@ -43,6 +38,9 @@ services:
     #     retries: 3
     #     start_period: 5s
     #   restart: always
+    #   volumes:
+    #     - static_files:/app/staticfiles:ro
+    #     - media_files:/app/UsersMedia:ro
 
     # web-exporter:
     #   container_name: nginx-exporter
@@ -50,7 +48,7 @@ services:
     #   command: --nginx.scrape-uri=http://web:8080/stub_status
     #   networks:
     #     - transcendence
-    #   depends_on:
+    #   depends_on:b
     #     web:
     #       condition: service_healthy
     #   restart: unless-stopped
@@ -60,28 +58,25 @@ services:
       container_name: frontend
       build:
         context: ./src/Frontend
-        target: ${ENV:-development}
+        target: ${ENV:-production}
         dockerfile: Dockerfile
       image: frontend
-# DEV ==============>
+# # DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
-        - /app/.next
-        - /app/node_modules
-# ==================>
+        # - /app/.next
+        # - /app/node_modules
+# # ==================>
       networks:
         - transcendence
       ports:
         - 3000:3000
-      # depends_on:
-      #     backend:
-      #         condition: service_healthy
-      # healthcheck:
-      #     test: ["CMD", ""]
-      #     interval: 1m30s
-      #     timeout: 30s
-      #     retries: 5
-      #     start_period: 30s
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 5s
       restart: always
 
 
@@ -89,7 +84,7 @@ services:
       container_name: backend
       build:
         context: ./src/Backend
-        target: ${ENV:-development}
+        target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
       environment:
@@ -106,6 +101,8 @@ services:
       volumes:
         - ./src/Backend/source:/app/source:rw
         - ./src/Backend/config:/app/config:rw
+        # - static_files:/app/staticfiles
+        # - media_files:/app/UsersMedia
 # ==================>
       networks:
         - transcendence
@@ -116,12 +113,12 @@ services:
           condition: service_healthy
         database:
           condition: service_healthy
-      # healthcheck:
-      #     test: ["CMD", ""]
-      #     interval: 1m30s
-      #     timeout: 30s
-      #     retries: 5
-      #     start_period: 30s
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 5s
       restart: always
 
 
@@ -242,8 +239,14 @@ services:
     #     - "./src/Services/grafana:/etc/grafana/provisioning:ro"
     #   networks:
     #     - transcendence
-    #   depends_on:
-    #     - prometheus
+    #   # depends_on:
+    #   #   - prometheus
+    #   healthcheck:
+    #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
+    #     interval: 10s
+    #     timeout: 5s
+    #     retries: 3
+    #     start_period: 5s
     #   restart: unless-stopped
 
 
@@ -264,19 +267,26 @@ volumes:
     #     type: none
     #     device: ${PWD}/volumes/postgres
 
-  prometheus-data:
-    name: prometheus
-    # driver: local
-    # driver_opts:
-    #     o: bind
-    #     type: none
-    #     device: ${PWD}/volumes/prometheus
+  # prometheus-data:
+  #   name: prometheus
+  #   # driver: local
+  #   # driver_opts:
+  #   #     o: bind
+  #   #     type: none
+  #   #     device: ${PWD}/volumes/prometheus
 
-  alert-manager-data:
-    name: alert-manager
+  # alert-manager-data:
+  #   name: alert-manager
 
-  grafana-data:
-    name: grafana
+  # grafana-data:
+  #   name: grafana
+
+  # static_data:
+  #   name: static_files
+
+
+  # media_data:
+  #   name: media_files
 
 networks:
   transcendence:

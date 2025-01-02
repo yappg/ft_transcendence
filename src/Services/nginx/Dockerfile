@@ -3,8 +3,8 @@ FROM nginx:alpine
 RUN apk update && \
     apk add curl openssl && \
     rm -rf /var/cache/apk/* \
-    rm -rf /etc/nginx/conf.d/default.conf 
-    # rm -rf /usr/share/nginx/html/*
+    rm -rf /etc/nginx/conf.d/default.conf \
+    rm -rf /usr/share/nginx/html/*
 
 COPY ./config/nginx.conf /etc/nginx/conf.d/endpoint.conf
 

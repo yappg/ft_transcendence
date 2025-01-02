@@ -1,5 +1,5 @@
 ######################################
-# Stage 1: Development stage
+# Stage 1: Development stage (for local development)
 ######################################
 
 FROM python:alpine AS development
@@ -23,7 +23,7 @@ CMD ["sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 || echo
 # CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
-# Stage 2: Production build stage
+# Stage 2: Production build stage (for nginx)
 ######################################
 
 FROM python:alpine AS production
@@ -32,13 +32,15 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
 
-COPY . .
-
 WORKDIR /app/source
+
+COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && chmod -R +x /app
+
+COPY . .
 
 EXPOSE 8080
 
