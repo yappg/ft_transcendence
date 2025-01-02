@@ -3,24 +3,24 @@ from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
 from dotenv import load_dotenv
- 
+
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
-# =========================== 
-  
+# ===========================
+
 # Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from the .env file if it exists will be added after TODO
-load_dotenv(BASE_DIR.parent.parent / ".env") 
+load_dotenv(BASE_DIR.parent.parent / ".env")
 
 # ===========================
-# SECURITY SETTINGS 
+# SECURITY SETTINGS
 # ===========================
- 
+
 # Secret key for cryptographic signing
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-  
+
 # Enable debug mode for development only (disable in production)
 DEBUG = True
 
@@ -38,10 +38,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 ]
-    
+
 # ===========================
 # APPLICATION CONFIGURATION
-# ===========================  
+# ===========================
 
 INSTALLED_APPS = [
     # API documentation
@@ -106,12 +106,12 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
-} 
+    "SIGNING_KEY": SECRET_KEY,
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',   
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'accounts.authenticate.CotumAuthentication',
@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-       
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -204,7 +204,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 12,  # Enforces a minimum length of 8 characters
+            'min_length': 8,  # Enforces a minimum length of 8 characters
         },
     },
     {
@@ -291,10 +291,10 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = 'static/'
-MEDIA_URL = '/UsersMedia/'
-MEDIA_ROOT = os.path.join(Path(__file__).resolve().parent.parent.parent, 'UsersMedia/')
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR.parent, 'staticfiles')
+MEDIA_URL = '/Media/'
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'UsersMedia')
 
 # ===========================
 # MISCELLANEOUS SETTINGS
@@ -310,7 +310,6 @@ USE_TZ = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #TODO fixing tokens being sent in the Authorization header
-#TODO implement the jwt sliding token 
+#TODO implement the jwt sliding token
 #TODO finalise the oauth2 implementation
 #TODO understand the asyncio role
-

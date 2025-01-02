@@ -64,8 +64,8 @@ services:
 # # DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
-        # - /app/.next
-        # - /app/node_modules
+        - /app/.next
+        - /app/node_modules
 # # ==================>
       networks:
         - transcendence
@@ -88,7 +88,9 @@ services:
         dockerfile: Dockerfile
       image: backend
       environment:
-        JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+        SIGNING_KEY: ${SIGNING_KEY}
+        ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+        CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
         CLIENT_ID_42: $${CLIENT_ID_42}
         CLIENT_SECRET_42: $${CLIENT_SECRET_42}
         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}

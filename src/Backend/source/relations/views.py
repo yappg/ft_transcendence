@@ -5,10 +5,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework import status
 from .models import *
 from .serializers import *
-from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 from accounts.serializers.userManagmentSerlizers import PlayerRelationsSerializer
 
+# from drf_yasg.utils import swagger_auto_schema
 
 class NotificationListView(ListAPIView):
     serializer_class = NotificationSerializer
@@ -70,6 +70,8 @@ class FriendsListView(APIView):
             return Response({"message": "Friend removed"}, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
