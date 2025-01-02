@@ -9,7 +9,7 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
   const BASE_URL = 'http://localhost:8080/accounts/2fa/';
   try {
     const response = await axios.post(`${BASE_URL}${endpoint}/`, {
-      username: name,
+      // username: name,
       otp_token: value,
     });
     return response;

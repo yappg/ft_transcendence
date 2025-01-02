@@ -35,9 +35,6 @@ const Home = () => {
     <div className="size-full md:py-4 md:pl-6 overflow-auto">
       <h1 className="text-white">Welcome {user?.username}</h1>
       <h1 className="text-white">You are logged in</h1>
-      <button onClick={handleClick} className="h-6 w-14 rounded-md bg-blue-400">
-        logout
-      </button>
     </div>
   );
 };

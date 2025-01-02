@@ -5,7 +5,6 @@
 import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/game/pixi-manager';
 import { useGame } from '@/context/GameContext';
 import React, { useRef, useEffect } from 'react';
-import socketManager from './socket-manager';
 import { useUser } from '@/context/GlobalContext';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
@@ -14,7 +13,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
-  const socketRef = useRef<WebSocket | null>(null);
+  // const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (mode.indexOf('local') !== -1) {
@@ -36,7 +35,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
       }
     }
     return () => {
-      if (gameManagerRef.current?.app) {
+      if (gameManagerRef?.current?.app) {
         gameManagerRef.current.app.destroy(true);
       }
     };

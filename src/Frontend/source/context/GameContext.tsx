@@ -22,6 +22,8 @@ export interface GameContextType {
   setGameMap: (map: 'earth' | 'water' | 'fire' | 'air' | 'simple') => void;
   opponent: User | null;
   setOpponent: (opponent: User | null) => void;
+  TournementTree: any;
+  setTournementTree: (tree: any) => void;
   // GameWinner: string | null,
   // setGameWinner: (winner: string | null) => void,
 }
@@ -41,6 +43,8 @@ const GameContext = createContext<GameContextType>({
   setGameMap: () => {},
   opponent: null,
   setOpponent: () => {},
+  TournementTree: null,
+  setTournementTree: () => {},
   // GameWinner:null,
   // setGameWinner: () => {},
 });
@@ -53,6 +57,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [gameMode, setGameMode] = useState<'local' | 'online'>('local');
   const [gameMap, setGameMap] = useState<'earth' | 'water' | 'fire' | 'air' | 'simple'>('simple');
   const [opponent, setOpponent] = useState<User | null>(null);
+  const [TournementTree, setTournementTree] = useState<any>(null);
   // const [GameWinner, setGameWinner] = useState<string | null>(null);
   return (
     <GameContext.Provider
@@ -71,6 +76,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setGameMap,
         opponent,
         setOpponent,
+        TournementTree,
+        setTournementTree,
         // setGameWinner,
         // GameWinner,
       }}
@@ -89,4 +96,5 @@ export const useGame = () => {
 
   return context;
 };
-// export default GameContext;
+
+export default GameContext;

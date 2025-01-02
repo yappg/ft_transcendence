@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useUser, User } from '@/context/GlobalContext';
+import { useUser, User, Player } from '@/context/GlobalContext';
 import { useGame } from '@/context/GameContext';
 import { useEffect } from 'react';
 import { RoundsProps } from '@/context/GameContext';
@@ -48,16 +48,16 @@ const PlayerScore = ({
   );
 };
 
-const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
-  const { user } = useUser();
+const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User | null}) => {
   const game = useGame();
+  const p1 = player1 ? player1 : { username: 'player1' } as User;
+  const p2 = player2 ? player2 : { username: 'player2' } as User;
 
-  console.log('moooooode', mode);
   useEffect(() => {
     if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
       const newRound = {
         round: game.Rounds.length + 1,
-        winner: game.GameScore[0] > game.GameScore[1] ? 'Player 1' : 'Player 2',
+        winner: game.GameScore[0] > game.GameScore[1] ? p1.username : p2.username,
         score: game.GameScore,
       };
 
@@ -82,7 +82,7 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
 
       <div className="size-full flex flex-col items-center justify-center gap-2">
         <div className="flex w-full items-center justify-around p-2 gap-15 font-dayson text-[20px] dark:text-white md:text-[35px]">
-          <PlayerScore player={user} score={game.GameScore[0]} isme={true} />
+          <PlayerScore player={p1} score={game.GameScore[0]} isme={true} />
           <div className="flex h-full text-[10px] w-[100px]  items-center justify-center rounded-[10px] border-2 border-white-crd text-center text-white-crd p-2">
             {game.GameState === 'start' ? (
               <div className="flex lg:flex-col">
@@ -96,15 +96,15 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
               <div>get ready</div>
             )}
           </div>
-          {mode.indexOf('local') === -1 ? (
+          {/* {mode.indexOf('local') === -1 ? (
             <PlayerScore player={game.opponent} score={game.GameScore[1]} isme={false} />
-          ) : (
+          ) : ( */}
             <PlayerScore
-              player={{ username: 'player2' } as User}
+              player={p2}
               score={game.GameScore[1]}
               isme={false}
             />
-          )}
+          {/* )} */}
         </div>
 
         <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd lg:flex">

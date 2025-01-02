@@ -13,7 +13,6 @@ import { TbLogout2 } from 'react-icons/tb';
 import { Card } from '@/components/settings/Card';
 import { useRouter } from 'next/navigation';
 
-
 const Logout = () => {
   const router = useRouter();
 
@@ -37,12 +36,9 @@ const Logout = () => {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        asChild
-        className=" bg-transparent size-full p-0"
-      >
+      <AlertDialogTrigger asChild className=" size-full bg-transparent p-0">
         <div className="size-full">
-          <Card title="Logout" Icon={TbLogout2}  path="" />
+          <Card title="Logout" Icon={TbLogout2} path="" />
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-[#28AFB0] dark:bg-[#C1382C]">

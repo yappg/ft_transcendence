@@ -11,7 +11,7 @@ interface InputBarProps {
   className?: string;
 }
 
-function InputBar({ Icon, placeholder, value, type, setValue, error, className }: InputBarProps) {
+function InputBar({ Icon, placeholder, value, type, setValue, className }: InputBarProps) {
   return (
     <div
       className={`${className} flex w-full items-center gap-5 rounded-full border border-[rgb(0,0,0,0.8)] px-6 py-3 focus-within:border-none focus-within:bg-[rgb(0,0,0,0.4)] dark:border dark:border-[rgb(255,255,255,0.6)] dark:bg-[rgb(0,0,0,0.2)] dark:focus-within:bg-[rgb(0,0,0,0.6)]`}
