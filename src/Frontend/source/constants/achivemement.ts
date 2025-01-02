@@ -9,4 +9,5 @@ export interface Achievement {
   iconUrl: string;
   gained: boolean;
   dateEarned: Date | null;
+  ratio: number;
 }

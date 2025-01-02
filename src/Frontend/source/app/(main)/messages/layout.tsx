@@ -36,11 +36,8 @@ export default function ChatLayout({
       setListChat(chats);
     }
   }, [chats]);
-
- 
   //TO_DO: The tournament system should be able to warn users expected for the next
   //   game.
-  
   // The user should be able to access other players profiles through the chat interface.
 
   return (
