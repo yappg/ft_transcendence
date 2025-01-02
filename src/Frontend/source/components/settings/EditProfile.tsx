@@ -31,7 +31,7 @@ const EditProfile = () => {
     oldPass: '',
     newPass: '',
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isClicked, setIsClicked] = useState(false);
   function handleSave() {
     if (Object.keys(errors).length > 0) {
@@ -57,7 +57,7 @@ const EditProfile = () => {
       setNewProfile({ ...newProfile, oldPass: '', newPass: '' });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = error.errors.reduce((acc, curr) => {
+        const fieldErrors = error.errors.reduce((acc: any, curr: any) => {
           acc[curr.path[0]] = curr.message;
           return acc;
         }, {});

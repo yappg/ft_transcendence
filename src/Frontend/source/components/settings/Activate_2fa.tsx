@@ -1,5 +1,20 @@
 import { Switch } from '@/components/ui/switch';
-export const Activate_2fa = () => {
+interface TwoFactorProps {
+  profileState: {
+    avatar: string;
+    cover: string;
+    profileError: string;
+    coverError: string;
+    username: string;
+    display_name: string;
+    password: string;
+    NewPassword: string;
+    is_private: boolean;
+  };
+  setProfileState: React.Dispatch<React.SetStateAction<any>>;
+}
+
+export const Activate_2fa = ({profileState, setProfileState}: TwoFactorProps) => {
     return (
         <div className="w-full py-6 flex flex-wrap items-center justify-start h-fit gap-10 border-2 bg-[#00000099] rounded-[50px] shadow-2xl p-7 border-[#B8B8B8]">
         <div className="w-full h-[12%] flex items-center">

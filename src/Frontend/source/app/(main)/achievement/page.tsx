@@ -62,11 +62,11 @@ const AchievementsPage: React.FC = () => {
 
   return (
     <div className="overflow-y-auto custom-scrollbar-container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-wrap p-4 gap-2 size-full">
-      {achievements.map((achievement: any) => (
+      {achievements.map((achievement: any, index) => (
         <AchievementBadge 
-          key={achievement.id} 
+          key={index} 
           title={achievement.title} 
-          description={achievement.description} 
+          description={achievement.description}
           points={achievement.points} 
           progress={achievement.progress} 
           xpReward={achievement.xpReward}

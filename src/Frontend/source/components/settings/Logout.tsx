@@ -57,7 +57,7 @@ const Logout = () => {
           <AlertDialogAction onClick={handleClick}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
+    </AlertDialog> 
   );
 };
 export default Logout;
