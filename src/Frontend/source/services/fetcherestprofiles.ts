@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { User } from '@/context/GlobalContext';
 
 const URL = 'http://localhost:8080/accounts/';
 
@@ -7,6 +6,7 @@ const friendsrestprofilesAPI = axios.create({
     baseURL: URL,
     withCredentials: true,
 });
+
 const fetcherestprofiles = {
     async getRestUser(id:number) {
         try {

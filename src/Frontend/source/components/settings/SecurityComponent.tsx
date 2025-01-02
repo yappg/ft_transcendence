@@ -15,7 +15,7 @@ export const SecurityComponent = ({profileState, setProfileState, errors, setErr
   errors: Record<string, string>, setErrors: Function}
 ) => {
   const updateState = (key: keyof typeof profileState, value: any) => {
-    setProfileState((prev) => ({ ...prev, [key]: value }));
+    setProfileState((prev: any) => ({ ...prev, [key]: value }));
   };
   return (
     <div className="w-full py-6 flex flex-wrap items-center justify-start h-fit gap-10 border-2 bg-[#00000099] rounded-[50px] shadow-2xl p-7 border-[#B8B8B8]">

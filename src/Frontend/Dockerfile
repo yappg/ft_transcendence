@@ -11,8 +11,6 @@ COPY ./source/package.json ./source/yarn.lock ./
 
 RUN yarn install
 
-RUN chmod -R +w ./source/*
-
 EXPOSE 3000
 
 CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 5; done"]

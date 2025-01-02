@@ -1,13 +1,10 @@
 
 import axios from 'axios';
-import Cookies from 'js-cookie';
-
 
 const frindsApi = axios.create({
     baseURL: 'http://localhost:8080/relations/',
     withCredentials: true
 });
-
 
 const FriendServices = {
     async getPlayers() {
@@ -33,6 +30,18 @@ const FriendServices = {
     async getFriendRequests() {
         try {
             const response = await frindsApi.get('/friends/pending/');
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
+
+    async declineFriendRequest(receiverUsername: string) {
+        try {
+            const response = await frindsApi.delete('/friends/pending/', {
+                data: { decline_pending: receiverUsername }
+            });
             return response.data;
         }
         catch (error) {
@@ -109,18 +118,6 @@ const FriendServices = {
         }
     },
 
-    async declineFriendRequest(senderUsername: string) {
-        try {
-            const response = await frindsApi.delete('/friends/decline/', {
-                data: { sender: senderUsername }
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    }
 };
-
 
 export default FriendServices;

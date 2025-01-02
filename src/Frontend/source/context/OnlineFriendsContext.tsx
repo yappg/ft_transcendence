@@ -21,7 +21,7 @@ export const OnlineFriendsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!user) return;
     
     const ws = onlineService.createWebSocketConnection(user);
-      
+ 
     
 
     return () => ws.closeConnection();

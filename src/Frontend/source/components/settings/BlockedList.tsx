@@ -43,7 +43,7 @@ const BlockedList = () => {
               <BlockedComponent
                 key={index}
                 name={user?.username}
-                ProfilePhoto={user?.avatar}
+                ProfilePhoto={`http://localhost:8080${user?.avatar}`}
                 onUnblock={handleUnblock}
               />
             ))

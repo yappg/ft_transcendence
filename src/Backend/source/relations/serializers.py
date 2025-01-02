@@ -10,6 +10,24 @@ class FriendInvitationSerializer(serializers.ModelSerializer):
         fields = ['sender', 'id', 'receiver', 'created_at']
 
 
+class FriendPendingSerializer(serializers.ModelSerializer):
+    sender_display_name = serializers.SerializerMethodField()
+    sender_avatar = serializers.SerializerMethodField()
+    sender_level = serializers.SerializerMethodField()
+
+
+    class Meta:
+        model = FriendInvitation
+        fields = ['sender', 'receiver', 'created_at', 'sender_display_name', 'sender_avatar', 'sender_level']
+    
+    def get_sender_display_name(self, obj):
+        return obj.sender.profile.display_name
+    def get_sender_avatar(self, obj):
+        return obj.sender.profile.avatar.url
+    def get_sender_level(self, obj):
+        return obj.sender.profile.level
+
+
 class ProfileFriendsSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     display_name = serializers.SerializerMethodField()
