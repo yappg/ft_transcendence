@@ -47,7 +47,8 @@ urlpatterns = [
 
 # JWT tokens
     path('JWT/token/', TokenObtainPairView.as_view(), name='token'),
-    path('JWT/token/refresh/', TokenRefreshView.as_view(), name='token'),
+    path('JWT/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('JWT/token/validate/', TokenValidateView.as_view(), name='token_validate'),
 
 #2fa
     path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),

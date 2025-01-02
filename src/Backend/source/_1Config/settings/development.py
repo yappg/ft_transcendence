@@ -19,7 +19,7 @@ load_dotenv(BASE_DIR.parent.parent / ".env")
 # ===========================
 
 # Secret key for cryptographic signing
-SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+SECRET_KEY = os.getenv('SIGNING_KEY')
 
 # Enable debug mode for development only (disable in production)
 DEBUG = True
@@ -106,7 +106,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
+    "SIGNING_KEY": SECRET_KEY,
 }
 
 REST_FRAMEWORK = {
@@ -264,12 +264,28 @@ OAUTH2_PROVIDER_GOOGLE = {
 }
 
 # ===========================
-# URL CONFIGURATION
+# TEMPLATES & URL CONFIGURATION
 # ===========================
 
 ROOT_URLCONF = '_1Config.urls'
 WSGI_APPLICATION = '_1Config.wsgi.application'
 ASGI_APPLICATION = '_1Config.asgi.application'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # ===========================
 # STATIC & MEDIA FILES
@@ -278,7 +294,8 @@ ASGI_APPLICATION = '_1Config.asgi.application'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia')
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'UsersMedia')
+print(f" =============== ====== debug = {MEDIA_ROOT}")
 
 # MEDIA_ROOT = os.path.join(Path(__file__).resolve().parent.parent.parent, 'UsersMedia/')
 

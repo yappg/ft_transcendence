@@ -86,6 +86,7 @@ interface UserProfile extends User {
     const response = await userApi.get(`/user-profile/`);
     return response.data;
   },
+
   async getUserProfile(): Promise<UserProfile> {
     const response = await userApi.get(`${USER_PROFILE_BASE_URL}`);
     return response.data;
@@ -127,13 +128,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }: { 
   const [error, setError] = useState<Error | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [notificationCount, setNotificationCount] = useState<number | null>(null); 
+  const [notificationCount, setNotificationCount] = useState<number | null>(null);
   const [PlayerMatches, setPlayerMatches] = useState<User[] | null>(null);
   const [PlayerLeaderBoard, setPlayerLeaderBoard] = useState<User[] | null>(null);
-  
+
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  
+
 
   const setOnlineStatus = async () => {
     try {

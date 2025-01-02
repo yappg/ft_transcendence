@@ -1,11 +1,6 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import UserActivityBoard from './UserActivityBoard';
-import { MatchHistory } from '@/constants/MatchHistory';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import FriendServices from '@/services/friendServices';
-import { toast } from '@/hooks/use-toast';
 import MatchHistoryBoard from './MatchHistoryBoard';
 import { Chart } from "@/components/Profile/Chart";
 import { ChartLine } from '@/components/Profile/ChartLine';
@@ -13,7 +8,7 @@ import Rating from './rating';
 import { useUser } from '@/context/GlobalContext';
 const UserSummary = (): JSX.Element => {
   const { user: userProfile } = useUser();
-  if (!userProfile) return <div>Loading...</div>; 
+  if (!userProfile) return <div>Loading...</div>;
   const {total_games, achievements } = userProfile;
   // const {players} = useUser();
   const {PlayerMatches} = useUser();

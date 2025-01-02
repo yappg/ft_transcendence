@@ -13,7 +13,7 @@ class TokenAuthMiddleware(BaseMiddleware):
     def get_user(self, user_id):
         from accounts.models import Player
         try:
-            return Player.objects.get(id=user_id) 
+            return Player.objects.get(id=user_id)
         except Player.DoesNotExist:
             # in this case actually it must not accept the connection
             #Q: alternative for this instead of returning AnonymousUser() is to not accept the connection
@@ -49,4 +49,3 @@ class TokenAuthMiddleware(BaseMiddleware):
         else:
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
-
