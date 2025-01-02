@@ -307,7 +307,12 @@ class OAuth42CallbackView(APIView):
         )
         return resp
 
-#--------------------------User Infos Update ------------------------------
+
+# class TokenValidateView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         return Response({'message': 'Token is valid'}, status=status.HTTP_200_OK)
 
 class UpdateUserInfos(APIView):
     permission_classes = [IsAuthenticated]

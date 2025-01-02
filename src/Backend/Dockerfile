@@ -37,10 +37,11 @@ WORKDIR /app/source
 COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app
+    && pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . ../
+
+RUN chmod -R +x /app/config
 
 EXPOSE 8080
 

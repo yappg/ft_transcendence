@@ -1,5 +1,4 @@
 
-
 class OnlineService {
   private socket: WebSocket | undefined
 
@@ -8,7 +7,6 @@ class OnlineService {
 
       this.closeConnection();
 
-  
       this.socket = new WebSocket(`ws://localhost:8080/ws/online/`)
 
       this.socket.onopen = () => {
@@ -39,7 +37,6 @@ class OnlineService {
 
   closeConnection() {
 
-
     if (this.socket) {
       this.socket.close()
       this.socket = undefined
@@ -48,4 +45,3 @@ class OnlineService {
 }
 
 export const onlineService = new OnlineService()
-
