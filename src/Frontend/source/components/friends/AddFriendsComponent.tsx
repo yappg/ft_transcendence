@@ -1,6 +1,5 @@
 // import { UsersList } from '@/constants/UsersList';
 
-import Form from 'react-bootstrap/Form';
 import FriendRequestCard from './FriendRequestCard';
 import { IconPlus } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -11,12 +10,11 @@ import { useUser } from '@/context/GlobalContext';
 const AddFriends = () => {
   const [message, setMessage] = useState('');
 
-  const [UsersList, setUserList] = useState([]);
   const [searchUser, setsearchUser] = useState('');
   const [FiltredUsers, setFiltredUsers] = useState([]);
   const {players, fetchPlayers}= useUser();
 
-  
+
   useEffect(() => {
     fetchPlayers().then((data)=>{
       setFiltredUsers(data)
