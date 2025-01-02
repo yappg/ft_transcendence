@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { Achievement } from '@/constants/achivemement'
-import { useUser } from '@/context/GlobalContext';
 import AchievementBadge from '@/components/achievements/badge';
 
 const AchievementsPage: React.FC = () => {
@@ -10,19 +9,11 @@ const AchievementsPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const USER_BASE_URL = 'http://localhost:8080/accounts/';
-
-
-  const userApi = axios.create({
-      baseURL: USER_BASE_URL,
-      withCredentials: true,
-  });
-
   const getAchievements = async (): Promise<Achievement[]> => {
-      const response = await userApi.get(`/user-achievements/`);
+      const response = await axios.get(`/accounts/user-achievements/`);
       return response.data;
   };
-    
+
   const fetchAchievements = async () => {
     setIsLoading(true);
     setError(null);
@@ -63,15 +54,15 @@ const AchievementsPage: React.FC = () => {
   return (
     <div className="overflow-y-auto custom-scrollbar-container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-wrap p-4 gap-2 size-full">
       {achievements.map((achievement: any) => (
-        <AchievementBadge 
-          key={achievement.id} 
-          title={achievement.title} 
-          description={achievement.description} 
-          points={achievement.points} 
-          progress={achievement.progress} 
+        <AchievementBadge
+          key={achievement.id}
+          title={achievement.title}
+          description={achievement.description}
+          points={achievement.points}
+          progress={achievement.progress}
           xpReward={achievement.xpReward}
-          ratio= {achievement.ratio} 
-          iconUrl={"http://localhost:8080" + achievement.iconUrl} 
+          ratio= {achievement.ratio}
+          iconUrl={"http://localhost:8080" + achievement.iconUrl}
         />
       ))}
     </div>

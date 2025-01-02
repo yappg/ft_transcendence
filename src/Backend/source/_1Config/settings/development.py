@@ -292,12 +292,9 @@ TEMPLATES = [
 # ===========================
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR.parent, 'staticfiles')
 MEDIA_URL = '/Media/'
 MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'UsersMedia')
-print(f" =============== ====== debug = {MEDIA_ROOT}")
-
-# MEDIA_ROOT = os.path.join(Path(__file__).resolve().parent.parent.parent, 'UsersMedia/')
 
 # ===========================
 # MISCELLANEOUS SETTINGS

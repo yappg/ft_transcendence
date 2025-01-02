@@ -13,17 +13,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
-    console.log('Clicked on ID:', id);
-    setIsActivated(id);                                                                                              
+    setIsActivated(id);
   };
 
   return (
     <UserProvider>
-      <div className=" grid h-screen w-full grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] gap-[8px] overflow-auto bg-linear-gradient lg:p-8 dark:bg-linear-gradient-dark">
+      <div className=" grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] md:gap-[8px] overflow-auto bg-linear-gradient md:p-8 dark:bg-linear-gradient-dark">
         <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
-        <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-start-1 flex items-start justify-start pt-2 transition-all duration-300 border-2">
+        <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-start-1 flex items-start justify-start pt-2 transition-all duration-300">
           <Header />
         </div>
         <div
@@ -45,11 +44,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RightBar handleRightClick={handleRightClick} />
       </div>
 
-      <div className="md:col-span-10 md:col-start-2 col-start-0  col-span-full row-span-8 row-start-2 col-end-11 grid grid-cols-[1fr] grid-rows-[1fr]">
+      <div className="md:col-span-10 md:col-start-2 col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr]">
         {children}
       </div>
     </div>
     </UserProvider>
   );
 }
-

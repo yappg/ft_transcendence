@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import FriendRequestCard from './FriendRequestCard';
-import AddFriends from './AddFriendsComponent';
 import {useEffect} from 'react';
 import FriendServices from '@/services/friendServices';
 import { toast } from '@/hooks/use-toast';
 import { FaCommentDots } from 'react-icons/fa';
 import { useUser } from '@/context/GlobalContext';
+import AddFriends from './AddFriendsComponent';
 
 
 const UserFriendsNav = (): JSX.Element => {
