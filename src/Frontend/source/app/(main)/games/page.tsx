@@ -39,7 +39,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/earth.png"
           title="Earth"
           description="earth could shake or make or fake"
-          url={`/Game-Arena?mode=${mode}&map=earth`}
+          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=earth` :`/Game-Arena?mode=${mode}&map=earth`}
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -48,7 +48,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/air.png"
           title="Air"
           description="Air: The invisible killer we can not live without"
-          url={`/Game-Arena?mode=${mode}&map=air`}
+          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=air` :`/Game-Arena?mode=${mode}&map=air`}
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -57,7 +57,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/fire.png"
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
-          url={`/Game-Arena?mode=${mode}&map=fire`}
+          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=fire` :`/Game-Arena?mode=${mode}&map=fire`}
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -66,7 +66,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/water.png"
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url={`/Game-Arena?mode=${mode}&map=water`}
+          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=water` : `/Game-Arena?mode=${mode}&map=water`}
         />
       </SwiperSlide>
     </Swiper>
@@ -96,17 +96,9 @@ const GameModeSwiper = () => {
       <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
-          title="toutnement"
+          title="Tournement"
           description=""
           url={`/games?mode=tournoment`}
-        />
-      </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
-        <ModesCard
-          height="100px"
-          title="Local Tournement"
-          description=""
-          url={`/games?mode=tournoment-local`}
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
