@@ -99,7 +99,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
       </div>
       <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
         <ImageCard
-          selectedImage={`http://localhost:8080${profileState?.avatar}`}
+          selectedImage={`http://localhost:8080/${profileState?.avatar}`}
           handleImageChange={handleImageChange}
           profileError={profileState.profileError}
         />
