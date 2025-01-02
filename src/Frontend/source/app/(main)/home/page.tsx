@@ -97,7 +97,7 @@ const Home = () => {
           <DashboardCard />
         </div>
         <div className="w-full h-[15%] flex items-center justify-between px-7 bg-black-crd rounded-[30px]">
-          <HomeAchievement 
+          {/* <HomeAchievement 
           title={user?.achievements[0].achievement.name}
           description={user?.achievements[0].achievement.description}
           points={user?.achievements[0].achievement.points}
@@ -105,7 +105,7 @@ const Home = () => {
           xpReward={user?.achievements[0].achievement.xp_gain}
           ratio={user?.achievements[0].achievement.ratio}
           iconUrl={"http://localhost:8080" + user?.achievements[0].image}
-          />
+          /> */}
           <Link href={'/achievement'} className='size-[80px]'>
             <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
           </Link>

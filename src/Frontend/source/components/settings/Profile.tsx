@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
 import ProfileInformations from './ProfileInformayions';
 import { SecurityComponent } from './SecurityComponent';
+import SettingsServices from '@/services/settingsServices';
 
 export default function ProfileInfo() {
   const { user } = useUser();
@@ -74,6 +75,7 @@ export default function ProfileInfo() {
         NewPassword: profileState.NewPassword,
       };
       setProfileState(updatedProfileState as any);
+      SettingsServices.updateSettings(updatedProfileState);
       setIsClicked(true);
       setTimeout(() => {
         setIsClicked(false);
