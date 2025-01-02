@@ -22,7 +22,8 @@ def get_env_variable(var_name):
 # SECURITY SETTINGS
 # ===========================
 
-SECRET_KEY = get_env_variable('SECRET_KEY')
+SECRET_KEY = os.getenv('SIGNING_KEY')
+
 DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
@@ -34,7 +35,7 @@ CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # TODO willnginx
+SECURE_HSTS_SECONDS = 0  # TODO will nginx
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 
@@ -130,7 +131,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [f"redis://:{get_env_variable('REDIS_PASS')}@{get_env_variable('REDIS_HOST', 'cache')}:6379/0"],
+            "hosts": [f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/0"],
             "capacity": 1500,
             "expiry": 10,
         },
@@ -145,51 +146,51 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': get_env_variable('POSTGRES_DB'),
         'USER': get_env_variable('POSTGRES_USER'),
         'PASSWORD': get_env_variable('POSTGRES_PASSWORD'),
-        'HOST': get_env_variable('POSTGRES_HOST', 'database'),
-        'PORT': get_env_variable('POSTGRES_PORT', '5432'),
-        'CONN_MAX_AGE': None,
-        'OPTIONS': {
-            'MAX_CONNS': 20,
-            'REUSE_CONNS': 10,
-        }
+        'HOST': 'database',
+        'PORT': '5432',
+        'CONN_MAX_AGE': 200,
     }
 }
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@{get_env_variable('REDIS_HOST', 'cache')}:6379/1",
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/1",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'SOCKET_CONNECT_TIMEOUT': 5,
             'SOCKET_TIMEOUT': 5,
             'RETRY_ON_TIMEOUT': True,
-            'MAX_CONNECTIONS': 1000,
-            'CONNECTION_POOL_KWARGS': {'max_connections': 100},
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
         }
     },
     'players_queue': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@{get_env_variable('REDIS_HOST', 'cache')}:6379/2",
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/2",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'SOCKET_CONNECT_TIMEOUT': 5,
             'SOCKET_TIMEOUT': 5,
             'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
         }
     },
     'games_pool': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@{get_env_variable('REDIS_HOST', 'cache')}:6379/3",
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/3",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'SOCKET_CONNECT_TIMEOUT': 5,
             'SOCKET_TIMEOUT': 5,
             'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
         }
     },
 }
@@ -202,37 +203,36 @@ SESSION_CACHE_ALIAS = "default"
 # ===========================
 
 AUTH_USER_MODEL = 'accounts.Player'
-SITE_ID = 1
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        # 'OPTIONS': {
-        #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-        # },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 8,
-        },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        # 'OPTIONS': {
-        #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-        # },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#         # 'OPTIONS': {
+#         #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
+#         # },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#         'OPTIONS': {
+#             'min_length': 8,
+#         },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#         # 'OPTIONS': {
+#         #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
+#         # },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 
 # ===========================
 # OAUTH2 CONFIGURATION
@@ -260,12 +260,28 @@ OAUTH2_PROVIDER_GOOGLE = {
 
 
 # ===========================
-# URL CONFIGURATION
+# TEMPLATES & URL CONFIGURATION
 # ===========================
 
 ROOT_URLCONF = '_1Config.urls'
 WSGI_APPLICATION = '_1Config.wsgi.application'
 ASGI_APPLICATION = '_1Config.asgi.application'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # ===========================
 # STATIC & MEDIA FILES
@@ -283,13 +299,13 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 # EMAIL CONFIGURATION
 # ===========================
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = get_env_variable('EMAIL_HOST')
-EMAIL_PORT = int(get_env_variable('EMAIL_PORT', '587'))
-EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = get_env_variable('DEFAULT_FROM_EMAIL')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = get_env_variable('EMAIL_HOST')
+# EMAIL_PORT = int(get_env_variable('EMAIL_PORT', '587'))
+# EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = get_env_variable('DEFAULT_FROM_EMAIL')
 
 # ===========================
 # MISCELLANEOUS SETTINGS

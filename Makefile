@@ -12,6 +12,13 @@ RESET := \033[0m
 
 ##########################################    BUILD    ##########################################
 
+# check for .env file before building with shell script
+# @if [ ! -f .env ]; then \
+# 	echo "$(RED)>$(YELLOW) .env file not found, please create one before building$(RESET)"; \
+# 	exit 1;\
+# fi
+# @cat .env | grep "ENV=" | echo "$(YELLOW)>$(GREEN) ENV=$(ENV) $(RESET)"
+
 build: down
 	docker compose -p $(PROJECT) -f $(COMPOSE) up --build -d && \
 	$(MAKE) logs
