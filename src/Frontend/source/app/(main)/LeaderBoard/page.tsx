@@ -23,7 +23,7 @@ export default function Page() {
               <div className="bg-black-crd dark:bg-transparent w-full h-fit">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
-                  ProfilePhoto={PlayerLeaderBoard[0].avatar}
+                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[0].avatar}`}
                   level={PlayerLeaderBoard[0].level}
                   wins={PlayerLeaderBoard[0].games_won}
                   losses={PlayerLeaderBoard[0].games_loss}
@@ -40,7 +40,7 @@ export default function Page() {
                   PlayerLeaderBoard.length > 1 &&
                 <FriendsComponent
                   name={PlayerLeaderBoard[1].display_name}
-                  ProfilePhoto={PlayerLeaderBoard[1].avatar}
+                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[1].avatar}`}
                   level={PlayerLeaderBoard[1].level}
                   wins={PlayerLeaderBoard[1].games_won}
                   losses={PlayerLeaderBoard[1].games_loss}
@@ -58,7 +58,7 @@ export default function Page() {
                   PlayerLeaderBoard.length > 2 &&
                 <FriendsComponent
                   name={PlayerLeaderBoard[2].display_name}
-                  ProfilePhoto={PlayerLeaderBoard[2].avatar}
+                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[2].avatar}`}
                   level={PlayerLeaderBoard[2].level}
                   wins={PlayerLeaderBoard[2].games_won}
                   losses={PlayerLeaderBoard[2].games_loss}
@@ -78,7 +78,7 @@ export default function Page() {
                 <FriendsComponent
                   key={index + 4}
                   name={friend.display_name}
-                  ProfilePhoto={friend.avatar}
+                  ProfilePhoto={`http://localhost:8080${friend.avatar}`}
                   level={friend.level}
                   wins={friend.games_won}
                   losses={friend.games_loss}

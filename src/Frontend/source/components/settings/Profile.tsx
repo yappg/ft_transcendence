@@ -73,7 +73,7 @@ export default function ProfileInfo() {
         password: profileState.password,
         NewPassword: profileState.NewPassword,
       };
-      setProfileState(updatedProfileState);
+      setProfileState(updatedProfileState as any);
       setIsClicked(true);
       setTimeout(() => {
         setIsClicked(false);

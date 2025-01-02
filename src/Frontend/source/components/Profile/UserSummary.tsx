@@ -2,11 +2,12 @@
 import { Chart } from '@/components/Profile/Chart';
 import { ChartLine } from '@/components/Profile/ChartLine';
 import Rating from './rating';
-import { Player, User, useUser } from '@/context/GlobalContext';
+import { Player, User, History } from '@/context/GlobalContext';
 import { Achievments } from './Achievments';
 import { JSX } from 'react';
 import { MatchHistory } from './MatchHistory';
 import { Friends } from './Friends';
+
 const UserSummary = ({
   user,
   is_private,
