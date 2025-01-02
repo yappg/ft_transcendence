@@ -48,7 +48,7 @@ services:
     #   command: --nginx.scrape-uri=http://web:8080/stub_status
     #   networks:
     #     - transcendence
-    #   depends_on:
+    #   depends_on:b
     #     web:
     #       condition: service_healthy
     #   restart: unless-stopped

@@ -27,8 +27,8 @@ export function NavSecondary({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <a href={item.url}>
-                  <item.icon />
-                  <span className="font-dayson">{item.title}</span>
+                  <item.icon className="dark:text-white text-black"/>
+                  <span className="font-dayson dark:text-white text-black">{item.title}</span>
                 </a>
               </SidebarMenuButton>
               {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}

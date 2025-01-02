@@ -4,7 +4,10 @@
 import { MdLanguage } from 'react-icons/md';
 import { MyButton } from '@/components/generalUi/Button';
 import Card from '@/components/generalUi/Card';
+import Cookies from 'js-cookie';
 const LandingCard = () => {
+  Cookies.remove('access_token');
+  Cookies.remove('refresh_token');
   return (
     <div className="z-[2] flex  size-full flex-col items-start justify-start overflow-auto md:items-center md:justify-start">
       <div className="z-[3] mb-[-100px] flex h-[280px] w-full items-end justify-center md:mb-[-120px]">

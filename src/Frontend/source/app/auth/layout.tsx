@@ -14,13 +14,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   const [isLeft, setIsLeft] = useState(true);
   const pathname = usePathname();
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     setIsAnimating(true);
-
     const timer = setTimeout(() => {
       setIsLeft(pathname === '/auth/signup');
       setIsAnimating(false);
