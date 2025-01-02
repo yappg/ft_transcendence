@@ -357,7 +357,7 @@ export class OnlineGameManager extends PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = (baseScreenWidth / this.screenWidth) * 4;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 4;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -399,20 +399,22 @@ export class OnlineGameManager extends PixiManager {
   }
 
 
-  
+    
     handlegameupdates() {
 
       if (!this.ball || !this.app) return;
+      console.log(`width: ${this.screenWidth}, height: ${this.screenHeight}`);
 
-      // const baseSpeed = 0.5;
-      const baseSpeed = Math.sqrt(this.dx**2 + this.dy**2);
-      // this.ballMovementSpeed = Math.sqrt(this.dx**2 + this.dy**2);
+      const scale_x = this.screenWidth / 75; 
+      const scale_y = this.screenHeight / 100;
 
-      const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
-      const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
+      const frontendDeltaTime = 0.016 // this.app.ticker.FPS; // Calculate frontend delta time
+      console.log('frontendDeltaTime:', frontendDeltaTime);
+
+      this.ball.x =this.ball.x + (this.dx *frontendDeltaTime * scale_x) //(frontendDeltaTime/backendDeltaTime);
+      this.ball.y =this.ball.y + (this.dy *frontendDeltaTime * scale_y) //(frontendDeltaTime/backendDeltaTime);
       
-      this.ballMovementSpeed = (baseScreenDiagonal / currentScreenDiagonal) * baseSpeed;
-      this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
+      this.updateBallPosition(this.ball.x , this.ball.y);
     }
 
     handleWaitingState() {
