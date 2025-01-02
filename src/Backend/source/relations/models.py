@@ -36,7 +36,6 @@ class Friends(models.Model):
         chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
         chat_room, created = ChatRoom.objects.get_or_create(
             name=chat_name,
-            defaults={'friends': self}
         )
         if created:
             chat_room.senders.add(self.friend_requester, self.friend_responder)

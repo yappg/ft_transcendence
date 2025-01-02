@@ -10,13 +10,13 @@ export const MatchHistory = ({ PlayerMatches }: { PlayerMatches: History[] }) =>
             <h1 className="text-white font-bold text-center">No Match History</h1>
           </div>
         ) : (
-          PlayerMatches?.map((user) => (
+          PlayerMatches?.map((match) => (
             <MatchHistoryBoard
-              key={user.id}
-              name={user.player2.display_name}
-              Profile={user.player2.avatar}
-              Player1score={user?.player1_score || 0}
-              Player2score={user?.player2_score || 0}
+              key={match.id}
+              name={match?.player1?.display_name}
+              Profile={match?.player1?.avatar}
+              Player1score={match?.player1_score || 0}
+              Player2score={match?.player2_score || 0}
             />
           ))
         )}
