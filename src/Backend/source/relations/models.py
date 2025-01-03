@@ -34,6 +34,8 @@ class Friends(models.Model):
         super().save(*args, **kwargs)
 
         chat_name = f"{self.friend_requester}_{self.friend_responder}_room"
+
+        # TODO: check for duplicates
         chat_room, created = ChatRoom.objects.get_or_create(
             name=chat_name,
             # defaults={'friends': self}

@@ -62,7 +62,7 @@ const AchievementsPage: React.FC = () => {
           progress={achievement.progress}
           xpReward={achievement.xpReward}
           ratio= {achievement.ratio}
-          iconUrl={"http://localhost:8080" + achievement.iconUrl}
+          iconUrl={process.env.NEXT_PUBLIC_HOST + achievement.iconUrl}
         />
       ))}
     </div>

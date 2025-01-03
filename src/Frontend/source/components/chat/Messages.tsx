@@ -31,7 +31,7 @@ export const Messages: React.FC<MessagesProps> = ({
   const [currentUserId, setCurrentUserId] = useState<number | null>(null)
   const [showMoreOptions, setShowMoreOptions] = useState(false)
   const { chats, user, setChats } = useUser()
-  
+
   const handleBlockUser = async () => {
     if (isBlocked === true) {
         console.log('Unblocking user:', currentChat?.receiver.username)
@@ -62,7 +62,7 @@ export const Messages: React.FC<MessagesProps> = ({
         }
       }
     }
-    
+
     const handleGameInvite = async () => {
       try {
       console.log('Sending game invite to:', currentChat?.receiver.id)
@@ -71,7 +71,7 @@ export const Messages: React.FC<MessagesProps> = ({
       console.log('Failed to send game invite', error)
     }
   }
-  
+
   useChatWebSocket({
     chatId,
     currentUserId,
@@ -79,7 +79,7 @@ export const Messages: React.FC<MessagesProps> = ({
     setMessages,
     setChats,
   })
-  
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newMessage.trim()) return
@@ -92,7 +92,7 @@ export const Messages: React.FC<MessagesProps> = ({
       console.error('Failed to send message', error)
     }
   }
-  
+
   React.useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -126,7 +126,7 @@ export const Messages: React.FC<MessagesProps> = ({
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
-              src={'http://localhost:8080' + currentChat?.receiver.avatar}
+              src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
             />
@@ -199,4 +199,3 @@ export const Messages: React.FC<MessagesProps> = ({
     </div>
   )
 }
-

@@ -24,13 +24,13 @@ FROM node:alpine AS builder
 
 ENV NODE_ENV=production
 
-WORKDIR /app/source
+WORKDIR /app
 
 COPY ./source/package.json ./source/yarn.lock ./
 
-RUN yarn install --frozen-lockfile --production
+RUN yarn install --frozen-lockfile
 
-COPY . /
+COPY . ./
 
 RUN yarn build
 
@@ -44,10 +44,15 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+COPY ./source/package.json ./source/yarn.lock ./
+
+RUN yarn install --frozen-lockfile --production
+
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
 
-ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["yarn", "start"]
 # CMD [ "tail", "-f", "/dev/null" ]

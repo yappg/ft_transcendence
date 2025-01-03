@@ -115,9 +115,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
     matches_history = serializers.SerializerMethodField()
+
     avatar = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
-
+    avatar_upload = serializers.ImageField(write_only=True, required=False)
+    cover_upload = serializers.ImageField(write_only=True, required=False)
 
     last_login = serializers.SerializerMethodField()
     is_private = serializers.SerializerMethodField()
@@ -195,11 +197,15 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_is_private(self, obj):
         return obj.settings.private_profile
 
-    def get_cover(self, obj):
-        return obj.cover.url
-
     def get_avatar(self, obj):
-        return obj.avatar.url
+        if obj.avatar:
+            return obj.avatar.url
+        return None
+
+    def get_cover(self, obj):
+        if obj.cover:
+            return obj.cover.url
+        return None
 
     def get_achievements(self, obj):
         LIMIT = 15
@@ -248,7 +254,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("max bio size is 500 characters")
         return value
 
-    def validate_avatar(self, value):
+    def validate_avatar_upload(self, value):
         size_max = 2 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
@@ -260,7 +266,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
         return value
 
-    def validate_cover(self, value):
+    def validate_cover_upload(self, value):
         size_max = 5 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
@@ -272,6 +278,13 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
         return value
 
+    def update(self, instance, validated_data):
+        if 'avatar_upload' in validated_data:
+            instance.avatar = validated_data.pop('avatar_upload')
+        if 'cover_upload' in validated_data:
+            instance.cover = validated_data.pop('cover_upload')
+
+        return super().update(instance, validated_data)
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
 

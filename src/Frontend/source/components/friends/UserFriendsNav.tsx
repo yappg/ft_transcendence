@@ -39,7 +39,7 @@ const UserFriendsNav = (): JSX.Element => {
 
   useEffect(() => {
     const displayInvit = async () => {
-      
+
       try {
         const response = await FriendServices.getFriendRequests();
         console.log('Friends Requests\n', response.data);
@@ -61,17 +61,17 @@ const UserFriendsNav = (): JSX.Element => {
     }
     displayInvit();
   }, []);
-  
+
   useEffect(() => {
     const displayFriends = async () => {
-      
+
       try {
         const response = await FriendServices.getFriends();
         console.log('Friends:',response.data);
         if (response.message){
           setFriends(response.data);
         }
-        else if (response.error) { 
+        else if (response.error) {
           console.log(response.error)
         }
       } catch (error) {
@@ -85,7 +85,7 @@ const UserFriendsNav = (): JSX.Element => {
     }
     displayFriends();
   }, []);
-  
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   const headers = [
@@ -93,7 +93,7 @@ const UserFriendsNav = (): JSX.Element => {
     { title: 'Invitations', href: '' },
     { title: 'Add New', href: '' },
   ];
-  
+
   const handleRequestAccepted = (username: string) => {
     const acceptedRequest = Requests.find((req: any) => req.sender === username);
     if (acceptedRequest) {
@@ -118,7 +118,7 @@ const UserFriendsNav = (): JSX.Element => {
             <FriendsComponent
               key={index}
               name={friend.display_name}
-              ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+              ProfilePhoto={process.env.NEXT_PUBLIC_HOST + friend.avatar}
               level={friend.level}
               messagesLink={
                 <div className="flex items-center justify-center">
