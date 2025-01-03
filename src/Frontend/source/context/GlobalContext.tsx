@@ -13,7 +13,7 @@ export interface User {
   username: string;
   xp: number;
   statistics: Statistics;
-  achievements: Achievement[];
+  achievements: any[];
   last_login: number;
   is_online: boolean;
   display_name: string;
