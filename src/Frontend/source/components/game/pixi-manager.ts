@@ -281,7 +281,7 @@ export class LocalGameManager extends PixiManager {
     if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 75;
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.1;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -357,7 +357,7 @@ export class OnlineGameManager extends PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 4;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.4;
 
     if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
@@ -398,8 +398,6 @@ export class OnlineGameManager extends PixiManager {
     }
   }
 
-
-    
     handlegameupdates() {
 
       if (!this.ball || !this.app) return;

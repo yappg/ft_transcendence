@@ -11,7 +11,6 @@ COPY ./source/package.json ./source/yarn.lock ./
 
 RUN yarn install
 
-RUN chmod -R +w ./source/*
 
 EXPOSE 3000
 

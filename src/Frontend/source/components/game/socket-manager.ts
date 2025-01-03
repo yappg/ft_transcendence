@@ -30,7 +30,7 @@ class SocketManager extends WebSocket {
   }
 
   sendData(data: any) {
-    this.send(JSON.stringify({ data }));
+    this.send(JSON.stringify( data ));
   }
 
   updateBallPosition(data: any) {
@@ -45,15 +45,16 @@ class SocketManager extends WebSocket {
       console.log('scale_x:', scale_x);
       console.log('scale_y:', scale_y);
       // console.log('new_x:', data);
-      this.pixiManager.dx = data.dx * scale_x;
       if (this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
         this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
+        this.pixiManager.dx = -data.dx;
         this.pixiManager.dy = -data.dy;
       }
       if (!this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = new_x;
         this.pixiManager.ball.y = new_y;
+        this.pixiManager.dx = data.dx;
         this.pixiManager.dy = data.dy;
       }
   }
@@ -65,16 +66,21 @@ class SocketManager extends WebSocket {
   
       const new_x = scale_x * data.new_x;
   
-      this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x;
+      // this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x - this.pixiManager.paddleWidth;
+    if (this.pixiManager.isTopPaddle) {
+        this.pixiManager.topRacket.x = new_x;
+    } else {
+        this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x - this.pixiManager.paddleWidth;
     }
-  }
+    }
+  } 
   
   async handleSocketMessage(message: any) {
     switch (message.type) {
       case 'acknowledgeOpponent':
         this.pixiManager.game.gameId = message.data.game_id;
         this.pixiManager.game.opponent = message.data.opponent;
-        this.pixiManager.isTopPaddle = message.data.top_paddle;
+        this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
         console.log('scale_y: ', scale_y);
         if (this.pixiManager.isTopPaddle) {
@@ -85,12 +91,12 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        this.send(JSON.stringify({ action: 'ready', game_id: message.data.game_id }));
+        this.sendData({ action: 'ready', game_id: message.data.game_id });
       case 'UpdateBall': 
         // this.pixiManager.app.ticker.add(() => {
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
           // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-          console.log('data:', message);
+          // console.log('data:', message);
           this.updateBallPosition(message.ball_position);
           // });
           break;
