@@ -10,13 +10,13 @@ export const ImageCard = ({
   profileError: string;
 }) => {
   return (
-    <div className="w-fit h-full flex items-center justify-center gap-6 flex-wrap">
-      <Image
-        src={selectedImage}
+    <div className="w-fit h-full flex items-center justify-center sm:gap-6 gap-1 flex-wrap">
+      <img
+        src={`http://localhost:8080${selectedImage}`}
         alt="Profile picture"
         width={80}
         height={80}
-        className="size-[80px] rounded-full bg-white bg-cover object-cover"
+        className="sm:size-[80px] size-[60px] rounded-full bg-white bg-cover object-cover"
       />
       <div className="w-fit h-full flex flex-col items-start justify-center gap-2">
         <h1 className="text-sm text-white tracking-wider">Profile Picture</h1>
@@ -25,7 +25,7 @@ export const ImageCard = ({
       </div>
       <label
         htmlFor="profile-upload"
-        className="py-2 px-4 bg-white text-black rounded-md cursor-pointer"
+        className="sm:py-2 sm:px-4 py-1 px-2 bg-white text-black rounded-md cursor-pointer"
       >
         Change Picture
       </label>
