@@ -39,7 +39,11 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/earth.png"
           title="Earth"
           description="earth could shake or make or fake"
-          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=earth` :`/Game-Arena?mode=${mode}&map=earth`}
+          url={
+            mode == 'tournament'
+              ? `/tournament?mode=${mode}&map=earth`
+              : `/Game-Arena?mode=${mode}&map=earth`
+          }
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -48,7 +52,11 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/air.png"
           title="Air"
           description="Air: The invisible killer we can not live without"
-          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=air` :`/Game-Arena?mode=${mode}&map=air`}
+          url={
+            mode == 'tournament'
+              ? `/tournament?mode=${mode}&map=air`
+              : `/Game-Arena?mode=${mode}&map=air`
+          }
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -57,7 +65,11 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/fire.png"
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
-          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=fire` :`/Game-Arena?mode=${mode}&map=fire`}
+          url={
+            mode == 'tournament'
+              ? `/tournament?mode=${mode}&map=fire`
+              : `/Game-Arena?mode=${mode}&map=fire`
+          }
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
@@ -66,7 +78,11 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           imageUrl="/water.png"
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url={mode == 'tournoment'? `/tournament?mode=${mode}&map=water` : `/Game-Arena?mode=${mode}&map=water`}
+          url={
+            mode == 'tournament'
+              ? `/tournament?mode=${mode}&map=water`
+              : `/Game-Arena?mode=${mode}&map=water`
+          }
         />
       </SwiperSlide>
     </Swiper>
@@ -96,16 +112,24 @@ const GameModeSwiper = () => {
       <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
-          title="Tournement"
-          description=""
-          url={`/games?mode=tournoment`}
+          title="Local One vs One"
+          description="Challenge a friend in a local one-on-one game mode."
+          url={`/games?mode=one-vs-one-local`}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="overflow-visible">
+        <ModesCard
+          height="100px"
+          title="Tournament"
+          description="Compete against other players in a tournament-style game mode."
+          url={`/games?mode=tournament`}
         />
       </SwiperSlide>
       <SwiperSlide className="overflow-visible">
         <ModesCard
           height="100px"
           title="One Vs One"
-          description=""
+          description="Enter the thrilling world of one-on-one competition against another player."
           url={`/games?mode=one-vs-one`}
         />
       </SwiperSlide>
@@ -113,7 +137,7 @@ const GameModeSwiper = () => {
         <ModesCard
           height="100px"
           title="Local One vs One"
-          description="The slippery element that makes sure your Pong ball never stays on course."
+          description="Challenge a friend in a local one-on-one game mode."
           url={`/games?mode=one-vs-one-local`}
         />
       </SwiperSlide>
@@ -131,7 +155,7 @@ const Game_modes = () => {
   }, [setIsActivated]);
 
   return (
-    <div className="w-full flex flex-col px-3 py-2 overflow-auto">
+    <div className="flex w-full flex-col overflow-auto px-3 py-2">
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>

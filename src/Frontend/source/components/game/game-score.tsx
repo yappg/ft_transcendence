@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useUser, User, Player } from '@/context/GlobalContext';
-import { useGame } from '@/context/GameContext';
+import { useGame, Player } from '@/context/GameContext';
 import { useEffect } from 'react';
 import { RoundsProps } from '@/context/GameContext';
 import { Skeleton } from '../ui/skeleton';
@@ -14,50 +13,55 @@ const PlayerScore = ({
   score,
   isme,
 }: {
-  player: User | null;
+  player: Player | null;
   score: number;
   isme: boolean;
 }) => {
   return (
     <div className={`flex h-full w-auto items-start ${isme ? '' : 'items-end'} flex-col gap-1`}>
-      <div className="flex items-center justify-center size-[50px] md:size-[60px]">
+      <div className="flex size-[50px] items-center justify-center md:size-[60px]">
         {player ? (
           <Avatar
-            className={`size-full bg-black-crd max-w-[35px] max-h-[35px] md:max-w-[50px] md:max-h-[50px]`}
+            className={`size-full max-h-[35px] max-w-[35px] bg-black-crd md:max-h-[50px] md:max-w-[50px]`}
           >
             <AvatarImage src="/Avatar.svg" alt="avatar" />
             <AvatarFallback className="bg-black-crd text-[10px]">CN</AvatarFallback>
           </Avatar>
         ) : (
-          <Skeleton className="size-full max-w-[35px] max-h-[35px] md:max-w-[50px] md:max-h-[50px] bg-black-crd dark:bg-white-crd rounded-full" />
+          <Skeleton className="size-full max-h-[35px] max-w-[35px] rounded-full bg-black-crd dark:bg-white-crd md:max-h-[50px] md:max-w-[50px]" />
         )}
       </div>
       <div
-        className={`flex font-poppin text-[10px] dark:text-white xl:text-[15px] w-[100px] lg:w-[150px] text-center'}`}
+        className={`font-poppin flex w-[100px] text-center text-[10px] dark:text-white lg:w-[150px] xl:text-[15px]`}
       >
-        <div className={`${isme ? '' : 'order-3'} w-full h-[10px]`}>
+        <div className={`${isme ? '' : 'order-3'} h-[10px] w-full`}>
           {player ? (
             <p className={`${isme ? '' : 'text-end'} `}>{player.username}</p>
           ) : (
-            <Skeleton className="size-full bg-black-crd dark:bg-white-crd rounded-md" />
+            <Skeleton className="size-full rounded-md bg-black-crd dark:bg-white-crd" />
           )}
         </div>
-        <div className={` w-full text-white-crd text-center`}>{score}</div>
+        <div className={` w-full text-center text-white-crd`}>{score}</div>
       </div>
     </div>
   );
 };
 
-const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User | null}) => {
+const ScoreTable = ({ player1, player2 }: { player1: Player; player2: Player }) => {
   const game = useGame();
-  const p1 = player1 ? player1 : { username: 'player1' } as User;
-  const p2 = player2 ? player2 : { username: 'player2' } as User;
+  // console.log('game:', game);
+  const p1 = player1 ? player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
+  const p2 = player2 ? player2 : ({ username: 'player2', avatar: '/Avatar.svg' } as Player);
+  // const p1 = game.player1 as User;
+  // const p1 = game.player1 as User;
+  console.log('players:', game.player1, game.player2);
 
   useEffect(() => {
     if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
       const newRound = {
         round: game.Rounds.length + 1,
-        winner: game.GameScore[0] > game.GameScore[1] ? p1.username : p2.username,
+        winner:
+          game.GameScore[0] > game.GameScore[1] ? game.player1.username : game.player2.username,
         score: game.GameScore,
       };
 
@@ -71,19 +75,19 @@ const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User 
   }, [game]);
 
   return (
-    <div className="flex items-center justify-around gap-1 xl:flex-col xl:gap-8 size-full px-8 relative">
+    <div className="relative flex size-full items-center justify-around gap-1 px-8 xl:flex-col xl:gap-8">
       <Link
         href={'#'}
-        className="flex h-[60px] w-auto items-center justify-start font-dayson text-[48px] dark:text-white xl:w-full absolute left-2 top-2"
+        className="absolute left-2 top-2 flex h-[60px] w-auto items-center justify-start font-dayson text-[48px] dark:text-white xl:w-full"
       >
         <IoIosArrowBack className="size-[20px] md:size-[60px]" />{' '}
         <span className="hidden lg:block">Game Arena</span>
       </Link>
 
-      <div className="size-full flex flex-col items-center justify-center gap-2">
-        <div className="flex w-full items-center justify-around p-2 gap-15 font-dayson text-[20px] dark:text-white md:text-[35px]">
+      <div className="flex size-full flex-col items-center justify-center gap-2">
+        <div className="flex w-full items-center justify-around gap-4 p-2 font-dayson text-[20px] dark:text-white md:text-[35px]">
           <PlayerScore player={p1} score={game.GameScore[0]} isme={true} />
-          <div className="flex h-full text-[10px] w-[100px]  items-center justify-center rounded-[10px] border-2 border-white-crd text-center text-white-crd p-2">
+          <div className="flex h-full w-[100px] items-center  justify-center rounded-[10px] border-2 border-white-crd p-2 text-center text-[10px] text-white-crd">
             {game.GameState === 'start' ? (
               <div className="flex lg:flex-col">
                 <h1>Round</h1>
@@ -91,7 +95,7 @@ const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User 
               </div>
             ) : game.GameState === 'over' ? (
               // <div className="flex size-full flex-col items-center justify-center border-white border-2 rounded-[10px]">
-              <div>game over</div>
+              <div>{`Winner :\n${game.GameWinner}`}</div>
             ) : (
               <div>get ready</div>
             )}
@@ -99,23 +103,19 @@ const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User 
           {/* {mode.indexOf('local') === -1 ? (
             <PlayerScore player={game.opponent} score={game.GameScore[1]} isme={false} />
           ) : ( */}
-            <PlayerScore
-              player={p2}
-              score={game.GameScore[1]}
-              isme={false}
-            />
+          <PlayerScore player={p2} score={game.GameScore[1]} isme={false} />
           {/* )} */}
         </div>
 
         <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd lg:flex">
           {/* rounds  */}
-          <div className="flex size-full flex-col items-center justify-start overflow-auto h-[200px]">
-            <div className="flex h-[50px] w-full items-center justify-around border-b border-black-crd dark:border-white-crd text-[18px] text-black-crd dark:text-white-crd">
-              <div className="w-1/3 h-full flex justify-center items-center">{'Round'}</div>
-              <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">
+          <div className="flex size-full h-[200px] flex-col items-center justify-start overflow-auto">
+            <div className="flex h-[50px] w-full items-center justify-around border-b border-black-crd text-[18px] text-black-crd dark:border-white-crd dark:text-white-crd">
+              <div className="flex h-full w-1/3 items-center justify-center">{'Round'}</div>
+              <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">
                 {'Winner'}
               </div>
-              <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">
+              <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">
                 {'score'}
               </div>
             </div>
@@ -124,9 +124,9 @@ const ScoreTable = ({ player1, player2 }: { player1: User | null, player2: User 
                 key={index}
                 className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? '' : 'border-b border-black-crd dark:border-white-crd'} text-[18px] text-black-crd dark:text-white-crd`}
               >
-                <div className="w-1/3 h-full flex justify-center items-center">{`${round.round}`}</div>
-                <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">{`${round.winner}`}</div>
-                <div className="w-1/3 h-full border-l border-black-crd dark:border-white-crd flex justify-center items-center">{`${round.score[0]}/${round.score[1]}`}</div>
+                <div className="flex h-full w-1/3 items-center justify-center">{`${round.round}`}</div>
+                <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.winner}`}</div>
+                <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.score[0]}/${round.score[1]}`}</div>
               </div>
             ))}
           </div>

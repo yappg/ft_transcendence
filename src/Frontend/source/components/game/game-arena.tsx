@@ -6,17 +6,24 @@ import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/g
 import { useGame } from '@/context/GameContext';
 import React, { useRef, useEffect } from 'react';
 import { useUser } from '@/context/GlobalContext';
+import { useRouter } from 'next/navigation';
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const game = useGame();
   const user = useUser();
+  const router = useRouter();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
-  // const socketRef = useRef<WebSocket | null>(null);
 
+  // useEffect(() => {
+  //   if (mode === 'tournament' && !game.TournementTree) {
+  //     router.push(`/tournament?mode=tournament&map=${map}`);
+  //     return;
+  //   }
+  // }, [mode, map, game, router]);
   useEffect(() => {
-    if (mode.indexOf('local') !== -1) {
+    if (mode.indexOf('local') !== -1 || mode === 'tournament') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
@@ -34,11 +41,11 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     }
-    return () => {
-      if (gameManagerRef?.current?.app) {
-        gameManagerRef.current.app.destroy(true);
-      }
-    };
+    // return () => {
+    //   if (gameManagerRef?.current?.app) {
+    //     gameManagerRef.current.app.destroy(true);
+    //   }
+    // };
   }, []);
 
   useEffect(() => {
