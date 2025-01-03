@@ -51,7 +51,7 @@ export const Header = () => {
 
   useEffect(() => {
     if (user) {
-      const ws = new WebSocket(`ws://localhost:8080/ws/notifications/?user_id=${user.id}`);
+      const ws = new WebSocket(process.env.NEXT_PUBLIC_WS_URL + `/notifications/?user_id=${user.id}`);
       console.log('WebSocket connection established');
 
       ws.onopen = () => {
@@ -173,7 +173,7 @@ export const Header = () => {
                     onClick={() => { router.push(`/Profile/${player.id}`); setFilteredPlayers([]); setValue(''); }}
                   >
                     <img
-                      src={"http://localhost:8080" + player?.avatar}
+                      src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                       alt={`${player?.display_name}'s avatar`}
                       className="size-10 rounded-full"
                     />

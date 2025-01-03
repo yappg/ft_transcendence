@@ -101,7 +101,6 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
-
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -25,7 +25,7 @@ class ChatService {
       return this.sockets.get(chatId)!;
     }
 
-    const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
+    const socketUrl = process.env.NEXT_PUBLIC_WS_URL + `/chat/${chatId}/`;
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {

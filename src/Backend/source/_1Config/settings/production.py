@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
 # ===========================
@@ -10,7 +8,6 @@ from django.core.exceptions import ImproperlyConfigured
 # ===========================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR.parent.parent / ".env")
 
 def get_env_variable(var_name):
     try:
@@ -29,13 +26,13 @@ ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
 # Security Headers
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False  # TODO will be handled by nginx
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # TODO will nginx
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 
@@ -93,7 +90,7 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -288,12 +285,12 @@ TEMPLATES = [
 # ===========================
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia')
+STATIC_ROOT = '/app/staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/UsersMedia'
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # ===========================
 # EMAIL CONFIGURATION
