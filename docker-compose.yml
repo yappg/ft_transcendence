@@ -64,8 +64,8 @@ services:
 # # DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
-        # - /app/.next
-        # - /app/node_modules
+        - /app/.next
+        - /app/node_modules
 # # ==================>
       networks:
         - transcendence

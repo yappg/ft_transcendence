@@ -7,9 +7,18 @@ export interface RoundsProps {
   score: [number, number];
 }
 
+export interface Player {
+  username: string;
+  avatar: string;
+}
+
 export interface GameContextType {
   GameId: number;
   setGameId: (id: number) => void;
+  player1: Player;
+  setPlayer1: (player: Player) => void;
+  player2: Player;
+  setPlayer2: (player: Player) => void;
   GameScore: [number, number];
   Rounds: RoundsProps[];
   GameState: 'start' | 'over' | 'round' | 'waiting';
@@ -24,13 +33,19 @@ export interface GameContextType {
   setOpponent: (opponent: User | null) => void;
   TournementTree: any;
   setTournementTree: (tree: any) => void;
-  // GameWinner: string | null,
-  // setGameWinner: (winner: string | null) => void,
+  totalScore: [number, number];
+  setTotalScore: (score: [number, number]) => void;
+  GameWinner: string | null;
+  setGameWinner: (winner: string | null) => void;
 }
 
 const GameContext = createContext<GameContextType>({
   GameId: 0,
   setGameId: () => {},
+  player1: { username: 'player1', avatar: '/Avatar.svg' },
+  setPlayer1: () => {},
+  player2: { username: 'player2', avatar: '/Avatar.svg' },
+  setPlayer2: () => {},
   GameScore: [0, 0],
   setGameScore: () => {},
   Rounds: [],
@@ -45,8 +60,10 @@ const GameContext = createContext<GameContextType>({
   setOpponent: () => {},
   TournementTree: null,
   setTournementTree: () => {},
-  // GameWinner:null,
-  // setGameWinner: () => {},
+  totalScore: [0, 0],
+  setTotalScore: () => {},
+  GameWinner: null,
+  setGameWinner: () => {},
 });
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -58,12 +75,19 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [gameMap, setGameMap] = useState<'earth' | 'water' | 'fire' | 'air' | 'simple'>('simple');
   const [opponent, setOpponent] = useState<User | null>(null);
   const [TournementTree, setTournementTree] = useState<any>(null);
-  // const [GameWinner, setGameWinner] = useState<string | null>(null);
+  const [totalScore, setTotalScore] = useState<[number, number]>([0, 0]);
+  const [GameWinner, setGameWinner] = useState<string | null>(null);
+  const [player1, setPlayer1] = useState<Player>({ username: 'player1', avatar: '/Avatar.svg' });
+  const [player2, setPlayer2] = useState<Player>({ username: 'player2', avatar: '/Avatar.svg' });
   return (
     <GameContext.Provider
       value={{
         GameId,
         setGameId,
+        player1,
+        setPlayer1,
+        player2,
+        setPlayer2,
         setGameScore,
         GameScore,
         Rounds,
@@ -78,8 +102,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setOpponent,
         TournementTree,
         setTournementTree,
-        // setGameWinner,
-        // GameWinner,
+        totalScore,
+        setTotalScore,
+        GameWinner,
+        setGameWinner,
       }}
     >
       {children}

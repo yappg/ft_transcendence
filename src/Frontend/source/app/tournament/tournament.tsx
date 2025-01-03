@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,20 +10,24 @@ import { TreeGenerator } from 'tournament-bracket-tree';
 import 'tournament-bracket-tree/dist/index.css';
 
 const mapTournamentToNode = (game: any) => {
-  console.log("node passed: ", game.player.avatar);
+  console.log('node passed: ', game.player.avatar);
   return (
     <div
-      className="w-[60px] h-[60px] lg:w-[77px] lg:h-[77px]
+      className="size-[60px] lg:size-[77px]
                 "
     >
       {game.player.avatar.startsWith('./') ? (
-        <div className='flex flex-col items-center justify-center gap-2'>
-          <img src={game.player.avatar} alt="Player" className="rounded-full object-cover w-full h-full border border-white" />
-          <h2>{game.player.nickname}</h2>
+        <div className="flex flex-col items-center justify-center gap-2">
+          <img
+            src={game.player.avatar}
+            alt="Player"
+            className="size-full rounded-full border border-white object-cover"
+          />
+          <h2>{game.player.username}</h2>
         </div>
       ) : (
-        <div className="empty-circle size-full">
-          <Skeleton className="size-full bg-black-crd dark:bg-white-crd rounded-full" />
+        <div className="size-full">
+          <Skeleton className="size-full rounded-full bg-black-crd dark:bg-white-crd" />
         </div>
       )}
     </div>
@@ -35,7 +40,7 @@ const Tournament = () => {
   const game = useGame();
   const searchParams = useSearchParams();
   const map = searchParams.get('map');
-  console.log("My Tree: ", game.TournementTree);
+  console.log('My Tree: ', game.TournementTree);
 
   useEffect(() => {
     const handleResize = () => {
@@ -51,14 +56,14 @@ const Tournament = () => {
   }, []);
 
   return (
-    <div className='h-screen w-full mg:rounded-2xl bg-black-crd p-4 flex justify-around items-center flex-col'>
-      <div className='size-auto md:h-auto w-full flex justify-center items-center'>
-        <h1 className='text-black-crd dark:text-white-crd text-2xl md:text-3xl font-bold text-center'>Tournament</h1>
+    <div className="mg:rounded-2xl flex h-screen w-full flex-col items-center justify-around bg-black-crd p-4">
+      <div className="flex size-auto w-full items-center justify-center md:h-auto">
+        <h1 className="text-center text-2xl font-bold text-black-crd dark:text-white-crd md:text-3xl">
+          Tournament
+        </h1>
       </div>
       <div
-        className={`flex size-full justify-center ${
-          isMobile ? 'flex-col' : 'flex-row'
-        } size-auto`}
+        className={`flex size-full justify-center ${isMobile ? 'flex-col' : 'flex-row'} size-auto`}
       >
         {/* Right Tree */}
         <TreeGenerator
@@ -75,9 +80,9 @@ const Tournament = () => {
           style={{
             margin: isMobile ? '10px 0' : '0 10px',
           }}
-          className="flex md:flex-col items-center w-full md:w-auto md:h-full justify-center"
+          className="flex w-full items-center justify-center md:h-full md:w-auto md:flex-col"
         >
-          <img src="./games-logo.svg" className="size-[100px]"></img>
+          <img src="./games-logo.svg" alt="avatar" className="size-[100px]"></img>
           {mapTournamentToNode(game.TournementTree.data)}
         </div>
 
@@ -90,10 +95,12 @@ const Tournament = () => {
           lineLength={35}
         />
       </div>
-      <div className='size-auto md:h-[100px] w-full flex justify-center items-center'>
+      <div className="flex size-auto w-full items-center justify-center md:h-[100px]">
         <div
-          className='w-[120px] h-[50px] md:w-[200px] md:h-[60px] rounded-md bg-primary dark:bg-primary-dark flex items-center justify-center text-white'
-          onClick={() => { router.push(`/Game-Arena?mode=tournament&map=${map}`) }}
+          className="flex h-[50px] w-[120px] items-center justify-center rounded-md bg-primary text-white dark:bg-primary-dark md:h-[60px] md:w-[200px]"
+          onClick={() => {
+            router.push(`/Game-Arena?mode=tournament&map=${map}`);
+          }}
         >
           next Match
         </div>

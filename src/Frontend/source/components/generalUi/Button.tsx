@@ -21,7 +21,7 @@ const MyButton = ({ children, className, onClick, disabled, type, route }: Butto
   };
   return (
     <button
-      className={`${className} ${buttonVariants()} font-dayson bg-primary dark:bg-primary-dark costum-little-shadow w-[120px] text-[18px] font-semibold text-white`}
+      className={`${className} ${buttonVariants()} costum-little-shadow w-[120px] bg-primary font-dayson text-[18px] font-semibold text-white dark:bg-primary-dark`}
       onClick={handleClick}
       disabled={disabled}
       type={type}
