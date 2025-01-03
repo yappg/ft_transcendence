@@ -58,13 +58,13 @@ const AchievementsPage: React.FC = () => {
       {achievements.map((achievement: Achievement, index) => (
         <AchievementBadge
           key={index}
-          title={achievement.title}
-          description={achievement.description}
-          points={achievement.points}
+          title={achievement.achievement.name}
+          description={achievement.achievement.description}
+          points={achievement.achievement.condition}
           progress={achievement.progress}
-          xpReward={achievement.xpReward}
-          ratio={achievement.ratio}
-          iconUrl={'http://localhost:8080' + achievement.iconUrl}
+          xpReward={achievement.achievement.xp_gain}
+          ratio={achievement.achievement.condition}
+          iconUrl={'http://localhost:8080' + achievement.image}
         />
       ))}
     </div>
