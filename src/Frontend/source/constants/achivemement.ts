@@ -10,4 +10,5 @@ export interface Achievement {
   gained: boolean;
   dateEarned: Date | null;
   ratio: number;
+  achievement: Achievement;
 }
