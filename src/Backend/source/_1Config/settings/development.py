@@ -4,19 +4,19 @@ from datetime import timedelta
 from django.conf import settings
 from dotenv import load_dotenv
  
-# ===========================
-# PATHS & ENVIRONMENT VARIABLES
-# =========================== 
+# ===========================        
+# PATHS & ENVIRONMENT VARIABLES                              
+# ===========================                   
     
-# Define the base directory of the project
+# Define the base directory of the project    
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from the .env file if it exists will be added after TODO
 load_dotenv(BASE_DIR.parent.parent / ".env") 
 
 # ===========================
-# SECURITY SETTINGS 
-# ===========================
+# SECURITY SETTINGS              
+# ===========================    
  
 # Secret key for cryptographic signing
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
