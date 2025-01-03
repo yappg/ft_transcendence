@@ -93,7 +93,7 @@ const AddFriends = () => {
             <FriendRequestCard
               key={user.id}
               name={user?.display_name}
-              ProfilePhoto={"http://localhost:8080" + user?.avatar}
+              ProfilePhoto={process.env.NEXT_PUBLIC_HOST + user?.avatar}
               vari={user.level}
               actions={[
                 <IconPlus

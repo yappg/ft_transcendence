@@ -13,8 +13,7 @@ WORKDIR /app/source
 COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app
+    && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
@@ -39,12 +38,11 @@ COPY ./source/requirements.txt ./
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY . ../
+COPY . /app
 
-RUN chmod -R +x /app/config
+RUN chmod -R +x /app/config/
 
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
-# CMD [ "tail", "-f", "/dev/null" ]

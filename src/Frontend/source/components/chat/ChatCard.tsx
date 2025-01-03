@@ -13,17 +13,17 @@ interface ChatCardProps {
 export const ChatCard = ({ chatContent , lastMessage }: ChatCardProps) => {
   const {messages, setMessages} = useUser();
   const router = useRouter();
-  
+
   const handleChatClick = async () => {
     const currentPath = window.location.pathname;
     const targetPath = `/messages/${chatContent.id}`;
-    
+
     if (currentPath !== targetPath) {
       setMessages([]);
       router.push(targetPath);
     }
   };
-  
+
   return (
     <div
       onClick={handleChatClick}
@@ -32,7 +32,7 @@ export const ChatCard = ({ chatContent , lastMessage }: ChatCardProps) => {
         <div className="flex items-center gap-5">
           <img
             className="h-12 w-12 rounded-full object-cover"
-            src={'http://localhost:8080' + chatContent.receiver.avatar}
+            src={process.env.NEXT_PUBLIC_HOST + chatContent.receiver.avatar}
             alt="avatar"
           />
           <div className="flex flex-col">
@@ -51,7 +51,7 @@ export const ChatCard = ({ chatContent , lastMessage }: ChatCardProps) => {
                 hour: '2-digit',
                 minute: '2-digit',
               })}
-            </span> 
+            </span>
           )}
         </div>
     </div>

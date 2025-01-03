@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv
 
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
@@ -10,9 +8,6 @@ from dotenv import load_dotenv
 
 # Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load environment variables from the .env file if it exists will be added after TODO
-load_dotenv(BASE_DIR.parent.parent / ".env")
 
 # ===========================
 # SECURITY SETTINGS

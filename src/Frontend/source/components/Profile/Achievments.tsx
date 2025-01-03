@@ -12,7 +12,7 @@ export const Achievments = ({
         key={index}
         className="lg:size-[65px] transition-all duration-300 xl:size-[80px] sm:size-[70px] size-[50px]"
       >
-        <AvatarImage src={"http://localhost:8080" + achievement.image} />
+        <AvatarImage src={process.env.NEXT_PUBLIC_HOST + achievement.image} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
     ))}

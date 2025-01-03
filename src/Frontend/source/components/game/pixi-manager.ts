@@ -31,7 +31,7 @@ export abstract class PixiManager {
   dy = 1;
 
 // 75 / 100 = 0.75
-  
+
 constructor(container: HTMLElement, backgroundImage: string, game: any) {
     this.app = new PIXI.Application();
     this.backgroundImage = backgroundImage;
@@ -212,7 +212,7 @@ export class LocalGameManager extends PixiManager {
 
       const collisionPoint = this.ball.x - this.topRacket.x;
       const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
-    
+
       this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
 
@@ -343,7 +343,7 @@ export class OnlineGameManager extends PixiManager {
     user: User | null
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager('ws://localhost:8080/ws/game/');
+    this.socketManager = new socketManager(process.env.NEXT_PUBLIC_WS_URL + '/game/');
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
@@ -399,7 +399,7 @@ export class OnlineGameManager extends PixiManager {
   }
 
 
-  
+
     handlegameupdates() {
 
       if (!this.ball || !this.app) return;
@@ -410,7 +410,7 @@ export class OnlineGameManager extends PixiManager {
 
       const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
       const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
-      
+
       this.ballMovementSpeed = (baseScreenDiagonal / currentScreenDiagonal) * baseSpeed;
       this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
     }
