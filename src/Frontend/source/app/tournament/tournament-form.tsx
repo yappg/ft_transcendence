@@ -13,6 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { MyButton } from '@/components/generalUi/Button';
+import InputBar from '@/components/auth/input-bar';
 
 const avatars = ['./air.png', './earth.png', './fire.png', './water.png'];
 
@@ -51,16 +53,18 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
   };
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-2xl bg-black-crd text-white">
       <CardHeader>
         <CardTitle>Tournament Player Selection</CardTitle>
-        <CardDescription>Select avatars and enter nicknames for 3 players</CardDescription>
+        <CardDescription className="text-[rgb(200,200,200)]">
+          Select avatars and enter nicknames for 3 players
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           {players.map((player, index) => (
             <div key={index} className="mb-6">
-              <Label htmlFor={`player-${index}`} className="mb-2 block">
+              <Label htmlFor={`player-${index}`} className="mb-2 block text-[rgb(200,200,200)]">
                 Player {index + 1}
               </Label>
               <div className="flex items-center space-x-4">
@@ -76,11 +80,18 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
                     </Avatar>
                   ))}
                 </div>
-                <Input
+                {/* <Input
                   id={`player-${index}`}
                   placeholder="Enter nickname"
                   value={player.username}
                   onChange={(e) => handleNicknameChange(index, e.target.value)}
+                  className="grow"
+                /> */}
+                <InputBar
+                  // Icon={Button}
+                  placeholder="Enter nickname"
+                  value={player.username}
+                  setValue={(value) => handleNicknameChange(index, value)}
                   className="grow"
                 />
               </div>
@@ -89,6 +100,13 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
         </form>
       </CardContent>
       <CardFooter>
+        {/* <MyButton
+          className="min-w-[120px] disabled:opacity-50"
+          type="submit"
+          onClick={handleSubmit}
+        >
+          start
+        </MyButton> */}
         <Button type="submit" onClick={handleSubmit}>
           Start Tournament
         </Button>

@@ -16,12 +16,6 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
 
   const gameManagerRef = useRef<PixiManager | null>(null);
 
-  // useEffect(() => {
-  //   if (mode === 'tournament' && !game.TournementTree) {
-  //     router.push(`/tournament?mode=tournament&map=${map}`);
-  //     return;
-  //   }
-  // }, [mode, map, game, router]);
   useEffect(() => {
     if (mode.indexOf('local') !== -1 || mode === 'tournament') {
       if (canvasContainerRef.current) {
@@ -41,6 +35,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     }
+
     // return () => {
     //   if (gameManagerRef?.current?.app) {
     //     gameManagerRef.current.app.destroy(true);

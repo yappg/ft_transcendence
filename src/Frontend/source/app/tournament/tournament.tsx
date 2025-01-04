@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+import { MyButton } from '@/components/generalUi/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGame } from '@/context/GameContext';
 import { useSearchParams } from 'next/navigation';
@@ -36,11 +37,10 @@ const mapTournamentToNode = (game: any) => {
 
 const Tournament = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
   const game = useGame();
   const searchParams = useSearchParams();
-  const map = searchParams.get('map');
   console.log('My Tree: ', game.TournementTree);
+  console.log('My Game: ', game.inGame);
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,7 +56,7 @@ const Tournament = () => {
   }, []);
 
   return (
-    <div className="mg:rounded-2xl flex h-screen w-full flex-col items-center justify-around bg-black-crd p-4">
+    <div className="mg:rounded-2xl lg:costum-big-shadow flex size-full flex-col items-center justify-around bg-black-crd p-4 lg:rounded-lg">
       <div className="flex size-auto w-full items-center justify-center md:h-auto">
         <h1 className="text-center text-2xl font-bold text-black-crd dark:text-white-crd md:text-3xl">
           Tournament
@@ -96,14 +96,30 @@ const Tournament = () => {
         />
       </div>
       <div className="flex size-auto w-full items-center justify-center md:h-[100px]">
-        <div
-          className="flex h-[50px] w-[120px] items-center justify-center rounded-md bg-primary text-white dark:bg-primary-dark md:h-[60px] md:w-[200px]"
+        {/* <div
+          className="flex h-[50px] w-[120px] cursor-pointer items-center justify-center rounded-md bg-primary text-white dark:bg-primary-dark md:h-[60px] md:w-[200px]"
           onClick={() => {
-            router.push(`/Game-Arena?mode=tournament&map=${map}`);
+            game.setInGame(true);
+            // game.inGame = true;
+            console.log('In Game: ', game.inGame);
+            // onStartGame(true);
           }}
         >
           next Match
-        </div>
+        </div> */}
+        <MyButton
+          className="min-w-[120px] disabled:opacity-50"
+          onClick={() => {
+            game.setGameScore([0, 0]);
+            game.setTotalScore([0, 0]);
+            game.setInGame(true);
+            // game.inGame = true;
+            console.log('In Game: ', game.inGame);
+            // onStartGame(true
+          }}
+        >
+          Next Match
+        </MyButton>
       </div>
     </div>
   );

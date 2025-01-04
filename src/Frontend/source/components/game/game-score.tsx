@@ -32,7 +32,7 @@ const PlayerScore = ({
         )}
       </div>
       <div
-        className={`font-poppin flex w-[100px] text-center text-[10px] dark:text-white lg:w-[150px] xl:text-[15px]`}
+        className={`flex w-[100px] text-center font-dayson text-[10px] dark:text-white lg:w-[150px] xl:text-[15px]`}
       >
         <div className={`${isme ? '' : 'order-3'} h-[10px] w-full`}>
           {player ? (
@@ -47,13 +47,12 @@ const PlayerScore = ({
   );
 };
 
-const ScoreTable = ({ player1, player2 }: { player1: Player; player2: Player }) => {
+const ScoreTable = () => {
   const game = useGame();
-  // console.log('game:', game);
-  const p1 = player1 ? player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
-  const p2 = player2 ? player2 : ({ username: 'player2', avatar: '/Avatar.svg' } as Player);
-  // const p1 = game.player1 as User;
-  // const p1 = game.player1 as User;
+  const p1 = game.player1 ? game.player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
+  const p2 = game.player2
+    ? game.player2
+    : ({ username: 'player2', avatar: '/Avatar.svg' } as Player);
   console.log('players:', game.player1, game.player2);
 
   useEffect(() => {
@@ -72,7 +71,42 @@ const ScoreTable = ({ player1, player2 }: { player1: Player; player2: Player }) 
 
       game.setGameScore([0, 0]);
     }
-  }, [game]);
+    if (game.GameState === 'over') {
+      if (game.totalScore[0] > game.totalScore[1]) {
+        game.GameWinner = game.player1;
+        game.setGameWinner(game.player1);
+      } else {
+        console.log('player2:', game.player2);
+        game.GameWinner = game.player2;
+        game.setGameWinner(game.player2);
+      }
+      // if (game.tournamentMatch === 0) {
+      //   game.setTournamentMatch(1);
+      // } else if (game.tournamentMatch === 1) {
+      //   game.setTournamentMatch(2);
+      // }
+    }
+  }, [game.GameScore]);
+
+  useEffect(() => {
+    if (game.GameState === 'over') {
+      if (game.tournamentMatch === 0) {
+        console.log('waaaaa l3adaw right', game.GameWinner);
+        game.TournementTree.right.data.player = game.GameWinner;
+        console.log('waaaaa l3adaw right1', game.TournementTree.right.data.player);
+      } else if (game.tournamentMatch === 1) {
+        console.log('waaaaa l3adaw left', game.GameWinner);
+        game.TournementTree.left.data.player = game.GameWinner;
+        console.log('waaaaa l3adaw left1', game.TournementTree.left.data.player);
+      } else {
+        console.log('waaaaa l3adaw else', game.GameWinner);
+        game.TournementTree.data.player = game.GameWinner;
+        console.log('waaaaa l3adaw else1', game.TournementTree.data.player);
+        game.setTournamentMatch(0);
+      }
+      game.setRounds(() => []);
+    }
+  }, [game.GameWinner]);
 
   return (
     <div className="relative flex size-full items-center justify-around gap-1 px-8 xl:flex-col xl:gap-8">
@@ -95,7 +129,7 @@ const ScoreTable = ({ player1, player2 }: { player1: Player; player2: Player }) 
               </div>
             ) : game.GameState === 'over' ? (
               // <div className="flex size-full flex-col items-center justify-center border-white border-2 rounded-[10px]">
-              <div>{`Winner :\n${game.GameWinner}`}</div>
+              <div>{`Winner :\n${game.GameWinner?.username}`}</div>
             ) : (
               <div>get ready</div>
             )}
