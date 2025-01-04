@@ -9,19 +9,19 @@ export const DashboardCard = (...props: any) => {
         </div>
     }
     return (
-        <div className="w-full h-full rounded-[30px] bg-black-crd flex items-center justify-between px-4">
-            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
+        <div className="w-full h-full rounded-[30px] bg-black-crd flex items-start p-2 justify-between">
+            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="sm:size-[70px] size-[50px] rounded-full object-cover" />
             <div className='flex flex-col items-start justify-center gap-2'>
-                <h1 className='text-white text-lg font-dayson'>{user.display_name}</h1>
-                <h1 className='text-white text-sm font-dayson'>Level {user.level}</h1>
+                <h1 className='text-white  text-sm font-dayson'>{user.display_name}</h1>
+                <h1 className='text-white  text-xs font-dayson'>Level {user.level}</h1>
             </div>
-            <h1 className='text-white text-[45px] font-dayson font-bold'>VS</h1>
+            <h1 className='text-white lg:text-[45px] text-[30px] font-coustard'>VS</h1>
             <div className='flex flex-col items-start justify-end gap-2'>
-                <h1 className='text-white text-lg font-dayson'>{user.display_name}</h1>
-                <h1 className='text-white text-sm font-dayson'>Level {user.level}</h1>
+                <h1 className='text-white  text-sm font-dayson'>{user.display_name}</h1>
+                <h1 className='text-white  text-xs font-dayson'>Level {user.level}</h1>
             </div>
-            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
-            <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
+            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="sm:size-[70px] size-[50px] rounded-full object-cover"/>
+            <RiArrowRightSLine className='text-white sm:text-[80px] text-[50px] font-dayson font-bold' />
         </div>
     )
 }

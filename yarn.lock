@@ -25,7 +25,7 @@
   resolved "https://registry.yarnpkg.com/@ark-ui/react/-/react-4.4.4.tgz#c7c5bbe1ac1c5b95086e4766e112081ba47bb5c0"
   integrity sha512-oYIHk12bLM0VvqmDNLD4lINeoctDijLpuN0L9Rycp6MH9h4JNbSPN2LKgpHhPwoe0nEau3let6wsBOIydPcCvw==
   dependencies:
-    "@internationalized/date" "3.5.6"
+    "@internationalized/date"  "3.5.6"
     "@zag-js/accordion" "0.77.1"
     "@zag-js/anatomy" "0.77.1"
     "@zag-js/auto-resize" "0.77.1"

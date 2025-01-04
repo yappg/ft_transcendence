@@ -67,8 +67,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 Content-Type: application/json
 
 {
-    "display_name": "droit1223123",
-    "bio": "bsdadsad"
+    "display_name": "deeerooo23123"
 }
 
 #########
@@ -85,17 +84,16 @@ Content-Type: application/json
 =
 #########
 GET http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDUzMjgzLCJpYXQiOjE3MzU3OTQwODMsImp0aSI6IjRmNjM0N2E0MzMzYjQwN2M4ODk3OWQzNWMzZTBmM2NhIiwidXNlcl9pZCI6MTJ9.Do7JNV_AtIxtg1th_e4eK3KooA78ByPJROreW8P4F8A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MTExNDM1LCJpYXQiOjE3MzU4NTIyMzUsImp0aSI6ImU0ZjlmZTIxYzk1NTRkYWQ4NWEzNWYzOTFmZmRlNjUxIiwidXNlcl9pZCI6Mn0.ePsIR8W6BOtTS12a2RkebZRUdQjk8IK1dgcfvI2C6CQ
 
 #########
 PUT http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDUzMjgzLCJpYXQiOjE3MzU3OTQwODMsImp0aSI6IjRmNjM0N2E0MzMzYjQwN2M4ODk3OWQzNWMzZTBmM2NhIiwidXNlcl9pZCI6MTJ9.Do7JNV_AtIxtg1th_e4eK3KooA78ByPJROreW8P4F8A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MTExNDM1LCJpYXQiOjE3MzU4NTIyMzUsImp0aSI6ImU0ZjlmZTIxYzk1NTRkYWQ4NWEzNWYzOTFmZmRlNjUxIiwidXNlcl9pZCI6Mn0.ePsIR8W6BOtTS12a2RkebZRUdQjk8IK1dgcfvI2C6CQ
 Content-Type: application/json
 
 {
-  "private_profile": true,
-  "notifications_enabled": true,
-  "stats_graph_days": 1
+  "private_profile": true
+  "notifications_enabled": 
 }
 
 #########
