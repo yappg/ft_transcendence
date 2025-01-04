@@ -1,23 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Tournament from './tournament';
 import TournamentForm from './tournament-form';
-import { Player } from '@/context/GlobalContext';
-import { useGame } from '@/context/GameContext';
+import { useGame, Player } from '@/context/GameContext';
+import GameArena from '../Game-Arena/page';
 
 const App = () => {
   const game = useGame();
 
   const [tournamentStarted, setTournamentStarted] = useState(false);
-  const [players, setPlayers] = useState([]);
 
-  const handleStartTournament = (selectedPlayers: any) => {
-    setPlayers(selectedPlayers);
+  useEffect(() => {
+    console.log('Updated TournementTree:', game.TournementTree);
+  }, [game.TournementTree]);
+
+  const handleStartTournament = (players: Player[]) => {
+    const myTree = createTree(players);
+    game.setTournementTree(myTree);
     setTournamentStarted(true);
   };
 
-  // Function to create a single-elimination tree dynamically
   const createTree = (players: Player[]): any => {
     console.log('players:', players);
     if (players.length === 1) {
@@ -32,16 +35,18 @@ const App = () => {
     };
   };
 
-  const myTree = tournamentStarted ? createTree(players) : null;
-  game.TournementTree = myTree;
-  game.setTournementTree(myTree);
-
   return (
     <div className="flex h-screen w-full items-center justify-center bg-linear-gradient dark:bg-linear-gradient-dark">
       {!tournamentStarted ? (
-        <TournamentForm onStartTournament={handleStartTournament} />
+        <div className="flex w-4/5 items-center justify-center">
+          <TournamentForm onStartTournament={handleStartTournament} />
+        </div>
+      ) : game.inGame ? (
+        <GameArena />
       ) : (
-        <Tournament />
+        <div className="flex size-full items-center justify-center lg:p-32">
+          <Tournament />
+        </div>
       )}
     </div>
   );

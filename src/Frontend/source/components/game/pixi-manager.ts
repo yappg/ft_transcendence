@@ -4,8 +4,6 @@ import { Assets, Sprite, Graphics } from 'pixi.js';
 import SocketManager from './socket-manager';
 import { User } from '@/context/GlobalContext';
 import socketManager from './socket-manager';
-import { basename } from 'path';
-import { Scale } from 'lucide-react';
 
 // Global Game Manager
 
@@ -19,7 +17,6 @@ export abstract class PixiManager {
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
-  gameState: string = 'waiting';
   screenWidth: number = 0;
   screenHeight: number = 0;
   ballMovementSpeed: number = 0;
@@ -89,9 +86,6 @@ export abstract class PixiManager {
   }
 
   abstract handleGameStates(): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateGame(x: number, y: number): void;
   abstract handlegameupdates(): void;
   abstract handleWaitingState(): void;
 
@@ -261,15 +255,13 @@ export class LocalGameManager extends PixiManager {
           this.game.gameState = 'waiting';
           this.game.setGameState('waiting');
         } else {
-          if (this.game.totalScore[0] > this.game.totalScore[1]) {
-            this.game.GameWinner = this.game.player1.username;
-            this.game.setGameWinner(this.game.player1.username);
-          } else {
-            this.game.GameWinner = this.game.player2.username;
-            this.game.setGameWinner(this.game.player2.username);
-          }
           this.game.gameState = 'over';
           this.game.setGameState('over');
+          // sleep 4 seconds
+          const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
+          await sleepmoment;
+          this.game.setInGame(false);
+          this.game.setTournamentMatch(this.game.tournamentMatch + 1);
         }
       }
       this.ball.x = this.screenWidth / 2;

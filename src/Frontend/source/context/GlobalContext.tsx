@@ -165,7 +165,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
   
-
   const setOnlineStatus = async () => {
     try {
       const ws = onlineService.createWebSocketConnection();
@@ -265,6 +264,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     fetchCurrentUserDetails();
     fetchNotifications();

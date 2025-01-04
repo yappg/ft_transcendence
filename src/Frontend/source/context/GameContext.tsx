@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { User } from './GlobalContext';
 
@@ -35,8 +37,12 @@ export interface GameContextType {
   setTournementTree: (tree: any) => void;
   totalScore: [number, number];
   setTotalScore: (score: [number, number]) => void;
-  GameWinner: string | null;
-  setGameWinner: (winner: string | null) => void;
+  GameWinner: Player | null;
+  setGameWinner: (winner: Player | null) => void;
+  inGame: boolean;
+  setInGame: (inGame: boolean) => void;
+  tournamentMatch: number;
+  setTournamentMatch: (match: number) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -64,6 +70,10 @@ const GameContext = createContext<GameContextType>({
   setTotalScore: () => {},
   GameWinner: null,
   setGameWinner: () => {},
+  inGame: false,
+  setInGame: () => {},
+  tournamentMatch: 0,
+  setTournamentMatch: () => {},
 });
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -76,9 +86,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [opponent, setOpponent] = useState<User | null>(null);
   const [TournementTree, setTournementTree] = useState<any>(null);
   const [totalScore, setTotalScore] = useState<[number, number]>([0, 0]);
-  const [GameWinner, setGameWinner] = useState<string | null>(null);
+  const [GameWinner, setGameWinner] = useState<Player | null>(null);
   const [player1, setPlayer1] = useState<Player>({ username: 'player1', avatar: '/Avatar.svg' });
   const [player2, setPlayer2] = useState<Player>({ username: 'player2', avatar: '/Avatar.svg' });
+  const [inGame, setInGame] = useState<boolean>(false);
+  const [tournamentMatch, setTournamentMatch] = useState<number>(0);
   return (
     <GameContext.Provider
       value={{
@@ -106,6 +118,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setTotalScore,
         GameWinner,
         setGameWinner,
+        inGame,
+        setInGame,
+        tournamentMatch,
+        setTournamentMatch,
       }}
     >
       {children}

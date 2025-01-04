@@ -3,21 +3,17 @@ import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/services/fetch-otp';
-import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import withAuth from '@/context/requireAhuth';
 
 const Login2fa = () => {
-  const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
   const myString = 'Go >';
   const handleClick = async () => {
     try {
-      const response = await sendOtp('verifiy-otp', value, user?.username || null) as any;
+      const response = (await sendOtp('verifiy-otp', value, 'TODO')) as any;
 
       console.log(response.data);
       if (response.data.message) {
-        updateUser({ is2FAvalidated: true });
         toast({
           title: 'success',
           description: response.data.message,
@@ -54,4 +50,4 @@ const Login2fa = () => {
   );
 };
 
-export default withAuth(Login2fa, false);
+export default Login2fa;
