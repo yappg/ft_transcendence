@@ -9,6 +9,7 @@ const MatchHistoryComponent = ({
   level2,
   Score1,
   Score2,
+  map_played,
 }: {
   Player1: string;
   Player2: string;
@@ -18,10 +19,46 @@ const MatchHistoryComponent = ({
   level2: number;
   Score1: number;
   Score2: number;
+  map_played: string;
 }): JSX.Element => {
-  {
-    return (
-      <div className="bg-black-crd flex h-[100px] w-full flex-row items-center gap-3 border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 md:h-[150px] lg:px-5">
+  console.log('map_played', map_played);
+  const getBackgroundStyle = () => {
+    if (map_played === 'fire') {
+      return {
+        backgroundImage: 'url("/FireMode.svg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+    if (map_played === 'air' || map_played === 'Air') {
+      return {
+        backgroundImage: 'url("/AirMode.svg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+    if (map_played === 'earth' || map_played === 'Earth') {
+      return {
+        backgroundImage: 'url("/EarthMode.svg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+    if (map_played === 'water' || map_played === 'Water') {
+      return {
+        backgroundImage: 'url("/WaterMode.svg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+    // Add more conditions for other maps if needed
+    return {};
+  };
+
+  return (
+    <div className="bg-black-crd relative flex h-[100px] w-full flex-row items-center gap-3 border-b-2 border-[#1C1C1C] border-opacity-[40%] px-4 md:h-[150px] lg:px-5">
+      <div className="absolute inset-0 z-0 opacity-50" style={getBackgroundStyle()} />
+      <div className="relative z-10 flex w-full flex-row items-center gap-3">
         <PlayerCard
           profilePhoto={ProfilePhoto1}
           playerName={Player1}
@@ -30,7 +67,7 @@ const MatchHistoryComponent = ({
           reverse={false}
           isHighScore={Score1 > Score2}
         />
-        <div className="flex h-full  w-[10%] items-center justify-center">
+        <div className="flex h-full w-[10%] items-center justify-center">
           <h1 className="font-dayson text-[#CFCDCD] transition-all duration-300 md:text-[32px] lg:text-[35px] xl:text-[43px] 2xl:text-[50px]">
             VS
           </h1>
@@ -44,7 +81,8 @@ const MatchHistoryComponent = ({
           isHighScore={Score2 > Score1}
         />
       </div>
-    );
-  }
+    </div>
+  );
 };
+
 export default MatchHistoryComponent;
