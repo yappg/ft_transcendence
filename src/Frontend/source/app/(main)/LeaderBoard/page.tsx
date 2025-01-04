@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 import FriendsComponent from '@/components/friends/FriendsComponent';
 import { SideBarContext } from '@/context/SideBarContext';
@@ -13,21 +14,20 @@ export default function Page() {
 
   const { PlayerLeaderBoard, setPlayerLeaderBoard, setIsLoading } = useUser();
 
-  const fetchPlayerLeaderBoard = async () => {
-    setIsLoading(true);
-    try {
-      const fetchPlayerLeaderBoard = await userService.getPlayerLeaderBoard();
-      setPlayerLeaderBoard(fetchPlayerLeaderBoard);
-    } catch (err) {
-      setPlayerLeaderBoard(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchPlayerLeaderBoard = async () => {
+      setIsLoading(true);
+      try {
+        const fetchPlayerLeaderBoard = await userService.getPlayerLeaderBoard();
+        setPlayerLeaderBoard(fetchPlayerLeaderBoard);
+      } catch (err) {
+        setPlayerLeaderBoard(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchPlayerLeaderBoard();
-  }, []);
+  }, [setPlayerLeaderBoard, setIsLoading]);
 
   console.log('this is the fetched leaderboard2: ', PlayerLeaderBoard);
   if (!PlayerLeaderBoard)
@@ -66,7 +66,7 @@ export default function Page() {
                     wins={PlayerLeaderBoard[1].games_won}
                     losses={PlayerLeaderBoard[1].games_loss}
                     messagesLink={
-                      <div className="flex h-[70px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[70px] sm:w-[75%] lg:h-[150px]">
+                      <div className="flex h-[70px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[70px] sm:w-3/4 lg:h-[150px]">
                         <span className="font-dayson text-[15px] text-[#C0C0C0] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                           2nd
                         </span>

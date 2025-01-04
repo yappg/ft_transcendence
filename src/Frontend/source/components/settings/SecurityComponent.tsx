@@ -1,32 +1,34 @@
-import { Switch } from '@/components/ui/switch';
-import { User } from '@/constants/chat';
+import { z } from 'zod';
 import { useState } from 'react';
 import { Activate_2fa } from './Activate_2fa';
-import { z } from 'zod';
 import SettingsServices from '@/services/settingsServices';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
 export const SecurityComponent = () => {
   const router = useRouter();
   const passwordValidator = z.object({
     password: z.string(),
-    newPassword: z.string().refine((val: string) => {
-      // If password is empty, newPassword must also be empty
-      if (password === '') {
-        return val === '';
+    newPassword: z.string().refine(
+      (val: string) => {
+        // If password is empty, newPassword must also be empty
+        if (password === '') {
+          return val === '';
+        }
+        // If password is not empty, newPassword must be at least 8 characters
+        return val.length >= 8;
+      },
+      {
+        message: 'New password must be provided and at least 8 characters when changing password',
       }
-      // If password is not empty, newPassword must be at least 8 characters
-      return val.length >= 8;
-    }, {
-      message: 'New password must be provided and at least 8 characters when changing password',
-    }),
+    ),
   });
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({
-      password: '',
-      newPassword: '',
+    password: '',
+    newPassword: '',
   });
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -39,9 +41,10 @@ export const SecurityComponent = () => {
     const get2fa = async () => {
       const response = await SettingsServices.get2fa();
       setEnabled2fa(response);
-    }
+    };
     get2fa();
   }, []);
+
   const handleClick = async () => {
     setErrors({});
 
@@ -52,7 +55,7 @@ export const SecurityComponent = () => {
     }
     const result = passwordValidator.safeParse({ password, newPassword });
     if (!result.success) {
-      setErrors(result.error.flatten().fieldErrors);
+      setErrors(result.error.flatten().fieldErrors as Record<string, string>);
     } else {
       setErrors({});
       if (password !== '' && newPassword !== '') {
@@ -72,52 +75,50 @@ export const SecurityComponent = () => {
     if (errors.password === '' && errors.newPassword === '') {
       if (enabled2fa) {
         router.push('/2fa/signup-2fa');
-      }
-      else {
+      } else {
         await SettingsServices.update2fa(false);
       }
     }
   };
   return (
-    <div className="w-full md:py-6 flex 2xl:flex-row flex-col items-center h-fit">
-      <div className="flex flex-col gap-8 w-full">
-      <div className="w-full h-[8%] flex items-center">
-        <h1 className="text-white font-dayson font-bold text-2xl tracking-wider border-b-2 transition-all duration-200">
-          Security
-        </h1>
-      </div>
-      <div className="w-full h-fit flex md:flex-row flex-col justify-between gap-4">
-        <div className="md:w-[50%] flex flex-col gap-4 md:px-12">
-          <label className="text-white text-sm">Password</label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            onChange={handlePasswordChange}
-            className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none w-[300px]"
-          />
-           {errors.password && (<p className="text-red-500 text-sm">{errors.password}</p>)}
-          <label className="text-white text-sm">New Password</label>
-          <input
-            type="password"
-            placeholder="Enter your new password"
-            onChange={handleNewPasswordChange}
-            className="py-2 px-4 bg-gray-700 text-white rounded-md outline-none w-[300px]"
-          />
-          {errors.newPassword && (<p className="text-red-500 text-sm">{errors.newPassword}</p>)}
+    <div className="flex h-fit w-full flex-col items-center md:py-6 2xl:flex-row">
+      <div className="flex w-full flex-col gap-8">
+        <div className="flex h-[8%] w-full items-center">
+          <h1 className="font-dayson border-b-2 text-2xl font-bold tracking-wider text-white transition-all duration-200">
+            Security
+          </h1>
+        </div>
+        <div className="flex h-fit w-full flex-col justify-between gap-4 md:flex-row">
+          <div className="flex flex-col gap-4 md:w-[50%] md:px-12">
+            <label className="text-sm text-white">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              onChange={handlePasswordChange}
+              className="w-[300px] rounded-md bg-gray-700 px-4 py-2 text-white outline-none"
+            />
+            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+            <label className="text-sm text-white">New Password</label>
+            <input
+              type="password"
+              placeholder="Enter your new password"
+              onChange={handleNewPasswordChange}
+              className="w-[300px] rounded-md bg-gray-700 px-4 py-2 text-white outline-none"
+            />
+            {errors.newPassword && <p className="text-sm text-red-500">{errors.newPassword}</p>}
+          </div>
         </div>
       </div>
-      </div>
-      <div className="w-full h-[5%] flex items-center justify-end flex-col gap-4">
-
-      <Activate_2fa enabled2fa={enabled2fa} setEnabled2fa={setEnabled2fa} />
-      <div className="w-full h-[5%] flex items-center justify-end">
-        <button
-          className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[250px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
-          onClick={handleClick}
-        >
-          {isClicked ? 'Updated' : 'Update'}
-        </button>
-      </div>
+      <div className="flex h-[5%] w-full flex-col items-center justify-end gap-4">
+        <Activate_2fa enabled2fa={enabled2fa} setEnabled2fa={setEnabled2fa} />
+        <div className="flex h-[5%] w-full items-center justify-end">
+          <button
+            className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} font-dayson h-[50px] w-[250px] rounded-md px-6 py-3 text-lg font-bold text-black transition-all duration-200 hover:bg-opacity-[90%]`}
+            onClick={handleClick}
+          >
+            {isClicked ? 'Updated' : 'Update'}
+          </button>
+        </div>
       </div>
     </div>
   );

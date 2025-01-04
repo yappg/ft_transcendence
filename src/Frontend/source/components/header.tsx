@@ -44,7 +44,6 @@ export const Header = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
-
   const router = useRouter();
   const handleClick = () => {
     setShowSearchBar(!showSearchBar);

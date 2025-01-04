@@ -4,19 +4,11 @@ import { chatService } from '@/services/chatService';
 
 interface UseChatWebSocketProps {
   chatId: number;
-  currentUserId: number;
-  receiverId: number;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+  setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
 }
 
-export function useChatWebSocket({
-  chatId,
-  currentUserId,
-  receiverId,
-  setMessages,
-  setChats,
-}: UseChatWebSocketProps) {
+export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
   const socketRef = useRef<WebSocket | null>(null);
 
   // ---------------------------------------------------------------------
@@ -36,7 +28,7 @@ export function useChatWebSocket({
         ];
       });
 
-      setChats((prevChats: Chat[]) => {
+      setChats((prevChats: Chat[] | null) => {
         if (!prevChats) return prevChats;
         return prevChats.map((chat) => {
           if (chat.id === chatId) {
