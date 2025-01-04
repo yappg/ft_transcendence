@@ -12,6 +12,7 @@ import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/module
 import { Chart } from '@/components/Profile/Chart';
 import Rating from '@/components/Profile/rating';
 import { useUser } from '@/context/GlobalContext';
+import { Achievement } from '@/constants/achivemement';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import HomeAchievement from '@/components/home/HomeAchievement';
 import Link from 'next/link';
@@ -79,10 +80,12 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
-  const { user } = useUser();
-  console.log('userrrrrrrrrrr', user?.achievements);
+  const { user, setAchievements } = useUser();
+
+  let userAchievements: Achievement[] = [];
   if (!user) return <div>Loading...</div>;
-  const achievements = user.achievements;
+  userAchievements = user?.achievements;
+  console.log('userAchievements', userAchievements);
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
       <div className="h-[50%] w-full lg:h-full lg:w-3/5">
@@ -100,15 +103,15 @@ const Home = () => {
           <DashboardCard />
         </div>
         <div className="bg-black-crd flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[10%]">
-          {user?.achievement > 0 ? (
+          {userAchievements && userAchievements.length > 0 ? (
             <HomeAchievement
-              title={user?.achievements[0].achievement.name}
-              description={user?.achievements[0].achievement.description}
-              points={user?.achievements[0].achievement.xp_gain}
-              progress={user?.achievements[0].progress}
-              xpReward={user?.achievements[0].achievement.xp_gain}
-              ratio={user?.achievements[0].achievement.condition}
-              iconUrl={'http://localhost:8080' + user?.achievements[0].image}
+              title={userAchievements[0].achievement.name}
+              description={userAchievements[0].achievement.description}
+              points={userAchievements[0].achievement.xp_gain}
+              progress={userAchievements[0].progress}
+              xpReward={userAchievements[0].achievement.xp_gain}
+              ratio={userAchievements[0].achievement.condition}
+              iconUrl={'http://localhost:8080' + userAchievements[0].image}
             />
           ) : (
             <div className="flex size-full items-center justify-center">

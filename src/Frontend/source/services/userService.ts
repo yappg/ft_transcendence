@@ -1,5 +1,6 @@
 import axios from '@/lib/axios';
 import { User, History, LeaderBoard } from '@/context/GlobalContext';
+import { Achievement } from '@/constants/achivemement';
 
 export const userService = {
   async getUserProfile(): Promise<User> {
@@ -12,6 +13,10 @@ export const userService = {
   },
   async getPlayerLeaderBoard(): Promise<LeaderBoard[]> {
     const response = await axios.get(`accounts/leaderboard/`);
+    return response.data;
+  },
+  async getAchievements(): Promise<Achievement[]> {
+    const response = await axios.get(`/accounts/user-achievements/`);
     return response.data;
   },
 };

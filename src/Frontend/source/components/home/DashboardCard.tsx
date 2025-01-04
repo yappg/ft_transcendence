@@ -1,22 +1,22 @@
 import { useUser } from '@/context/GlobalContext';
 import { RiArrowRightSLine } from 'react-icons/ri';
+
 export const DashboardCard = (...props: any) => {
   const { user, PlayerMatches } = useUser();
 
   if (!user) {
     return (
-      <div className="size-full rounded-[30px]">
+      <div className="size-full rounded-[300px]">
         <h1 className="font-dayson text-2xl font-bold text-white">No data available</h1>
       </div>
     );
   }
-  console.log('PlayerMatches', PlayerMatches[0]);
   return (
     <>
       {PlayerMatches && PlayerMatches.length > 0 ? (
-        <div className={`relative size-full rounded-[30px]`}>
+        <div className={`relative size-full rounded-[40px]`}>
           <div
-            className={`absolute inset-0 rounded-[30px] bg-cover bg-center
+            className={`absolute inset-0 rounded-[20px] bg-cover bg-center
                         ${
                           PlayerMatches[0]?.map_played === 'water'
                             ? 'bg-[url("/WaterMode.svg")]'
