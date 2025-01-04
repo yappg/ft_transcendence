@@ -10,7 +10,7 @@ WORKDIR /app
 COPY ./source/package.json ./
 # ./source/yarn.lock ./
 
-# RUN yarn install
+RUN yarn install
 
 EXPOSE 3000
 

@@ -1,38 +1,45 @@
-import { useUser } from "@/context/GlobalContext"
-import Link from "next/link";
-import { RiArrowRightSLine } from "react-icons/ri";
+import { useUser } from '@/context/GlobalContext';
+import Link from 'next/link';
+import { RiArrowRightSLine } from 'react-icons/ri';
 
 export const HomeLeaderboard = () => {
-  const {PlayerLeaderBoard} = useUser();
+  const { PlayerLeaderBoard } = useUser();
   return (
-      <div className="w-full h-full flex flex-col items-start justify-start rounded-[30px] bg-black-crd py-3">
-          <div className="w-full h-[85%] flex flex-col">
-              {PlayerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
-                  <div 
-                      key={index}
-                      className={`w-full flex-1 flex items-center justify-start gap-4 lg:gap-8 border-b-2 px-8 
-                          ${index === 0 ? '' : 'md:hidden lg:flex flex'} 
+    <div className="bg-black-crd flex size-full flex-col items-start justify-start rounded-[30px] py-3">
+      <div className="flex h-[85%] w-full flex-col">
+        {PlayerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
+          <div
+            key={index}
+            className={`flex w-full flex-1 items-center justify-start gap-4 border-b-2 px-8 lg:gap-8 
+                          ${index === 0 ? '' : 'flex md:hidden lg:flex'} 
                           ${index > 2 ? 'hidden' : ''}`}
-                  >
-                      <img 
-                          src={'http://localhost:8080' + leaderboard.avatar} 
-                          alt="avatar" 
-                          className="size-[40px] lg:size-[50px] rounded-full object-cover" 
-                      />
-                      <div className="flex flex-col items-start justify-center gap- lg:gap-4">
-                          <h1 className="text-white lg:text-[20px] text-sm font-coustard">{leaderboard.display_name}</h1>
-                          <h1 className="text-white lg:text-[20px] text-sm font-coustard opacity-50">level {leaderboard.level}</h1>
-                      </div>
-                  </div>
-              ))}
+          >
+            <img
+              src={`http://localhost:8080${leaderboard.avatar}`}
+              alt="avatar"
+              className="size-[40px] rounded-full object-cover lg:size-[50px]"
+            />
+            <div className="gap- flex flex-col items-start justify-center lg:gap-4">
+              <h1 className="font-coustard text-sm text-white lg:text-[20px]">
+                {leaderboard.display_name}
+              </h1>
+              <h1 className="font-coustard text-sm text-white opacity-50 lg:text-[20px]">
+                level {leaderboard.level}
+              </h1>
+            </div>
           </div>
-          
-          <div className="w-full h-[15%] p-4 border-t border-gray-700 flex items-center justify-end">
-              <h1 className="text-white text-sm font-dayson text-center">Leaderboard</h1>
-              <Link href={'/leaderboard'} className='lg:size-[70px] size-[50px] flex items-center justify-center'>
-                <RiArrowRightSLine className='text-white lg:text-[80px] text-[40px] font-dayson font-bold' />
-              </Link>
-          </div>
+        ))}
       </div>
-  )
-}
+
+      <div className="flex h-[15%] w-full items-center justify-end border-t border-gray-700 p-4">
+        <h1 className="font-dayson text-center text-sm text-white">Leaderboard</h1>
+        <Link
+          href={'/LeaderBoard'}
+          className="flex size-[50px] items-center justify-center lg:size-[70px]"
+        >
+          <RiArrowRightSLine className="font-dayson text-[40px] font-bold text-white lg:text-[80px]" />
+        </Link>
+      </div>
+    </div>
+  );
+};
