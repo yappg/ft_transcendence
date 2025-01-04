@@ -33,6 +33,7 @@ export default function Page() {
             level2={match.player2.level}
             Score1={match.player1_score}
             Score2={match.player2_score}
+            map_played={match.map_played}
           />
         ))}
       </div>
