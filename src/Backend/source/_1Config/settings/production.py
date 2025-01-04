@@ -13,13 +13,13 @@ def get_env_variable(var_name):
     try:
         return os.getenv(var_name)
     except KeyError:
-        raise ImproperlyConfigured(f"Set the {var_name} environment variable")
+        raise ImproperlyConfigured(f"{var_name} environment variable is not set")
 
 # ===========================
 # SECURITY SETTINGS
 # ===========================
 
-SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
+SECRET_KEY = os.getenv('SIGNING_KEY')
 
 DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
@@ -65,10 +65,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'accounts',
-    'chat',
-    'game',
-    'relations',
+    'accounts', 'chat', 'game', 'relations',
 ]
 
 MIDDLEWARE = [
@@ -201,35 +198,23 @@ SESSION_CACHE_ALIAS = "default"
 
 AUTH_USER_MODEL = 'accounts.Player'
 
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = True
-# ACCOUNT_AUTHENTICATION_METHOD = 'username'
-# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+SITE_ID = 1
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#         # 'OPTIONS': {
-#         #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#         'OPTIONS': {
-#             'min_length': 8,
-#         },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#         # 'OPTIONS': {
-#         #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 8},
+    },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
 
 # ===========================
 # OAUTH2 CONFIGURATION
@@ -254,7 +239,6 @@ OAUTH2_PROVIDER_GOOGLE = {
     'CALLBACK_URL': get_env_variable('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
-
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION
@@ -285,12 +269,12 @@ TEMPLATES = [
 # ===========================
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/app/staticfiles'
+STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/app/UsersMedia'
+MEDIA_ROOT = '/app/source/UsersMedia'
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
 
 # ===========================
 # EMAIL CONFIGURATION

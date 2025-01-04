@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ===========================
 
 # Secret key for cryptographic signing
-SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
+SECRET_KEY = os.getenv('SIGNING_KEY')
 
 # Enable debug mode for development only (disable in production)
 DEBUG = True
@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['*']
 # CORS CONFIGURATION
 # ===========================
 
-CORS_ALLOW_ALL_ORIGINS = False  # Restrict origins
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     # 'http://frontend:3000',
@@ -226,27 +226,28 @@ SWAGGER_SETTINGS = {
     },
 }
 
-# OAuth2 Configuration for 42 API TODO ENV
+# OAuth2 Configuration for 42 API
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': os.getenv("CLIENT_ID_42"),
-    'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
+    'CLIENT_ID': os.getenv('CLIENT_ID_42'),
+    'CLIENT_SECRET': os.getenv('CLIENT_SECRET_42'),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://localhost:3000/auth/login',
+    'CALLBACK_URL': os.getenv('OAUTH_42_CALLBACK_URL'),
     'SCOPE': 'public',
 }
 
-# OAuth2 Configuration for Google API TODO ENV
+# OAuth2 Configuration for Google API
 OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
-    'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+    'CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
+    'CLIENT_SECRET': os.getenv('GOOGLE_CLIENT_SECRET'),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://localhost:3000/auth/login?provider=google',
+    'CALLBACK_URL': os.getenv('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
+
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION

@@ -2,9 +2,10 @@
 import UserInfo from '@/components/Profile/UserInfo';
 import UserSummary from '@/components/Profile/UserSummary';
 import { User, useUser } from '@/context/GlobalContext';
+
 export default function Page() {
   const { user } = useUser();
-  
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -15,7 +16,7 @@ export default function Page() {
           <div
             className="absolute h-full w-full z-[0]"
             style={{
-              backgroundImage: `url(http://localhost:8080${user?.cover})`,
+              backgroundImage: `url(${process.env.NEXT_PUBLIC_HOST + user?.cover})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',

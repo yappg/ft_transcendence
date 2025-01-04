@@ -5,7 +5,7 @@ import { useUser } from '@/context/GlobalContext';
 import { useState } from 'react';
 const ProfileInformations = ({profileState, setProfileState, errors, setErrors}: {
   profileState: {
-    avatar: string, 
+    avatar: string,
     cover: string,
     profileError: string,
     coverError: string,
@@ -38,7 +38,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
         updateState('avatar', null);
         return;
       }
-      
+
       const imageUrl = URL.createObjectURL(file);
       updateState('avatar', imageUrl);
       updateState('profileError', '');
@@ -51,7 +51,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
         type: file.type,
         size: file.size,
       });
-      
+
       if (!validationResult.success) {
         updateState('coverError', 'Invalid file type or size. Max size 5MB.');
         updateState('cover', null);
@@ -99,7 +99,7 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
       </div>
       <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
         <ImageCard
-          selectedImage={`http://localhost:8080${profileState?.avatar}`}
+          selectedImage={process.env.NEXT_PUBLIC_HOST + profileState?.avatar}
           handleImageChange={handleImageChange}
           profileError={profileState.profileError}
         />

@@ -46,7 +46,7 @@ const UserInfo = ({
   return (
     <div className="size-full z-99 absolute flex lg:flex-row flex-col items-center justify-between px-6 py-4 2xl:px-10">
       <div className="lg:w-fit w-full h-fit lg:h-full flex flex-col items-center justify-start lg:flex-row lg:items-end lg:justify-start gap-12">
-        <Avatar url={`http://localhost:8080${userProfile?.avatar}`} />
+        <Avatar url={process.env.NEXT_PUBLIC_HOST + userProfile?.avatar} />
         <ProfileInfo
           display_name={userProfile?.display_name}
           username={userProfile?.username}
