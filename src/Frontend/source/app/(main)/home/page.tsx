@@ -17,7 +17,6 @@ import HomeAchievement from '@/components/home/HomeAchievement';
 import Link from 'next/link';
 import { HomeLeaderboard } from '@/components/home/HomeLeaderboard';
 
-
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
     <Swiper
@@ -81,49 +80,60 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const { user } = useUser();
+  console.log('userrrrrrrrrrr', user?.achievements);
   if (!user) return <div>Loading...</div>;
   const achievements = user.achievements;
   return (
-    <div className="size-full overflow-y-scroll xl:gap-8 gap-28 xl:flex-row flex-col flex custom-scrollbar-container lg:overflow-hidden">
-      <div className='xl:w-[60%] w-full xl:h-full h-[500px]'>
-      <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center relative">
-        <img src="/games-logo.svg" alt="" className="size-[300px]" />
-      </div>
-      <div className=" custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
+    <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
+      <div className="h-[50%] w-full lg:h-full lg:w-3/5">
+        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
+          <img src="/games-logo.svg" alt="" className="size-[300px]" />
+        </div>
+        <div className=" custom-inner-shadow costum-little-shadow bg-black-crd relative flex h-full items-center overflow-hidden rounded-[30px]">
           <div className="flex size-full items-center">
             <MapsSwiper mode="" />
           </div>
         </div>
       </div>
-      <div className="xl:w-[40%] w-full xl:h-full h-full justify-between flex-col flex">
-        <div className="w-full h-[100px]">
+      <div className="flex h-[50%] w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
+        <div className="h-[200px] w-full lg:h-[10%]">
           <DashboardCard />
         </div>
-        <div className="w-full h-[100px] flex items-center justify-between px-7 bg-black-crd rounded-[30px] bg-black">
-          {/* <HomeAchievement 
-          title={user?.achievements[0].achievement.name}
-          description={user?.achievements[0].achievement.description}
-          points={user?.achievements[0].achievement.points}
-          progress={user?.achievements[0].progress}
-          xpReward={user?.achievements[0].achievement.xp_gain}
-          ratio={user?.achievements[0].achievement.ratio}
-          iconUrl={"http://localhost:8080" + user?.achievements[0].image}
-          /> */}
-          <Link href={'/achievement'} className='size-[80px]'>
-            <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
+        <div className="bg-black-crd flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[10%]">
+          {user?.achievement > 0 ? (
+            <HomeAchievement
+              title={user?.achievements[0].achievement.name}
+              description={user?.achievements[0].achievement.description}
+              points={user?.achievements[0].achievement.xp_gain}
+              progress={user?.achievements[0].progress}
+              xpReward={user?.achievements[0].achievement.xp_gain}
+              ratio={user?.achievements[0].achievement.condition}
+              iconUrl={'http://localhost:8080' + user?.achievements[0].image}
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <p className="font-dayson text-[20px] font-bold text-white">No achievement yet</p>
+            </div>
+          )}
+          <Link
+            href={'/achievement'}
+            className="flex size-[50px] items-center justify-center lg:size-[80px]"
+          >
+            <RiArrowRightSLine className="font-dayson text-[40px] font-bold text-white lg:text-[80px]" />
           </Link>
         </div>
-        <div className="bg-black w-full h-[30%]">
+        <div className=" h-[300px] w-full md:h-fit lg:h-2/5">
           <HomeLeaderboard />
         </div>
-        <div className=" w-full h-[30%] bg-black-crd rounded-[30px] shadow-2xl">
-        <div className="w-full h-full flex items-center justify-center bg-black-crd rounded-[30px]">
-          <div className="w-1/2  h-full">
-            <Chart total_games={user?.total_games} stats={user?.statistics} />
+        <div className=" bg-black-crd h-[300px] w-full rounded-[30px] shadow-2xl md:h-fit lg:h-2/5">
+          <div className="bg-black-crd gap2 flex size-full flex-row items-center justify-center rounded-[30px] lg:flex-col xl:flex-row">
+            <div className="h-4/5  w-1/2 items-start justify-start">
+              <Chart total_games={user?.total_games} stats={user?.statistics} />
+            </div>
+            <div className="h-full w-1/2 pt-5">
+              <Rating statistics={user?.statistics} />
+            </div>
           </div>
-          <Rating statistics={user?.statistics} />
-        </div>
-          
         </div>
       </div>
     </div>
