@@ -1,3 +1,4 @@
+
 import axios from '@/lib/axios';
 
 const FriendServices = {
@@ -24,6 +25,18 @@ const FriendServices = {
     async getFriendRequests() {
         try {
             const response = await axios.get('/relations/friends/pending/');
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
+    },
+
+    async declineFriendRequest(receiverUsername: string) {
+        try {
+            const response = await axios.delete('/relations/friends/pending/', {
+                data: { decline_pending: receiverUsername }
+            });
             return response.data;
         }
         catch (error) {
@@ -89,7 +102,6 @@ const FriendServices = {
 
     async unblockFriend(unblockedUsername: string) {
         try {
-            // console.log('Unblocking user:', unblockedUsername, 'called in friendServices')
             const response = await axios.delete('/relations/friends/block/', {
                 data: { unblock_user: unblockedUsername }
             });
@@ -100,17 +112,6 @@ const FriendServices = {
         }
     },
 
-    async declineFriendRequest(senderUsername: string) {
-        try {
-            const response = await axios.delete('/friends/decline/', {
-                data: { sender: senderUsername }
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    }
 };
 
 export default FriendServices;

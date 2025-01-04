@@ -1,9 +1,11 @@
 'use client';
-import { MatchHistory } from '@/constants/MatchHistory';
+import { History } from '@/context/GlobalContext';
 import MatchHistoryComponent from '@/components/MatchHistory/HistoryComponent';
 import { useContext, useEffect } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useUser } from '@/context/GlobalContext';
+
+
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
@@ -20,11 +22,11 @@ export default function Page() {
             </div>
           )
         }
-      {PlayerMatches?.map((match: any) => (
+      {PlayerMatches?.map((match: History) => (
           <MatchHistoryComponent
             key={match.id}
-            Player1={match.pldisplayayer1.display_name}
-            Player2={match.player2._name}
+            Player1={match.player1.display_name}
+            Player2={match.player2.display_name}
             ProfilePhoto1={match.player1.avatar}
             ProfilePhoto2={match.player2.avatar}
             level1={match.player1.level}

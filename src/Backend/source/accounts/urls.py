@@ -72,6 +72,8 @@ urlpatterns = [
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     # path('settings/', SettingsView.as_view(), name='settings'),
+    # path('oauth/login/google/', GoogleLoginView.as_view(), name='google_login'),
+
 
 # TODO disable_account, delete_account
     # path('disable_account/', UserHistoryView , name='user_game_history'),
