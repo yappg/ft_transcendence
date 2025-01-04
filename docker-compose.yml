@@ -54,7 +54,7 @@ services:
       container_name: frontend
       build:
         context: ./src/Frontend
-        target: ${TEST:-production}
+        target: ${TEST:-development}
         # target: ${ENV:-production}
         dockerfile: Dockerfile
       image: frontend
@@ -70,8 +70,8 @@ services:
 # # ==================>
       networks:
         - transcendence
-      # ports:
-      #   - 3000:3000
+      ports:
+        - 3000:3000
       # healthcheck:
       #   test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       #   interval: 10s
