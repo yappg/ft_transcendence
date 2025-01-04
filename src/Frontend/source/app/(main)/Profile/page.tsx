@@ -4,7 +4,7 @@ import UserSummary from '@/components/Profile/UserSummary';
 import { User, useUser } from '@/context/GlobalContext';
 export default function Page() {
   const { user } = useUser();
-  
+
   if (!user) {
     return <div>Loading...</div>;
   }
