@@ -108,7 +108,7 @@ const Home = () => {
               progress={achievements[0].progress}
               xpReward={achievements[0].achievement.xp_gain}
               ratio={achievements[0].achievement.ratio}
-              iconUrl={"http://localhost:8080" + achievements[0].image}
+              iconUrl={process.env.NEXT_PUBLIC_HOST + achievements[0].image}
             />
           )} */}
           <Link href={'/achievement'} className='size-[80px]'>

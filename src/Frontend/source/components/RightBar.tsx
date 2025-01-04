@@ -31,7 +31,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
       console.error("Error fetching friends:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchFriends();
   }, [user?.id]);
@@ -41,7 +41,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
       <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
         <Link href="/Profile" onClick={() => handleClick(9)} >
         <Avatar className="size-auto">
-          <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
+          <AvatarImage src={process.env.NEXT_PUBLIC_HOST + user?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         </Link>
@@ -55,12 +55,12 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
         </div>
         <div className="size-full custom-scrollbar-container items-center flex flex-col gap-3">
           {friends.length > 0 && friends.map((friend) => (
-            <Avatar 
-              onClick={() => router.push(`/Profile/${friend.id}`)} 
-              className="size-[60px] rounded-full  cursor-pointer hover:scale-110 transition-transform duration-300" 
+            <Avatar
+              onClick={() => router.push(`/Profile/${friend.id}`)}
+              className="size-[60px] rounded-full  cursor-pointer hover:scale-110 transition-transform duration-300"
               key={friend.id}
             >
-              <AvatarImage src={`http://localhost:8080${friend.avatar}`} alt={friend.display_name || 'User'} />
+              <AvatarImage src={process.env.NEXT_PUBLIC_HOST + friend.avatar} alt={friend.display_name || 'User'} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
@@ -77,12 +77,12 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
         </div>
         <div className="size-full custom-scrollbar-container items-center flex flex-col gap-3">
           {chats && chats.length > 0 && chats.map((chat) => (
-            <Avatar 
-              onClick={() => router.push(`/messages/${chat.id}`)} 
-              className="size-[60px] rounded-full cursor-pointer hover:scale-110 transition-transform duration-300" 
+            <Avatar
+              onClick={() => router.push(`/messages/${chat.id}`)}
+              className="size-[60px] rounded-full cursor-pointer hover:scale-110 transition-transform duration-300"
               key={chat.id}
             >
-              <AvatarImage src={`http://localhost:8080${chat.receiver.avatar}`} alt={chat.receiver.username || 'User'} />
+              <AvatarImage src={process.env.NEXT_PUBLIC_HOST + chat.receiver.avatar} alt={chat.receiver.username || 'User'} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ))}
@@ -91,4 +91,3 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
     </div>
   );
 };
-

@@ -7,15 +7,15 @@ ENV NODE_ENV=development
 
 WORKDIR /app
 
-COPY ./source/package.json ./
-# COPY ./source/package.json ./source/yarn.lock ./
+# COPY ./source/package.json ./
+COPY ./source/package.json ./source/yarn.lock ./
 
-# RUN yarn install
+RUN yarn install
 
 EXPOSE 3000
 
-# CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 5; done"]
-CMD [ "tail", "-f", "/dev/null" ]
+CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 5; done"]
+# CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
 # Stage 2: Build stage

@@ -151,7 +151,7 @@ const UserFriendsNav = (): JSX.Element => {
             <FriendRequestCard
               key={index}
               name={invitation.sender_display_name}
-              ProfilePhoto={`http://localhost:8080${invitation.sender_avatar}`}
+              ProfilePhoto={process.env.NEXT_PUBLIC_HOST + invitation.sender_avatar}
               vari={formatDate(invitation.created_at)}
               onRequestAccepted={handleRequestAccepted}
               onRequestDeclined={handleRequestDeclined}

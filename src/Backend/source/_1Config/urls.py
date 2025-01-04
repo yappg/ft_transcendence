@@ -38,7 +38,7 @@ urlpatterns = [
     path('prometheus/', include('django_prometheus.urls')),
     path('health/', health_check, name='health_check'),
 
-    path('api/admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls'), name='accounts'),
     path('api/relations/', include('relations.urls'), name='relations'),
     path('api/chat/', include('chat.urls'), name='chat'),

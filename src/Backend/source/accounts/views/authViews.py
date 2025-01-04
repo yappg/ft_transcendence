@@ -130,30 +130,33 @@ class LogoutView(APIView):
 
 #------------------------------------- 2FA ------------------------------------
 
-class GenerateURI(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = GenerateOTPSerializer
+# class GenerateURI(APIView): # TODO internal 500 error
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = GenerateOTPSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_200_OK)
-        # TODO must retrieve the user from the request cookie, to fetch the user from the database
-        user = Player.objects.get(username=request.data['username'])
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
-        if user.enabled_2fa == True:
-            return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data)
+#         if not serializer.is_valid():
+#             return Response(serializer.errors, status=status.HTTP_200_OK)
 
-        secret_key = pyotp.random_base32()
-        totp = pyotp.TOTP(secret_key)
-        uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
+#         try:
+#             user = Player.objects.get(username=request.data['username'])
+#         except Player.DoesNotExist:
+#             return Response({'error': 'User not found'}, status=status.HTTP_200_OK)
 
-        user.otp_secret_key = secret_key
-        user.save()
-        return Response(
-            {'uri': uri, 'enabled_2fa': user.enabled_2fa},
-            status=status.HTTP_200_OK)
+#         if user.enabled_2fa:
+#             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
+
+#         secret_key = pyotp.random_base32()
+#         totp = pyotp.TOTP(secret_key)
+#         uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
+
+#         user.otp_secret_key = secret_key
+#         user.save()
+
+#         return Response(
+#             {'uri': uri, 'enabled_2fa': user.enabled_2fa},
+#             status=status.HTTP_200_OK)
 
 class VerifyOTP(APIView):
     permission_classes = [IsAuthenticated]

@@ -12,7 +12,7 @@ function Title() {
     if (code) {
       if (provider && provider === 'google') {
         axiosInstance
-          .get('http://localhost:8080/accounts/oauth/callback/google/', {
+          .get('/accounts/oauth/callback/google/', {
             params: {
               code: code,
             },
@@ -25,7 +25,7 @@ function Title() {
       } else {
         console.log('--------42', code);
         axiosInstance
-          .get('http://localhost:8080/accounts/oauth/callback/42/', {
+          .get('/accounts/oauth/callback/42/', {
             params: {
               code: code,
             },
