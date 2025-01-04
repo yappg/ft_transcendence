@@ -115,9 +115,10 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
     matches_history = serializers.SerializerMethodField()
-    avatar = serializers.SerializerMethodField()
-    cover = serializers.SerializerMethodField()
-
+    # avatar = serializers.SerializerMethodField()
+    # cover = serializers.SerializerMethodField()
+    avatar = serializers.ImageField(required=False, allow_null=True)
+    cover = serializers.ImageField(required=False, allow_null=True)
 
     last_login = serializers.SerializerMethodField()
     is_private = serializers.SerializerMethodField()
@@ -166,6 +167,20 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
             'last_login',
         ]
+        
+    def update(self, instance, validated_data):
+        # Handle file updates (avatar/cover)
+        avatar = validated_data.get('avatar', None)
+        cover = validated_data.get('cover', None)
+
+        if avatar:
+            instance.avatar = avatar
+        if cover:
+            instance.cover = cover
+
+        instance.display_name = validated_data.get('display_name', instance.display_name)  # Update other fields
+        instance.save()
+        return instance
 
     def get_relation(self, obj):
         from relations.models import FriendInvitation, BlockedUsers

@@ -33,10 +33,15 @@ class Friends(models.Model):
 
         super().save(*args, **kwargs)
         
-        chat_room = ChatRoom.objects.filter(senders__in=[self.friend_requester, self.friend_responder]).first()
-        if not chat_room:
+        chat_room = ChatRoom.objects.filter(name=f"{self.friend_requester.username}_{self.friend_responder.username}_room").first()
+        chat_room_reverse = ChatRoom.objects.filter(name=f"{self.friend_responder.username}_{self.friend_requester.username}_room").first()
+        # check if chat room exists
+
+        if not chat_room and not chat_room_reverse:
             chat_room = ChatRoom.objects.create(name=f"{self.friend_requester.username}_{self.friend_responder.username}_room")
             chat_room.senders.add(self.friend_requester, self.friend_responder)
+            chat_room.save()
+        
 
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
