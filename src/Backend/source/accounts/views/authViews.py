@@ -139,9 +139,10 @@ class GenerateURI(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
-        user = Player.objects.get(username=request.data['username'])
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
+        try:
+            user = Player.objects.get(username=request.data['username'])
+        except:
+            return Response({'error': 'user Not found'}, status=status.HTTP_404_NOT_FOUND)
         if user.enabled_2fa == True:
             return Response({'error': '2fa already enabled'}, status=status.HTTP_200_OK)
 
@@ -169,10 +170,11 @@ class VerifyOTP(APIView):
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
         otp_token = request.data['otp_token']
-        user = Player.objects.get(username=username)
-        user = request.user
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
+        
+        try:
+            user = Player.objects.get(username=username)
+        except:
+            return Response({'error': 'user Not found'}, status=status.HTTP_404_NOT_FOUND)
         totp = pyotp.TOTP(user.otp_secret_key)
         bol = totp.verify(otp_token)
         if not bol:
@@ -195,10 +197,10 @@ class ValidateOTP(APIView):
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
         otp_token = request.data['otp_token']
-        user = Player.objects.get(username=username)
-        user = request.user
-        if user == None:
-            return Response({'error': 'user Not found'}, status=status.HTTP_200_OK)
+        try:
+            user = Player.objects.get(username=username)
+        except:
+            return Response({'error': 'user Not found'}, status=status.HTTP_404_NOT_FOUND)
         totp = pyotp.TOTP(user.otp_secret_key)
         bol = totp.verify(otp_token)
         if not bol:
@@ -224,9 +226,9 @@ class DisableOTP(APIView):
 
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
-        user = Player.objects.get(username=username)
-        user = request.user
-        if user is None:
+        try:
+            user = Player.objects.get(username=username)
+        except:
             return Response({'error' : 'invalid user'})
         if user.enabled_2fa is False:
             return Response({'error':'2fa Already Disabled'})
