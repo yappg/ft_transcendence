@@ -82,8 +82,8 @@ export function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) 
   return (
     <Sidebar {...props}>
       <SidebarHeader className="gap-10 ">
-        <h1 className="font-dayson text-[25px] dark:text-white text-black">Ping Pong</h1>
-        <NavMain items={data.navMain}/>
+        <h1 className="font-dayson text-[25px] text-black dark:text-white">Ping Pong</h1>
+        <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent className="">
         <NavSecondary items={data.navSecondary} className="mt-auto" />

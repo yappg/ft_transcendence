@@ -28,31 +28,31 @@ const Signup2fa = () => {
       const valid = async () => {
         const response = await sendOtp('verifiy-otp', value, 'user?.username || null'); // need to edit this after talking to kadigh
         console.log(response);
-      if (response.data.message) {
-        toast({
-          title: 'success',
-          description: response.data.message,
-          className: 'bg-primary border-none text-white bg-opacity-20',
-        });
-        return;
-      } else if (response.data.error) {
-        toast({
-          title: 'error',
-          description: response.data.error,
-          className: 'bg-primary-dark border-none text-white bg-opacity-20',
-        });
-      }
+        if (response.data.message) {
+          toast({
+            title: 'success',
+            description: response.data.message,
+            className: 'bg-primary border-none text-white bg-opacity-20',
+          });
+          return;
+        } else if (response.data.error) {
+          toast({
+            title: 'error',
+            description: response.data.error,
+            className: 'bg-primary-dark border-none text-white bg-opacity-20',
+          });
+        }
       };
       valid();
     }
   };
   return (
     <div className="relative flex size-auto flex-col items-center justify-center gap-4 md:h-[90%] md:w-[85%]">
-      <h1 className=" flex items-center justify-center font-dayson text-[40px] text-white transition-all duration-300">
+      <h1 className=" font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300">
         activate 2FA
       </h1>
       {isLoading ? (
-        <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
+        <h1 className="border-white-crd font-dayson flex size-[200px] items-center justify-center rounded-md border text-[30px] text-gray-600">
           Loading...
         </h1>
       ) : (

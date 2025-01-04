@@ -17,6 +17,8 @@ import { RiArrowRightSLine } from 'react-icons/ri';
 import HomeAchievement from '@/components/home/HomeAchievement';
 import Link from 'next/link';
 import { HomeLeaderboard } from '@/components/home/HomeLeaderboard';
+import { userService } from '@/services/userService';
+import { useEffect } from 'react';
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
@@ -80,15 +82,83 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
-  const { user, setAchievements } = useUser();
+  const {
+    user,
+    setAchievements,
+    achievements,
+    setIsLoading,
+    isLoading,
+    setPlayerLeaderBoard,
+    PlayerLeaderBoard,
+    setPlayerMatches,
+    PlayerMatches,
+  } = useUser();
 
-  let userAchievements: Achievement[] = [];
+  const fetchAchievements = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedAchievements = await userService.getAchievements();
+      const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
+        player: data.player,
+        achievement: {
+          name: data.achievement.name,
+          description: data.achievement.description,
+          xp_gain: data.achievement.xp_gain,
+          condition: data.achievement.condition,
+        },
+        date_earned: data.date_earned,
+        image: data.image,
+        xpReward: data.achievement.xp_gain,
+        ratio: data.achievement.condition,
+        progress: data.progress,
+        iconUrl: data.image,
+        gained: data.gained,
+        dateEarned: data.date_earned,
+      }));
+      setAchievements(mappedAchievements);
+    } catch (err) {
+      setAchievements([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerLeaderBoard();
+      setPlayerLeaderBoard(response);
+    } catch (error) {
+      console.log('Error fetching leaderboard:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPlayerMatches = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerMatches();
+      setPlayerMatches(response);
+    } catch (error) {
+      console.log('Error fetching player matches:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayerMatches();
+    fetchAchievements();
+    fetchLeaderboard();
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+  let userAchievements: Achievement[] = achievements || [];
   if (!user) return <div>Loading...</div>;
-  userAchievements = user?.achievements;
-  console.log('userAchievements', userAchievements);
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
-      <div className="h-[50%] w-full lg:h-full lg:w-3/5">
+      <div className="h-1/2 w-full lg:h-full lg:w-3/5">
         <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
           <img src="/games-logo.svg" alt="" className="size-[300px]" />
         </div>
@@ -100,7 +170,7 @@ const Home = () => {
       </div>
       <div className="flex h-[50%] w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
         <div className="h-[200px] w-full lg:h-[10%]">
-          <DashboardCard />
+          <DashboardCard playerMatches={PlayerMatches || []} />
         </div>
         <div className="bg-black-crd flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[10%]">
           {userAchievements && userAchievements.length > 0 ? (
@@ -126,7 +196,7 @@ const Home = () => {
           </Link>
         </div>
         <div className=" h-[300px] w-full md:h-fit lg:h-2/5">
-          <HomeLeaderboard />
+          <HomeLeaderboard playerLeaderBoard={PlayerLeaderBoard || []} />
         </div>
         <div className=" bg-black-crd h-[300px] w-full rounded-[30px] shadow-2xl md:h-fit lg:h-2/5">
           <div className="bg-black-crd gap2 flex size-full flex-row items-center justify-center rounded-[30px] lg:flex-col xl:flex-row">

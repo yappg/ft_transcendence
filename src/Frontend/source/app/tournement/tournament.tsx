@@ -9,14 +9,14 @@ import 'tournament-bracket-tree/dist/index.css';
 const mapTournamentToNode = (game: any) => {
   return (
     <div
-      className="m-2 md:m-[3px] w-[60px] h-[60px] lg:w-[77px] lg:h-[77px] lg:m-[14px]
-                flex justify-center items-center border border-[#FFFFFF] rounded-full"
+      className="m-2 flex size-[60px] items-center justify-center rounded-full border
+                border-[#FFFFFF] md:m-[3px] lg:m-[14px] lg:size-[77px]"
     >
       {game.player.startsWith('./') ? (
-        <img src={game.player} alt="Player" className="rounded-full object-cover w-full h-full" />
+        <img src={game.player} alt="Player" className="size-full rounded-full object-cover" />
       ) : (
         <div className="empty-circle size-full">
-          <Skeleton className="size-full bg-black-crd dark:bg-white-crd rounded-full" />
+          <Skeleton className="bg-black-crd dark:bg-white-crd size-full rounded-full" />
         </div>
       )}
     </div>
@@ -40,15 +40,13 @@ const Tournament = ({ myTree }: any) => {
   }, []);
 
   return (
-    <div className='h-screen w-full mg:rounded-2xl bg-black-crd p-4 flex justify-around items-center flex-col'>
-      <div className='size-auto md:h-[100px] w-full flex justify-center items-center'>
-        <h1 className='text-black-crd dark:text-white-crd text-2xl md:text-3xl font-bold text-center'>Tournament</h1>
+    <div className="mg:rounded-2xl bg-black-crd flex h-screen w-full flex-col items-center justify-around p-4">
+      <div className="flex size-auto w-full items-center justify-center md:h-[100px]">
+        <h1 className="text-black-crd dark:text-white-crd text-center text-2xl font-bold md:text-3xl">
+          Tournament
+        </h1>
       </div>
-      <div
-        className={`flex ${
-          isMobile ? 'flex-col' : 'flex-row'
-        } size-auto`}
-      >
+      <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} size-auto`}>
         {/* Right Tree */}
         <TreeGenerator
           root={isMobile ? 'bottom' : 'right'}
@@ -64,7 +62,7 @@ const Tournament = ({ myTree }: any) => {
           style={{
             margin: isMobile ? '10px 0' : '0 10px',
           }}
-          className="flex md:flex-col items-center w-full md:w-auto md:h-full justify-center"
+          className="flex w-full items-center justify-center md:h-full md:w-auto md:flex-col"
         >
           <img src="./games-logo.svg" className="size-[100px]"></img>
           {mapTournamentToNode(myTree.data)}
@@ -79,7 +77,7 @@ const Tournament = ({ myTree }: any) => {
           lineLength={35}
         />
       </div>
-      <div className='size-auto md:h-[100px] w-full flex justify-center items-center'>
+      <div className="flex size-auto w-full items-center justify-center md:h-[100px]">
         <MyButton>Start Tournament</MyButton>
       </div>
     </div>

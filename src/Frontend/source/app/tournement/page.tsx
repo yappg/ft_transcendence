@@ -4,12 +4,7 @@ import Tournament from './tournament';
 
 const App = () => {
   // Mock images for players (can be replaced with backend data)
-  const playerImages = [
-    './Avatar.svg',
-    './Avatar.svg',
-    './logo.svg',
-    './logo.svg',
-  ];
+  const playerImages = ['./Avatar.svg', './Avatar.svg', './logo.svg', './logo.svg'];
 
   // Function to create a single-elimination tree dynamically
   const createTree = (players: any): { data: { player: string }; right?: any; left?: any } => {
@@ -29,7 +24,7 @@ const App = () => {
   const myTree = createTree(playerImages);
 
   return (
-    <div className="flex justify-center items-center bg-linear-gradient dark:bg-linear-gradient-dark h-screen w-full">
+    <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full items-center justify-center">
       <Tournament myTree={myTree} />
     </div>
   );
