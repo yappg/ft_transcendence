@@ -3,13 +3,14 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import axios from '@/lib/axios';
 import { Chat, Message } from '@/constants/chat';
 import { userService } from '@/services/userService';
+import { Achievement } from '@/constants/achivemement';
 
 export interface User {
   id: number;
   username: string;
   xp: number;
   statistics: Statistics;
-  achievements: any[];
+  achievements: Achievement[];
   last_login: number;
   is_online: boolean;
   display_name: string;
@@ -81,6 +82,7 @@ interface UserContextType {
   lastMessages: { [key: number]: string } | null;
   PlayerLeaderBoard: LeaderBoard[] | null;
   PlayerMatches: History[] | null;
+  achievements: Achievement[] | null;
   fetchCurrentUserDetails: () => Promise<void>;
   setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[] | null>>;
@@ -88,6 +90,7 @@ interface UserContextType {
   setLastMessages: React.Dispatch<React.SetStateAction<{ [key: number]: string } | null>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setPlayerLeaderBoard: React.Dispatch<React.SetStateAction<LeaderBoard[] | null>>;
+  setAchievements: React.Dispatch<React.SetStateAction<Achievement[]>>;
   // setOnlineStatus: () => Promise<void>;
 }
 
@@ -101,6 +104,7 @@ const UserContext = createContext<UserContextType>({
   lastMessages: null,
   PlayerLeaderBoard: [],
   PlayerMatches: [],
+  achievements: [],
   setMessages: () => {},
   setChats: () => {},
   setLastMessages: () => {},
@@ -108,6 +112,7 @@ const UserContext = createContext<UserContextType>({
   setPlayerMatches: () => {},
   setIsLoading: () => {},
   setPlayerLeaderBoard: () => {},
+  setAchievements: () => {},
   // setOnlineStatus: async () => {},
 });
 
@@ -125,6 +130,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [chats, setChats] = useState<Chat[] | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [lastMessages, setLastMessages] = useState<{ [key: number]: string } | null>(null);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   // const setOnlineStatus = async () => {
   //   try {
@@ -167,11 +173,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         lastMessages,
         PlayerMatches,
         PlayerLeaderBoard,
+        achievements,
         setIsLoading,
         setChats,
         setMessages,
         setLastMessages,
         setPlayerMatches,
+        setAchievements,
         setPlayerLeaderBoard,
         fetchCurrentUserDetails,
       }}
