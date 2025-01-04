@@ -7,8 +7,9 @@ from .models import *
 from .serializers import *
 from django.db.models import Q
 from accounts.serializers.userManagmentSerlizers import PlayerRelationsSerializer
-
-# from drf_yasg.utils import swagger_auto_schema
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from chat.models import ChatRoom
 
 class NotificationListView(ListAPIView):
     serializer_class = NotificationSerializer
@@ -231,6 +232,21 @@ class BlockedUsersView(APIView):
                 Q(sender=blocker, receiver=blocked) |
                 Q(sender=blocked, receiver=blocker)
             ).delete()
+            try:
+                chat = ChatRoom.objects.filter(name=f"{blocker.username}_{blocked.username}_room").first()
+                if not chat:
+                    chat = ChatRoom.objects.filter(name=f"{blocked.username}_{blocker.username}_room").first()
+            except ChatRoom.DoesNotExist:
+                return Response({"error": "Chat room not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"chat_{chat.id}",
+                {
+                    "type": "user_blocked",
+                    "chat_id": chat.id
+                    }
+                )
 
             return Response({"message": "User blocked successfully"}, status=status.HTTP_200_OK)
         else:
@@ -244,9 +260,26 @@ class BlockedUsersView(APIView):
             blocked = Player.objects.get(profile__display_name=blocked_display_name)
         except Player.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        block_list = BlockedUsers.objects.get(user=blocker)
+        try:
+            block_list = BlockedUsers.objects.get(user=blocker)
+        except BlockedUsers.DoesNotExist:
+            return Response({"error": "Block list not found"}, status=status.HTTP_404_NOT_FOUND)
         if block_list.unblock_user(blocked):
+            
+            try:
+                chat = ChatRoom.objects.filter(name=f"{blocker.username}_{blocked.username}_room").first()
+                if not chat:
+                    chat = ChatRoom.objects.filter(name=f"{blocked.username}_{blocker.username}_room").first()
+            except ChatRoom.DoesNotExist:
+                return Response({"error": "Chat room not found"}, status=status.HTTP_404_NOT_FOUND)
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"chat_{chat.id}",
+                {
+                    "type": "user_blocked",
+                    "chat_id": chat.id
+                }
+            )
             return Response({"message": "User unblocked successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User not blocked"}, status=status.HTTP_400_BAD_REQUEST)

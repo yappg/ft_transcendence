@@ -15,10 +15,10 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     receiver = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
     blocked_by = serializers.SerializerMethodField()
-
+    is_online = serializers.SerializerMethodField()
     class Meta:
         model = ChatRoom
-        fields = ['id', 'created_at', 'last_message', 'receiver', 'is_blocked', 'blocked_by']
+        fields = ['id', 'created_at', 'last_message', 'receiver', 'is_blocked', 'blocked_by', 'is_online']
     
         
     
@@ -57,3 +57,9 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         if blocked_by.is_blocked(user):
             return True
         return False
+
+    def get_is_online(self, obj):
+        user = self.context.get('request').user
+        other = obj.senders.exclude(id=user.id).first()
+        return other.profile.is_online
+    
