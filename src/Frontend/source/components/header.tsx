@@ -38,7 +38,8 @@ export const Header = () => {
   const { isActivated } = useContext(SideBarContext);
   const [value, setValue] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [filteredPlayers, setFilteredPlayers] = useState<Result>([]);
+  const [filteredPlayers, setFilteredPlayers] = useState<Result[]>([]);
+
   const router = useRouter();
   const handleClick = () => {
     setShowSearchBar(!showSearchBar);
@@ -173,7 +174,7 @@ export const Header = () => {
                     onClick={() => { router.push(`/Profile/${player.id}`); setFilteredPlayers([]); setValue(''); }}
                   >
                     <img
-                      src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
+                      src={`http://localhost:8080${player?.avatar}`}
                       alt={`${player?.display_name}'s avatar`}
                       className="size-10 rounded-full"
                     />
@@ -190,7 +191,7 @@ export const Header = () => {
               )
             }
           </div>
-        <NotificationBell notifications={notifications} notificationCount={notificationCount} />
+        <NotificationBell notifications={notifications || []} notificationCount={notificationCount} setNotificationsCount={setNotificationCount}/>
       </div>
     </div>
   );

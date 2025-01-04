@@ -19,7 +19,7 @@ def get_env_variable(var_name):
 # SECURITY SETTINGS
 # ===========================
 
-SECRET_KEY = os.getenv('SIGNING_KEY')
+SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
 
 DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')

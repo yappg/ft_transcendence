@@ -71,6 +71,8 @@ class FriendsListView(APIView):
         except Player.DoesNotExist:
             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -79,7 +81,7 @@ class PendingInvitationsView(APIView):
         pending_invitations = FriendInvitation.objects.filter(receiver=user)
         if not pending_invitations:
             return Response({"error": "No Invitaions Found"}, status=200);
-        serializer = FriendInvitationSerializer(pending_invitations, many=True)
+        serializer = FriendPendingSerializer(pending_invitations, many=True)
         return Response({'message': 'Success', 'data': serializer.data})
 
     def delete(self, request):
@@ -163,11 +165,6 @@ class FriendInvitationView(APIView):
 
         invitation.delete()
         return Response({"message": "Invitation canceled"}, status=status.HTTP_200_OK)
-
-# @swagger_auto_schema(
-#     request_body=FriendInvitationSerializer,
-#     responses={200: 'Success', 400: 'Invalid input'}
-# )
 
 class AcceptInvitationView(APIView):
     permission_classes = [IsAuthenticated]
