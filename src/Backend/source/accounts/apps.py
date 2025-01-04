@@ -12,7 +12,7 @@ class AccountsConfig(AppConfig):
         def create_admin_user(sender, **kwargs):
             User = get_user_model()
             admin_username = 'admin'
-            admin_email = 'admin@example.com'
+            admin_email = 'admin@django.com'
             admin_password = 'admin'
 
             if not User.objects.filter(username=admin_username).exists():

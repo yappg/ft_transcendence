@@ -174,7 +174,7 @@ export const Header = () => {
                     onClick={() => { router.push(`/Profile/${player.id}`); setFilteredPlayers([]); setValue(''); }}
                   >
                     <img
-                      src={`http://localhost:8080${player?.avatar}`}
+                      src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                       alt={`${player?.display_name}'s avatar`}
                       className="size-10 rounded-full"
                     />

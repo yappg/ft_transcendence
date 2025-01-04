@@ -10,7 +10,7 @@ export const DashboardCard = (...props: any) => {
     }
     return (
         <div className="w-full h-full rounded-[30px] bg-black-crd flex items-center justify-between px-4">
-            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
+            <img src={process.env.NEXT_PUBLIC_HOST + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
             <div className='flex flex-col items-start justify-center gap-2'>
                 <h1 className='text-white text-lg font-dayson'>{user.display_name}</h1>
                 <h1 className='text-white text-sm font-dayson'>Level {user.level}</h1>
@@ -20,7 +20,7 @@ export const DashboardCard = (...props: any) => {
                 <h1 className='text-white text-lg font-dayson'>{user.display_name}</h1>
                 <h1 className='text-white text-sm font-dayson'>Level {user.level}</h1>
             </div>
-            <img src={'http://localhost:8080' + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
+            <img src={process.env.NEXT_PUBLIC_HOST + user.avatar} alt="avatar" className="size-[100px] rounded-full object-cover" />
             <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
         </div>
     )

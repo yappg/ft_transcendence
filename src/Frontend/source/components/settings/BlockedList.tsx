@@ -12,9 +12,9 @@ const BlockedList = () => {
     const [blockedList, setBlockedList] = useState<Blocked[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    
+
     function handleUnblock(name: string) {
-        
+
     }
     useEffect(() => {
       const fetchBlockedList = async () => {
@@ -28,7 +28,7 @@ const BlockedList = () => {
           setLoading(false);
         }
       };
-  
+
       fetchBlockedList();
     }, []);
     if (loading) {
@@ -43,7 +43,7 @@ const BlockedList = () => {
               <BlockedComponent
                 key={index}
                 name={user?.username}
-                ProfilePhoto={`http://localhost:8080${user?.avatar}`}
+                ProfilePhoto={process.env.NEXT_PUBLIC_HOST + user?.avatar}
                 onUnblock={handleUnblock}
               />
             ))

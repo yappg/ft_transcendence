@@ -173,7 +173,7 @@ class PlayerProfile(models.Model):
 
     def update_win_ratio(self):
         if self.total_games != 0:
-            self.win_ratio = (self.games_won / self.total_games) * 100
+            self.win_ratio = round((self.games_won / self.total_games) * 100, 2)
         else:
             self.win_ratio = 0.0
 
