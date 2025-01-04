@@ -79,10 +79,11 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const { user } = useUser();
+  console.log('userrrrrrrrrrr',user?.achievements);
   if (!user) return <div>Loading...</div>;
   return (
-    <div className="size-full overflow-y-scroll xl:gap-8 gap-28 xl:flex-row flex-col flex custom-scrollbar-container lg:overflow-hidden">
-      <div className='xl:w-[60%] w-full xl:h-full h-[500px]'>
+    <div className="size-full overflow-y-scroll xl:gap-8 lg:gap-0 gap-[150px] lg:flex-row flex-col flex custom-scrollbar-container lg:overflow-hidden">
+      <div className='lg:w-[60%] w-full lg:h-full h-[50%]'>
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center relative">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>
@@ -92,33 +93,41 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="xl:w-[40%] w-full xl:h-full h-full justify-between flex-col flex">
-        <div className="w-full h-[100px]">
+      <div className="lg:w-[40%] w-full lg:h-full justify-start lg:gap-10 gap-5 flex-col flex h-[50%] ">
+        <div className="w-full h-[200px] lg:h-[10%]">
           <DashboardCard />
         </div>
-        <div className="w-full h-[150px] flex items-center justify-between bg-black-crd rounded-[30px] bg-black">
+        <div className="w-full h-[150px] md:h-[15%] lg:h-[10%] flex items-center justify-between bg-black-crd rounded-[30px] bg-black">
+          {user?.achievement > 0 ?
           <HomeAchievement 
           title={user?.achievements[0].achievement.name}
           description={user?.achievements[0].achievement.description}
-          points={user?.achievements[0].achievement.condition}
+          points={user?.achievements[0].achievement.xp_gain}
           progress={user?.achievements[0].progress}
           xpReward={user?.achievements[0].achievement.xp_gain}
           ratio={user?.achievements[0].achievement.condition}
           iconUrl={"http://localhost:8080" + user?.achievements[0].image}
           />
-          <Link href={'/achievement'} className='size-[80px]'>
-            <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
+          :
+          <div className='w-full h-full flex items-center justify-center'>
+            <p className='text-white text-[20px] font-dayson font-bold'>No achievement yet</p>
+          </div>
+          }
+          <Link href={'/achievement'} className='lg:size-[80px] size-[50px] flex items-center justify-center'>
+            <RiArrowRightSLine className='text-white lg:text-[80px] text-[40px] font-dayson font-bold' />
           </Link>
         </div>
-        <div className="bg-black w-full h-[30%]">
+        <div className=" w-full md:h-fit lg:h-[40%] h-[300px]">
           <HomeLeaderboard />
         </div>
-        <div className=" w-full h-[30%] bg-black-crd rounded-[30px] shadow-2xl">
-        <div className="w-full h-full flex items-center justify-center bg-black-crd rounded-[30px]">
-          <div className="w-1/2  h-full">
+        <div className=" w-full md:h-fit lg:h-[40%] h-[300px] bg-black-crd rounded-[30px] shadow-2xl">
+        <div className="w-full h-full flex items-center justify-center bg-black-crd rounded-[30px] lg:flex-col flex-row xl:flex-row gap2">
+          <div className="w-1/2  h-[80%] items-start justify-start">
             <Chart total_games={user?.total_games} stats={user?.statistics} />
           </div>
-          <Rating statistics={user?.statistics} />
+          <div className="w-1/2 h-full pt-5">
+            <Rating statistics={user?.statistics} />
+          </div>
         </div>
           
         </div>
