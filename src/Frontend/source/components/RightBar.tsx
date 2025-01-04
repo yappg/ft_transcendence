@@ -25,10 +25,9 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
   const fetchFriends = async () => {
     try {
       const friendsData = await FriendServices.getFriends();
-      console.log('Fetched friends:', friendsData);
       setFriends(friendsData.data);
     } catch (error: any) {
-      console.error('Error fetching friends:', error);
+      console.log('Error fetching friends:', error);
     }
   };
 
