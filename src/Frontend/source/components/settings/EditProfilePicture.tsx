@@ -23,7 +23,6 @@ const EditProfilePicture = () => {
         </div>
         <div className="w-[300px] h-full gap-8">
           <div className="text-white text-[30px] font-coustard font-light border-2">
-
             {user.username}
           </div>
           <div className="text-white text-[30px] font-coustard font-light border-2">
@@ -35,5 +34,3 @@ const EditProfilePicture = () => {
   );
 };
 export default EditProfilePicture;
-
-

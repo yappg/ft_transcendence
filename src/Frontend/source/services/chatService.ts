@@ -62,25 +62,25 @@ class ChatService {
     userId: number,
     receiverId: number
   ): Promise<void> {
-      console.log('chatService.sendMessage called');
-      const socket = this.sockets.get(chatId);
-      if (!socket || socket.readyState !== WebSocket.OPEN) {
-        throw new Error('WebSocket connection is not open');
-      }
+    console.log('chatService.sendMessage called');
+    const socket = this.sockets.get(chatId);
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket connection is not open');
+    }
 
-      try {
-        socket.send(
-          JSON.stringify({
-            content: content,
-            sender: userId,
-            receiver: receiverId,
-            chatId: chatId,
-          })
-        );
-      } catch (error) {
-        console.log('Error sending message:', error);
-        throw new Error('Failed to send message');
-      }
+    try {
+      socket.send(
+        JSON.stringify({
+          content: content,
+          sender: userId,
+          receiver: receiverId,
+          chatId: chatId,
+        })
+      );
+    } catch (error) {
+      console.log('Error sending message:', error);
+      throw new Error('Failed to send message');
+    }
   }
 
   // ------------------------------------------------

@@ -20,13 +20,13 @@ export default function ProfileInfo() {
     const get2fa = async () => {
       const response = await SettingsServices.get2fa();
       setEnabled2fa(response);
-    }
+    };
     get2fa();
   }, []);
   if (!user) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <h1 className="text-white text-2xl">Loading...</h1>
+      <div className="flex size-full items-center justify-center">
+        <h1 className="text-2xl text-white">Loading...</h1>
       </div>
     );
   }
@@ -98,18 +98,22 @@ export default function ProfileInfo() {
     await SettingsServices.updatePrivacy(newPrivacyState);
   };
   return (
-    <div className="size-full md:py-8 md:px-6 2xl:p-10 flex flex-col md:gap-8">
+    <div className="flex size-full flex-col md:gap-8 md:px-6 md:py-8 2xl:p-10">
       <ProfileInformations />
-      <div className="w-full h-fit flex flex-col gap-16 border-2 bg-[#00000099] md:rounded-[50px] shadow-2xl p-7 border-[#B8B8B8]">
-        <div className="w-full h-[8%] flex items-center">
-        <h1 className="text-white font-dayson font-bold text-2xl tracking-wider border-b-2 transition-all duration-200">
-          Profile Privacy
-        </h1>
-      </div>
-        <div className=" 2xl:px-20 py-6 w-full h-fit flex flex-row gap-9">
-        {privacy ? <IconLock stroke={1.75} className="text-white"/> : <IconLockOpen2 stroke={1.75} className="text-white"/>}
-        <h1 className="font-coustard text-xl text-white">Private Profile</h1>
-        <Switch checked={privacy} onCheckedChange={handlePrivacy}/>
+      <div className="flex h-fit w-full flex-col gap-16 border-2 border-[#B8B8B8] bg-[#00000099] p-7 shadow-2xl md:rounded-[50px]">
+        <div className="flex h-[8%] w-full items-center">
+          <h1 className="font-dayson border-b-2 text-2xl font-bold tracking-wider text-white transition-all duration-200">
+            Profile Privacy
+          </h1>
+        </div>
+        <div className=" flex h-fit w-full flex-row gap-9 py-6 2xl:px-20">
+          {privacy ? (
+            <IconLock stroke={1.75} className="text-white" />
+          ) : (
+            <IconLockOpen2 stroke={1.75} className="text-white" />
+          )}
+          <h1 className="font-coustard text-xl text-white">Private Profile</h1>
+          <Switch checked={privacy} onCheckedChange={handlePrivacy} />
         </div>
         {/* <div className="w-full h-[5%] flex items-center justify-end">
         <button
@@ -120,12 +124,12 @@ export default function ProfileInfo() {
         </button>
       </div> */}
       </div>
-      <div className="w-full h-fit flex flex-col gap-4 border-2 bg-[#00000099] md:rounded-[50px] shadow-2xl p-7 border-[#B8B8B8]">
-        <div className="w-full h-fit flex flex-row gap-4">
-      <SecurityComponent />
-      {/* <Activate_2fa enabled2fa={enabled2fa} /> */}
-      </div>
-      {/* <div className="w-[30%] h-[5%] flex items-center justify-end">
+      <div className="flex h-fit w-full flex-col gap-4 border-2 border-[#B8B8B8] bg-[#00000099] p-7 shadow-2xl md:rounded-[50px]">
+        <div className="flex h-fit w-full flex-row gap-4">
+          <SecurityComponent />
+          {/* <Activate_2fa enabled2fa={enabled2fa} /> */}
+        </div>
+        {/* <div className="w-[30%] h-[5%] flex items-center justify-end">
         <button
           className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[250px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
           // onClick={handleClick}
