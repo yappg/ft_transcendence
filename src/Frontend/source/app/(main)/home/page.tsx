@@ -84,8 +84,8 @@ const Home = () => {
   if (!user) return <div>Loading...</div>;
   const achievements = user.achievements;
   return (
-    <div className="size-full overflow-hidden gap-8 flex-row flex">
-      <div className='w-[60%] h-full'>
+    <div className="size-full overflow-y-scroll xl:gap-8 gap-28 xl:flex-row flex-col flex custom-scrollbar-container lg:overflow-hidden">
+      <div className='xl:w-[60%] w-full xl:h-full h-[500px]'>
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center relative">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>
@@ -95,30 +95,28 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="w-[40%] h-full gap-9 flex-col flex">
-        <div className="w-full h-[15%]">
+      <div className="xl:w-[40%] w-full xl:h-full h-full justify-between flex-col flex">
+        <div className="w-full h-[100px]">
           <DashboardCard />
         </div>
-        <div className="w-full h-[15%] flex items-center justify-between px-7 bg-black-crd rounded-[30px]">
-          {/* {achievements && (
-            <HomeAchievement
-              title={achievements[0].achievement.name}
-            description={achievements[0].achievement.description}
-              points={achievements[0].achievement.points}
-              progress={achievements[0].progress}
-              xpReward={achievements[0].achievement.xp_gain}
-              ratio={achievements[0].achievement.ratio}
-              iconUrl={"http://localhost:8080" + achievements[0].image}
-            />
-          )} */}
+        <div className="w-full h-[100px] flex items-center justify-between px-7 bg-black-crd rounded-[30px] bg-black">
+          {/* <HomeAchievement 
+          title={user?.achievements[0].achievement.name}
+          description={user?.achievements[0].achievement.description}
+          points={user?.achievements[0].achievement.points}
+          progress={user?.achievements[0].progress}
+          xpReward={user?.achievements[0].achievement.xp_gain}
+          ratio={user?.achievements[0].achievement.ratio}
+          iconUrl={"http://localhost:8080" + user?.achievements[0].image}
+          /> */}
           <Link href={'/achievement'} className='size-[80px]'>
             <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
           </Link>
         </div>
-        <div className="bg-black w-full h-[35%]">
+        <div className="bg-black w-full h-[30%]">
           <HomeLeaderboard />
         </div>
-        <div className=" w-full h-[35%] bg-black-crd rounded-[30px] shadow-2xl">
+        <div className=" w-full h-[30%] bg-black-crd rounded-[30px] shadow-2xl">
         <div className="w-full h-full flex items-center justify-center bg-black-crd rounded-[30px]">
           <div className="w-1/2  h-full">
             <Chart total_games={user?.total_games} stats={user?.statistics} />

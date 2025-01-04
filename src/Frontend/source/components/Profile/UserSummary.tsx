@@ -20,7 +20,7 @@ const UserSummary = ({
   if (!user) return <div>Loading...</div>;
   const { total_games, achievements } = user;
   return (
-    <div className="bg-[#242627]/90 w-full h-fit lg:h-full flex lg:flex-row flex-col items-center pb-3">
+    <div className="bg-[#242627]/90 w-full h-full lg:h-full flex lg:flex-row flex-col items-center pb-3">
       <div className="w-full h-fit lg:w-[60%] lg:h-full  flex flex-col items-start justify-start px-2 lg:px-1">
         <Achievments achievements={achievements} />
         {!is_private ? (
@@ -34,7 +34,7 @@ const UserSummary = ({
           </div>
         )}
       </div>
-      <div className="w-full h-[600px] lg:w-[40%] lg:h-[90%] bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl  flex flex-col items-center justify-center m-8">
+      <div className="w-full h-[600px] lg:w-[40%] lg:h-[90%] bg-[#4C4D4E] rounded-[14px] lg:rounded-[30px] shadow-2xl flex flex-col items-center justify-center m-8">
         <div className="w-full h-1/2 flex items-center justify-center">
           <div className="w-1/2  h-full">
             <Chart total_games={total_games} stats={user?.statistics} />
