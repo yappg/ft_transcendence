@@ -4,10 +4,10 @@ import '@/app/globals.css';
 import { RightBar } from '@/components/RightBar';
 import { SideBar } from '@/components/SideBar';
 import { Header } from '@/components/header';
-import { UserProvider } from '@/context/GlobalContext';
+import { UserProvider, useUser } from '@/context/GlobalContext';
 import { SideBarContext } from '@/context/SideBarContext';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

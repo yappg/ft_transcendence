@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Message, Chat } from '@/constants/chat';
 import { chatService } from '@/services/chatService';
-
 interface UseChatWebSocketProps {
   chatId: number;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -10,7 +9,6 @@ interface UseChatWebSocketProps {
 
 export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
   const socketRef = useRef<WebSocket | null>(null);
-
   // ---------------------------------------------------------------------
   const handleWebSocketMessage = useCallback(
     (message: any) => {
@@ -51,7 +49,8 @@ export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSo
       try {
         socketRef.current = await chatService.createWebSocketConnection(
           chatId,
-          handleWebSocketMessage
+          handleWebSocketMessage,
+          setChats
         );
       } catch (error) {
         console.log('WebSocket connection failed', error);

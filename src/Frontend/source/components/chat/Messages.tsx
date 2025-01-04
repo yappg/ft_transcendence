@@ -39,6 +39,7 @@ export const Messages: React.FC<MessagesProps> = ({
       try {
         await FriendServices.unblockFriend(currentChat?.receiver.username);
         setIsBlocked(false);
+        setChatBar(true);
       } catch (error) {
         toast({
           title: 'User is already unblocked',
@@ -52,6 +53,7 @@ export const Messages: React.FC<MessagesProps> = ({
       try {
         await FriendServices.blockFriend(currentChat?.receiver.username);
         setIsBlocked(true);
+        setChatBar(false);
       } catch (error) {
         toast({
           title: 'User is already blocked',
@@ -107,14 +109,18 @@ export const Messages: React.FC<MessagesProps> = ({
     if (user) setCurrentUserId(user.id);
     if (chats) {
       const currentchat = chats.find((chat: Chat) => chat.id === chatId);
-      if (currentchat && (currentchat.is_blocked || currentchat.blocked_by)) {
-        setChatBar(false);
-      }
       if (currentchat && currentchat.is_blocked === true) {
         setIsBlocked(true);
       }
+      if (currentchat && (currentchat.is_blocked || currentchat.blocked_by)) {
+        setChatBar(false);
+      } else {
+        setChatBar(true);
+      }
+      if (currentchat) {
+        setIsPartnerOnline(currentchat.is_online);
+      }
     }
-    setIsPartnerOnline(true);
   }, [user?.id, chats]);
 
   return (
@@ -123,7 +129,7 @@ export const Messages: React.FC<MessagesProps> = ({
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
-              src={'http://localhost:8080' + currentChat?.receiver.avatar}
+              src={`http://localhost:8080${currentChat?.receiver.avatar}`}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
             />
@@ -182,13 +188,17 @@ export const Messages: React.FC<MessagesProps> = ({
       >
         <div className="flex size-full items-center gap-3 px-4">
           <FiPlus className="dark: size-[30px] text-white" />
-          {chatBar && (
+          {chatBar ? (
             <input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Start a new conversation"
               className="size-full bg-transparent text-white focus:outline-none"
             />
+          ) : (
+            <h1 className="size-full bg-transparent text-white focus:outline-none">
+              You can&apos;t send messages to this user
+            </h1>
           )}
         </div>
         <button

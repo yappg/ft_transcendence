@@ -4,6 +4,7 @@ import axios from '@/lib/axios';
 import { Chat, Message } from '@/constants/chat';
 import { userService } from '@/services/userService';
 import { Achievement } from '@/constants/achivemement';
+import { onlineService } from '@/services/onlineService';
 
 export interface User {
   id: number;
@@ -91,7 +92,7 @@ interface UserContextType {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setPlayerLeaderBoard: React.Dispatch<React.SetStateAction<LeaderBoard[] | null>>;
   setAchievements: React.Dispatch<React.SetStateAction<Achievement[]>>;
-  // setOnlineStatus: () => Promise<void>;
+  setOnlineStatus: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -113,7 +114,7 @@ const UserContext = createContext<UserContextType>({
   setIsLoading: () => {},
   setPlayerLeaderBoard: () => {},
   setAchievements: () => {},
-  // setOnlineStatus: async () => {},
+  setOnlineStatus: async () => {},
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
@@ -132,13 +133,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const [lastMessages, setLastMessages] = useState<{ [key: number]: string } | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
 
-  // const setOnlineStatus = async () => {
-  //   try {
-  //     const ws = onlineService.createWebSocketConnection();
-  //   } catch (err) {
-  //     console.log('err');
-  //   }
-  // };
+  const setOnlineStatus = async () => {
+    try {
+      const ws = onlineService.createWebSocketConnection();
+    } catch (err) {
+      console.log('err');
+    }
+  };
 
   const fetchCurrentUserDetails = async () => {
     setIsLoading(true);
@@ -159,6 +160,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     fetchCurrentUserDetails();
+    setOnlineStatus();
   }, [user?.username]);
 
   return (
@@ -174,6 +176,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         PlayerMatches,
         PlayerLeaderBoard,
         achievements,
+        setOnlineStatus,
         setIsLoading,
         setChats,
         setMessages,
