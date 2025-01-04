@@ -11,6 +11,7 @@ import { IconCarambolaFilled } from '@tabler/icons-react';
 import { IconUserScan } from '@tabler/icons-react';
 import { IconConeFilled } from '@tabler/icons-react';
 import { FaUsers } from 'react-icons/fa';
+import { IconDeviceGamepad3Filled } from '@tabler/icons-react';
 // This is sample data.
 const data = {
   teams: [
@@ -52,6 +53,11 @@ const data = {
       title: 'Achievements',
       url: '/achievement',
       icon: IconCarambolaFilled,
+    },
+    {
+      title: 'Game',
+      url: '/games',
+      icon: IconDeviceGamepad3Filled,
     },
   ],
   navSecondary: [
