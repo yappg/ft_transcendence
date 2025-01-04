@@ -66,15 +66,16 @@ class SocketManager extends WebSocket {
   
       const new_x = scale_x * data.new_x;
   
-      // this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x - this.pixiManager.paddleWidth;
-    if (this.pixiManager.isTopPaddle) {
+      if (this.pixiManager.isTopPaddle) {
+        this.pixiManager.topRacket.x = this.pixiManager.screenWidth - (new_x + this.pixiManager.paddleWidth);
+      } else {
         this.pixiManager.topRacket.x = new_x;
-    } else {
-        this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x - this.pixiManager.paddleWidth;
+      }
     }
-    }
-  } 
-  
+  }
+
+
+
   async handleSocketMessage(message: any) {
     switch (message.type) {
       case 'acknowledgeOpponent':
@@ -82,7 +83,6 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.opponent = message.data.opponent;
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
-        console.log('scale_y: ', scale_y);
         if (this.pixiManager.isTopPaddle) {
           this.pixiManager.dy = -20;
         } else {
@@ -92,7 +92,7 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         this.sendData({ action: 'ready', game_id: message.data.game_id });
-      case 'UpdateBall': 
+      case 'UpdateBall':
         // this.pixiManager.app.ticker.add(() => {
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
           // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
@@ -103,9 +103,12 @@ class SocketManager extends WebSocket {
       case 'UpdatePaddle':
         this.updatePaddlePosition(message);
         break;
-      case 'scoreUpdate':
+      case 'UpdateScore':
         // this.pixiManager.updateScore(message);
-        break;
+        
+        const score1 = message.data.self_score[message.data.round];
+        const score2 = message.data.opponent_score[message.data.round];
+        this.pixiManager.game.GameScore =  [score1, score2];
       case 'gameState':
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);
