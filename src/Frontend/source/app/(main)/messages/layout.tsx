@@ -9,6 +9,7 @@ import { useUser } from '@/context/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { ChatCard } from '@/components/chat/ChatCard';
 import { IoChevronBackOutline } from 'react-icons/io5';
+import { chatService } from '@/services/chatService';
 
 export default function ChatLayout({
   children,
@@ -16,10 +17,24 @@ export default function ChatLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
-  const { chats, messages, user, setMessages } = useUser();
-  const [listChat, setListChat] = useState<Chat[] | null>(chats);
+  const { chats, messages, user, setMessages, setChats, lastMessages, setLastMessages } = useUser();
   const [showChat, setShowChat] = useState(false);
-  const [lastMessages, setLastMessages] = useState<{ [key: number]: string }>({});
+  // I need to fecth only once the chats not every time the page is loaded
+  // but once the user make a new chat i need to fetch the chats again
+
+  const fetchChats = async () => {
+    try {
+      const fetchedChats = await chatService.getChatList();
+      console.log('this is the fetched chat: ', fetchedChats);
+      setChats(fetchedChats);
+    } catch (error) {
+      console.log('Failed to fetch chats or user details', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChats();
+  }, []);
 
   useEffect(() => {
     if (messages && messages.length > 0) {
@@ -35,7 +50,7 @@ export default function ChatLayout({
         {}
       );
       setLastMessages(messagesMap);
-      setListChat(chats);
+      setChats(chats);
     }
   }, [chats]);
   //TO_DO: The tournament system should be able to warn users expected for the next
@@ -75,9 +90,13 @@ export default function ChatLayout({
               <h2>Listed Conversations</h2>
             </div>
             <div className="custom-scrollbar-container flex size-full flex-col items-center justify-start gap-5">
-              {listChat &&
-                listChat.map((chat: Chat, index: number) => (
-                  <ChatCard key={chat.id} chatContent={chat} lastMessage={lastMessages[chat.id]} />
+              {chats &&
+                chats.map((chat: Chat, index: number) => (
+                  <ChatCard
+                    key={chat.id}
+                    chatContent={chat}
+                    lastMessage={lastMessages?.[chat.id]}
+                  />
                 ))}
             </div>
           </div>

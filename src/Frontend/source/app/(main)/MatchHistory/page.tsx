@@ -4,25 +4,42 @@ import MatchHistoryComponent from '@/components/MatchHistory/HistoryComponent';
 import { useContext, useEffect } from 'react';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useUser } from '@/context/GlobalContext';
-
+import { userService } from '@/services/userService';
 
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
+
   useEffect(() => {
     setIsActivated(5);
   }, [setIsActivated]);
-  const {PlayerMatches} = useUser();
+
+  const { PlayerMatches, setIsLoading, setPlayerMatches } = useUser();
+
+  const fetchPlayerMatches = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedMatches = await userService.getPlayerMatches();
+      setPlayerMatches(fetchedMatches);
+    } catch (err) {
+      setPlayerMatches(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayerMatches();
+  }, []);
+
   return (
-    <div className="size-full md:py-4 md:pl-6 overflow-auto ">
-      <div className=" custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll md:rounded-[50px] bg-[#00000099]">
-        {
-          PlayerMatches?.length === 0 && (
-            <div className="w-full h-full flex items-center justify-center">
-              <h1 className="text-white text-2xl font-dayson font-bold">No Matches Found</h1>
-            </div>
-          )
-        }
-      {PlayerMatches?.map((match: History) => (
+    <div className="size-full overflow-auto md:py-4 md:pl-6 ">
+      <div className=" custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
+        {PlayerMatches?.length === 0 && (
+          <div className="flex size-full items-center justify-center">
+            <h1 className="font-dayson text-2xl font-bold text-white">No Matches Found</h1>
+          </div>
+        )}
+        {PlayerMatches?.map((match: History) => (
           <MatchHistoryComponent
             key={match.id}
             Player1={match.player1.display_name}
