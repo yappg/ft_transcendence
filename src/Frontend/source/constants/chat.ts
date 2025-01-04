@@ -29,5 +29,7 @@ export interface Chat {
   id: number;
   last_message?: LastMessage;
   receiver: ReceiverData;
+  is_blocked: boolean;
+  blocked_by: boolean;
   send_at: string;
 }

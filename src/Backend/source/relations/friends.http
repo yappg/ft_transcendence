@@ -17,7 +17,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 Content-Type: application/json
 
 {
-    "remove_friend":"client4_rewnfy7yqtwt"
+    "remove_friend":"client1_5lzb2llqsgjg"
 }
 
 ######### protect api against sending a friend request to from both users me pending him pending
@@ -47,7 +47,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNz
 Content-Type: application/json
 
 {
-    "receiver":"merywwww_p67p2se6moa2"
+    "receiver":"client1_5lzb2llqsgjg"
 }
 
 #########
@@ -56,7 +56,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 Content-Type: application/json
 
 {
-    "cancel_invite":"client2_28sv4y9f15zg"
+    "cancel_invite":"client3_89iiavmo3mqd"
 }
 
 ##########################################

@@ -10,6 +10,9 @@ import { chatService } from '@/services/chatService'
 import FriendServices from '@/services/friendServices'
 import { useChatWebSocket } from '@/hooks/useChatWebSocket'
 import { toast } from '@/hooks/use-toast';
+
+
+
 interface MessagesProps {
   chatId: number
   currentChat: Chat
@@ -28,7 +31,7 @@ export const Messages: React.FC<MessagesProps> = ({
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [isPartnerOnline, setIsPartnerOnline] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<number>(0)
   const [showMoreOptions, setShowMoreOptions] = useState(false)
   const { chats, user, setChats } = useUser()
 
@@ -52,7 +55,6 @@ export const Messages: React.FC<MessagesProps> = ({
           await FriendServices.blockFriend(currentChat?.receiver.username)
           setIsBlocked(true)
         } catch (error) {
-          // need to overide the alert and show it like a toast
           toast({
             title: 'User is already blocked',
             description: 'You cannot block this user',
@@ -116,9 +118,8 @@ export const Messages: React.FC<MessagesProps> = ({
           setIsBlocked(true);
       }
     }
-
     setIsPartnerOnline(true);
-  }, [user], [chats])
+  }, [user?.id, chats])
 
   return (
     <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
@@ -166,7 +167,7 @@ export const Messages: React.FC<MessagesProps> = ({
         </div>
       </div>
       <div ref={messagesContainerRef} className="custom-scrollbar-container flex h-full w-[90%] flex-col gap-2 overflow-scroll py-2">
-        {messages.length > 0 && messages.map((message, index) => (
+        {messages && messages.length > 0 && messages.map((message, index) => (
           <MessageBubble
             key={index}
             message={message}
