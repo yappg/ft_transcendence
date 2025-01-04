@@ -1,13 +1,14 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from '@/lib/axios';
+
 import { notificationsService } from '@/services/notificationsService';
 import { chatService } from '@/services/chatService';
 import { Chat, Message } from '@/constants/chat';
 import { Notification } from '@/constants/notifications';
 import { Achievement } from '@/constants/achivemement';
 import { onlineService } from '@/services/onlineService';
-import FriendServices from '@/services/friendServices';
+// import FriendServices from '@/services/friendServices';
 
 export interface User {
   id: number;
@@ -193,26 +194,26 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const fetchPlayers = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await FriendServices.getPlayers();
-      if (data.message) {
-        setPlayers(data.data);
-        setIsLoading(false);
-        return data.data;
-      } else if (data.error) {
-        console.error(data.error);
-        setPlayers(null);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
-      setPlayers(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+//   const fetchPlayers = async () => {
+//     setIsLoading(true);
+//     setError(null);
+//     try {
+//       const data = await FriendServices.getPlayers();
+//       if (data.message) {
+//         setPlayers(data.data);
+//         setIsLoading(false);
+//         return data.data;
+//       } else if (data.error) {
+//         console.error(data.error);
+//         setPlayers(null);
+//       }
+//     } catch (err) {
+//       setError(err instanceof Error ? err : new Error('Failed to fetch user details'));
+//       setPlayers(null);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
 
   const fetchPlayerMatches = async () => {
     setIsLoading(true);

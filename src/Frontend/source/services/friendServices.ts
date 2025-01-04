@@ -1,15 +1,15 @@
 import axios from '@/lib/axios';
 
 const FriendServices = {
-    async getPlayers() {
-        try {
-            const response = await axios.get('/relations/players/');
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
+    // async getPlayers() {
+    //     try {
+    //         const response = await axios.get('/relations/players/');
+    //         return response.data;
+    //     }
+    //     catch (error) {
+    //         throw error;
+    //     }
+    // },
 
     async getFriends() {
         try {
@@ -44,7 +44,7 @@ const FriendServices = {
     },
     async cancelFriendRequest(receiverUsername: string) {
         try {
-            const response = await frindsApi.delete('/friends/invite/', {
+            const response = await axios.delete('/relations/friends/invite/', {
                 data: { cancel_invite: receiverUsername }
             });
             return response.data;
