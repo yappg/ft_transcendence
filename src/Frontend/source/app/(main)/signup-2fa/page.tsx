@@ -1,6 +1,5 @@
 'use client';
 
-import axiosInstance from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -10,6 +9,7 @@ import { QRCodeSVG } from 'qrcode.react'; // Changed to more stable QR code libr
 import { sendOtp } from '@/services/fetch-otp';
 import { toast } from '@/hooks/use-toast';
 import { useUser } from '@/context/GlobalContext';
+import axios from '@/lib/axios';
 
 const Signup2fa = () => {
   // State management

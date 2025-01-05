@@ -42,7 +42,6 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls'), name='accounts'),
     path('api/relations/', include('relations.urls'), name='relations'),
     path('api/chat/', include('chat.urls'), name='chat'),
-    path('api/game/', include('game.urls'), name='game'),
 
     # path('health/', health_checkup, name='health_checkup'),
 ]

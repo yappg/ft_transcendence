@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { OAuthClient } from '@/services/fetch-oauth';
 import { useSearchParams } from 'next/navigation';
-import axiosInstance from '@/lib/axios';
+import axios from '@/lib/axios';
 
 function Title() {
   const code = useSearchParams().get('code');
@@ -11,7 +11,7 @@ function Title() {
   useEffect(() => {
     if (code) {
       if (provider && provider === 'google') {
-        axiosInstance
+        axios
           .get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/callback/google/', {
             params: {
               code: code,
@@ -24,7 +24,7 @@ function Title() {
           });
       } else {
         console.log('--------42', code);
-        axiosInstance
+        axios
           .get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/callback/42/', {
             params: {
               code: code,

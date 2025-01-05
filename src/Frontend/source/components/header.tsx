@@ -49,13 +49,13 @@ export const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
-  // ------Omar's code
   const { user } = useUser();
 
   useEffect(() => {
-    // fetchNotifications();
     if (user) {
-      const ws = new WebSocket(process.env.NEXT_PUBLIC_WS_URL + '/notifications/?user_id=${user.id}');
+      const ws = new WebSocket(
+        `${process.env.NEXT_PUBLIC_WS_URL}'/notifications/?user_id=${user.id}`
+      );
       console.log('WebSocket connection established');
 
       ws.onopen = () => {
@@ -95,7 +95,7 @@ export const Header = () => {
 
   const fetchUsers = async (value: string) => {
     try {
-      const res = await axios.get(`accounts/search-users/?search=${value}`);
+      const res = await axios.get(`/accounts/search-users/?search=${value}`);
       return res.data;
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -190,7 +190,7 @@ export const Header = () => {
                   }}
                 >
                   <img
-                    src={`http://localhost:8080${player?.avatar}`}
+                    src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                     alt={`${player?.display_name}'s avatar`}
                     className="size-10 rounded-full"
                   />

@@ -9,6 +9,7 @@ export class AuthClient {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(data),
       });
