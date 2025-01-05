@@ -101,7 +101,6 @@ class PlayerProfile(models.Model):
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
 
-
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -174,7 +173,7 @@ class PlayerProfile(models.Model):
 
     def update_win_ratio(self):
         if self.total_games != 0:
-            self.win_ratio = (self.games_won / self.total_games) * 100
+            self.win_ratio = round((self.games_won / self.total_games) * 100, 2)
         else:
             self.win_ratio = 0.0
 
@@ -182,7 +181,6 @@ class PlayerProfile(models.Model):
         def update_achievements(achievements, progress):
             for achievement in achievements:
                 try:
-                    # print(f"Achievement: {achievement}, Progress: {progress}")
                     achievement = Achievement.objects.get(name=achievement)
                     player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
 

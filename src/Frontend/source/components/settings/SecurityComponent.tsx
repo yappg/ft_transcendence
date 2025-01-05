@@ -48,7 +48,6 @@ export const SecurityComponent = () => {
   console.log('update2fa: ', update2fa);
   const handleClick = async () => {
     setErrors({});
-
     if (password === '' && newPassword !== '') {
       setErrors({ newPassword: 'Cannot set new password without current password' });
       return;
@@ -126,6 +125,39 @@ export const SecurityComponent = () => {
             {isClicked ? 'Updated' : 'Update'}
           </button>
         </div>
+        <div className="flex h-fit w-full flex-col justify-between gap-4 md:flex-row">
+          <div className="flex flex-col gap-4 md:w-[50%] md:px-12">
+            <label className="text-sm text-white">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              onChange={handlePasswordChange}
+              className="w-[300px] rounded-md bg-gray-700 px-4 py-2 text-white outline-none"
+            />
+            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+            <label className="text-sm text-white">New Password</label>
+            <input
+              type="password"
+              placeholder="Enter your new password"
+              onChange={handleNewPasswordChange}
+              className="w-[300px] rounded-md bg-gray-700 px-4 py-2 text-white outline-none"
+            />
+            {errors.newPassword && <p className="text-sm text-red-500">{errors.newPassword}</p>}
+          </div>
+        </div>
+      </div>
+      </div>
+      <div className="w-full h-[5%] flex items-center justify-end flex-col gap-4">
+
+      <Activate_2fa update2fa={update2fa} setUpdate2fa={setUpdate2fa} />
+      <div className="w-full h-[5%] flex items-center justify-end">
+        <button
+          className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[250px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}
+          onClick={handleClick}
+        >
+          {isClicked ? 'Updated' : 'Update'}
+        </button>
+      </div>
       </div>
     </div>
   );

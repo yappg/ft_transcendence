@@ -19,7 +19,7 @@ const Logout = () => {
   const handleClick = () => {
     const fetchLogout = async () => {
       try {
-        const response = await fetch('http://localhost:8080/accounts/auth/logout/', {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/accounts/auth/logout/', {
           method: 'POST',
           credentials: 'include',
           headers: {

@@ -45,7 +45,7 @@ export default function Page() {
               <div className="bg-black-crd h-fit w-full dark:bg-transparent">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
-                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[0].avatar}`}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[0].avatar}
                   level={PlayerLeaderBoard[0].level}
                   wins={PlayerLeaderBoard[0].games_won}
                   losses={PlayerLeaderBoard[0].games_loss}
@@ -98,7 +98,7 @@ export default function Page() {
                 <FriendsComponent
                   key={index + 3}
                   name={friend.display_name}
-                  ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + friend.avatar}
                   level={friend.level}
                   wins={friend.games_won}
                   losses={friend.games_loss}

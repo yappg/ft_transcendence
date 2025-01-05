@@ -144,7 +144,8 @@ class GenerateURI(APIView):
         uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
 
         user.otp_secret_key = secret_key
-        user.save()
+        user.save(update_fields=['otp_secret_key'])
+
         return Response(
             {'uri': uri, 'enabled_2fa': user.enabled_2fa},
             status=status.HTTP_200_OK)
