@@ -125,22 +125,18 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
       console.log('response: ', response);
 
       if (response.message) {
+        localStorage.setItem('username', formData.username);
         toast({
           title: 'Success',
           description: isSignup ? 'Account created successfully' : 'Logged in successfully',
-          className: 'bg-primary border-none text-white bg-opacity-20',
+          className: 'bg-primary-dark border-none text-white bg-opacity-20',
         });
         console.log('formData: ', formData);
         console.log('response: ', response);
         console.log('isSignup: ', isSignup);
         if (isSignup) {
-          router.push('/2fa/signup-2fa');
-          return;
-        }
-        if (response.enabled_2fa === 'True') {
-          router.push('/2fa/login-2fa/');
-        } else {
           router.push('/home');
+          return;
         }
       }
       if (response.error)

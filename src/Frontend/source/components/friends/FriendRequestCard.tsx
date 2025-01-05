@@ -24,12 +24,10 @@ const FriendRequestCard = ({
   onRequestAccepted,
   onRequestDeclined,
 }: FriendRequestCardProps): JSX.Element => {
-
-
   async function declineRequest() {
     try {
       const response = await FriendServices.declineFriendRequest(name);
-      console.log("declined Friends",response, name);
+      console.log('declined Friends', response, name);
     } catch (error) {
       toast({
         title: 'Authentication failed',
@@ -43,12 +41,11 @@ const FriendRequestCard = ({
   async function acceptRequest() {
     try {
       const response = await FriendServices.acceptFriendRequest(name);
-      console.log("accepted Friends",response.message, name);
-      if(response.message){
+      console.log('accepted Friends', response.message, name);
+      if (response.message) {
         console.log(response.message);
-      }
-      else if(response.error) {
-          console.log('accpet ?',response.error);
+      } else if (response.error) {
+        console.log('accpet ?', response.error);
       }
     } catch (error) {
       toast({
@@ -99,10 +96,16 @@ const FriendRequestCard = ({
         ) : (
           <>
             <button>
-              <GoCheckCircle className="size-[44px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] dark:hover:text-[#E43222]" onClick={handleClick} />
+              <GoCheckCircle
+                className="size-[44px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] dark:hover:text-[#E43222]"
+                onClick={handleClick}
+              />
             </button>
             <button>
-              <IoCloseCircleOutline className="size-[50px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] " onClick={handleDecline} />
+              <IoCloseCircleOutline
+                className="size-[50px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] "
+                onClick={handleDecline}
+              />
             </button>
           </>
         )}

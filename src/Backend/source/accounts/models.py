@@ -181,7 +181,6 @@ class PlayerProfile(models.Model):
         def update_achievements(achievements, progress):
             for achievement in achievements:
                 try:
-                    # print(f"Achievement: {achievement}, Progress: {progress}")
                     achievement = Achievement.objects.get(name=achievement)
                     player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
 

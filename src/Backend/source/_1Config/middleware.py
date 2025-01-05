@@ -26,8 +26,6 @@ class TokenAuthMiddleware(BaseMiddleware):
         scope = dict(scope)
         headers = dict(scope['headers'])
         cookies = headers.get(b'cookie', b'').decode()
-        if cookies:
-            print('-------------\n Cookies Exist \n--------------------')
         token = None
 
         if cookies:
@@ -39,7 +37,6 @@ class TokenAuthMiddleware(BaseMiddleware):
             token = cookie_dict.get('access_token')
         if token:
             try:
-                print('-------------\n Token Exist \n--------------------')
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
                 user = await self.get_user(payload['user_id'])
                 scope['user'] = user

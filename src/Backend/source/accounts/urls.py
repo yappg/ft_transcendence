@@ -51,7 +51,7 @@ urlpatterns = [
     # path('JWT/token/validate/', TokenValidateView.as_view(), name='token_validate'),
 
 #2fa
-    # path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),
+    path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),
     path('2fa/verifiy-otp/', VerifyOTP.as_view(), name='verify_otp'),
     path('2fa/validate-otp/', ValidateOTP.as_view(), name='validate_otp'),
     path('2fa/disable-otp/', DisableOTP.as_view(), name='disable_otp'),

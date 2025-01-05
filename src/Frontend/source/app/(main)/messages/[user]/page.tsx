@@ -46,9 +46,12 @@ export default function Page() {
   };
 
   useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  useEffect(() => {
     if (chat_id > 0) {
       setChatSelected(findChatById(chat_id) as Chat);
-      fetchMessages();
     }
   }, [chat_id]);
 
