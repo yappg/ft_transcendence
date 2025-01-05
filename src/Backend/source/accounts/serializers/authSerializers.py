@@ -17,7 +17,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if Player.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username is already in use")
-        if len(value) < 3 or len(value) > 30: #it has been checked on the fronrtend
+        if len(value) < 3 or len(value) > 30:
             raise serializers.ValidationError("Username should be between 3 and 30 characters long")
         return value
 
@@ -65,17 +65,30 @@ class SignInSerializer(serializers.Serializer):
         return attrs
 
 class GenerateOTPSerializer(serializers.Serializer):
-    pass
-    # username = serializers.CharField()
+    username = serializers.CharField()
+    
+    def validate(self, attrs):
+        if not attrs.get('username'):
+            raise serializers.ValidationError({"error":"Username required"})
+        if not Player.objects.filter(username=attrs['username']).exists():
+            raise serializers.ValidationError({"error":"User does not exist"})
+        return attrs
 
 
 class VerifyOTPSerializer(serializers.Serializer):
-    # username = serializers.CharField()
+    username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6, required=True)
+
+    def validate(self, attrs):
+        if not attrs.get('otp_token') or not attrs.get('username'):
+            raise serializers.ValidationError({"error":"OTP Token required"})
+        if not Player.objects.filter(username=attrs['username']).exists():
+            raise serializers.ValidationError({"error":"User does not exist"})
+        return attrs
 
 
 class ValidateOTPSerializer(serializers.Serializer):
-    # username = serializers.CharField()
+    username = serializers.CharField()
     otp_token = serializers.CharField(max_length=6)
 
     def validate(self, attrs):
@@ -89,6 +102,7 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ['username', 'email', 'verified_otp', 'enabled_2fa', 'old_password', 'new_password']
+        #TODO this feild , 'verified_otp' should be removed from the fields 
         read_only_fields = ['username', 'email']
         extra_kwargs = {
             'username': {'required': False},
