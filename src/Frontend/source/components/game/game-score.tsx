@@ -67,6 +67,7 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
       });
 
       game.setGameScore([0, 0]);
+      game.GameScore = [0, 0];
     }
   }, [game]);
 
