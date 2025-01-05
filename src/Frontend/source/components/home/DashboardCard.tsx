@@ -17,7 +17,7 @@ export const DashboardCard = ({ playerMatches }: { playerMatches: History[] }) =
       {playerMatches && playerMatches.length > 0 ? (
         <div className={`relative size-full rounded-[40px]`}>
           <div
-            className={`absolute inset-0 rounded-[20px] bg-cover bg-center
+            className={`absolute inset-0 rounded-[30px] bg-cover bg-center
                         ${
                           playerMatches[0]?.map_played === 'water'
                             ? 'bg-[url("/WaterMode.svg")]'

@@ -24,10 +24,10 @@ export const InviteSentButton = ({
   }
   return (
     <button
-      className={` font-coustard flex w-[130px] justify-center rounded-md bg-green-500 py-2 text-white transition-all duration-300`}
+      className={`font-dayson flex h-[30px] w-[170px] items-center justify-center rounded-[14px] bg-white text-lg text-blue-500 shadow-2xl md:size-full lg:rounded-[30px]`}
       onClick={handleClick}
     >
-      {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Cancel'}
+      {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-black" /> : 'Cancel'}
     </button>
   );
 };

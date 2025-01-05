@@ -161,3 +161,9 @@ Content-Type: application/json
 }
 
 ###########
+POST http://localhost:8080/accounts/2fa/generate-uri/
+Content-Type: application/json
+
+{
+    "username": "mery"
+}
