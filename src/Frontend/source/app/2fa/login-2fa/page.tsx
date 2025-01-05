@@ -3,21 +3,22 @@ import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/services/fetch-otp';
-import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import withAuth from '@/context/requireAhuth';
 
 const Login2fa = () => {
-  const { user, updateUser } = useAuth();
   const [value, setValue] = React.useState('');
+  const [storedusename, setStoredusename] = React.useState<string>('');
+  React.useEffect(() => {
+    setStoredusename(localStorage.getItem('username'));
+  }, []);
+
   const myString = 'Go >';
   const handleClick = async () => {
     try {
-      const response = await sendOtp('verifiy-otp', value, user?.username || null) as any;
+      const response = await sendOtp('verifiy-otp', value, storedusename) as any;
 
       console.log(response.data);
       if (response.data.message) {
-        updateUser({ is2FAvalidated: true });
         toast({
           title: 'success',
           description: response.data.message,
@@ -31,7 +32,13 @@ const Login2fa = () => {
           className: 'bg-primary-dark border-none text-white bg-opacity-20',
         });
       }
-    } catch {}
+    } catch (error) {
+      toast({
+        title: 'error',
+        description: 'Oops something went wrong! Try fetching later',
+        variant: 'destructive',
+      });
+    }
   };
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
@@ -54,4 +61,4 @@ const Login2fa = () => {
   );
 };
 
-export default withAuth(Login2fa, false);
+export default Login2fa;

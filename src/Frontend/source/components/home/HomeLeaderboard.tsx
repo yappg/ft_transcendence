@@ -34,11 +34,11 @@ export const HomeLeaderboard = () => {
       <div className="flex h-[15%] w-full items-center justify-end border-t border-gray-700 p-4">
         <h1 className="font-dayson text-center text-sm text-white">Leaderboard</h1>
         <Link
-          href={'/LeaderBoard'}
-          className="flex size-[50px] items-center justify-center lg:size-[70px]"
-        >
-          <RiArrowRightSLine className="font-dayson text-[40px] font-bold text-white lg:text-[80px]" />
-        </Link>
+            href={'/LeaderBoard'}
+            className="flex 2xl:size-[50px] size-[30px] items-center justify-center lg:size-[30px]"
+          >
+            <RiArrowRightSLine className="font-dayson 2xl:text-[40px] text-[20px] font-bold text-white lg:text-[80px]" />
+          </Link>
       </div>
     </div>
   );
