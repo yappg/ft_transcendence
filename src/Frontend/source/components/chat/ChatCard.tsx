@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 import { Chat } from '@/constants/chat';
 import { useUser } from '@/context/GlobalContext';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface ChatCardProps {
   chatContent: Chat;
-  lastMessage?: string;
+  lastMessage: string;
 }
 
 export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {

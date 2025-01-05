@@ -3,16 +3,20 @@ import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
 import React from 'react';
 import { MyButton } from '@/components/generalUi/Button';
 import { sendOtp } from '@/services/fetch-otp';
-import { useUser } from '@/context/GlobalContext';
 import { toast } from '@/hooks/use-toast';
 
 const Login2fa = () => {
   const [value, setValue] = React.useState('');
+  const [storedusename, setStoredusename] = React.useState<string>('');
+  React.useEffect(() => {
+    setStoredusename(localStorage.getItem('username'));
+  }, []);
+
   const myString = 'Go >';
   const { user } = useUser();
   const handleClick = async () => {
     try {
-      const response = (await sendOtp('verifiy-otp', value, user?.username || null)) as any;
+      const response = await sendOtp('verifiy-otp', value, storedusename) as any;
 
       console.log(response.data);
       if (response.data.message) {
@@ -29,11 +33,11 @@ const Login2fa = () => {
           className: 'bg-primary-dark border-none text-white bg-opacity-20',
         });
       }
-    } catch {
+    } catch (error) {
       toast({
         title: 'error',
-        description: 'Something went wrong',
-        className: 'bg-primary-dark border-none text-white bg-opacity-20',
+        description: 'Oops something went wrong! Try fetching later',
+        variant: 'destructive',
       });
     }
   };

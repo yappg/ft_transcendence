@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 
-
-
 const AchievementBadge = ({
   title = 'First Achievement',
   description = 'play first game and win with',
@@ -11,19 +9,18 @@ const AchievementBadge = ({
   xpReward = 1000,
   ratio = 1,
   iconUrl = '/api/placeholder/80/80',
-} : {
-  title: string,
-  description: string,
-  points: number,
-  progress: number,
-  xpReward: number,
-  ratio: number,
-  iconUrl: string,
+}: {
+  title: string;
+  description: string;
+  points: number;
+  progress: number;
+  xpReward: number;
+  ratio: number;
+  iconUrl: string;
 }) => {
-
   return (
-    <div className="relative flex h-[132px] w-full items-center rounded-3xl bg-black-crd p-4">
-      <div className="flex size-20 shrink-0 items-center justify-center rounded-full overflow-hidden bg-black-crd">
+    <div className="bg-black-crd relative flex h-[132px] w-full items-center rounded-3xl p-4">
+      <div className="bg-black-crd flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full">
         <img src={iconUrl} alt="Icon" className="size-full object-cover" />
       </div>
       <div className="ml-4 grow">

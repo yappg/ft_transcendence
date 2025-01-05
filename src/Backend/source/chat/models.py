@@ -11,7 +11,7 @@ class ChatRoom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chat between {self.senders.all()[0].username} and {self.senders.all()[1].username}"
+        return f"ChatRoom :{self.name}"        
 
 
 class Message(models.Model):
