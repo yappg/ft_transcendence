@@ -20,8 +20,8 @@ services:
         dockerfile: Dockerfile
       image: nginx
       volumes:
-        - media-files:/app/UsersMedia:ro
-        - static-files:/app/staticfiles:ro
+        - media-files:/app/UsersMedia
+        - static-files:/app/staticfiles
       networks:
         - transcendence
       ports:
@@ -87,8 +87,8 @@ services:
       container_name: backend
       build:
         context: ./src/Backend
-        target: ${TEST:-production}
-        # target: ${ENV:-production}
+        # target: ${TEST:-production}
+        target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
       environment:
@@ -106,12 +106,12 @@ services:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
       volumes:
-        - static-files:/app/source/staticfiles
-        - media-files:/app/source/UsersMedia
-# DEV ==============>
+# # DEV ==============>
         - ./src/Backend/config:/app/config:rw
         - ./src/Backend/source:/app/source:rw
 # ==================>
+        - media-files:/app/source/UsersMedia
+        - static-files:/app/source/staticfiles
       networks:
         - transcendence
       ports:

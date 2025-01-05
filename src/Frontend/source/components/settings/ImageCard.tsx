@@ -11,7 +11,7 @@ export const ImageCard = ({
 }) => {
   let imageUrl = selectedImage;
   if (imageUrl && !imageUrl.startsWith('blob')) {
-    imageUrl = 'http://localhost:8080' + imageUrl;
+    imageUrl = `${process.env.NEXT_PUBLIC_HOST}${imageUrl}`;
   }
   return (
     <div className="flex h-full w-fit flex-wrap items-center justify-center gap-1 sm:gap-6">

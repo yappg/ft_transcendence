@@ -61,7 +61,7 @@ export default function Page() {
                 {PlayerLeaderBoard.length > 1 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[1].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[1].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[1].avatar}
                     level={PlayerLeaderBoard[1].level}
                     wins={PlayerLeaderBoard[1].games_won}
                     losses={PlayerLeaderBoard[1].games_loss}
@@ -78,7 +78,7 @@ export default function Page() {
                 {PlayerLeaderBoard.length > 2 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[2].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[2].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[2].avatar}
                     level={PlayerLeaderBoard[2].level}
                     wins={PlayerLeaderBoard[2].games_won}
                     losses={PlayerLeaderBoard[2].games_loss}

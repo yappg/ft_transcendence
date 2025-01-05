@@ -277,10 +277,10 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR.parent, 'staticfiles')
+STATIC_URL = '/Static/'
+STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'UsersMedia')
+MEDIA_ROOT = '/app/source/UsersMedia'
 
 # ===========================
 # MISCELLANEOUS SETTINGS

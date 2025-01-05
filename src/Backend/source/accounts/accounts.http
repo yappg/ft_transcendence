@@ -81,21 +81,12 @@ Content-Type: application/json
 ####################################################################################################################################
 =
 #########
-<<<<<<< HEAD
-GET http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MTExNDM1LCJpYXQiOjE3MzU4NTIyMzUsImp0aSI6ImU0ZjlmZTIxYzk1NTRkYWQ4NWEzNWYzOTFmZmRlNjUxIiwidXNlcl9pZCI6Mn0.ePsIR8W6BOtTS12a2RkebZRUdQjk8IK1dgcfvI2C6CQ
-
-#########
-PUT http://localhost:8080/accounts/user-settings/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MTExNDM1LCJpYXQiOjE3MzU4NTIyMzUsImp0aSI6ImU0ZjlmZTIxYzk1NTRkYWQ4NWEzNWYzOTFmZmRlNjUxIiwidXNlcl9pZCI6Mn0.ePsIR8W6BOtTS12a2RkebZRUdQjk8IK1dgcfvI2C6CQ
-=======
 GET http://localhost:8080/api/accounts/user-settings/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDUzMjgzLCJpYXQiOjE3MzU3OTQwODMsImp0aSI6IjRmNjM0N2E0MzMzYjQwN2M4ODk3OWQzNWMzZTBmM2NhIiwidXNlcl9pZCI6MTJ9.Do7JNV_AtIxtg1th_e4eK3KooA78ByPJROreW8P4F8A
 
 #########
 PUT http://localhost:8080/api/accounts/user-settings/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDUzMjgzLCJpYXQiOjE3MzU3OTQwODMsImp0aSI6IjRmNjM0N2E0MzMzYjQwN2M4ODk3OWQzNWMzZTBmM2NhIiwidXNlcl9pZCI6MTJ9.Do7JNV_AtIxtg1th_e4eK3KooA78ByPJROreW8P4F8A
->>>>>>> bdf946d438d0e1f9d764901c37d8b7bc370005b3
 Content-Type: application/json
 
 {
@@ -121,8 +112,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ####################################################################################################################################
 
 #########
-GET http://localhost:8080/api/accounts/user-achievements/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDUzMjgzLCJpYXQiOjE3MzU3OTQwODMsImp0aSI6IjRmNjM0N2E0MzMzYjQwN2M4ODk3OWQzNWMzZTBmM2NhIiwidXNlcl9pZCI6MTJ9.Do7JNV_AtIxtg1th_e4eK3KooA78ByPJROreW8P4F8A
+GET https://localhost:443/api/accounts/user-achievements/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MTEzNjI5LCJpYXQiOjE3MzYxMTAwMjksImp0aSI6ImE4YWIyYTgyZTI1MjQ2NWI4Mjc4ZGY2NjU1ZWRjMmRmIiwidXNlcl9pZCI6Mn0.RxIh9HgMufUGPr0BBMXkVrXKCTxpqjpJe2GKvE4qaHA
 
 ####################################################################################################################################
 
