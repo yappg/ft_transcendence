@@ -24,7 +24,7 @@ const PlayerScore = ({
           <Avatar
             className={`size-full max-h-[35px] max-w-[35px] bg-black-crd md:max-h-[50px] md:max-w-[50px]`}
           >
-            <AvatarImage src="/Avatar.svg" alt="avatar" />
+            <AvatarImage src={player.avatar} alt="avatar" />
             <AvatarFallback className="bg-black-crd text-[10px]">CN</AvatarFallback>
           </Avatar>
         ) : (
@@ -47,7 +47,7 @@ const PlayerScore = ({
   );
 };
 
-const ScoreTable = () => {
+const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
   const game = useGame();
   const p1 = game.player1 ? game.player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
   const p2 = game.player2
@@ -110,13 +110,12 @@ const ScoreTable = () => {
 
   return (
     <div className="relative flex size-full items-center justify-around gap-1 px-8 xl:flex-col xl:gap-8">
-      <Link
-        href={'#'}
-        className="absolute left-2 top-2 flex h-[60px] w-auto items-center justify-start font-dayson text-[48px] dark:text-white xl:w-full"
-      >
-        <IoIosArrowBack className="size-[20px] md:size-[60px]" />{' '}
-        <span className="hidden lg:block">Game Arena</span>
-      </Link>
+      <div className="absolute left-2 top-2 flex h-[60px] w-auto items-center justify-start font-dayson text-[48px] dark:text-white xl:w-full">
+        <Link href={'/games'}>
+          {mode !== 'tournament' && <IoIosArrowBack className="size-[20px] md:size-[60px]" />}
+        </Link>
+        <span className="hidden lg:block"> Game Arena</span>
+      </div>
 
       <div className="flex size-full flex-col items-center justify-center gap-2">
         <div className="flex w-full items-center justify-around gap-4 p-2 font-dayson text-[20px] dark:text-white md:text-[35px]">
