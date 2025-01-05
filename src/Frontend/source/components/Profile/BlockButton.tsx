@@ -23,7 +23,7 @@ export const BlockButton = ({
         }, 2000);
     }
     return (
-        <button className={` bg-red-300 text-white rounded-md w-[130px] flex justify-center py-2 font-coustard transition-all duration-300`} onClick={handleClick} >
+        <button className={`md:w-full w-[170px] md:h-full h-[30px] bg-[#080E7E] rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl`} onClick={handleClick} >
             {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Block'}
         </button>
     )

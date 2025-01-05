@@ -37,7 +37,7 @@ export const Chart = ({ total_games, stats }: { total_games: number; stats: Stat
   if (!stats?.earth_ratio && !stats?.air_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
     return (
       <div className="flex size-full items-center justify-center">
-        <h1 className="font-dayson text-2xl font-bold text-white">No data available</h1>
+        <h1 className="font-dayson 2xl:text-2xl text-lg  font-bold text-white">No data available</h1>
       </div>
     );
   }
@@ -61,8 +61,8 @@ export const Chart = ({ total_games, stats }: { total_games: number; stats: Stat
               data={chartData}
               dataKey="visitors"
               nameKey="browser"
-              innerRadius={60}
-              strokeWidth={5}
+              innerRadius={40}
+              strokeWidth={80}
             >
               <Label
                 content={({ viewBox }) => {
