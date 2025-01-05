@@ -3,22 +3,33 @@ import Button from '../2fa/Button';
 import { useState } from 'react';
 import { AiOutlineLoading } from 'react-icons/ai';
 import FriendServices from '@/services/friendServices';
+import { chatService } from '@/services/chatService';
+import { useUser } from '@/context/GlobalContext';
 
 const BlockedComponent = ({
   name,
   ProfilePhoto,
-  onUnblock,
+  callback,
 }: {
   name: string;
   ProfilePhoto: string;
-  onUnblock: (name: string) => void;
+  callback: () => void;
 }) => {
   const [clicked, setClicked] = useState(false);
+  const { setChats } = useUser();
+  const refreshData = async () => {
+    const chats = await chatService.getChatList();
+    setChats(chats);
+    if (callback) {
+      callback();
+    }
+  };
+
   async function handleClick() {
     setClicked(true);
     try {
       await FriendServices.unblockFriend(name);
-      onUnblock(name);
+      refreshData();
     } catch (error) {
       console.error('Error unblocking user:', error);
     } finally {

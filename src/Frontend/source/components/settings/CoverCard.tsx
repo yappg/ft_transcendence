@@ -9,10 +9,14 @@ export const CoverCard = ({
   handleCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   coverError: string;
 }) => {
+  let imageUrl = coverImage;
+  if (imageUrl && !imageUrl.startsWith('blob')) {
+    imageUrl = 'http://localhost:8080' + imageUrl;
+  }
   return (
     <div className="w-fit h-full flex items-center justify-center sm:gap-6 gap-1 flex-wrap">
       <img
-        src={`http://localhost:8080${coverImage}` || '/ProfilePicture.svg'}
+        src={`${imageUrl}` || '/ProfilePicture.svg'}
         alt="Cover picture"
         width={200}
         height={100}

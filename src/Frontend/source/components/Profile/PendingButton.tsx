@@ -30,15 +30,21 @@ export const PendingButton = ({
     } catch {
       console.log('error');
     }
-    return (
-        <div className="size-full gap-7 flex flex-row">
-           <button className={`h-full bg-red-500 rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl w-[50%]`} onClick={handleClickDecline} >
-           {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Decline'}
-            </button>
-            <button className={` h-full bg-green-400 rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl w-[50%]`} onClick={handleClickAccept} >
-            {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Accept'}
-            </button>
-        </div>
-
-    )
-}
+  }
+  return (
+    <div className="flex size-full flex-row gap-7">
+      <button
+        className={`font-dayson flex h-full w-[50%] items-center justify-center rounded-[14px] bg-red-500 text-lg text-white shadow-2xl lg:rounded-[30px]`}
+        onClick={handleClickDecline}
+      >
+        {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Decline'}
+      </button>
+      <button
+        className={` font-dayson flex h-full w-[50%] items-center justify-center rounded-[14px] bg-green-400 text-lg text-white shadow-2xl lg:rounded-[30px]`}
+        onClick={handleClickAccept}
+      >
+        {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Accept'}
+      </button>
+    </div>
+  );
+};

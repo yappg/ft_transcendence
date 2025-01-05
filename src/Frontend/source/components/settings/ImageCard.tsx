@@ -9,10 +9,14 @@ export const ImageCard = ({
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   profileError: string;
 }) => {
+  let imageUrl = selectedImage;
+  if (imageUrl && !imageUrl.startsWith('blob')) {
+    imageUrl = 'http://localhost:8080' + imageUrl;
+  }
   return (
     <div className="flex h-full w-fit flex-wrap items-center justify-center gap-1 sm:gap-6">
       <img
-        src={`http://localhost:8080${selectedImage}`}
+        src={`${imageUrl}`}
         alt="Profile picture"
         width={80}
         height={80}

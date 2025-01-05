@@ -18,8 +18,13 @@ export const UnBlockButton = ({
     } catch {
       console.log('error');
     }
-    return <button className={`w-full h-full bg-[#4C4D4E75] rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl`} onClick={handleClick} >
-        {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Unblock'}
+  }
+  return (
+    <button
+      className={`font-dayson flex size-full items-center justify-center rounded-[14px] bg-[#4C4D4E75] text-lg text-white shadow-2xl lg:rounded-[30px]`}
+      onClick={handleClick}
+    >
+      {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Unblock'}
     </button>
   );
 };

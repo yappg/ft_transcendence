@@ -29,7 +29,7 @@ export default function Page() {
           <div
             className="absolute h-full w-full z-[0]"
             style={{
-              backgroundImage: `url(${PlayerRestProfile?.cover})`,
+              backgroundImage: `url(http://localhost:8080${PlayerRestProfile?.cover})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',

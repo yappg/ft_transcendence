@@ -49,16 +49,6 @@ export const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
-  //   const fetchNotifications = async () => {
-  //   try {
-  //     const fetchedNotifications = await notificationsService.getNotifications();
-  //     setNotifications(fetchedNotifications as Notification[]);
-  //   } catch (err) {
-  //     setNotifications([]);
-  //     setNotificationCount(0);
-  //   }
-  // };
-
   // ------Omar's code
   const { user } = useUser();
 
@@ -219,6 +209,7 @@ export const Header = () => {
           notifications={notifications || []}
           notificationCount={notificationCount}
           setNotificationsCount={setNotificationCount}
+          setNotifications={setNotifications}
         />
       </div>
     </div>
