@@ -11,11 +11,9 @@ export const SecurityComponent = () => {
   const passwordValidator = z.object({
     password: z.string(),
     newPassword: z.string().refine((val: string) => {
-      // If password is empty, newPassword must also be empty
       if (password === '') {
         return val === '';
       }
-      // If password is not empty, newPassword must be at least 8 characters
       return val.length >= 8;
     }, {
       message: 'New password must be provided and at least 8 characters when changing password',
@@ -34,18 +32,20 @@ export const SecurityComponent = () => {
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
   };
-  const [enabled2fa, setEnabled2fa] = useState(false);
+  const [currentEnabled2fa, setCurrentEnabled2fa] = useState(false);
+  const [update2fa, setUpdate2fa] = useState(false);
   useEffect(() => {
-    const get2fa = async () => {
+    const get2fa = async () => {  
       const response = await SettingsServices.get2fa();
-      setEnabled2fa(response);
+      setCurrentEnabled2fa(response);
+      setUpdate2fa(response);
     }
     get2fa();
   }, []);
+  console.log('update2fa: ', update2fa);
   const handleClick = async () => {
     setErrors({});
-
-    // If password is empty but new password isn't
+    
     if (password === '' && newPassword !== '') {
       setErrors({ newPassword: 'Cannot set new password without current password' });
       return;
@@ -70,11 +70,18 @@ export const SecurityComponent = () => {
       }
     }
     if (errors.password === '' && errors.newPassword === '') {
-      if (enabled2fa) {
-        router.push('/2fa/signup-2fa');
+      if (currentEnabled2fa === update2fa) {
+        return;
       }
-      else {
+      if (update2fa) {
+        setUpdate2fa(true);
+        setCurrentEnabled2fa(true);
+        router.push('/signup-2fa');
+      }
+      else { 
         await SettingsServices.update2fa(false);
+        setCurrentEnabled2fa(false);
+        setUpdate2fa(false);
       }
     }
   };
@@ -109,7 +116,7 @@ export const SecurityComponent = () => {
       </div>
       <div className="w-full h-[5%] flex items-center justify-end flex-col gap-4">
 
-      <Activate_2fa enabled2fa={enabled2fa} setEnabled2fa={setEnabled2fa} />
+      <Activate_2fa update2fa={update2fa} setUpdate2fa={setUpdate2fa} />
       <div className="w-full h-[5%] flex items-center justify-end">
         <button
           className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} w-[250px] h-[50px] py-3 px-6 text-black font-dayson rounded-md font-bold text-lg hover:bg-opacity-[90%] transition-all duration-200`}

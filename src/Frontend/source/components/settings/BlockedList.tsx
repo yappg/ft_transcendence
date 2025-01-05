@@ -37,7 +37,7 @@ const BlockedList = () => {
     return (
         <div className="size-full 2xl:p-28">
             <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll 2xl:rounded-[50px] bg-[#4C4D4E] shadow-2xl">
-            <div className="bg-black-crd dark:bg-transparent w-full h-fit">
+            <div className="bg-black-crd dark:bg-transparent w-full h-full items-center justify-center ">
             {blockedList.length > 0 ? (
             blockedList.map((user, index) => (
               <BlockedComponent
@@ -48,7 +48,7 @@ const BlockedList = () => {
               />
             ))
           ) : (
-            <div className="flex items-center justify-center font-dayson text-xl text-white border-2">No blocked users found.</div>
+            <div className="flex items-center justify-center font-dayson text-xl text-white ">No blocked users found.</div>
           )}
             </div>
             </div>

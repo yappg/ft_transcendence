@@ -17,8 +17,8 @@ export const InviteSentButton = ({name, setThisState}: {name: string, setThisSta
             }, 2000);
         }
     return (
-            <button className={` bg-green-500 text-white rounded-md w-[130px] flex justify-center py-2 font-coustard transition-all duration-300`} onClick={handleClick} >
-                {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Cancel'}
+            <button className={`md:w-full w-[170px] md:h-full h-[30px] bg-white rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-blue-500 font-dayson text-lg shadow-2xl`} onClick={handleClick} >
+                {clicked ? <AiOutlineLoading className="animate-spin text-black text-[20px]"  /> : 'Cancel'}
             </button>
         )
 }
