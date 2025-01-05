@@ -30,7 +30,7 @@ class SocketManager extends WebSocket {
   }
 
   sendData(data: any) {
-    this.send(JSON.stringify({ data }));
+    this.send(JSON.stringify( data ));
   }
 
   updateBallPosition(data: any) {
@@ -38,68 +38,84 @@ class SocketManager extends WebSocket {
       console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
-  
+
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
-      
+
       console.log('scale_x:', scale_x);
       console.log('scale_y:', scale_y);
       // console.log('new_x:', data);
-      this.pixiManager.dx = data.dx * scale_x;
       if (this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
         this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
+        this.pixiManager.dx = -data.dx;
         this.pixiManager.dy = -data.dy;
       }
       if (!this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = new_x;
         this.pixiManager.ball.y = new_y;
+        this.pixiManager.dx = data.dx;
         this.pixiManager.dy = data.dy;
       }
-  }
+    }
   }
 
   updatePaddlePosition(data: any) {
     if (data) {
       const scale_x = this.pixiManager.screenWidth / 75;
-  
+
       const new_x = scale_x * data.new_x;
   
-      this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x;
+      if (this.pixiManager.isTopPaddle) {
+        this.pixiManager.topRacket.x = this.pixiManager.screenWidth - (new_x + this.pixiManager.paddleWidth);
+      } else {
+        this.pixiManager.topRacket.x = new_x;
+      }
     }
   }
-  
+
+
+
   async handleSocketMessage(message: any) {
     switch (message.type) {
       case 'acknowledgeOpponent':
         this.pixiManager.game.gameId = message.data.game_id;
         this.pixiManager.game.opponent = message.data.opponent;
-        this.pixiManager.isTopPaddle = message.data.top_paddle;
+        this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
-        console.log('scale_y: ', scale_y);
         if (this.pixiManager.isTopPaddle) {
-          this.pixiManager.dy = -2 * scale_y;
+          this.pixiManager.dy = -20;
         } else {
-          this.pixiManager.dy = 2 * scale_y;
+          this.pixiManager.dy = 20;
         }
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        this.send(JSON.stringify({ action: 'ready', game_id: message.data.game_id }));
-      case 'UpdateBall': 
+        this.sendData({ action: 'ready', game_id: message.data.game_id });
+      case 'UpdateBall':
         // this.pixiManager.app.ticker.add(() => {
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
           // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-          console.log('data:', message);
+          // console.log('data:', message);
           this.updateBallPosition(message.ball_position);
           // });
           break;
-      // case 'UpdatePaddle':
-        // this.updatePaddlePosition(message);
-        // break;
-      case 'scoreUpdate':
-        // this.pixiManager.updateScore(message);
+      case 'UpdatePaddle':
+        this.updatePaddlePosition(message);
         break;
+      case 'UpdateScore':
+        let score1 = 0;
+        let score2 = 0;
+        console.log('message:', message);
+        if (this.pixiManager.isTopPaddle) {
+          score1 = message.data.top[message.data.round];
+          score2 = message.data.bottom[message.data.round];
+        } else {
+          score1 = message.data.bottom[message.data.round];
+          score2 = message.data.top[message.data.round];
+        }
+        this.pixiManager.game.setGameScore([score1, score2]);
+        console.log('scoroooor: ', this.pixiManager.game.GameScore);
       case 'gameState':
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);

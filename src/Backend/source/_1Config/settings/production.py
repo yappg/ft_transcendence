@@ -3,61 +3,60 @@ from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
 
-# Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load environment variables from the .env file if it exists will be added after TODO
 load_dotenv(BASE_DIR.parent.parent / ".env")
+
+def get_env_variable(var_name):
+    try:
+        return os.getenv(var_name)
+    except KeyError:
+        raise ImproperlyConfigured(f"Set the {var_name} environment variable")
 
 # ===========================
 # SECURITY SETTINGS
 # ===========================
 
-# Secret key for cryptographic signing
-SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
 
-# Enable debug mode for development only (disable in production)
 DEBUG = False
+ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
-# Allow all hosts for development (update for production)
-ALLOWED_HOSTS = [
-    'http://frontend:3000',
-    # 'http://127.0.0.1:3000',
-    # 'http://localhost:3000',
-]
+# Security Headers
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False  # TODO will be handled by nginx
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 0  # TODO will nginx
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
 
 # ===========================
 # CORS CONFIGURATION
 # ===========================
 
-CORS_ALLOW_ALL_ORIGINS = False  # Restrict origins
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://frontend:3000',
-    # 'http://127.0.0.1:3000',
-    # 'http://localhost:3000',
-]
+CORS_ALLOWED_ORIGINS = get_env_variable('CORS_ALLOWED_ORIGINS').split(',')
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 # ===========================
 # APPLICATION CONFIGURATION
 # ===========================
 
 INSTALLED_APPS = [
-    # API documentation
     'drf_yasg',
-
-    # Monitoring
     'django_prometheus',
-
-    # ASGI/Channels
-    'daphne', 'channels',
-
-    # Core Django apps
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -65,36 +64,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
-    # Third-party apps
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-
-    # Local apps
-    'accounts', 'chat', 'game', 'relations',
+    'accounts',
+    'chat',
+    'game',
+    'relations',
 ]
 
 MIDDLEWARE = [
-    # Security middleware
-    'django.middleware.security.SecurityMiddleware',
-
-    # Prometheus monitoring (before other middlewares to capture metrics)
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
-
-    # Core Django middleware
-    'django.contrib.sessions.middleware.SessionMiddleware',  # Handles session management
-    'corsheaders.middleware.CorsMiddleware',  # CORS must come before CommonMiddleware
-    'django.middleware.common.CommonMiddleware',  # Adds common functionality like redirects
-    'django.middleware.csrf.CsrfViewMiddleware',  # Protects against CSRF attacks
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Authentication handling
-    'django.contrib.messages.middleware.MessageMiddleware',  # Enables messages framework
-
-    # Middleware for clickjacking protection
+    'django.middleware.security.SecurityMiddleware',
+    'accounts.middleware.AccessTokenMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # Prometheus middleware for after request handling
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
@@ -103,10 +93,14 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 REST_FRAMEWORK = {
@@ -114,164 +108,156 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'accounts.authenticate.CotumAuthentication',
-        'rest_framework.permissions.IsAuthenticated',
+        'accounts.authenticate.CotumAuthentication',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon' : '3/min',
-    }
+        'anon': '20/minute',
+        'user': '100/minute',
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
 
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
 
-
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/0"],
+            "hosts": [f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/0"],
             "capacity": 1500,
-            "expiry": 50,
+            "expiry": 10,
         },
     },
 }
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     },
-    # 'matchmaking': {
-    #     'BACKEND': 'django_redis.cache.RedisCache',
-    #     'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/2",
-    #     'OPTIONS': {
-    #         'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-    #     }
-    # }
-# }
 
 # ===========================
 # DATABASE CONFIGURATION
 # ===========================
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB"),
-        'USER': os.getenv("POSTGRES_USER"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'NAME': get_env_variable('POSTGRES_DB'),
+        'USER': get_env_variable('POSTGRES_USER'),
+        'PASSWORD': get_env_variable('POSTGRES_PASSWORD'),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 600,  # Extend connection lifetime to 10 minutes
+        'CONN_MAX_AGE': 200,
     }
 }
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://:{os.getenv('REDIS_PASS')}@cache:6379/1",
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/1",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
         }
-    }
+    },
+    'players_queue': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/2",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
+        }
+    },
+    'games_pool': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f"redis://:{get_env_variable('REDIS_PASS')}@cache:6379/3",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'RETRY_ON_TIMEOUT': True,
+            'MAX_CONNECTIONS': 500,
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50},
+        }
+    },
 }
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # Use cache for sessions
-SESSION_CACHE_ALIAS = "default"  # Use the default cache defined above
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # ===========================
 # AUTHENTICATION & USERS
 # ===========================
 
-AUTH_USER_MODEL = 'accounts.Player'  # Custom user model
-SITE_ID = 1
+AUTH_USER_MODEL = 'accounts.Player'
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        # 'OPTIONS': {
-            # 'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-        # },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 12,  # Enforces a minimum length of 8 characters
-        },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        # 'OPTIONS': {
-        #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-        # },
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#         # 'OPTIONS': {
+#         #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
+#         # },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#         'OPTIONS': {
+#             'min_length': 8,
+#         },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#         # 'OPTIONS': {
+#         #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
+#         # },
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 
 # ===========================
-# THIRD-PARTY CONFIGURATION
+# OAUTH2 CONFIGURATION
 # ===========================
 
-# Swagger API Documentation
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header',
-        },
-    },
-}
-
-# OAuth2 Configuration for 42 API TODO ENV
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': "u-s4t2ud-9a789e497d800c5a443dceb37c2238734264a05f5208354f0a20b8eecb94e72f",
-    'CLIENT_SECRET': "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",
-    #TRANS2-----------------------------------------
-    # 'CLIENT_ID': "u-s4t2ud-4aedcd9bbfe99586bd8aab9967a260dd24e4a1459620fe008ae457eae916624c",
-    # 'CLIENT_SECRET': "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",
-    # -----------------END--------------------------
-    # 'CLIENT_ID': os.getenv("CLIENT_ID_42"),
-    # 'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
+    'CLIENT_ID': get_env_variable('CLIENT_ID_42'),
+    'CLIENT_SECRET': get_env_variable('CLIENT_SECRET_42'),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
-    'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/42',
-    # 'CALLBACK_URL': 'https://127.0.0.1:8080/api/oauth/callback/42',
-
+    'CALLBACK_URL': get_env_variable('OAUTH_42_CALLBACK_URL'),
     'SCOPE': 'public',
 }
 
-# OAuth2 Configuration for Google API TODO ENV
 OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
-    'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+    'CLIENT_ID': get_env_variable('GOOGLE_CLIENT_ID'),
+    'CLIENT_SECRET': get_env_variable('GOOGLE_CLIENT_SECRET'),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://127.0.0.1:8080/api/oauth/callback/google',
-    # 'CALLBACK_URL': 'https://127.0.0.1:8080/api/oauth/callback/google',
-
-    # 'CALLBACK_URL': 'http://127.0.0.1:3000/home',
+    'CALLBACK_URL': get_env_variable('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
+
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION
@@ -301,36 +287,31 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia/')
-MEDIA_URL = '/media/'
-
-# Add static root configuration
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/Media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia')
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+# ===========================
+# EMAIL CONFIGURATION
+# ===========================
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = get_env_variable('EMAIL_HOST')
+# EMAIL_PORT = int(get_env_variable('EMAIL_PORT', '587'))
+# EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = get_env_variable('DEFAULT_FROM_EMAIL')
 
 # ===========================
 # MISCELLANEOUS SETTINGS
 # ===========================
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
-# Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-
-# Add security headers
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True

@@ -12,8 +12,8 @@ volumes
 **/*.sublime-workspace
 
 # Node.js
-**/.next/
-**/node_modules/
+**/.next/*
+**/node_modules/*
 **/npm-debug.log
 **/package-lock.json
 **/yarn-debug.log
