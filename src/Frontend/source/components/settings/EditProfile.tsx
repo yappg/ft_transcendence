@@ -23,7 +23,7 @@ const EditProfile = () => {
     name: 'Meryem',
     email: 'test.ts@gmail.com',
     oldPassword: '123',
-    });
+  });
   const [newProfile, setNewProfile] = useState({
     username: profile.username,
     name: profile.name,
@@ -31,7 +31,7 @@ const EditProfile = () => {
     oldPass: '',
     newPass: '',
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isClicked, setIsClicked] = useState(false);
   function handleSave() {
     if (Object.keys(errors).length > 0) {
@@ -57,7 +57,7 @@ const EditProfile = () => {
       setNewProfile({ ...newProfile, oldPass: '', newPass: '' });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = error.errors.reduce((acc, curr) => {
+        const fieldErrors = error.errors.reduce((acc: any, curr: any) => {
           acc[curr.path[0]] = curr.message;
           return acc;
         }, {});
@@ -70,11 +70,11 @@ const EditProfile = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#28AFB0] dark:bg-[#C1382C]">
+      <DialogContent className="bg-[#28AFB0] sm:max-w-[425px] dark:bg-[#C1382C]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Make changes to your profile here. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -91,7 +91,7 @@ const EditProfile = () => {
               }}
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500 font-coustard">{errors.name}</p>
+              <p className="font-coustard mt-1 text-sm text-red-500">{errors.name}</p>
             )}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">

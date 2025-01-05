@@ -9,6 +9,7 @@ import { getFields } from './fields';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const buttonAction = () => {
     console.log('clicked');
     let result = '';

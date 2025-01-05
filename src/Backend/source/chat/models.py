@@ -11,16 +11,19 @@ class ChatRoom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chat between {self.senders.all()[0].username} and {self.senders.all()[1].username}"
+        return f"ChatRoom :{self.name}"        
 
 
 class Message(models.Model):
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name="messages")
+
     sender = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='recived_messages', default='')
+
     content = models.TextField()
-    send_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+
+    send_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message from {self.sender.username} in chat {self.chatroom.id}"

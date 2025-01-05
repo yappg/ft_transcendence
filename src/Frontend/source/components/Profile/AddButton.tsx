@@ -1,21 +1,35 @@
-import FriendServices from "@/services/friendServices";
-import { AiOutlineLoading } from "react-icons/ai";
-import { useState } from "react";
-export const AddButton = ({ name, setThisState }: { name: string, setThisState: (state: string) => void }) => {
-    const [clicked, setClicked] = useState(false);
-    console.log('name', name);
-    function handleClick () {
-        try{
-            FriendServices.sendFriendRequest(name);
-            setClicked(true);
-            setThisState('sent_invite');
-        }catch{
-            console.log('error')
-        }
+import FriendServices from '@/services/friendServices';
+import { AiOutlineLoading } from 'react-icons/ai';
+import { useState } from 'react';
+
+export const AddButton = ({
+  name,
+  setThisState,
+}: {
+  name: string;
+  setThisState: (state: string) => void;
+}) => {
+  const [clicked, setClicked] = useState(false);
+  async function handleClick() {
+    try {
+      await FriendServices.sendFriendRequest(name);
+      setClicked(true);
+      setThisState('sent_invite');
+    } catch (error: any) {
+      console.log('error', error);
     }
-    return (
-        <button className="w-full h-full bg-[#4C4D4E] rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl" onClick={handleClick}>
-            {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Add Friend'}
-        </button>
-    )
-}
+  }
+
+  return (
+    <button
+      className="font-dayson flex h-[30px] w-[170px] items-center justify-center rounded-[14px] bg-blue-500 text-lg text-white shadow-2xl md:size-full lg:rounded-[30px] "
+      onClick={handleClick}
+    >
+      {clicked ? (
+        <AiOutlineLoading className="animate-spin text-[20px] text-white" />
+      ) : (
+        'Add Friend'
+      )}
+    </button>
+  );
+};

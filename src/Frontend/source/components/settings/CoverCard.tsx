@@ -9,14 +9,18 @@ export const CoverCard = ({
   handleCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   coverError: string;
 }) => {
+  let imageUrl = coverImage;
+  if (imageUrl && !imageUrl.startsWith('blob')) {
+    imageUrl = 'http://localhost:8080' + imageUrl;
+  }
   return (
-    <div className="w-fit h-full flex items-center justify-center gap-6 flex-wrap">
-      <Image
-        src={coverImage || '/ProfilePicture.svg'}
+    <div className="w-fit h-full flex items-center justify-center sm:gap-6 gap-1 flex-wrap">
+      <img
+        src={`${imageUrl}` || '/ProfilePicture.svg'}
         alt="Cover picture"
         width={200}
         height={100}
-        className="w-[200px] h-[100px] rounded-md bg-white bg-cover object-cover"
+        className="lg:w-[200px] sm:w-[150px] w-[60px] h-[60px] rounded-md bg-white bg-cover object-cover"
       />
       <div className="w-fit h-full flex flex-col items-start justify-center gap-2">
         <h1 className="text-lg text-white tracking-wider">Cover Picture</h1>
@@ -25,9 +29,9 @@ export const CoverCard = ({
       </div>
       <label
         htmlFor="cover-upload"
-        className="py-2 px-4 bg-white text-black rounded-md cursor-pointer"
+        className="sm:py-2 sm:px-4 py-1 px-2 bg-white text-black rounded-md cursor-pointer"
       >
-        Upload Cover
+        Change Cover
       </label>
       <input
         id="cover-upload"
