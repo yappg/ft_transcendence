@@ -12,11 +12,14 @@ import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/module
 import { Chart } from '@/components/Profile/Chart';
 import Rating from '@/components/Profile/rating';
 import { useUser } from '@/context/GlobalContext';
+import { Achievement } from '@/constants/achivemement';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import HomeAchievement from '@/components/home/HomeAchievement';
 import Link from 'next/link';
 import { HomeLeaderboard } from '@/components/home/HomeLeaderboard';
-
+import { userService } from '@/services/userService';
+import { useEffect } from 'react';
+import { ChartLine } from '@/components/Profile/ChartLine';
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
@@ -80,52 +83,135 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
-  const { user } = useUser();
+  const {
+    user,
+    setAchievements,
+    achievements,
+    setIsLoading,
+    isLoading,
+    setPlayerLeaderBoard,
+    PlayerLeaderBoard,
+    setPlayerMatches,
+    PlayerMatches,
+  } = useUser();
+
+  const fetchAchievements = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedAchievements = await userService.getAchievements();
+      const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
+        player: data.player,
+        achievement: {
+          name: data.achievement.name,
+          description: data.achievement.description,
+          xp_gain: data.achievement.xp_gain,
+          condition: data.achievement.condition,
+        },
+        date_earned: data.date_earned,
+        image: data.image,
+        xpReward: data.achievement.xp_gain,
+        ratio: data.achievement.condition,
+        progress: data.progress,
+        iconUrl: data.image,
+        gained: data.gained,
+        dateEarned: data.date_earned,
+      }));
+      setAchievements(mappedAchievements);
+    } catch (err) {
+      setAchievements([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerLeaderBoard();
+      setPlayerLeaderBoard(response);
+    } catch (error) {
+      console.log('Error fetching leaderboard:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPlayerMatches = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerMatches();
+      setPlayerMatches(response);
+    } catch (error) {
+      console.log('Error fetching player matches:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayerMatches();
+    fetchAchievements();
+    fetchLeaderboard();
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+  let userAchievements: Achievement[] = achievements || [];
   if (!user) return <div>Loading...</div>;
-  const achievements = user.achievements;
+  userAchievements = user?.achievements;
   return (
-    <div className="size-full overflow-hidden gap-8 flex-row flex">
-      <div className='w-[60%] h-full'>
-      <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center relative">
-        <img src="/games-logo.svg" alt="" className="size-[300px]" />
-      </div>
-      <div className=" custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
+    <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
+      <div className="h-1/2 w-full lg:h-full lg:w-3/5">
+        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
+          <img src="/games-logo.svg" alt="" className="size-[300px]" />
+        </div>
+        <div className=" custom-inner-shadow costum-little-shadow bg-black-crd relative flex h-full items-center overflow-hidden rounded-[30px]">
           <div className="flex size-full items-center">
             <MapsSwiper mode="" />
           </div>
         </div>
       </div>
-      <div className="w-[40%] h-full gap-9 flex-col flex">
-        <div className="w-full h-[15%]">
+      <div className="flex h-[50%] w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
+        <div className="md:h-[100px] h-[200px] w-full lg:h-[10%]">
           <DashboardCard />
         </div>
-        <div className="w-full h-[15%] flex items-center justify-between px-7 bg-black-crd rounded-[30px]">
-          {/* {achievements && (
+        <div className="bg-black-crd flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[15%] realtive">
+          {userAchievements && userAchievements.length > 0 ? (
             <HomeAchievement
-              title={achievements[0].achievement.name}
-            description={achievements[0].achievement.description}
-              points={achievements[0].achievement.points}
-              progress={achievements[0].progress}
-              xpReward={achievements[0].achievement.xp_gain}
-              ratio={achievements[0].achievement.ratio}
-              iconUrl={process.env.NEXT_PUBLIC_HOST + achievements[0].image}
+              title={userAchievements[0].achievement.name}
+              description={userAchievements[0].achievement.description}
+              points={userAchievements[0].achievement.xp_gain}
+              progress={userAchievements[0].progress}
+              xpReward={userAchievements[0].achievement.xp_gain}
+              ratio={userAchievements[0].achievement.condition}
+              iconUrl={process.env.NEXT_PUBLIC_HOST + userAchievements[0].image}
             />
-          )} */}
-          <Link href={'/achievement'} className='size-[80px]'>
-            <RiArrowRightSLine className='text-white text-[80px] font-dayson font-bold' />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <p className="font-dayson 2xl:text-[20px] lg:text-[10px] font-bold text-white">No achievement yet</p>
+            </div>
+          )}
+          <Link
+            href={'/achievement'}
+            className="flex 2xl:size-[50px] size-[30px] items-center justify-center lg:size-[30px]"
+          >
+            <RiArrowRightSLine className="font-dayson 2xl:text-[40px] text-[20px] font-bold text-white lg:text-[80px]" />
           </Link>
         </div>
-        <div className="bg-black w-full h-[35%]">
-          <HomeLeaderboard />
+        <div className=" h-[300px] w-full md:h-fit lg:h-2/5">
+          <HomeLeaderboard playerLeaderBoard={PlayerLeaderBoard || []} />
         </div>
-        <div className=" w-full h-[35%] bg-black-crd rounded-[30px] shadow-2xl">
-        <div className="w-full h-full flex items-center justify-center bg-black-crd rounded-[30px]">
-          <div className="w-1/2  h-full">
-            <Chart total_games={user?.total_games} stats={user?.statistics} />
+        <div className=" bg-black-crd h-[300px] md:h-fit w-full rounded-[30px] shadow-2xl md:h-fit lg:h-2/5 lg:overflow-hidden overflow-y-scroll custom-scrollbar-container">
+          <div className="bg-black-crd gap2 flex size-full flex-row items-center justify-center lg:flex-row xl:flex-row lg:h-1/2 h-[300px] ">
+            <div className="h-4/5  w-1/2 items-start justify-start">
+              <Chart total_games={user?.total_games} stats={user?.statistics} />
+            </div>
+            <div className="h-full w-1/2 pt-5">
+              <Rating statistics={user?.statistics} />
+            </div>
           </div>
-          <Rating statistics={user?.statistics} />
+          <div className="w-full lg:h-1/2 flex items-center justify-center bg-black-crd h-[300px]">
+          <ChartLine statistics={user?.statistics} />
         </div>
-
         </div>
       </div>
     </div>

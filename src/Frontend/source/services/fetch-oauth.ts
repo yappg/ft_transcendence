@@ -19,12 +19,12 @@ export class OAuthClient {
   }
 
   static async google() {
-    const authUrl = await axiosInstance.get('/accounts/oauth/login/google/');
+    const authUrl = await axiosInstance.get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/login/google/');
     window.location.href = authUrl.data.url;
   }
 
   static async intra42() {
-    const authUrl = await axiosInstance.get('/accounts/oauth/login/42/');
+    const authUrl = await axiosInstance.get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/login/42/');
     // console.log('--------42', authUrl);
     window.location.href = authUrl.data.url;
   }
