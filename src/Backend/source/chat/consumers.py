@@ -86,6 +86,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'chatId': chat.id,
             }
         )
+    
+    async def user_blocked(self, event):
+        chat_id = event['chat_id']
+        print(f"-----------------[DEBUG] User blocked in chat: {chat_id}")
+        await self.send(text_data=json.dumps({
+            'type': 'user_blocked',
+            'chat_id': chat_id
+        }))
         
     async def chat_message(self, event):
         content = event['content']

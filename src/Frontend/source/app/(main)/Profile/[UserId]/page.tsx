@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import fetcherestprofiles from '@/services/fetcherestprofiles';
 import { useParams } from 'next/navigation';
 
-
 export default function Page() {
   const params = useParams();
   const id = Number(params.UserId);
@@ -22,6 +21,7 @@ export default function Page() {
     }
   }, []);
 
+  // need to add online status
   return (
     <div className="size-full md:py-4 md:pl-6 overflow-auto">
       <div className="costum-little-shadow size-full overflow-hidden md:rounded-[50px] gap-8">
@@ -29,7 +29,7 @@ export default function Page() {
           <div
             className="absolute h-full w-full z-[0]"
             style={{
-              backgroundImage: `url(${PlayerRestProfile?.cover})`,
+              backgroundImage: `url(http://localhost:8080${PlayerRestProfile?.cover})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',

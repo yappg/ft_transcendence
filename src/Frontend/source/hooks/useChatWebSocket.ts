@@ -1,24 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Message, Chat } from '@/constants/chat';
 import { chatService } from '@/services/chatService';
-
+import { useUser } from '@/context/GlobalContext';
+import { setRequestMeta } from 'next/dist/server/request-meta';
 interface UseChatWebSocketProps {
   chatId: number;
-  currentUserId: number;
-  receiverId: number;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+  setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
 }
 
-export function useChatWebSocket({
-  chatId,
-  currentUserId,
-  receiverId,
-  setMessages,
-  setChats,
-}: UseChatWebSocketProps) {
+export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
+  const { setLastMessages } = useUser();
   const socketRef = useRef<WebSocket | null>(null);
-
   // ---------------------------------------------------------------------
   const handleWebSocketMessage = useCallback(
     (message: any) => {
@@ -35,18 +28,14 @@ export function useChatWebSocket({
           },
         ];
       });
-
-      setChats((prevChats: Chat[]) => {
-        if (!prevChats) return prevChats;
-        return prevChats.map((chat) => {
-          if (chat.id === chatId) {
-            return {
-              ...chat,
-              last_message: message.content,
-            };
-          }
-          return chat;
-        });
+      setLastMessages((prevLastMessages: { [key: number]: string } | null) => {
+        if (!prevLastMessages) return prevLastMessages;
+        let newObject = {
+          ...prevLastMessages,
+          [chatId]: message.content,
+        };
+        console.log('this is the newObject: ', newObject);
+        return newObject;
       });
     },
     [chatId, setMessages, setChats]
@@ -59,7 +48,8 @@ export function useChatWebSocket({
       try {
         socketRef.current = await chatService.createWebSocketConnection(
           chatId,
-          handleWebSocketMessage
+          handleWebSocketMessage,
+          setChats
         );
       } catch (error) {
         console.log('WebSocket connection failed', error);

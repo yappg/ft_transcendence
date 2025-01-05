@@ -38,10 +38,10 @@ class SocketManager extends WebSocket {
       console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
-  
+
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
-      
+
       console.log('scale_x:', scale_x);
       console.log('scale_y:', scale_y);
       // console.log('new_x:', data);
@@ -56,19 +56,19 @@ class SocketManager extends WebSocket {
         this.pixiManager.ball.y = new_y;
         this.pixiManager.dy = data.dy;
       }
-  }
+    }
   }
 
   updatePaddlePosition(data: any) {
     if (data) {
       const scale_x = this.pixiManager.screenWidth / 75;
-  
+
       const new_x = scale_x * data.new_x;
-  
+
       this.pixiManager.topRacket.x = this.pixiManager.screenWidth - new_x;
     }
   }
-  
+
   async handleSocketMessage(message: any) {
     switch (message.type) {
       case 'acknowledgeOpponent':
@@ -86,17 +86,17 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         this.send(JSON.stringify({ action: 'ready', game_id: message.data.game_id }));
-      case 'UpdateBall': 
+      case 'UpdateBall':
         // this.pixiManager.app.ticker.add(() => {
-          // console.log("jfjkbkfskbfskje", message.game_state.ball);
-          // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-          console.log('data:', message);
-          this.updateBallPosition(message.ball_position);
-          // });
-          break;
+        // console.log("jfjkbkfskbfskje", message.game_state.ball);
+        // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
+        console.log('data:', message);
+        this.updateBallPosition(message.ball_position);
+        // });
+        break;
       // case 'UpdatePaddle':
-        // this.updatePaddlePosition(message);
-        // break;
+      // this.updatePaddlePosition(message);
+      // break;
       case 'scoreUpdate':
         // this.pixiManager.updateScore(message);
         break;

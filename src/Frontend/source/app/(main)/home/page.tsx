@@ -17,6 +17,8 @@ import { RiArrowRightSLine } from 'react-icons/ri';
 import HomeAchievement from '@/components/home/HomeAchievement';
 import Link from 'next/link';
 import { HomeLeaderboard } from '@/components/home/HomeLeaderboard';
+import { userService } from '@/services/userService';
+import { useEffect } from 'react';
 import { ChartLine } from '@/components/Profile/ChartLine';
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
@@ -81,14 +83,84 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
-  const { user, setAchievements } = useUser();
+  const {
+    user,
+    setAchievements,
+    achievements,
+    setIsLoading,
+    isLoading,
+    setPlayerLeaderBoard,
+    PlayerLeaderBoard,
+    setPlayerMatches,
+    PlayerMatches,
+  } = useUser();
 
-  let userAchievements: Achievement[] = [];
+  const fetchAchievements = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedAchievements = await userService.getAchievements();
+      const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
+        player: data.player,
+        achievement: {
+          name: data.achievement.name,
+          description: data.achievement.description,
+          xp_gain: data.achievement.xp_gain,
+          condition: data.achievement.condition,
+        },
+        date_earned: data.date_earned,
+        image: data.image,
+        xpReward: data.achievement.xp_gain,
+        ratio: data.achievement.condition,
+        progress: data.progress,
+        iconUrl: data.image,
+        gained: data.gained,
+        dateEarned: data.date_earned,
+      }));
+      setAchievements(mappedAchievements);
+    } catch (err) {
+      setAchievements([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerLeaderBoard();
+      setPlayerLeaderBoard(response);
+    } catch (error) {
+      console.log('Error fetching leaderboard:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPlayerMatches = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userService.getPlayerMatches();
+      setPlayerMatches(response);
+    } catch (error) {
+      console.log('Error fetching player matches:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayerMatches();
+    fetchAchievements();
+    fetchLeaderboard();
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+  let userAchievements: Achievement[] = achievements || [];
   if (!user) return <div>Loading...</div>;
   userAchievements = user?.achievements;
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
-      <div className="h-[50%] w-full lg:h-full lg:w-3/5">
+      <div className="h-1/2 w-full lg:h-full lg:w-3/5">
         <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
           <img src="/games-logo.svg" alt="" className="size-[300px]" />
         </div>
@@ -99,10 +171,10 @@ const Home = () => {
         </div>
       </div>
       <div className="flex h-[50%] w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
-        <div className="md:h-[100px] h-[200px] w-full lg:h-[10%]">
-          <DashboardCard />
+        <div className="h-[200px] w-full md:h-[100px] lg:h-[10%]">
+          <DashboardCard playerMatches={PlayerMatches || []} />
         </div>
-        <div className="bg-black-crd flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[15%] realtive">
+        <div className="bg-black-crd realtive flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[15%]">
           {userAchievements && userAchievements.length > 0 ? (
             <HomeAchievement
               title={userAchievements[0].achievement.name}
@@ -115,21 +187,23 @@ const Home = () => {
             />
           ) : (
             <div className="flex size-full items-center justify-center">
-              <p className="font-dayson 2xl:text-[20px] lg:text-[10px] font-bold text-white">No achievement yet</p>
+              <p className="font-dayson font-bold text-white lg:text-[10px] 2xl:text-[20px]">
+                No achievement yet
+              </p>
             </div>
           )}
           <Link
             href={'/achievement'}
-            className="flex 2xl:size-[50px] size-[30px] items-center justify-center lg:size-[30px]"
+            className="flex size-[30px] items-center justify-center lg:size-[30px] 2xl:size-[50px]"
           >
-            <RiArrowRightSLine className="font-dayson 2xl:text-[40px] text-[20px] font-bold text-white lg:text-[80px]" />
+            <RiArrowRightSLine className="font-dayson text-[20px] font-bold text-white lg:text-[80px] 2xl:text-[40px]" />
           </Link>
         </div>
         <div className=" h-[300px] w-full md:h-fit lg:h-2/5">
-          <HomeLeaderboard />
+          <HomeLeaderboard playerLeaderBoard={PlayerLeaderBoard || []} />
         </div>
-        <div className=" bg-black-crd h-[300px] md:h-fit w-full rounded-[30px] shadow-2xl md:h-fit lg:h-2/5 lg:overflow-hidden overflow-y-scroll custom-scrollbar-container">
-          <div className="bg-black-crd gap2 flex size-full flex-row items-center justify-center lg:flex-row xl:flex-row lg:h-1/2 h-[300px] ">
+        <div className=" bg-black-crd custom-scrollbar-container h-[300px] w-full overflow-y-scroll rounded-[30px] shadow-2xl md:h-fit lg:h-2/5 lg:overflow-hidden">
+          <div className="bg-black-crd gap2 flex size-full h-[300px] flex-row items-center justify-center lg:h-1/2 lg:flex-row xl:flex-row ">
             <div className="h-4/5  w-1/2 items-start justify-start">
               <Chart total_games={user?.total_games} stats={user?.statistics} />
             </div>
@@ -137,9 +211,9 @@ const Home = () => {
               <Rating statistics={user?.statistics} />
             </div>
           </div>
-          <div className="w-full lg:h-1/2 flex items-center justify-center bg-black-crd h-[300px]">
-          <ChartLine statistics={user?.statistics} />
-        </div>
+          <div className="bg-black-crd flex h-[300px] w-full items-center justify-center lg:h-1/2">
+            <ChartLine statistics={user?.statistics} />
+          </div>
         </div>
       </div>
     </div>

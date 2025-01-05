@@ -1,8 +1,9 @@
 import { useUser } from '@/context/GlobalContext';
+import { History } from '@/context/GlobalContext';
 import { RiArrowRightSLine } from 'react-icons/ri';
 
-export const DashboardCard = (...props: any) => {
-  const { user, PlayerMatches } = useUser();
+export const DashboardCard = ({ playerMatches }: { playerMatches: History[] }) => {
+  const { user } = useUser();
 
   if (!user) {
     return (
@@ -13,18 +14,18 @@ export const DashboardCard = (...props: any) => {
   }
   return (
     <>
-      {PlayerMatches && PlayerMatches.length > 0 ? (
-        <div className={`relative size-full rounded-[40px] overflow-hidden`}>
+      {playerMatches && playerMatches.length > 0 ? (
+        <div className={`relative size-full rounded-[40px]`}>
           <div
             className={`absolute inset-0 rounded-[30px] bg-cover bg-center
                         ${
-                          PlayerMatches[0]?.map_played === 'water'
+                          playerMatches[0]?.map_played === 'water'
                             ? 'bg-[url("/WaterMode.svg")]'
-                            : PlayerMatches[0]?.map_played === 'air'
+                            : playerMatches[0]?.map_played === 'air'
                               ? 'bg-[url("/AirMode.svg")]'
-                              : PlayerMatches[0]?.map_played === 'earth'
+                              : playerMatches[0]?.map_played === 'earth'
                                 ? 'bg-[url("/EarthMode.svg")]'
-                                : PlayerMatches[0]?.map_played === 'fire'
+                                : playerMatches[0]?.map_played === 'fire'
                                   ? 'bg-[url("/FireMode.svg")]'
                                   : ''
                         }`}
@@ -32,29 +33,29 @@ export const DashboardCard = (...props: any) => {
           <div className="absolute inset-0 bg-black/50"></div>
           <div className="relative flex size-full items-center justify-between p-1 px-5">
             <img
-              src={PlayerMatches[0]?.player1.avatar}
+              src={playerMatches[0]?.player1.avatar}
               alt="avatar"
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
             />
             <div className="flex flex-col items-start justify-center gap-2">
               <h1 className="font-dayson text-sm text-white">
-                {PlayerMatches[0]?.player1.display_name.slice(0, 7)}
+                {playerMatches[0]?.player1.display_name.slice(0, 7)}
               </h1>
               <h1 className="font-dayson text-sm text-green-500">
-                {PlayerMatches[0]?.player1_score}
+                {playerMatches[0]?.player1_score}
               </h1>
             </div>
             <h1 className="font-coustard text-[30px] text-white xl:text-[45px]">VS</h1>
             <div className="flex flex-col items-end justify-end gap-2">
               <h1 className="font-dayson text-sm text-white">
-                {PlayerMatches[0]?.player2.display_name.slice(0, 7)}
+                {playerMatches[0]?.player2.display_name.slice(0, 7)}
               </h1>
               <h1 className="font-dayson text-sm text-red-500">
-                {PlayerMatches[0]?.player2_score}
+                {playerMatches[0]?.player2_score}
               </h1>
             </div>
             <img
-              src={PlayerMatches[0]?.player2.avatar}
+              src={playerMatches[0]?.player2.avatar}
               alt="avatar"
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
             />

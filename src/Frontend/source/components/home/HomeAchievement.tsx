@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 
-
-
 const HomeAchievement = ({
   title = 'First Achievement',
   description = 'play first game and win with',
@@ -11,16 +9,15 @@ const HomeAchievement = ({
   xpReward = 1000,
   ratio = 1,
   iconUrl = '/api/placeholder/80/80',
-} : {
-  title: string,
-  description: string,
-  points: number,
-  progress: number,
-  xpReward: number,
-  ratio: number,
-  iconUrl: string,
+}: {
+  title: string;
+  description: string;
+  points: number;
+  progress: number;
+  xpReward: number;
+  ratio: number;
+  iconUrl: string;
 }) => {
-
   return (
     <div className="relative flex items-center">
       <div className="flex 2xl:size-20 lg:size-[50px] shrink-0 items-center justify-center rounded-full overflow-hidden bg-black-crd">

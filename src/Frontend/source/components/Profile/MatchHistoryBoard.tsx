@@ -21,7 +21,7 @@ const MatchHistoryBoard = ({
           {name.length > 10 ? name.slice(0, 10) + '' : name}
         </p>
       </div>
-      <div className="w-fit h-full flex items-center justify-center">
+      <div className="flex h-full w-fit items-center justify-center">
         <p
           className={`2xl:text-[17px] xl:text-[11px] md:text-[11px] sm:text-[18px] text-[14px] font-dayson ${
             Player1score < Player2score ? 'text-[#C1382C]' : 'text-[#5FB2AD]'
