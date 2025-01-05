@@ -93,6 +93,7 @@ interface UserContextType {
   setPlayerLeaderBoard: React.Dispatch<React.SetStateAction<LeaderBoard[] | null>>;
   setAchievements: React.Dispatch<React.SetStateAction<Achievement[]>>;
   setOnlineStatus: () => Promise<void>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -115,6 +116,7 @@ const UserContext = createContext<UserContextType>({
   setPlayerLeaderBoard: () => {},
   setAchievements: () => {},
   setOnlineStatus: async () => {},
+  setUser: () => {},
 });
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
@@ -135,7 +137,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   const setOnlineStatus = async () => {
     try {
-      const ws = onlineService.createWebSocketConnection();
+      const ws = await onlineService.createWebSocketConnection();
     } catch (err) {
       console.log('err');
     }
@@ -161,6 +163,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     fetchCurrentUserDetails();
     setOnlineStatus();
+    return () => {
+      onlineService.closeConnection();
+    };
   }, [user?.username]);
 
   return (
@@ -185,6 +190,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         setAchievements,
         setPlayerLeaderBoard,
         fetchCurrentUserDetails,
+        setUser,
       }}
     >
       {children}

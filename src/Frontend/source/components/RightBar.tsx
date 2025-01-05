@@ -40,7 +40,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
       <div className="costum-little-shadow bg-black-crd flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px]">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-auto">
-            <AvatarImage src={`${user?.avatar}`} />
+            <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Link>

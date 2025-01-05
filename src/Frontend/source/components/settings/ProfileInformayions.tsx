@@ -4,16 +4,22 @@ import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
 import { useState } from 'react';
 import SettingsServices from '@/services/settingsServices';
+import { userService } from '@/services/userService';
+
 const ProfileInformations = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+
   const [profileState, setProfileState] = useState({
+    display_name: user?.display_name,
     avatar: user?.avatar,
     cover: user?.cover,
-    profileError: '',
-    coverError: '',
-    display_name: user?.display_name,
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [display_name, setDisplayName] = useState<string | null>(user?.display_name || '');
+  const [avatar_upload, setAvatarUpload] = useState<File | null>(null);
+  const [cover_upload, setCoverUpload] = useState<File | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [coverError, setCoverError] = useState<string | null>(null);
   const [isClicked, setIsClicked] = useState(false);
 
   if (!user) {
@@ -35,13 +41,12 @@ const ProfileInformations = () => {
       });
 
       if (!validationResult.success) {
-        updateState('profileError', 'Invalid file type or size. Max size 5MB.');
-        updateState('avatar', null);
+        setAvatarUpload(null);
+        setProfileError('Invalid file type or size');
         return;
       }
-      const imageUrl = URL.createObjectURL(file);
-      updateState('avatar', imageUrl);
-      updateState('profileError', '');
+      setAvatarUpload(file);
+      setProfileError(null);
     }
   };
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,57 +58,61 @@ const ProfileInformations = () => {
       });
 
       if (!validationResult.success) {
-        updateState('coverError', 'Invalid file type or size. Max size 5MB.');
-        updateState('cover', null);
+        setCoverUpload(null);
+        setCoverError('Invalid file type or size');
         return;
       }
 
-      const imageUrl = URL.createObjectURL(file);
-      updateState('cover', imageUrl);
-      updateState('coverError', '');
+      setCoverUpload(file);
+      setCoverError(null);
     }
   };
   function handleNamechange(e: React.ChangeEvent<HTMLInputElement>) {
-    updateState('display_name', e.target.value);
+    setDisplayName(e.target.value);
   }
   function handleClick() {
-    const Nameschema = z.object({
-      display_name: z.string().min(3, 'Full name must be at least 3 characters'),
-    });
-    const validationResult = Nameschema.safeParse({
-      display_name: profileState.display_name,
-    });
-    if (!validationResult.success) {
-      const errorMap = validationResult.error.errors.reduce(
-        (acc: any, err: any) => {
-          acc[err.path[0]] = err.message;
-          return acc;
-        },
-        {} as Record<string, string>
-      );
-      setErrors(errorMap);
-      return;
-    } else {
-      setErrors({});
-      updateState('display_name', profileState.display_name);
-      if (profileState.display_name !== user?.display_name) {
-        send_data();
-        setIsClicked(true);
-        setTimeout(() => {
-          setIsClicked(false);
-        }, 3000);
-      }
-    }
+    setProfileError(null);
+    send_data();
+    setIsClicked(true);
+    setTimeout(() => {
+      setIsClicked(false);
+    }, 3000);
   }
   async function send_data() {
     try {
-      const response = await SettingsServices.updateSettings(profileState);
+      const formData = new FormData();
+      if (display_name && display_name !== user?.display_name) {
+        formData.append('display_name', display_name);
+      }
+      if (avatar_upload) {
+        formData.append('avatar_upload', avatar_upload);
+      }
+      if (cover_upload) {
+        formData.append('cover_upload', cover_upload);
+      }
+      formData.append('errors', JSON.stringify(profileError));
+      const response = await SettingsServices.updateSettings(formData);
+      updateState('display_name', display_name);
+      const userData = await userService.getUserProfile();
+      setUser(userData);
       console.log('Settings updated successfully:', response);
     } catch (error: any) {
-      if (error.response?.data?.display_name?.length > 0) {
-        setErrors({ display_name: error.response.data.display_name[0] });
+      if (
+        error.response?.data?.display_name?.length > 0 ||
+        error.response?.data?.avatar_upload?.length > 0 ||
+        error.response?.data?.cover_upload?.length > 0
+      ) {
+        if (error.response?.data?.display_name?.length > 0) {
+          setProfileError(error.response.data.display_name[0]);
+        }
+        if (error.response?.data?.avatar_upload?.length > 0) {
+          setAvatarError(error.response.data.avatar_upload[0]);
+        }
+        if (error.response?.data?.cover_upload?.length > 0) {
+          setCoverError(error.response.data.cover_upload[0]);
+        }
       } else {
-        setErrors({ general: 'An unexpected error occurred. Please try again.' });
+        setProfileError('An unexpected error occurred. Please try again.');
       }
     }
   }
@@ -117,15 +126,15 @@ const ProfileInformations = () => {
       </div>
       <div className="flex w-full flex-wrap items-center justify-start gap-[50px] py-6 sm:pl-12 xl:gap-[100px] 2xl:gap-[170px] 2xl:px-20">
         <ImageCard
-          selectedImage={profileState?.avatar || ''}
+          selectedImage={avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar}
           handleImageChange={handleImageChange}
-          profileError={profileState.profileError}
+          profileError={avatarError || ''}
         />
 
         <CoverCard
-          coverImage={profileState.cover || ''}
+          coverImage={cover_upload ? URL.createObjectURL(cover_upload) : user?.cover}
           handleCoverChange={handleCoverChange}
-          coverError={profileState.coverError}
+          coverError={coverError || ''}
         />
       </div>
       <div className="flex h-fit w-full flex-col items-start justify-start py-6 pl-2 sm:px-12 md:gap-7 md:px-5 xl:gap-10 2xl:gap-20 2xl:pl-20">
@@ -156,11 +165,11 @@ const ProfileInformations = () => {
               <label className="text-sm text-white">Display name</label>
               <input
                 type="text"
-                value={profileState.display_name}
+                value={display_name || ''}
                 onChange={handleNamechange}
                 className="w-[150px] rounded-md bg-white px-4 py-2 text-black outline-none sm:w-[200px]"
               />
-              {errors.display_name && <p className="text-sm text-red-500">{errors.display_name}</p>}
+              {profileError && <p className="text-sm text-red-500">{profileError}</p>}
             </div>
           </div>
         </div>

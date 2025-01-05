@@ -17,9 +17,13 @@ export const BlockButton = ({
     } catch {
       console.log('error');
     }
-    return (
-        <button className={`md:w-full w-[170px] md:h-full h-[30px] bg-[#080E7E] rounded-[14px] lg:rounded-[30px] flex items-center justify-center text-white font-dayson text-lg shadow-2xl`} onClick={handleClick} >
-            {clicked ? <AiOutlineLoading className="animate-spin text-white text-[20px]"  /> : 'Block'}
-        </button>
-    )
-}
+  }
+  return (
+    <button
+      className={`font-dayson flex h-[30px] w-[170px] items-center justify-center rounded-[14px] bg-[#080E7E] text-lg text-white shadow-2xl md:size-full lg:rounded-[30px]`}
+      onClick={handleClick}
+    >
+      {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Block'}
+    </button>
+  );
+};

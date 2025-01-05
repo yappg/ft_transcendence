@@ -10,6 +10,8 @@ import { chatService } from '@/services/chatService';
 import FriendServices from '@/services/friendServices';
 import { useChatWebSocket } from '@/hooks/useChatWebSocket';
 import { toast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface MessagesProps {
   chatId: number;
@@ -27,12 +29,13 @@ export const Messages: React.FC<MessagesProps> = ({
   receiverId,
 }) => {
   const [newMessage, setNewMessage] = useState<string>('');
+  const { setLastMessages } = useUser();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [isPartnerOnline, setIsPartnerOnline] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<number>(0);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { chats, user, setChats } = useUser();
-
+  const router = useRouter();
   const handleBlockUser = async () => {
     if (isBlocked === true) {
       console.log('Unblocking user:', currentChat?.receiver.username);
@@ -86,10 +89,19 @@ export const Messages: React.FC<MessagesProps> = ({
     try {
       if (currentUserId !== null) {
         await chatService.sendMessage(chatId, newMessage, currentUserId, receiverId);
+        setLastMessages((prevLastMessages: { [key: number]: string } | null) => {
+          if (!prevLastMessages) return prevLastMessages;
+          let newObject = {
+            ...prevLastMessages,
+            [chatId]: newMessage,
+          };
+          console.log('this is the newObject: ', newObject);
+          return newObject;
+        });
       }
       setNewMessage('');
     } catch (error) {
-      console.error('Failed to send message', error);
+      console.log('Failed to send message', error);
     }
   };
 
@@ -129,6 +141,7 @@ export const Messages: React.FC<MessagesProps> = ({
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
+              onClick={() => router.push(`/Profile/${currentChat?.receiver.id}`)}
               src={`http://localhost:8080${currentChat?.receiver.avatar}`}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"

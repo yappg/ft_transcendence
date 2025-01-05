@@ -53,10 +53,7 @@ export default function ChatLayout({
       setChats(chats);
     }
   }, [chats]);
-  //TO_DO: The tournament system should be able to warn users expected for the next
-  //   game.
   // The user should be able to access other players profiles through the chat interface.
-
   return (
     <div className="flex w-full overflow-hidden lg:p-4">
       <div className="relative flex size-full gap-8">
@@ -95,7 +92,7 @@ export default function ChatLayout({
                   <ChatCard
                     key={chat.id}
                     chatContent={chat}
-                    lastMessage={lastMessages?.[chat.id]}
+                    lastMessage={lastMessages?.[chat.id] || ''}
                   />
                 ))}
             </div>

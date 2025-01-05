@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Message, Chat } from '@/constants/chat';
 import { chatService } from '@/services/chatService';
+import { useUser } from '@/context/GlobalContext';
+import { setRequestMeta } from 'next/dist/server/request-meta';
 interface UseChatWebSocketProps {
   chatId: number;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -8,6 +10,7 @@ interface UseChatWebSocketProps {
 }
 
 export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
+  const { setLastMessages } = useUser();
   const socketRef = useRef<WebSocket | null>(null);
   // ---------------------------------------------------------------------
   const handleWebSocketMessage = useCallback(
@@ -25,18 +28,14 @@ export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSo
           },
         ];
       });
-
-      setChats((prevChats: Chat[] | null) => {
-        if (!prevChats) return prevChats;
-        return prevChats.map((chat) => {
-          if (chat.id === chatId) {
-            return {
-              ...chat,
-              last_message: message.content,
-            };
-          }
-          return chat;
-        });
+      setLastMessages((prevLastMessages: { [key: number]: string } | null) => {
+        if (!prevLastMessages) return prevLastMessages;
+        let newObject = {
+          ...prevLastMessages,
+          [chatId]: message.content,
+        };
+        console.log('this is the newObject: ', newObject);
+        return newObject;
       });
     },
     [chatId, setMessages, setChats]
