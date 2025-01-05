@@ -18,28 +18,25 @@ const config: Config = {
         'fire-red': 'var(--fire-red)',
         'dark-teal': 'var(--dark-teal)',
       },
-      backgroundColor: {},
+      backgroundColor: {
+        'black-crd': 'var(--black-color-card)',
+        'white-crd': 'var(--white-color-card)',
+      },
       colors: {
         'black-crd': 'var(--black-color-card)',
         'white-crd': 'var(--white-color-card)',
-        secondary: 'var(--secondary-color)',
-        primary: 'var(--primary-color)',
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
         'secondary-dark': 'var(--secondary-color-dark)',
         'primary-dark': 'var(--primary-color-dark)',
         aqua: 'var(--aqua)',
         'fire-red': 'var(--fire-red)',
-        // secondary: {
-        //   DEFAULT: 'hsl(var(--secondary))',
-        //   foreground: 'hsl(var(--secondary-foreground))',
-        // },
-        // primary: {
-        //   DEFAULT: 'hsl(var(--primary))',
-        //   foreground: 'hsl(var(--primary-foreground))',
-        // },
-        // 'secondary-dark': 'var(--secondary-color-dark)',
-        // 'primary-dark': 'var(--primary-color-dark)',
-        // aqua: 'var(--aqua)',
-        // 'fire-red': 'var(--fire-red)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -74,7 +71,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        coustard: ['Coustard', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
         dayson: ['Days On', 'serif'],
       },
       borderRadius: {

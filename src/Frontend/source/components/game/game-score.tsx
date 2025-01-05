@@ -70,6 +70,7 @@ const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
       });
 
       game.setGameScore([0, 0]);
+      game.GameScore = [0, 0];
     }
     if (game.GameState === 'over') {
       if (game.totalScore[0] > game.totalScore[1]) {

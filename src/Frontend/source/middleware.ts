@@ -4,9 +4,8 @@ import type { NextRequest } from 'next/server';
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('access_token');
   const pathname = req.nextUrl.pathname;
-  console.log('token: ', token);
   if (
-    !token &&
+    (!token || token.value === '') &&
     pathname !== '/auth/login' &&
     pathname !== '/auth/signup' &&
     pathname !== '/2fa/login-2fa' &&

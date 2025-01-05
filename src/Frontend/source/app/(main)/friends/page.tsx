@@ -1,5 +1,6 @@
 'use client';
 import UserFriendsNav from '@/components/friends/UserFriendsNav';
+
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext } from 'react';
 import { useEffect } from 'react';

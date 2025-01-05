@@ -88,9 +88,11 @@ services:
         dockerfile: Dockerfile
       image: backend
       environment:
-        JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-        CLIENT_ID_42: $${CLIENT_ID_42}
-        CLIENT_SECRET_42: $${CLIENT_SECRET_42}
+        JWT_SIGNING_KEY: ${JWT_SIGNING_KEY}
+        # ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+        # CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+        CLIENT_ID_42: u-s4t2ud-1baa27e8252de771dcea3ea9d1e7993d5508444cd623a7426c7cc6c0c2777653
+        CLIENT_SECRET_42: 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
         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
         GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
         POSTGRES_DB: ${POSTGRES_DB}
