@@ -99,12 +99,6 @@ class SignInView(APIView):
                 value=refresh_token,
                 httponly=False
             )
-            # csrf_token = get_token(request)
-            # resp.set_cookie(
-            #     key='csrftoken',
-            #     value=csrf_token,
-            #     samesite='Lax'
-            # )
             return resp
         else :
             return Response(Serializer.errors, status=status.HTTP_200_OK)
@@ -123,7 +117,6 @@ class LogoutView(APIView):
             response = Response({'message': 'Logged Out Successfuly'}, status=status.HTTP_200_OK)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
-            response.delete_cookie('csrftoken')
         except Exception as e:
             return Response({'error': str(e)}, status=200)
         return response

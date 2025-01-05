@@ -35,11 +35,11 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
         );
       }
     }
-    return () => {
-      if (gameManagerRef.current?.app) {
-        gameManagerRef.current.app.destroy(true);
-      }
-    };
+    // return () => {
+    //   if (gameManagerRef.current?.app) {
+    //     gameManagerRef.current.app.destroy(true);
+    //   }
+    // };
   }, []);
 
   useEffect(() => {
