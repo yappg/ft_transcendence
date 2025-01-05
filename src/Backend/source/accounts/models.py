@@ -8,7 +8,6 @@ from datetime import timedelta
 import string
 import random
 
-# from relations.models import Friends
 
 def validate_file_size(value):
     filesize = value.size
@@ -124,7 +123,6 @@ class PlayerProfile(models.Model):
         return PlayerAchievement.objects.filter(player=self).order_by('-gained', '-date_earned')
 
     def all_friends(self):
-        from relations.models import Friends
         return PlayerProfile.objects.filter(
             Q(player__friend_requests_sent__friend_responder=self.player) |
             Q(player__friend_requests_received__friend_requester=self.player)

@@ -1,51 +1,45 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { Message, Chat } from '@/constants/chat'
-import { chatService } from '@/services/chatService'
-
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Message, Chat } from '@/constants/chat';
+import { chatService } from '@/services/chatService';
+import { useUser } from '@/context/GlobalContext';
+import { setRequestMeta } from 'next/dist/server/request-meta';
 interface UseChatWebSocketProps {
-  chatId: number
-  currentUserId: number
-  receiverId: number
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-  setChats: (chats: Chat[]) => void
+  chatId: number;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
 }
 
-export function useChatWebSocket({
-  chatId,
-  currentUserId,
-  receiverId,
-  setMessages,
-  setChats,
-}: UseChatWebSocketProps) {
-  const socketRef = useRef<WebSocket | null>(null)
-
+export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
+  const { setLastMessages } = useUser();
+  const socketRef = useRef<WebSocket | null>(null);
   // ---------------------------------------------------------------------
-
-  const handleWebSocketMessage = useCallback((message: any) => {
-    setMessages((prevMessages: Message[]) => [
-      ...prevMessages,
-      {
-        chat: chatId,
-        sender: message.sender,
-        receiver: message.receiver,
-        content: message.content,
-        timestamp: new Date().toISOString(),
-      },
-    ])
-
-    setChats((prevChats: Chat[]) => {
-      if (!prevChats) return prevChats
-      return prevChats.map((chat) => {
-        if (chat.id === chatId) {
-          return {
-            ...chat,
-            last_message: message.content,
-          }
-        }
-        return chat
-      })
-    })
-  }, [chatId, setMessages, setChats])
+  const handleWebSocketMessage = useCallback(
+    (message: any) => {
+      setMessages((prevMessages: Message[]) => {
+        if (!prevMessages) return prevMessages;
+        return [
+          ...prevMessages,
+          {
+            chat: chatId,
+            sender: message.sender,
+            receiver: message.receiver,
+            content: message.content,
+            timestamp: new Date().toISOString(),
+          },
+        ];
+      });
+      setLastMessages((prevLastMessages: { [key: number]: string } | null) => {
+        if (!prevLastMessages) return prevLastMessages;
+        let newObject = {
+          ...prevLastMessages,
+          [chatId]: message.content,
+        };
+        console.log('this is the newObject: ', newObject);
+        return newObject;
+      });
+    },
+    [chatId, setMessages, setChats]
+  );
 
   // ---------------------------------CHAT-----------------------------------
 
@@ -54,25 +48,25 @@ export function useChatWebSocket({
       try {
         socketRef.current = await chatService.createWebSocketConnection(
           chatId,
-          handleWebSocketMessage
-        )
+          handleWebSocketMessage,
+          setChats
+        );
       } catch (error) {
-        console.log('WebSocket connection failed', error)
+        console.log('WebSocket connection failed', error);
       }
-    }
+    };
 
-    setupWebSocket()
+    setupWebSocket();
 
     return () => {
       if (socketRef.current) {
-        socketRef.current.close()
+        socketRef.current.close();
       }
-    }
-  }, [chatId, handleWebSocketMessage])
-  
+    };
+  }, [chatId, handleWebSocketMessage]);
+
   //-------------------------------------------------------------------------
   return {
-    chatSocket: socketRef.current
-  }
+    chatSocket: socketRef.current,
+  };
 }
-

@@ -1,84 +1,75 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Label, Pie, PieChart } from "recharts";
+import * as React from 'react';
+import { Label, Pie, PieChart } from 'recharts';
 
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Statistics } from "@/context/GlobalContext";
+} from '@/components/ui/chart';
+import { Statistics } from '@/context/GlobalContext';
 
 const chartConfig = {
   visitors: {
-    label: "Game",
+    label: 'Game',
   },
   chrome: {
-    label: "Earth",
-    color: "hsl(var(--chart-1))",
+    label: 'Earth',
+    color: 'hsl(var(--chart-1))',
   },
   safari: {
-    label: "Ice",
-    color: "hsl(var(--chart-2))",
+    label: 'Ice',
+    color: 'hsl(var(--chart-2))',
   },
   firefox: {
-    label: "Water",
-    color: "hsl(var(--chart-3))",
+    label: 'Water',
+    color: 'hsl(var(--chart-3))',
   },
   edge: {
-    label: "Fire",
-    color: "hsl(var(--chart-4))",
+    label: 'Fire',
+    color: 'hsl(var(--chart-4))',
   },
 } satisfies ChartConfig;
 
-export const Chart = ({
-  total_games,
-  stats,
-} :
-{
-  total_games: number,
-  stats: Statistics
-}) => {
-  console.log(stats, total_games);
+export const Chart = ({ total_games, stats }: { total_games: number; stats: Statistics }) => {
   if (!stats?.earth_ratio && !stats?.air_ratio && !stats?.water_ratio && !stats?.fire_ratio) {
-    return <div className="w-full h-full flex items-center justify-center">
-      <h1 className="text-2xl font-bold font-dayson text-white">No data available</h1>
-    </div>;
+    return (
+      <div className="flex size-full items-center justify-center">
+        <h1 className="font-dayson 2xl:text-2xl text-lg  font-bold text-white">No data available</h1>
+      </div>
+    );
   }
   const chartData = [
-    { browser: "Earth", visitors:  stats?.earth_ratio , fill: "var(--color-chrome)" },
-    { browser: "Ice", visitors:  stats?.air_ratio , fill: "var(--color-safari)" },
-    { browser: "Water", visitors:  stats?.water_ratio , fill: "var(--color-firefox)" },
-    { browser: "Fire", visitors:  stats?.fire_ratio , fill: "var(--color-edge)" },
+    { browser: 'Earth', visitors: stats?.earth_ratio, fill: 'var(--color-chrome)' },
+    { browser: 'Ice', visitors: stats?.air_ratio, fill: 'var(--color-safari)' },
+    { browser: 'Water', visitors: stats?.water_ratio, fill: 'var(--color-firefox)' },
+    { browser: 'Fire', visitors: stats?.fire_ratio, fill: 'var(--color-edge)' },
   ];
 
   return (
-    <div className="flex items-start justify-start size-full">
-      <div className="flex items-center justify-center size-full">
+    <div className="flex size-full items-start justify-start">
+      <div className="flex size-full items-center justify-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto size-full aspect-square max-h-[250px]"
+          className="mx-auto aspect-square size-full max-h-[250px]"
         >
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
               data={chartData}
               dataKey="visitors"
               nameKey="browser"
-              innerRadius={60}
-              strokeWidth={5}
+              innerRadius={40}
+              strokeWidth={80}
             >
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                     return (
                       <text
-                        x={viewBox.cx} 
+                        x={viewBox.cx}
                         y={viewBox.cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
@@ -86,7 +77,7 @@ export const Chart = ({
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl text-white font-bold"
+                          className="fill-foreground text-3xl font-bold text-white"
                         >
                           {total_games}
                         </tspan>

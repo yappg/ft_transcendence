@@ -1,5 +1,4 @@
 import Card from '@/components/generalUi/Card';
-import withAuth from '@/context/requireAhuth';
 import React, { ComponentType } from 'react';
 
 export default function RootLayout({
@@ -15,5 +14,3 @@ export default function RootLayout({
     </div>
   );
 }
-
-// /2fa/signup-2fa
