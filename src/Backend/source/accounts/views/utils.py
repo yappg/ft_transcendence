@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from ..models import Player
+from ..models import Player, PlayerProfile
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -25,8 +25,8 @@ Oauth2_Providers = {
 
 def APIdata(code, provider):
     data = Oauth2_Providers[provider]
-    data[provider]['code'] = code
-
+    data['code'] = code
+    print('--------DATA', data);
     return (data)
 
 def fetch_user_data(access_token, provider):
@@ -69,9 +69,9 @@ def store_user_data(user_data, provider):
             tmpImg.flush()
             # here may be a problem if all 42 images arent .jpg extension or google being .png
             if provider == '42':
-                user.avatar.save(f"{username}_profile.jpg", File(tmpImg), save=True)
+                user.profile.avatar.save(f"{username}_profile.jpg", File(tmpImg), save=True)
             elif provider == 'google':
-                user.avatar.save(f"{username}_profile.png", File(tmpImg), save=True)
+                user.profile.avatar.save(f"{username}_profile.png", File(tmpImg), save=True)
         except requests.RequestException as e:
             print(f"Failed to download image: {e}")
     return (user, created)

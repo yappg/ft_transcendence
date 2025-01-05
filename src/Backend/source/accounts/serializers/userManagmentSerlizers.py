@@ -115,9 +115,12 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
     matches_history = serializers.SerializerMethodField()
+
     avatar = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
 
+    avatar_upload = serializers.ImageField(write_only=True, required=False)
+    cover_upload = serializers.ImageField(write_only=True, required=False)
 
     last_login = serializers.SerializerMethodField()
     is_private = serializers.SerializerMethodField()
@@ -271,6 +274,15 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Cover must be a JPEG or PNG image.")
 
         return value
+    
+    
+    def update(self, instance, validated_data):
+        if 'avatar_upload' in validated_data:
+            instance.avatar = validated_data.pop('avatar_upload')
+        if 'cover_upload' in validated_data:
+            instance.cover = validated_data.pop('cover_upload')
+
+        return super().update(instance, validated_data)
 
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):

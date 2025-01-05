@@ -4,17 +4,18 @@ import UserSummary from '@/components/Profile/UserSummary';
 import { User, useUser } from '@/context/GlobalContext';
 export default function Page() {
   const { user } = useUser();
+
   if (!user) {
     return <div>Loading...</div>;
   }
   return (
-    <div className="size-full md:py-4 md:pl-6 overflow-auto">
+    <div className="size-full md:py-4 md:pl-6 overflow-y-scroll custom-scrollbar-container">
       <div className="costum-little-shadow size-full overflow-hidden md:rounded-[50px] gap-8">
-        <div className="relative col-start-1 flex items-center justify-center w-full h-[55%] lg:h-[40%]">
+        <div className="relative col-start-1 flex items-center justify-center w-full h-[60%] lg:h-[40%]">
           <div
             className="absolute h-full w-full z-[0]"
             style={{
-              backgroundImage: `url(${user?.cover})`,
+              backgroundImage: `url(http://localhost:8080${user?.cover})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
@@ -23,7 +24,7 @@ export default function Page() {
           ></div>
           <UserInfo userProfile={user as User} state="null" />
         </div>
-        <div className="flex items-start justify-start w-full h-[45%] lg:h-[60%] overflow-y-scroll custom-scrollbar-container">
+        <div className="flex items-start justify-start w-full lg:h-[60%] h-[45%]">
           <UserSummary
             user={user as User}
             userFriends={user?.friends}

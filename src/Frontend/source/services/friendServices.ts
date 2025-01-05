@@ -1,126 +1,105 @@
-
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
-
-const frindsApi = axios.create({
-    baseURL: 'http://localhost:8080/relations/',
-    withCredentials: true
-});
-
+import axios from '@/lib/axios';
 
 const FriendServices = {
-    async getPlayers() {
-        try {
-            const response = await frindsApi.get('/players/');
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async getFriends() {
-        try {
-            const response = await frindsApi.get('/friends/');
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async getFriendRequests() {
-        try {
-            const response = await frindsApi.get('/friends/pending/');
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async sendFriendRequest(receiverUsername: string) {
-        try {
-            const response = await frindsApi.post('/friends/invite/', {
-                receiver: receiverUsername
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-    async cancelFriendRequest(receiverUsername: string) {
-        try {
-            const response = await frindsApi.delete('/friends/invite/', {
-                data: { cancel_invite: receiverUsername }
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async acceptFriendRequest(senderUsername: string) {
-        try {
-            const response = await frindsApi.post('/friends/accept/', {
-                sender: senderUsername
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-    async getBlocked() {
-        try {
-            const response = await frindsApi.get('/friends/block/')
-            return response.data;
-        }
-        catch(error) {
-            throw error;
-        }
-    },
-
-    async unblockFriend(unblockedUsername: string) {
-        try {
-            console.log('Unblocking user:', unblockedUsername, 'called in friendServices')
-            const response = await frindsApi.delete('/friends/block/', {
-                 data: { unblock_user: unblockedUsername }
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async blockFriend(blockedUsername: string) {
-        try {
-            const response = await frindsApi.patch('/friends/block/', {
-                 block_user: blockedUsername 
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
-    },
-
-    async declineFriendRequest(senderUsername: string) {
-        try {
-            const response = await frindsApi.delete('/friends/decline/', {
-                data: { sender: senderUsername }
-            });
-            return response.data;
-        }
-        catch (error) {
-            throw error;
-        }
+  async getPlayers() {
+    try {
+      const response = await axios.get('/relations/players/');
+      return response.data;
+    } catch (error) {
+      throw error;
     }
-};
+  },
 
+  async getFriends() {
+    try {
+      const response = await axios.get('/relations/friends/');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getFriendRequests() {
+    try {
+      const response = await axios.get('/relations/friends/pending/');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async declineFriendRequest(receiverUsername: string) {
+    try {
+      const response = await axios.delete('/relations/friends/pending/', {
+        data: { decline_pending: receiverUsername },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async sendFriendRequest(receiverUsername: string) {
+    try {
+      const response = await axios.post('/relations/friends/invite/', {
+        receiver: receiverUsername,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async cancelFriendRequest(receiverUsername: string) {
+    try {
+      const response = await axios.delete('/relations/friends/invite/', {
+        data: { cancel_invite: receiverUsername },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async acceptFriendRequest(senderUsername: string) {
+    try {
+      const response = await axios.post('/relations/friends/accept/', {
+        sender: senderUsername,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getBlocked() {
+    try {
+      const response = await axios.get('/relations/friends/block/');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async blockFriend(blockedUsername: string) {
+    try {
+      const response = await axios.patch('/relations/friends/block/', {
+        block_user: blockedUsername,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async unblockFriend(unblockedUsername: string) {
+    try {
+      const response = await axios.delete('/relations/friends/block/', {
+        data: { unblock_user: unblockedUsername },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
 
 export default FriendServices;

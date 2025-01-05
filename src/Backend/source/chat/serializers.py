@@ -15,10 +15,10 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     receiver = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
     blocked_by = serializers.SerializerMethodField()
-
+    is_online = serializers.SerializerMethodField()
     class Meta:
         model = ChatRoom
-        fields = ['id', 'created_at', 'last_message', 'receiver', 'is_blocked', 'blocked_by']
+        fields = ['id', 'created_at', 'last_message', 'receiver', 'is_blocked', 'blocked_by', 'is_online']
     
         
     
@@ -30,7 +30,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     
     def get_receiver(self, obj):
         user = self.context.get('request').user
-        receivers = obj.senders.exclude(id=user.id)
+        receivers = obj.senders.exclude(profile__isnull=True).exclude(id=user.id)
         if receivers.exists():
             receiver = receivers.first()
             return {
@@ -42,18 +42,31 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
     def get_is_blocked(self, obj):
         user = self.context.get('request').user
-        obj_receiver = obj.senders.exclude(id=user.id).first()
-        blocked = BlockedUsers.objects.get(user=user)
-        if blocked.is_blocked(obj_receiver):
-            return True
+        obj_receiver = obj.senders.exclude(profile__isnull=True).exclude(id=user.id).first()
+        if obj_receiver:
+            try:
+                blocked = BlockedUsers.objects.get(user=user)
+                if blocked.is_blocked(obj_receiver):
+                    return True
+            except BlockedUsers.DoesNotExist:
+                return False
         return False
 
     def get_blocked_by(self, obj):
         user = self.context.get('request').user
-        other = obj.senders.exclude(id=user.id).first()
-        
-        # here I need to check if the other user is blocked by the user
-        blocked_by = BlockedUsers.objects.get(user=other)
-        if blocked_by.is_blocked(user):
-            return True
+        other = obj.senders.exclude(profile__isnull=True).exclude(id=user.id).first()
+        if other:
+            try:
+                blocked_by = BlockedUsers.objects.get(user=other)
+                return blocked_by.is_blocked(user)
+            except BlockedUsers.DoesNotExist:
+                return False
         return False
+
+    def get_is_online(self, obj):
+        user = self.context.get('request').user
+        other = obj.senders.exclude(profile__isnull=True).exclude(id=user.id).first()
+        if other:
+            return other.profile.is_online
+        return False
+    
