@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
 # ===========================
@@ -10,32 +8,31 @@ from django.core.exceptions import ImproperlyConfigured
 # ===========================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR.parent.parent / ".env")
 
 def get_env_variable(var_name):
     try:
         return os.getenv(var_name)
     except KeyError:
-        raise ImproperlyConfigured(f"Set the {var_name} environment variable")
+        raise ImproperlyConfigured(f"{var_name} environment variable is not set")
 
 # ===========================
 # SECURITY SETTINGS
 # ===========================
 
-SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
+SECRET_KEY = os.getenv('SIGNING_KEY')
 
 DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
 # Security Headers
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False  # TODO will be handled by nginx
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # TODO will nginx
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 
@@ -68,10 +65,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'accounts',
-    'chat',
-    'game',
-    'relations',
+    'accounts', 'chat', 'game', 'relations',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +87,7 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -204,35 +198,23 @@ SESSION_CACHE_ALIAS = "default"
 
 AUTH_USER_MODEL = 'accounts.Player'
 
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = True
-# ACCOUNT_AUTHENTICATION_METHOD = 'username'
-# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+SITE_ID = 1
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#         # 'OPTIONS': {
-#         #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#         'OPTIONS': {
-#             'min_length': 8,
-#         },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#         # 'OPTIONS': {
-#         #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 8},
+    },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
 
 # ===========================
 # OAUTH2 CONFIGURATION
@@ -257,7 +239,6 @@ OAUTH2_PROVIDER_GOOGLE = {
     'CALLBACK_URL': get_env_variable('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
-
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION
@@ -287,13 +268,13 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/Static/'
+STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia')
+MEDIA_ROOT = '/app/source/UsersMedia'
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
 
 # ===========================
 # EMAIL CONFIGURATION

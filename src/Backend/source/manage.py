@@ -2,24 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-# from django.contrib.auth.models import User
-
-
-# def create_superuser():
-#     username = 'admin'
-#     email = 'admin@example.com'
-#     password = 'admin'
-
-#     if not User.objects.filter(username=username).exists():
-#         User.objects.create_superuser(username=username, email=email, password=password)
-#         print(f'Superuser {username} created successfully.')
-#     else:
-#         print(f'Superuser {username} already exists.')
 
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', '_1Config.settings')
-    # create_superuser()
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
