@@ -65,7 +65,7 @@ export default function Settings() {
             </div>
           </div>
         </div>
-        <div className="w-full h-[90%] lg:h-full lg:w-5/6 xl:w-4/6 custom-scrollbar-container overflow-y-scroll flex flex-col">
+        <div className="w-full h-[90%] lg:h-full lg:w-6/6 xl:w-5/6 2xl:w-6/6 custom-scrollbar-container overflow-y-scroll flex flex-col">
           {renderContent()}
         </div>
       </div>

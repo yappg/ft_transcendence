@@ -11,6 +11,7 @@ import { IconCarambolaFilled } from '@tabler/icons-react';
 import { IconUserScan } from '@tabler/icons-react';
 import { IconConeFilled } from '@tabler/icons-react';
 import { FaUsers } from 'react-icons/fa';
+import { IconDeviceGamepad3Filled } from '@tabler/icons-react';
 // This is sample data.
 const data = {
   teams: [
@@ -53,6 +54,11 @@ const data = {
       url: '/achievement',
       icon: IconCarambolaFilled,
     },
+    {
+      title: 'Game',
+      url: '/games',
+      icon: IconDeviceGamepad3Filled,
+    },
   ],
   navSecondary: [
     {
@@ -76,8 +82,8 @@ export function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) 
   return (
     <Sidebar {...props}>
       <SidebarHeader className="gap-10 ">
-        <h1 className="font-dayson text-[25px] dark:text-white text-black">Ping Pong</h1>
-        <NavMain items={data.navMain}/>
+        <h1 className="font-dayson text-[25px] text-black dark:text-white">Ping Pong</h1>
+        <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent className="">
         <NavSecondary items={data.navSecondary} className="mt-auto" />

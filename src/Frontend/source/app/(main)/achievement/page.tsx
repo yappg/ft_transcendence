@@ -1,38 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// eslint-disable-next-line react-hooks/exhaustive-deps
 'use client';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Achievement } from '@/constants/achivemement'
-import { useUser } from '@/context/GlobalContext';
+import axios from '@/lib/axios';
+import { Achievement } from '@/constants/achivemement';
 import AchievementBadge from '@/components/achievements/badge';
+import { useUser } from '@/context/GlobalContext';
+import { userService } from '@/services/userService';
 
 const AchievementsPage: React.FC = () => {
-    const [achievements, setAchievements] = useState<Achievement[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+  const { achievements, setAchievements, setIsLoading, isLoading } = useUser();
 
-    const USER_BASE_URL = 'http://localhost:8080/accounts/';
-
-
-  const userApi = axios.create({
-      baseURL: USER_BASE_URL,
-      withCredentials: true,
-  });
-
-  const getAchievements = async (): Promise<Achievement[]> => {
-      const response = await userApi.get(`/user-achievements/`);
-      return response.data;
-  };
-    
   const fetchAchievements = async () => {
     setIsLoading(true);
-    setError(null);
     try {
-      const fetchedAchievements = await getAchievements();
+      const fetchedAchievements = await userService.getAchievements();
       const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
-        id: data.id,
-        title: data.achievement.name,
-        description: data.achievement.description,
-        points: data.achievement.xp_gain,
+        player: data.player,
+        achievement: {
+          name: data.achievement.name,
+          description: data.achievement.description,
+          xp_gain: data.achievement.xp_gain,
+          condition: data.achievement.condition,
+        },
+        date_earned: data.date_earned,
+        image: data.image,
         xpReward: data.achievement.xp_gain,
         ratio: data.achievement.condition,
         progress: data.progress,
@@ -42,7 +34,7 @@ const AchievementsPage: React.FC = () => {
       }));
       setAchievements(mappedAchievements);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to fetch achievements'));
+      setAchievements([]);
     } finally {
       setIsLoading(false);
     }
@@ -56,24 +48,21 @@ const AchievementsPage: React.FC = () => {
     return <div>Loading achievements...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   return (
-    <div className="overflow-y-auto custom-scrollbar-container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-wrap p-4 gap-2 size-full">
-      {achievements.map((achievement: any) => (
-        <AchievementBadge 
-          key={achievement.id} 
-          title={achievement.title} 
-          description={achievement.description} 
-          points={achievement.points} 
-          progress={achievement.progress} 
-          xpReward={achievement.xpReward}
-          ratio= {achievement.ratio} 
-          iconUrl={"http://localhost:8080" + achievement.iconUrl} 
-        />
-      ))}
+    <div className="custom-scrollbar-container grid size-full grid-cols-1 flex-wrap gap-2 overflow-y-auto p-4 md:grid-cols-2 xl:grid-cols-3">
+      {achievements &&
+        achievements?.map((achievement: Achievement, index) => (
+          <AchievementBadge
+            key={index}
+            title={achievement.achievement.name}
+            description={achievement.achievement.description}
+            points={achievement.achievement.condition}
+            progress={achievement.progress}
+            xpReward={achievement.achievement.xp_gain}
+            ratio={achievement.achievement.condition}
+            iconUrl={'http://localhost:8080' + achievement.image}
+          />
+        ))}
     </div>
   );
 };

@@ -1,12 +1,15 @@
 // Define the Achievement interface
 export interface Achievement {
-  id: number;
-  title: string;
-  description: string;
-  points: number;
-  progress: number;
-  xpReward: number;
-  iconUrl: string;
+  player: number;
+  achievement: Achievement2;
   gained: boolean;
-  dateEarned: Date | null;
+  progress: number;
+  date_earned: string;
+  image: string;
+}
+export interface Achievement2 {
+  name: string;
+  description: string;
+  condition: number;
+  xp_gain: number;
 }

@@ -2,6 +2,8 @@ import { GoCheckCircle } from 'react-icons/go';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import FriendServices from '@/services/friendServices';
+import { toast } from '@/hooks/use-toast';
+import { JSX } from 'react';
 
 type FriendRequestCardProps = {
   name: string;
@@ -10,6 +12,7 @@ type FriendRequestCardProps = {
   actions?: JSX.Element[];
   customStyles?: React.CSSProperties;
   onRequestAccepted?: (username: string) => void;
+  onRequestDeclined?: (username: string) => void;
 };
 
 const FriendRequestCard = ({
@@ -19,34 +22,30 @@ const FriendRequestCard = ({
   actions,
   customStyles = {},
   onRequestAccepted,
+  onRequestDeclined,
 }: FriendRequestCardProps): JSX.Element => {
+  async function declineRequest() {
+    try {
+      const response = await FriendServices.declineFriendRequest(name);
+      console.log('declined Friends', response, name);
+    } catch (error) {
+      toast({
+        title: 'Authentication failed',
+        description: 'Oups Somthing went wrong !',
+        variant: 'destructive',
+        className: 'bg-primary-dark border-none text-white',
+      });
+    }
+  }
 
-  const achievements = [
-    {
-      name: 'Achievement 1',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 2',
-      icon: '/ach1.svg',
-    },
-    {
-      name: 'Achievement 3',
-      icon: '/ach1.svg',
-    },
-  ];
   async function acceptRequest() {
     try {
       const response = await FriendServices.acceptFriendRequest(name);
-      console.log("accepted Friends",response.message, name);
-      if(response.message){
+      console.log('accepted Friends', response.message, name);
+      if (response.message) {
         console.log(response.message);
-        if (onRequestAccepted) {
-          onRequestAccepted(name);
-        }
-      }
-      else if(response.error) {
-          console.log('accpet',response.error);
+      } else if (response.error) {
+        console.log('accpet ?', response.error);
       }
     } catch (error) {
       toast({
@@ -60,7 +59,18 @@ const FriendRequestCard = ({
 
   function handleClick() {
     acceptRequest();
+    if (onRequestAccepted) {
+      onRequestAccepted(name);
+    }
   }
+
+  function handleDecline() {
+    declineRequest();
+    if (onRequestDeclined) {
+      onRequestDeclined(name);
+    }
+  }
+
   return (
     <div
       className="bg-black-crd flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] px-10 xl:px-16 2xl:px-28"
@@ -80,28 +90,22 @@ const FriendRequestCard = ({
           </h1>
         </div>
       </div>
-
-      <div className="relative flex size-auto w-fit flex-row">
-        {achievements.map((achievement) => (
-          <Avatar
-            key={achievement.name}
-            className="-ml-[17px] size-[55px] transition-all duration-300 xl:size-[75px]"
-          >
-            <AvatarImage src={achievement.icon} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        ))}
-      </div>
       <div className="flex w-[200px] items-center justify-center gap-4 pr-12 xl:gap-8">
         {actions && actions.length > 0 ? (
           actions.map((action, index) => <button key={index}>{action}</button>)
         ) : (
           <>
             <button>
-              <GoCheckCircle className="size-[44px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] dark:hover:text-[#E43222]" onClick={handleClick} />
+              <GoCheckCircle
+                className="size-[44px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] dark:hover:text-[#E43222]"
+                onClick={handleClick}
+              />
             </button>
             <button>
-              <IoCloseCircleOutline className="size-[50px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%]" />
+              <IoCloseCircleOutline
+                className="size-[50px] text-white opacity-[50%] transition-all duration-300 hover:opacity-[100%] "
+                onClick={handleDecline}
+              />
             </button>
           </>
         )}

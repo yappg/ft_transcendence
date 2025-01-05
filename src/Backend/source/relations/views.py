@@ -5,35 +5,18 @@ from rest_framework.generics import ListAPIView
 from rest_framework import status
 from .models import *
 from .serializers import *
-from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 from accounts.serializers.userManagmentSerlizers import PlayerRelationsSerializer
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from chat.models import ChatRoom
 
 class NotificationListView(ListAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
-
-# class PlayerListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         try:
-#             from accounts.models import PlayerProfile
-#             profiles = PlayerProfile.objects.get(player=request.user)
-#             friends = profiles.all_friends()
-#             invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
-
-#             players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends).exclude(profile__in=invites)[:10]
-#             serializer = PlayerRelationsSerializer(players, many=True)
-#             return Response({'message': 'Success', 'data': serializer.data})
-#         except PlayerProfile.DoesNotExist:
-#             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
-#         except Exception as e:
-#             return Response({'error': 'An error occurred' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')[:5]
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -71,6 +54,8 @@ class FriendsListView(APIView):
         except Player.DoesNotExist:
             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -79,7 +64,7 @@ class PendingInvitationsView(APIView):
         pending_invitations = FriendInvitation.objects.filter(receiver=user)
         if not pending_invitations:
             return Response({"error": "No Invitaions Found"}, status=200);
-        serializer = FriendInvitationSerializer(pending_invitations, many=True)
+        serializer = FriendPendingSerializer(pending_invitations, many=True)
         return Response({'message': 'Success', 'data': serializer.data})
 
     def delete(self, request):
@@ -164,11 +149,6 @@ class FriendInvitationView(APIView):
         invitation.delete()
         return Response({"message": "Invitation canceled"}, status=status.HTTP_200_OK)
 
-# @swagger_auto_schema(
-#     request_body=FriendInvitationSerializer,
-#     responses={200: 'Success', 400: 'Invalid input'}
-# )
-
 class AcceptInvitationView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -234,6 +214,21 @@ class BlockedUsersView(APIView):
                 Q(sender=blocker, receiver=blocked) |
                 Q(sender=blocked, receiver=blocker)
             ).delete()
+            try:
+                chat = ChatRoom.objects.filter(name=f"{blocker.username}_{blocked.username}_room").first()
+                if not chat:
+                    chat = ChatRoom.objects.filter(name=f"{blocked.username}_{blocker.username}_room").first()
+            except ChatRoom.DoesNotExist:
+                return Response({"error": "Chat room not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"chat_{chat.id}",
+                {
+                    "type": "user_blocked",
+                    "chat_id": chat.id
+                    }
+                )
 
             return Response({"message": "User blocked successfully"}, status=status.HTTP_200_OK)
         else:
@@ -245,11 +240,26 @@ class BlockedUsersView(APIView):
 
         try:
             blocked = Player.objects.get(profile__display_name=blocked_display_name)
+            block_list = BlockedUsers.objects.get(user=blocker)
         except Player.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        block_list = BlockedUsers.objects.get(user=blocker)
+        except BlockedUsers.DoesNotExist:
+            return Response({"error": "Block list not found"}, status=status.HTTP_404_NOT_FOUND)
         if block_list.unblock_user(blocked):
+            try:
+                chat = ChatRoom.objects.filter(name=f"{blocker.username}_{blocked.username}_room").first()
+                if not chat:
+                    chat = ChatRoom.objects.filter(name=f"{blocked.username}_{blocker.username}_room").first()
+            except ChatRoom.DoesNotExist:
+                return Response({"error": "Chat room not found"}, status=status.HTTP_404_NOT_FOUND)
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"chat_{chat.id}",
+                {
+                    "type": "user_blocked",
+                    "chat_id": chat.id
+                }
+            )
             return Response({"message": "User unblocked successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User not blocked"}, status=status.HTTP_400_BAD_REQUEST)
