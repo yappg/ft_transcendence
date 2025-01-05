@@ -38,10 +38,10 @@ class SocketManager extends WebSocket {
       console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
-  
+
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
-      
+
       console.log('scale_x:', scale_x);
       console.log('scale_y:', scale_y);
       // console.log('new_x:', data);
@@ -57,13 +57,13 @@ class SocketManager extends WebSocket {
         this.pixiManager.dx = data.dx;
         this.pixiManager.dy = data.dy;
       }
-  }
+    }
   }
 
   updatePaddlePosition(data: any) {
     if (data) {
       const scale_x = this.pixiManager.screenWidth / 75;
-  
+
       const new_x = scale_x * data.new_x;
   
       if (this.pixiManager.isTopPaddle) {

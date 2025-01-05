@@ -1,32 +1,53 @@
 import { IoMdNotifications } from 'react-icons/io';
 import { useState } from 'react';
 import { Notification } from '@/constants/notifications';
+import { notificationsService } from '@/services/notificationsService';
 
 interface NotificationBellProps {
   notifications: Notification[];
   notificationCount: number;
+  setNotificationsCount: (count: number) => void;
+  setNotifications: (notifications: Notification[]) => void;
 }
 
-const NotificationBell: React.FC<NotificationBellProps> = ({ notifications, notificationCount }) => {
+const NotificationBell: React.FC<NotificationBellProps> = ({
+  notifications,
+  notificationCount,
+  setNotificationsCount,
+  setNotifications,
+}) => {
   const [notifClicked, setNotifClicked] = useState(false);
+  const fetchNotifications = async () => {
+    try {
+      const fetchedNotifications = await notificationsService.getNotifications();
+      setNotifications(fetchedNotifications as Notification[]);
+    } catch (err) {
+      setNotifications([]);
+      setNotificationsCount(0);
+    }
+  };
 
   return (
     <div className="relative z-50">
-      <div className="flex size-[33px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
+      <div className="flex size-[23px] items-center justify-center rounded-full bg-[rgba(28,28,28,0.4)] opacity-60 shadow-xl md:size-[40px]">
         <IoMdNotifications
-          className="size-[13px] sm:size-[20px] text-[rgba(28,28,28,0.9)] dark:text-[#B8B8B8] md:size-[30px] transition-all duration-300"
-          onClick={() => setNotifClicked(!notifClicked)}
+          className="size-[13px] text-[rgba(28,28,28,0.9)] transition-all duration-300 sm:size-[20px] md:size-[30px] dark:text-[#B8B8B8]"
+          onClick={() => {
+            fetchNotifications();
+            setNotifClicked(!notifClicked);
+            setNotificationsCount(0);
+          }}
         />
         {notificationCount > 0 && (
-          <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs">
+          <span className="absolute right-0 top-0 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
             {notificationCount}
           </span>
         )}
       </div>
       {notifClicked && (
-        <div className="absolute top-10 right-0 w-80 bg-white shadow-lg rounded-lg">
-          {notifications.map((notification,index) => (
-            <div key={index} className="p-4 border-b border-gray-200">
+        <div className="absolute right-0 top-10 w-80 rounded-lg bg-white shadow-lg">
+          {notifications.map((notification, index) => (
+            <div key={index} className="border-b border-gray-200 p-4">
               <p>{notification.message}</p>
             </div>
           ))}

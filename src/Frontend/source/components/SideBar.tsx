@@ -46,14 +46,14 @@ export const SideBar = ({
         <Icon
           className={` ${id === selectedId ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.5)] dark:text-white'} ${
             id === selectedId ? 'h-600-800:size-9 size-12' : 'h-600-800:size-7 size-10'
-          } z-99 absolute transition-all duration-300 hover:text-aqua hover:dark:text-fire-red`}
+          } z-99 hover:text-aqua hover:dark:text-fire-red absolute transition-all duration-300`}
         />
       </div>
     </Link>
   );
 
   return (
-    <div className="costum-little-shadow relative hidden h-full min-h-[550px] w-auto flex-col items-center justify-between rounded-[50px] bg-black-crd px-1 pb-4 transition-all duration-300 md:flex">
+    <div className="costum-little-shadow bg-black-crd relative hidden h-full min-h-[550px] w-auto flex-col items-center justify-between rounded-[50px] px-1 pb-4 transition-all duration-300 md:flex">
       <Image
         src="/logo.svg"
         alt=""
@@ -80,7 +80,11 @@ export const SideBar = ({
           return showIcon(item.Icon, item.id, isActivated, item.path);
         })}
 
-        {(pathname === '/friends' || pathname === '/messages' || pathname === '/LeaderBoard' || pathname === '/MatchHistory' || pathname === '/Profile') &&
+        {(pathname === '/friends' ||
+          pathname === '/messages' ||
+          pathname === '/LeaderBoard' ||
+          pathname === '/MatchHistory' ||
+          pathname === '/Profile') &&
           smallScreenIcons.map((item) => {
             return showIcon(item.Icon, item.id, isActivated, item.path);
           })}
@@ -98,7 +102,7 @@ export const SideBar = ({
         ></div>
         <IconSettingsFilled
           size={isActivated == 8 ? 70 : 60}
-          className={`text-[40px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] absolute z-10 transition-all duration-300 hover:text-aqua hover:dark:text-fire-red`}
+          className={`text-[40px] ${isActivated == 8 ? 'text-dark-teal dark:text-fire-red' : 'text-[rgba(28,28,28,0.4)] dark:text-white'} h-600-800:text-[74px] hover:text-aqua hover:dark:text-fire-red absolute z-10 transition-all duration-300`}
         />
       </Link>
     </div>
