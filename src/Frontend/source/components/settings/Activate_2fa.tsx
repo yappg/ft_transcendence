@@ -10,15 +10,14 @@ interface TwoFactorProps {
   setUpdate2fa: (enabled: boolean) => void;
 }
 
-export const Activate_2fa: React.FC<TwoFactorProps> = ({update2fa, setUpdate2fa }) => {
-  
+export const Activate_2fa: React.FC<TwoFactorProps> = ({ update2fa, setUpdate2fa }) => {
   function handle2fa() {
     if (update2fa) {
       setUpdate2fa(false);
     } else {
       setUpdate2fa(true);
     }
-  };
+  }
   return (
     <div className="flex h-fit w-full flex-wrap items-center justify-start gap-10 py-6">
       <div className="flex h-[12%] w-full items-center">
@@ -33,11 +32,8 @@ export const Activate_2fa: React.FC<TwoFactorProps> = ({update2fa, setUpdate2fa 
           <br />
         </p>
         <div className="flex h-[50%] w-full flex-row items-center justify-start gap-10">
-          <h1 className="font-coustard text-xl text-white">
-            {update2fa ? 'Enabled' : 'Disabled'}
-          </h1>
-            <Switch checked={update2fa} onCheckedChange={handle2fa}/>
-          </div> 
+          <h1 className="font-coustard text-xl text-white">{update2fa ? 'Enabled' : 'Disabled'}</h1>
+          <Switch checked={update2fa} onCheckedChange={handle2fa} />
         </div>
       </div>
     </div>

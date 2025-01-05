@@ -1,19 +1,31 @@
 import { IoMdNotifications } from 'react-icons/io';
 import { useState } from 'react';
 import { Notification } from '@/constants/notifications';
+import { notificationsService } from '@/services/notificationsService';
 
 interface NotificationBellProps {
   notifications: Notification[];
   notificationCount: number;
   setNotificationsCount: (count: number) => void;
+  setNotifications: (notifications: Notification[]) => void;
 }
 
 const NotificationBell: React.FC<NotificationBellProps> = ({
   notifications,
   notificationCount,
   setNotificationsCount,
+  setNotifications,
 }) => {
   const [notifClicked, setNotifClicked] = useState(false);
+  const fetchNotifications = async () => {
+    try {
+      const fetchedNotifications = await notificationsService.getNotifications();
+      setNotifications(fetchedNotifications as Notification[]);
+    } catch (err) {
+      setNotifications([]);
+      setNotificationsCount(0);
+    }
+  };
 
   return (
     <div className="relative z-50">
@@ -21,6 +33,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
         <IoMdNotifications
           className="size-[13px] text-[rgba(28,28,28,0.9)] transition-all duration-300 sm:size-[20px] md:size-[30px] dark:text-[#B8B8B8]"
           onClick={() => {
+            fetchNotifications();
             setNotifClicked(!notifClicked);
             setNotificationsCount(0);
           }}

@@ -16,25 +16,7 @@ class NotificationListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
-
-# class PlayerListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         try:
-#             from accounts.models import PlayerProfile
-#             profiles = PlayerProfile.objects.get(player=request.user)
-#             friends = profiles.all_friends()
-#             invites = FriendInvitation.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
-
-#             players = Player.objects.filter(profile__isnull=False).exclude(profile__in=friends).exclude(profile__in=invites)[:10]
-#             serializer = PlayerRelationsSerializer(players, many=True)
-#             return Response({'message': 'Success', 'data': serializer.data})
-#         except PlayerProfile.DoesNotExist:
-#             return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
-#         except Exception as e:
-#             return Response({'error': 'An error occurred' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')[:5]
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -258,14 +240,12 @@ class BlockedUsersView(APIView):
 
         try:
             blocked = Player.objects.get(profile__display_name=blocked_display_name)
+            block_list = BlockedUsers.objects.get(user=blocker)
         except Player.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        try:
-            block_list = BlockedUsers.objects.get(user=blocker)
         except BlockedUsers.DoesNotExist:
             return Response({"error": "Block list not found"}, status=status.HTTP_404_NOT_FOUND)
         if block_list.unblock_user(blocked):
-            
             try:
                 chat = ChatRoom.objects.filter(name=f"{blocker.username}_{blocked.username}_room").first()
                 if not chat:

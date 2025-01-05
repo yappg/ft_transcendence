@@ -31,5 +31,3 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
         except PlayerProfile.DoesNotExist:
             pass
 
-    # def send_the_updated_status(self, user):
-    #     # here I need to se
