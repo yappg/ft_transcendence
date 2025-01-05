@@ -104,11 +104,18 @@ class SocketManager extends WebSocket {
         this.updatePaddlePosition(message);
         break;
       case 'UpdateScore':
-        // this.pixiManager.updateScore(message);
-        
-        const score1 = message.data.self_score[message.data.round];
-        const score2 = message.data.opponent_score[message.data.round];
-        this.pixiManager.game.GameScore =  [score1, score2];
+        let score1 = 0;
+        let score2 = 0;
+        console.log('message:', message);
+        if (this.pixiManager.isTopPaddle) {
+          score1 = message.data.top[message.data.round];
+          score2 = message.data.bottom[message.data.round];
+        } else {
+          score1 = message.data.bottom[message.data.round];
+          score2 = message.data.top[message.data.round];
+        }
+        this.pixiManager.game.setGameScore([score1, score2]);
+        console.log('scoroooor: ', this.pixiManager.game.GameScore);
       case 'gameState':
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);

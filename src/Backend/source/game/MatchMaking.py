@@ -32,18 +32,6 @@ class MatchMakingSystem:
             self._matchmaking_task = asyncio.create_task(self.matchmaking_loop())
             print(f'{RED_BOLD}Matchmaking System Started{RESET}')
 
-    async def stop(self):
-        if self._running:
-            self._running = False
-            if self._matchmaking_task:
-                self._matchmaking_task.cancel()
-                try:
-                    await self._matchmaking_task
-                except asyncio.CancelledError:
-                    pass
-                self._matchmaking_task = None
-            print(f'{RED_BOLD}Matchmaking System Stopped{RESET}')
-
     async def matchmaking_loop(self):
         i = 0
         while self._running:
@@ -64,11 +52,8 @@ class MatchMakingSystem:
                     try:
                         await self.Update_players_state(player1_id, player2_id)
 
-                        # game_model = await self.create_game(player1_model, player2_model)
-                        # game_model = await database_sync_to_async(Game.objects.create)(player1=player1_model, player2=player2_model)
-
                         game = PingPongGame(player1, player2, gameID=int(len(self.games)+1))
-                        # game = PingPongGame(player1, player2, game_model_id=game_model.id )
+
                         self.games[game.game_id] = game
                         print(f'{YELLOW_BOLD}Game created AM here ID: {game.game_id}{RESET}')
 
