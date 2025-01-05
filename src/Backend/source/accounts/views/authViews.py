@@ -157,15 +157,15 @@ class GenerateURI(APIView):
             status=status.HTTP_200_OK)
 
 class VerifyOTP(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = VerifyOTPSerializer
     authentication_classes = []
 
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=400)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
 
         # TODO must retrieve the user from the request cookie, to fetch the user from the database
         username = request.data['username']
@@ -173,7 +173,7 @@ class VerifyOTP(APIView):
         
         try:
             user = Player.objects.get(username=username)
-        except:
+        except Player.DoesNotExist:
             return Response({'error': 'user Not found'}, status=status.HTTP_404_NOT_FOUND)
         totp = pyotp.TOTP(user.otp_secret_key)
         bol = totp.verify(otp_token)

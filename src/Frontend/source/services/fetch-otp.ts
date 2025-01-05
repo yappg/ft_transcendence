@@ -2,6 +2,7 @@
 import axios from '@/lib/axios';
 import { toast } from '@/hooks/use-toast';
 import { Dispatch, SetStateAction } from 'react';
+import { useUser } from '@/context/GlobalContext';
 
 export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
   try {
@@ -19,25 +20,3 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
   }
 };
 
-export const fetchQrCode = async (
-  setIsLoading: Dispatch<SetStateAction<boolean>>,
-  setQRcode: Dispatch<SetStateAction<string>>,
-  username: string | null
-) => {
-  try {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const data = await axios.post('/accounts/2fa/generate-uri/', {
-        username: username,
-      });
-      setQRcode(data.data.uri);
-      setIsLoading(false);
-    };
-    fetchData();
-  } catch (error) {
-    toast({
-      title: 'Error',
-      description: 'Oups somthing went wrong! try fetching later',
-    });
-  }
-};
