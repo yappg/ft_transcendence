@@ -5,9 +5,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/* \
         /etc/nginx/conf.d/default.conf
 
-        # /usr/share/nginx/html/*
-
-# COPY ./config/nginx.conf /etc/nginx/conf.d/endpoint.conf
+COPY ./config/nginx.conf /etc/nginx/conf.d/endpoint.conf
 
 COPY ./config/SSLGen.sh /init.sh
 
@@ -17,4 +15,3 @@ EXPOSE 80 443
 
 ENTRYPOINT [ "sh", "/init.sh" ]
 CMD [ "nginx", "-g", "daemon off;" ]
-# CMD [ "tail", "-f", "/dev/null" ]

@@ -14,7 +14,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   const [isLeft, setIsLeft] = useState(true);
   const pathname = usePathname();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -29,19 +28,19 @@ export default function RootLayout({
     return () => clearTimeout(timer);
   }, [pathname]);
   return (
-    <div className="flex h-screen w-full items-end justify-start overflow-auto bg-linear-gradient dark:bg-linear-gradient-dark">
+    <div className="bg-linear-gradient dark:bg-linear-gradient-dark flex h-screen w-full items-end justify-start overflow-auto">
       <div className="z-0 flex h-[95%] w-full min-w-[350px] flex-col items-start">
         <div className="z-10 mb-[-75px] flex h-[150px] w-full items-center justify-center md:mb-[-80px] lg:hidden">
           <Link href="/">
             <img
               src="/landing-page-logo.svg"
               alt="logo"
-              className="size-[150px] dark:hidden md:size-[200px]"
+              className="size-[150px] md:size-[200px] dark:hidden"
             />
             <img
               src="/landing-page-dark-logo.svg"
               alt="logo"
-              className="hidden size-[150px] dark:block md:size-[200px]"
+              className="hidden size-[150px] md:size-[200px] dark:block"
             />
           </Link>
         </div>

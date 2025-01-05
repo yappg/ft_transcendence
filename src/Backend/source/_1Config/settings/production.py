@@ -268,9 +268,9 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = '/static/'
+STATIC_URL = '/Static/'
 STATIC_ROOT = '/app/source/staticfiles'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/Media/'
 MEDIA_ROOT = '/app/source/UsersMedia'
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
