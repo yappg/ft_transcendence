@@ -23,7 +23,7 @@ class ChatListView(APIView):
             serializer = ChatRoomSerializer(chats, many=True, context={'request': request})
             return Response(serializer.data)
         except Exception as e:
-            return Response({"error": "Failed to retrieve chats"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": f"Failed to retrieve chats {e}"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ChatMessagesView(APIView):

@@ -7,6 +7,7 @@ import { Achievement } from '@/constants/achivemement';
 import AchievementBadge from '@/components/achievements/badge';
 import { useUser } from '@/context/GlobalContext';
 import { userService } from '@/services/userService';
+
 const AchievementsPage: React.FC = () => {
   const { achievements, setAchievements, setIsLoading, isLoading } = useUser();
 

@@ -1,13 +1,12 @@
-import { useUser } from '@/context/GlobalContext';
 import Link from 'next/link';
 import { RiArrowRightSLine } from 'react-icons/ri';
+import { LeaderBoard } from '@/context/GlobalContext';
 
-export const HomeLeaderboard = () => {
-  const { PlayerLeaderBoard } = useUser();
+export const HomeLeaderboard = ({ playerLeaderBoard }: { playerLeaderBoard: LeaderBoard[] }) => {
   return (
     <div className="bg-black-crd flex size-full flex-col items-start justify-start rounded-[30px] py-3">
       <div className="flex h-[85%] w-full flex-col">
-        {PlayerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
+        {playerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
           <div
             key={index}
             className={`flex w-full flex-1 items-center justify-start gap-4 border-b-2 px-8 lg:gap-8 
