@@ -339,7 +339,7 @@ export class OnlineGameManager extends PixiManager {
 
   constructor(container: HTMLElement, backgroundImage: string, game: any, user: User | null) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager('ws://localhost:8080/ws/game/');
+    this.socketManager = new socketManager(process.env.NEXT_PUBLIC_WS_URL + '/game/');
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
@@ -405,6 +405,7 @@ export class OnlineGameManager extends PixiManager {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   handlegameupdates() {
     if (!this.ball || !this.app) return;
 
@@ -447,6 +448,24 @@ export class OnlineGameManager extends PixiManager {
       console.log('ball:', this.ball.x, this.ball.y, this.screenWidth, this.screenHeight);
     }
 >>>>>>> a413f5568ed4539ea49db8e1692fa3e231d54d2d
+=======
+  handlegameupdates() {
+    if (!this.ball || !this.app) return;
+
+    // const baseSpeed = 0.5;
+    const baseSpeed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
+    // this.ballMovementSpeed = Math.sqrt(this.dx**2 + this.dy**2);
+
+    const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
+    const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
+
+    this.ballMovementSpeed = (baseScreenDiagonal / currentScreenDiagonal) * baseSpeed;
+    this.updateBallPosition(
+      this.ball.x + this.dx * this.ballMovementSpeed,
+      this.ball.y + this.dy * this.ballMovementSpeed
+    );
+  }
+>>>>>>> bdf946d438d0e1f9d764901c37d8b7bc370005b3
 
   handleWaitingState() {
     this.displayText('Get\nReady');

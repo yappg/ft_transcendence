@@ -10,7 +10,6 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         if self.user.is_authenticated:
-            print(f'----------- I M HERE ____{self.user}')
             await self.set_logging_status(self.user, True)
             await self.accept()
         else:
