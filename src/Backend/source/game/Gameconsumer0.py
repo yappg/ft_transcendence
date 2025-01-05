@@ -1,4 +1,3 @@
-# consumers0.py
 import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -6,18 +5,23 @@ from channels.db import database_sync_to_async
 from .MatchMaking import MatchMakingSystem
 from accounts.models import Player, PlayerProfile
 from game.models import Game
-
+from accounts.models import MatchHistory
 matchmake_system = MatchMakingSystem()
 
 RED = '\033[31m'
 GREEN = '\033[32m'
 YELLOW = '\033[33m'
 BLUE = '\033[34m'
+VIOLET = '\033[35m'
+ORANGE = '\033[36m'
+PINK = '\033[37m'
 RESET = '\033[0m'
 #TODO handle the unexpected disconnects and game state details
 
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
+        self.game = None
+        self.game_tick = None
         super().__init__(*args, **kwargs)
 
     async def connect(self):
@@ -27,7 +31,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         self.user = self.scope["user"]
         self.profile = await database_sync_to_async(PlayerProfile.objects.get)(player=self.user)
-        self.game = None
         self.opponent = None
         self.Gameplayer = None
         print(f'\n{GREEN}[User Authenticated {self.user}]{RESET}\n')
@@ -36,28 +39,28 @@ class GameConsumer(AsyncWebsocketConsumer):
             await matchmake_system.start()
         #TODO to fix 
         self.profile.status = 'waiting'
-        await database_sync_to_async(self.profile.save)()
+        await database_sync_to_async(self.profile.save)(update_fields=['status'])
 
         await self.accept()
 
-        if self.profile.status == 'waiting':
+        if (self.profile.status == 'waiting') and not self.player_in_QG():
             print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
             await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
-            # self.profile.status = 'inqueue'
-            # await database_sync_to_async(self.profile.save)()
         else:
             print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
+
+    def player_in_QG(self):
+        return (self.user.id in matchmake_system.players_in_game) and (self.user.id in matchmake_system.players_queue)
 
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
-            print(f'\n{BLUE}[Received Data {data}]{RESET}\n')  
             action  = data.get('action')
-            # print (f'\n{YELLOW}[Received Data {data}]{RESET}\n')
+            print(f'\n{YELLOW}data: [{data}]{RESET}\n')
 
             if action == 'ready':
+                print(f'\n{YELLOW}[Player ReadyYYYYYYYYYY]{RESET}\n')
                 game_id = data.get('game_id', None)
-                print(f'\n{YELLOW}data: [{data}]{RESET}\n')
                 if not game_id :
                     return
                 self.game_id = game_id 
@@ -65,59 +68,54 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if not self.game:
                     return
                 await self.set_Gameplayers_to_consumer()
-                self.Gameplayer.status = 'ready' 
-                # self.broadcast_ready()
-                if self.user.id == self.game.player1.id:
-                    print(f'\n{YELLOW}[Player 1 Ready]{RESET}\n')
-                else:
-                    print(f'\n{RED}[Player 2 Ready]{RESET}\n')
+                self.Gameplayer.status = 'ready'
+                #TODO Include the game map in the ready event
+                self.broadcast_ready()
+                #TODO Am not sure if we still need this sleep for synchronization or not[CHECK with the Noredin]
                 await asyncio.sleep(2)
 
-                # players_ready = self.players_ready()
-                # print(players_ready)
                 if self.game.status == 'waiting':
                     print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
                     await self.broadcast_ready()
-                    await self.self_send_start_game()
-                    # await asyncio.sleep(2)
-                    await self.start_game_loop()
-                    # await matchmake_system.broadcast_ball_move()
+
+                    self.game_tick = asyncio.create_task(self.start_game_loop())
             elif action == 'move_paddle':
                 if not self.game or self.game.status != 'playing' :
                     return
-                print(f'\n{BLUE}[Moving Paddle Position[{data.get('new_x')}]]{RESET}\n')
                 if self.game:
                     new_x = data.get('new_x')#, 50)
-                    self.game.move_paddle(self.user.id, new_x)
+                    await self.game.move_paddle(self.user.id, new_x)
                     await self.share_paddle_move(new_x)
         except Exception as e:
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
-    async def share_paddle_move(self, new_x):
-        await matchmake_system.channel_layer.send(
-            self.opponent.channel_name,
-            {
-                'type': 'paddle.move',
-                'new_x': new_x
-                })
-    async def paddle_move(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'UpdatePaddle',
-            'new_x': event['new_x']
-        }))
+    
+    #------------------------------------>>>>>Game loop<<<<<<<------------------------------
+    async def start_game_loop(self):
+        try :
+            await self.broadcast_ball_move()
+            while self.game and self.game.status == 'playing'\
+                and self.game.player1.status == 'ready' and self.game.player2.status == 'ready':
+                delta_time = 0.016 #60 FPS
+                if await self.game.update(delta_time):
+                    await self.broadcast_ball_move()
+                if await self.game.check_scoring():
+                    await self.broadcast_score_update()
+                if await self.game.check_for_rounds():
+                    await self.broadcast_score_update()
+                    # await self.broadcast_end_round()#TODO to implement
+                await asyncio.sleep(delta_time)
+            if self.game and self.game.status == 'finished':
+                print(f'\n{YELLOW}[Game Finished]{RESET}\n')
+                await self.handle_game_end()
+        except Exception as e:
+            print(f'\n{RED}[Error in Game Loop {str(e)} {self.game.round}]{RESET}\n')
+        # finally :
+        #     self.game_tick = None
 
-
-        # (
-        #     f'game_{self.game_id}',
-        #     {
-        #         'type': 'game.move',
-        #         'opponent_id': opponent_id,
-        #         'new_x': new_x
-        #     }
-        # )
-
+    #------------------------------------>>>>>broadcast Events<<<<<<<------------------------------
     async def game_found(self, event):
         await self.send(text_data=json.dumps( 
             {
@@ -127,11 +125,66 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'opponent': event['opponent'],
                     'top_paddle': event['top_paddle'],
                     'game_id': event['game_id']
-                } 
+                }
             }))
 
-    def get_opponent_id(self):
-        return ( self.game.player1 if self.game.player1.id != self.user.id else self.game.player2).id
+    # async def update_score(self, event):
+    #     await self.send(text_data=json.dumps({
+    #         'type': 'UpdateScore',
+    #         'round': event['round'],
+    #         'self_score': event['self_score'],
+    #         'opponent_score': event['opponent_score']
+    #     }))
+    # async def broadcast_score_update(self):
+    #     if not self.game:
+    #         return
+    #     await self.channel_layer.send(
+    #         self.opponent.channel_name,
+    #         {
+    #             'type': 'update_score',
+    #             'round': self.game.round,
+    #             'self_score': self.opponent.score,
+    #             'opponent_score': self.Gameplayer.score
+    #         }
+    #     )
+    #     await self.channel_layer.send(
+    #         self.Gameplayer.channel_name,
+    #         {
+    #             'type': 'update_score',
+    #             'round': self.game.round,
+    #             'self_score': self.Gameplayer.score,
+    #             'opponent_score': self.opponent.score
+    #         }
+    #     )
+
+    async def paddle_move(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'UpdatePaddle',
+            'new_x': event['new_x']
+        }))
+    async def share_paddle_move(self, new_x):
+        await matchmake_system.channel_layer.send(
+            self.opponent.channel_name,
+            {
+                'type': 'paddle_move',
+                'new_x': new_x
+            })
+
+    async def ball_move(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'UpdateBall',
+            'ball_position': event['ball_position']
+        }))
+    async def broadcast_ball_move(self):
+        if not self.game:
+            return
+        await matchmake_system.channel_layer.group_send(
+            f'game_{self.game_id}',
+            {
+                'type': 'ball_move',
+                'ball_position': await self.game.ball_update()
+            }
+        )
 
     async def set_Gameplayers_to_consumer(self):
         if self.game.player1.id != self.user.id :
@@ -141,125 +194,161 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.opponent = self.game.player2 
             self.Gameplayer = self.game.player1
 
-    async def start_game_loop(self):   
-        # import time
-        await asyncio.create_task(self.broadcast_ball_move())
-        await asyncio.create_task(self.self_send_game_state())
-        while self.game and self.game.status == 'playing':
-            #print the ball position
-            # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
-            # delta_time = time.perf_counter()
-            delta_time = 0.1  # 60 FPS 1/90=0.0111
-            if await self.game.update(delta_time):
-                #ball position
-                # print(f'\n{YELLOW}[Ball Position: {self.game.ball.position}]{RESET}\n')
-                await asyncio.create_task(self.broadcast_ball_move())
-                await asyncio.create_task(self.self_send_game_state())
-            # await self.broadcast_ball_move()
-            # await self.self_send_game_state()
-            # await asyncio.sleep(delta_time)
-        if self.game and self.game.status == 'finished':
-            await self.broadcast_ball_move(self.get_opponent_id())
-            await self.self_send_game_state()
-            await self.handle_game_end()
-
-    async def self_send_game_state(self):
-        # print(" AAAAAA w9",{
-        #     'type': 'UpdateBall',
-        #     'ball_position': self.game.get_state()
-        # })
-        if not self.game:
-            return
-        await self.send(text_data=json.dumps({
-            'type': 'UpdateBall',
-            'ball_position': self.game.get_state()
-        }))
-
-    async def broadcast_ball_move(self):
-        # print( {
-        #         'type': 'ball.move',
-        #         'ball_position': self.game.get_state()
-        #     })
-        if not self.game:
-            return
-        await matchmake_system.channel_layer.group_send(
-            f'game_{self.game_id}',
-            {
-                'type': 'ball.move',
-                'ball_position': self.game.get_state()
-            }
-        )
-
-    async def broadcast_ready(self): # broadcast ready to players then start the game
-        await matchmake_system.channel_layer.send(
-            self.game.player1.channel_name,
-            {
-                'type': 'acknowledge.ready',
-                'state': "start"
-            }
-        )
-        await matchmake_system.channel_layer.send(
-            self.game.player2.channel_name,
-            {
-                'type': 'acknowledge.ready',
-                'state': "start"
-            }
-        )
-
     async def acknowledge_ready(self, event):
         await self.send(text_data=json.dumps({
             'type': 'gameState',
             'state': event['state']
         }))
-    async def self_send_start_game(self):
-        if not self.game:
-            return
-        await self.send(text_data=json.dumps({
-            'type': 'gameState',
-            'state': 'start'
-        }))
-
-
-    async def ball_move(self, event):
-        # print (event)
-        await self.send(text_data=json.dumps({
-            'type': 'UpdateBall',
-            'ball_position': event['ball_position']
-        }))
+    async def broadcast_ready(self):# broadcast ready to players then start the game
+        await matchmake_system.channel_layer.group_send(
+            f'game_{self.game_id}',
+            {
+                'type': 'acknowledge.ready',
+                'state': 'start'
+            })
 
     async def handle_game_end(self):
         if not self.game:
             return
-
-        # await self.save_game_result(self.game.get_state(self.user.id))
-
-        # await matchmake_system.channel_layer.group_send(
-        #     f'game_{self.game_id}',
-        #     {
-        #         'type': 'game.update',
-        #         'game_state': self.game.get_state()
-        #     }
-        # )
         try:
             print (f'\n{RED}[Game End {self.game_id}]{RESET}\n')
-            self.game.status = 'finished'
-            del matchmake_system.games[self.game_id]
+            await self.save_game_result(self.game.player1.id, self.game.player2.id, self.game.winner)
+            matchmake_system.players_in_game.remove(self.user.id)
+            matchmake_system.players_in_game.remove(self.opponent.id)
+            if self.game_id in matchmake_system.games:
+                del matchmake_system.games[self.game_id]
+            await self.getBack_To_WaitingStatus()
+
         except Exception as e:
+            #TODO self.close()
             print(f'\n{RED}[Error in Game End {str(e)}]{RESET}\n')
-        self.game = None
-        self.game_id = None
+        finally:
+            await self.broadcast_game_end()
+            await self.disconnect(1000)
+            # await self.close()
+            self.game = None
+            self.game_id = None
 
     @database_sync_to_async
-    def save_game_result(self, game_state):
-        pass
+    def save_game_result(self, player1_id, player2_id, result_value):
+        
+        player1_m = Player.objects.select_related('profile').get(id=player1_id)
+        player2_m = Player.objects.select_related('profile').get(id=player2_id)
+        MatchHistory.objects.create(
+            player1=player1_m.profile,
+            player2=player2_m.profile,
+            player1_score=sum(self.game.player1.score),
+            player2_score=sum(self.game.player2.score),
+            result=str(result_value),
+            map_played=self.game.map
+        )
 
-    # Implement game result saving lo   gic here
+    async def unexpected_disconnect(self, player1_id, player2_id, result_value):
+        print(f'\n{RED}[Unexpected Disconnection]{RESET}\n')
+        await self.save_game_result(player1_id, player2_id, result_value)
+
+        matchmake_system.players_in_game.remove(self.user.id)
+        matchmake_system.players_in_game.remove(self.opponent.id)
+
+    async def game_over(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'GameEnd',
+            'winner': event['winner']
+        }))
+    #TODO 'winner': self.game.winner to be altered to username or smthg else
+    async def broadcast_game_end(self):
+        await matchmake_system.channel_layer.group_send(
+            f'game_{self.game_id}',
+            {
+                'type': 'game_over',
+                'winner': self.game.winner
+            })
+
     async def disconnect(self, close_code):
-    # TODO handle the unexpeted disconnects or cleanup after normal disconnect 
-        if self.game:
-            self.game.status = 'finished'
-            #TODO update PlayerProfile
-            del matchmake_system.games[self.game_id]
-        await self.close()
+    # TODO handle the unexpeted disconnects or cleanup after normal disconnect
+        try:
+            if self.game:
+                print(f'\n{RED}[Disconnect {self.user.username} AMAMAMAMM HERERERER]{RESET}\n')
+                await self.getBack_To_WaitingStatus()
+                # await self.broadcast_game_end()
+                if self.game.status == 'playing':
+                    await self.unexpected_disconnect(self.user.id, self.opponent.id, 'player2')
+                    await self.broadcast_disconnection()
+                if self.game_id in matchmake_system.games:
+                    del matchmake_system.games[self.game_id]
+                print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
+            await self.channel_layer.group_discard(f'game_{self.game_id}', self.channel_name)
 
-# {"username":"kad","password":"qwe123"}
+            await self.close()
+        except Exception as e:
+            print(f'\n{RED}[Error in Disconnect {str(e)}]{RESET}\n')
+
+    #force disconnection from both sides
+    async def broadcast_disconnection(self):
+        await matchmake_system.channel_layer.group_send(
+            f'game_{self.game_id}',
+            {
+                'type': 'force_disconnect',
+                'winner': 'draw'
+            })
+    async def force_disconnect(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'GameEnd',
+            'winner': event['winner']
+        }))
+
+    #------------------------------------>>>>>util functions<<<<<<<------------------------------
+    async def getBack_To_WaitingStatus(self):
+        self.profile.status = 'waiting'
+        await database_sync_to_async(self.profile.save)(update_fields=['status'])
+    #------------------------------------>>>>>util functions<<<<<<<------------------------------
+    async def update_score(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'UpdateScore',
+            'data': event['data']
+        }))
+
+    async def broadcast_score_update(self):
+        if not self.game:
+            return
+        try:
+            await self.channel_layer.send(
+                self.Gameplayer.channel_name,
+                {
+                    'type': 'update_score',
+                    'data':{
+                        'round': self.game.round,
+                        'self_score': self.Gameplayer.score,
+                        'opponent_score': self.opponent.score
+                    }
+                }
+            )
+            await self.channel_layer.send(
+                self.opponent.channel_name,
+                {
+                    'type': 'update_score',
+                    'data':{
+                        'round': self.game.round,
+                        'self_score': self.opponent.score,
+                        'opponent_score': self.Gameplayer.score
+                    }
+                }
+            )
+        except Exception as e:
+            print(f'\n{RED}[Error in Score Update {str(e)}]{RESET}\n')
+
+
+
+
+#TODO check with nouredine to send the game map in ready event 
+#TODO handle the paddle movs [About to be done] {NEED to implement the paddle effect}!!!!!!!!
+#TODO handle the force disconnect if unexpected disconnect 
+#TODO handle the game end and Score 
+#TODO handle the game end and disconnections
+#TODO handle the game maps
+#TODO broadcast round end
+#TODO Why the ball updates after the round stop
+
+
+#_______________________________Sbject requirements _______________________________________
+# 1- the app should be protected against XSS attacks
