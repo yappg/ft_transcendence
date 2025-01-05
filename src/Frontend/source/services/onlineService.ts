@@ -5,7 +5,7 @@ class OnlineService {
     try {
       this.closeConnection();
 
-      this.socket = new WebSocket(`ws://localhost:8080/ws/online/`);
+      this.socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/online/`);
 
       this.socket.onopen = () => {
         console.log('Connected to WebSocket server');

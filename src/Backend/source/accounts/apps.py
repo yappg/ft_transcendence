@@ -94,7 +94,6 @@ class AccountsConfig(AppConfig):
                     {"name": "khriz man pro max 1", "description": "loss 3 matches in row", "xp_gain": 69, "condition": 3, "image" : "achievements/colored/losser/4.png", "image_bw" : "achievements/bw/losser/4.png"},
                     {"name": "khriz man pro max 2", "description": "loss 6 matches in row", "xp_gain": 69, "condition": 6, "image" : "achievements/colored/losser/5.png", "image_bw" : "achievements/bw/losser/5.png"},
                     {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 12, "image" : "achievements/colored/losser/6.png", "image_bw" : "achievements/bw/losser/6.png"},
-
                 ]
 
                 for achievement in default_achievements:

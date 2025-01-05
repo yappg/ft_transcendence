@@ -38,7 +38,7 @@ const UserInfo = ({ userProfile, state }: { userProfile: User; state: string }) 
   return (
     <div className="z-99 absolute flex size-full flex-col items-center justify-between px-6 py-4 lg:flex-row 2xl:px-10">
       <div className="flex h-fit w-full flex-col items-center justify-start gap-12 lg:h-full lg:w-fit lg:flex-row lg:items-end lg:justify-start">
-        <Avatar url={`http://localhost:8080${userProfile?.avatar}`} />
+        <Avatar url={`${process.env.NEXT_PUBLIC_HOST}${userProfile?.avatar}`} />
         <ProfileInfo
           display_name={userProfile?.display_name}
           username={userProfile?.username}

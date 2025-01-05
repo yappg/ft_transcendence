@@ -123,7 +123,7 @@ const UserFriendsNav = (): JSX.Element => {
               <FriendsComponent
                 key={index}
                 name={friend.display_name}
-                ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${friend.avatar}`}
                 level={friend.level}
                 messagesLink={
                   <div className="flex items-center justify-center">
@@ -149,7 +149,7 @@ const UserFriendsNav = (): JSX.Element => {
               <FriendRequestCard
                 key={index}
                 name={invitation.sender_display_name}
-                ProfilePhoto={`http://localhost:8080${invitation.sender_avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${invitation.sender_avatar}`}
                 vari={formatDate(invitation.created_at)}
                 onRequestAccepted={handleRequestAccepted}
                 onRequestDeclined={handleRequestDeclined}
@@ -169,7 +169,7 @@ const UserFriendsNav = (): JSX.Element => {
       <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10">
         <div className="flex h-fit w-[250px] flex-row items-center justify-between md:w-[300px]">
           <Avatar className="max-w-[120px] sm:size-[60px] md:size-auto">
-            <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
+            <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`} />
             <AvatarFallback className="font-dayson m-2 size-[60px] bg-[rgba(28,28,28,0.5)] text-lg text-white md:size-[80px]">
               {user?.display_name}
             </AvatarFallback>

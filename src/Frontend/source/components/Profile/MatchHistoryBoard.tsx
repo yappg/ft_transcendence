@@ -14,7 +14,7 @@ const MatchHistoryBoard = ({
     <div className="flex flex-row-reverse items-center justify-between text-white h-[80px] 2xl:px-4 md:px-2 px-1 overflow-hidden border-b-2 border-white border-opacity-[40%]">
       <div className="w-fit h-full flex flex-row-reverse justify-start items-center 2xl:gap-3 gap-2">
         <Avatar className="2xl:size-[60px] xl:size-[40px] md:size-[30px] sm:size-[60px] size-[50px]">
-          <AvatarImage src={`http://localhost:8080${Profile}`} />
+          <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${Profile}`} />
           <AvatarFallback>OT</AvatarFallback>
         </Avatar>
         <p className="xl:text-[12px] text-[10px] font-dayson text-white">

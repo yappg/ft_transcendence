@@ -31,7 +31,7 @@ export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
       <div className="flex items-center gap-5">
         <img
           className="size-12 rounded-full object-cover"
-          src={`http://localhost:8080${chatContent.receiver.avatar}`}
+          src={process.env.NEXT_PUBLIC_HOST + chatContent.receiver.avatar}
           alt="avatar"
         />
         <div className="flex flex-col">

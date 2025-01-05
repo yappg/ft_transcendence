@@ -41,7 +41,7 @@ const BlockedList = () => {
               <BlockedComponent
                 key={index}
                 name={user?.username}
-                ProfilePhoto={`http://localhost:8080${user?.avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`}
                 callback={fetchBlockedList}
               />
             ))

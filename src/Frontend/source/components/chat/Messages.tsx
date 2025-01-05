@@ -142,7 +142,7 @@ export const Messages: React.FC<MessagesProps> = ({
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <img
               onClick={() => router.push(`/Profile/${currentChat?.receiver.id}`)}
-              src={`http://localhost:8080${currentChat?.receiver.avatar}`}
+              src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
             />

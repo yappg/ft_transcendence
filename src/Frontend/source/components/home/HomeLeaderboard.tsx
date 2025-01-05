@@ -14,7 +14,7 @@ export const HomeLeaderboard = ({ playerLeaderBoard }: { playerLeaderBoard: Lead
                           ${index > 2 ? 'hidden' : ''}`}
           >
             <img
-              src={`http://localhost:8080${leaderboard.avatar}`}
+              src={`${process.env.NEXT_PUBLIC_HOST}${leaderboard.avatar}`}
               alt="avatar"
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
             />

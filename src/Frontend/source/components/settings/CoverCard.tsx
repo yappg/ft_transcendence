@@ -11,7 +11,7 @@ export const CoverCard = ({
 }) => {
   let imageUrl = coverImage;
   if (imageUrl && !imageUrl.startsWith('blob')) {
-    imageUrl = 'http://localhost:8080' + imageUrl;
+    imageUrl = `${process.env.NEXT_PUBLIC_HOST}${imageUrl}`;
   }
   return (
     <div className="w-fit h-full flex items-center justify-center sm:gap-6 gap-1 flex-wrap">
