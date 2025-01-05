@@ -3,28 +3,35 @@ import { CoverCard } from './CoverCard';
 import { z } from 'zod';
 import { useUser } from '@/context/GlobalContext';
 import { useState } from 'react';
-const ProfileInformations = ({profileState, setProfileState, errors, setErrors}: {
-  profileState: {
-    avatar: string, 
-    cover: string,
-    profileError: string,
-    coverError: string,
-    username: string,
-    display_name: string,
-  }, setProfileState: Function,
-  errors: Record<string, string>, setErrors: Function}
-) => {
-  const { user } = useUser();
+import SettingsServices from '@/services/settingsServices';
+import { userService } from '@/services/userService';
+
+const ProfileInformations = () => {
+  const { user, setUser } = useUser();
+
+  const [profileState, setProfileState] = useState({
+    display_name: user?.display_name,
+    avatar: user?.avatar,
+    cover: user?.cover,
+  });
+  const [display_name, setDisplayName] = useState<string | null>(user?.display_name || '');
+  const [avatar_upload, setAvatarUpload] = useState<File | null>(null);
+  const [cover_upload, setCoverUpload] = useState<File | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [coverError, setCoverError] = useState<string | null>(null);
+  const [isClicked, setIsClicked] = useState(false);
+
   if (!user) {
     return null;
   }
+  const updateState = (key: keyof typeof profileState, value: any) => {
+    setProfileState((prev: any) => ({ ...prev, [key]: value }));
+  };
   const imageSchema = z.object({
     type: z.enum(['image/jpeg', 'image/png']),
     size: z.number().max(5 * 1024 * 1024),
   });
-  const updateState = (key: keyof typeof profileState, value: any) => {
-    setProfileState((prev) => ({ ...prev, [key]: value }));
-  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -34,14 +41,12 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
       });
 
       if (!validationResult.success) {
-        updateState('profileError', 'Invalid file type or size. Max size 5MB.');
-        updateState('avatar', null);
+        setAvatarUpload(null);
+        setProfileError('Invalid file type or size');
         return;
       }
-      
-      const imageUrl = URL.createObjectURL(file);
-      updateState('avatar', imageUrl);
-      updateState('profileError', '');
+      setAvatarUpload(file);
+      setProfileError(null);
     }
   };
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,95 +56,130 @@ const ProfileInformations = ({profileState, setProfileState, errors, setErrors}:
         type: file.type,
         size: file.size,
       });
-      
+
       if (!validationResult.success) {
-        updateState('coverError', 'Invalid file type or size. Max size 5MB.');
-        updateState('cover', null);
+        setCoverUpload(null);
+        setCoverError('Invalid file type or size');
         return;
       }
 
-      const imageUrl = URL.createObjectURL(file);
-      updateState('cover', imageUrl);
-      updateState('coverError', '');
+      setCoverUpload(file);
+      setCoverError(null);
     }
   };
-  function handleNamechange (e: React.ChangeEvent<HTMLInputElement>) {
-    updateState('display_name', e.target.value);
-  };
+  function handleNamechange(e: React.ChangeEvent<HTMLInputElement>) {
+    setDisplayName(e.target.value);
+  }
   function handleClick() {
-    const Nameschema = z.object({
-      display_name: z.string().min(3, 'Full name must be at least 3 characters'),
-
-    });
-    const validationResult = Nameschema.safeParse({
-      display_name: profileState.display_name,
-
-    });
-    if (!validationResult.success) {
-      const errorMap = validationResult.error.errors.reduce(
-        (acc, err) => {
-          acc[err.path[0]] = err.message;
-          return acc;
-        },
-        {} as Record<string, string>
-      );
-      setErrors(errorMap);
-      return;
-    }
-    else {
-      setErrors({});
+    setProfileError(null);
+    send_data();
+    setIsClicked(true);
+    setTimeout(() => {
+      setIsClicked(false);
+    }, 3000);
+  }
+  async function send_data() {
+    try {
+      const formData = new FormData();
+      if (display_name && display_name !== user?.display_name) {
+        formData.append('display_name', display_name);
+      }
+      if (avatar_upload) {
+        formData.append('avatar_upload', avatar_upload);
+      }
+      if (cover_upload) {
+        formData.append('cover_upload', cover_upload);
+      }
+      formData.append('errors', JSON.stringify(profileError));
+      const response = await SettingsServices.updateSettings(formData);
+      updateState('display_name', display_name);
+      const userData = await userService.getUserProfile();
+      setUser(userData);
+      console.log('Settings updated successfully:', response);
+    } catch (error: any) {
+      if (
+        error.response?.data?.display_name?.length > 0 ||
+        error.response?.data?.avatar_upload?.length > 0 ||
+        error.response?.data?.cover_upload?.length > 0
+      ) {
+        if (error.response?.data?.display_name?.length > 0) {
+          setProfileError(error.response.data.display_name[0]);
+        }
+        if (error.response?.data?.avatar_upload?.length > 0) {
+          setAvatarError(error.response.data.avatar_upload[0]);
+        }
+        if (error.response?.data?.cover_upload?.length > 0) {
+          setCoverError(error.response.data.cover_upload[0]);
+        }
+      } else {
+        setProfileError('An unexpected error occurred. Please try again.');
+      }
     }
   }
+
   return (
-    <div className="gap-10 border-2 bg-[#00000099] h-fit rounded-[50px] shadow-2xl md:p-6 sm:p-9 p-14 border-[#B8B8B8]">
-      <div className="w-full h-[12%] flex items-center">
-        <h1 className="text-white font-dayson font-bold text-2xl tracking-wider hover:border-b-2 transition-all duration-200">
+    <div className="h-fit gap-10 border-2 border-[#B8B8B8] bg-[#00000099] shadow-2xl md:rounded-[50px] md:p-6">
+      <div className="flex h-fit w-full items-center p-5 md:p-10">
+        <h1 className="font-dayson border-b-2 text-2xl font-bold tracking-wider text-white transition-all duration-200">
           Profile Information
         </h1>
       </div>
-      <div className="w-full 2xl:px-20 py-6 flex sm:gap-[100px] gap-[50px] items-center justify-start flex-wrap">
+      <div className="flex w-full flex-wrap items-center justify-start gap-[50px] py-6 sm:pl-12 xl:gap-[100px] 2xl:gap-[170px] 2xl:px-20">
         <ImageCard
-          selectedImage={profileState?.avatar}
+          selectedImage={avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar}
           handleImageChange={handleImageChange}
-          profileError={profileState.profileError}
+          profileError={avatarError || ''}
         />
 
         <CoverCard
-          coverImage={profileState.cover}
+          coverImage={cover_upload ? URL.createObjectURL(cover_upload) : user?.cover}
           handleCoverChange={handleCoverChange}
-          coverError={profileState.coverError}
+          coverError={coverError || ''}
         />
       </div>
-      <div className="w-full h-fit 2xl:px-20 py-6 flex 2xl:gap-20 xl:gap-10 lg:gap-7 items-start justify-start sm:px-12 lg:flex-row flex-col">
-        <div className="w-fit flex flex-col gap-4">
-          <label className="text-white text-sm">Username</label>
-          <input
-            type="text"
-            value={profileState.username}
-            disabled
-            className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
-          />
-          <label className="text-white text-sm">Email</label>
-          <input
-            type="email"
-            value="user@example.com"
-            disabled
-            className="py-2 px-4 bg-gray-700 text-white rounded-md cursor-not-allowed"
-          />
+      <div className="flex h-fit w-full flex-col items-start justify-start py-6 pl-2 sm:px-12 md:gap-7 md:px-5 xl:gap-10 2xl:gap-20 2xl:pl-20">
+        <div className="flex w-fit flex-row gap-[50px] lg:gap-[100px]">
+          <div className="flex w-fit flex-col gap-4">
+            <label className="text-sm text-white">Username</label>
+            <input
+              type="text"
+              value={user?.username}
+              disabled
+              className="w-[150px] cursor-not-allowed rounded-md bg-gray-700 px-4 py-2 text-white sm:w-[200px]"
+            />
+          </div>
+          <div className="flex w-fit flex-col gap-4">
+            <label className="text-sm text-white">Email</label>
+            <input
+              type="email"
+              value="user@example.com"
+              disabled
+              className="w-[150px] cursor-not-allowed rounded-md bg-gray-700 px-4 py-2 text-white sm:w-[200px]"
+            />
+          </div>
         </div>
 
-        <div className="w-fit h-full  flex flex-col gap-4 ">
-          <label className="text-white text-sm">Display name</label>
-          <input
-            type="text"
-            value={profileState.display_name}
-            onChange={handleNamechange}
-            className="py-2 px-4 bg-white text-black rounded-md outline-none"
-          />{
-            errors.display_name && (
-              <p className="text-red-500 text-sm">{errors.display_name}</p>
-            )
-          }
+        <div className="flex size-full flex-row items-end justify-between">
+          <div className="flex w-fit flex-row items-center justify-between gap-[100px]">
+            <div className="flex w-fit flex-col gap-4">
+              <label className="text-sm text-white">Display name</label>
+              <input
+                type="text"
+                value={display_name || ''}
+                onChange={handleNamechange}
+                className="w-[150px] rounded-md bg-white px-4 py-2 text-black outline-none sm:w-[200px]"
+              />
+              {profileError && <p className="text-sm text-red-500">{profileError}</p>}
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full items-center justify-end ">
+          <button
+            className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} font-dayson h-[50px] w-[150px] rounded-md text-sm font-bold text-black transition-all duration-200 hover:bg-opacity-[90%] sm:w-[200px] sm:px-6 sm:py-3 sm:text-lg`}
+            onClick={handleClick}
+          >
+            {isClicked ? 'Updated' : 'Update Profile'}
+          </button>
         </div>
       </div>
     </div>

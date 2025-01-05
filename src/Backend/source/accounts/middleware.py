@@ -9,6 +9,7 @@ class AccessTokenMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+
         jwt_auth = JWTAuthentication()
         accessToken = request.COOKIES.get('access_token')
         # print('prev access Token: '+str(accessToken))
@@ -20,7 +21,7 @@ class AccessTokenMiddleware:
         if exp_time:
             exp_time = datetime.datetime.fromtimestamp(exp_time, tz=datetime.timezone.utc)
             remain_time = exp_time - now()
-            if remain_time.total_seconds() < 300: 
+            if remain_time.total_seconds() < 300:
                 #and remain_time.total_seconds() > 0()in
                 refresh_token = request.COOKIES.get('refresh_token')
                 if refresh_token:
@@ -35,5 +36,3 @@ class AccessTokenMiddleware:
                         pass
                         # return self.get_response(request)
         return self.get_response(request)
-
-         
