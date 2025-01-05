@@ -49,7 +49,7 @@ const GameArena = () => {
   return (
     <div className="flex h-screen w-full flex-col bg-linear-gradient dark:bg-linear-gradient-dark lg:flex-row xl:gap-8 xl:px-8">
       <div className="flex h-[100px] w-full items-center justify-center lg:h-full xl:w-auto">
-        <ScoreTable></ScoreTable>
+        <ScoreTable mode={mode || ''} map={map || ''}></ScoreTable>
       </div>
       {/* game table */}
       <div className="flex size-full items-center justify-center">

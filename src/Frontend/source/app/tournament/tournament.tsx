@@ -36,6 +36,7 @@ const mapTournamentToNode = (game: any) => {
 };
 
 const Tournament = () => {
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const game = useGame();
   const searchParams = useSearchParams();
@@ -96,30 +97,31 @@ const Tournament = () => {
         />
       </div>
       <div className="flex size-auto w-full items-center justify-center md:h-[100px]">
-        {/* <div
-          className="flex h-[50px] w-[120px] cursor-pointer items-center justify-center rounded-md bg-primary text-white dark:bg-primary-dark md:h-[60px] md:w-[200px]"
-          onClick={() => {
-            game.setInGame(true);
-            // game.inGame = true;
-            console.log('In Game: ', game.inGame);
-            // onStartGame(true);
-          }}
-        >
-          next Match
-        </div> */}
-        <MyButton
-          className="min-w-[120px] disabled:opacity-50"
-          onClick={() => {
-            game.setGameScore([0, 0]);
-            game.setTotalScore([0, 0]);
-            game.setInGame(true);
-            // game.inGame = true;
-            console.log('In Game: ', game.inGame);
-            // onStartGame(true
-          }}
-        >
-          Next Match
-        </MyButton>
+        {game.tournamentMatch !== 3 ? (
+          <MyButton
+            className="min-w-[120px] disabled:opacity-50"
+            onClick={() => {
+              game.setGameScore([0, 0]);
+              game.setTotalScore([0, 0]);
+              game.setInGame(true);
+            }}
+          >
+            Next Match
+          </MyButton>
+        ) : (
+          <MyButton
+            className="w-[220px] min-w-[120px] disabled:opacity-50"
+            onClick={() => {
+              game.setGameScore([0, 0]);
+              game.setTotalScore([0, 0]);
+              game.setTournamentMatch(0);
+              game.setGameWinner(null);
+              router.push('/games');
+            }}
+          >
+            end Tournament
+          </MyButton>
+        )}
       </div>
     </div>
   );
