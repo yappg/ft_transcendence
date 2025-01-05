@@ -13,8 +13,6 @@ import { UnBlockButton } from './UnBlockButton';
 import { useEffect, useState } from 'react';
 const UserInfo = ({ userProfile, state }: { userProfile: User; state: string }) => {
   const [thisState, setThisState] = useState(state);
-  console.log('thisState', thisState);
-  console.log('state', state);
 
   useEffect(() => {
     setThisState(state);
@@ -47,17 +45,17 @@ const UserInfo = ({ userProfile, state }: { userProfile: User; state: string }) 
           level={userProfile?.level}
         />
       </div>
-      <div className="flex h-fit w-full  flex-col items-end justify-between pr-6 lg:h-full lg:w-fit">
-        <div className="flex w-full flex-row items-center justify-center gap-4 lg:w-fit lg:flex-col lg:items-start lg:justify-start">
-          <InfoTitle title={'Total Wins: '} value="55" />
-          <Separator className="block lg:hidden" orientation="vertical" />
-          <InfoTitle title={'Total Losses: '} value="55" />
-          <Separator className="block lg:hidden" orientation="vertical" />
-          <InfoTitle title={'Winrate: '} value="55%" />
+      <div className="lg:w-fit w-full h-fit lg:h-full flex-col flex items-end justify-between pr-6 gap-10">
+        <div className="flex w-full lg:w-fit flex-row lg:flex-col lg:items-start lg:justify-start items-center justify-center gap-4">
+          <InfoTitle title={'Total Wins: '} value={userProfile?.games_won} />
+          <Separator className="lg:hidden block" orientation="vertical" />
+          <InfoTitle title={'Total Losses: '} value={userProfile?.games_loss} />
+          <Separator className="lg:hidden block" orientation="vertical" />
+          <InfoTitle title={'Winrate: '} value={userProfile?.win_ratio } />
         </div>
-        <div className="flex h-[70px] w-[270px] items-center justify-end">{renderContent()}</div>
-      </div>
+        <div className="md:w-[270px] w-full h-[70px] flex items-center justify-center">{renderContent()}</div>
     </div>
-  );
+    </div>
+  ); 
 };
 export default UserInfo;

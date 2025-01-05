@@ -41,15 +41,15 @@ const Logout = () => {
           <Card title="Logout" Icon={TbLogout2} path="" />
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-[#28AFB0] dark:bg-[#C1382C]">
+      <AlertDialogContent className="bg-[#28AFB0]">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-black">
             Are you sure you want to log out? You will need to log in again to access your account.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="dark:text-white text-black">Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleClick}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

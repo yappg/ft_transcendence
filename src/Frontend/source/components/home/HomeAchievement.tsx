@@ -20,15 +20,15 @@ const HomeAchievement = ({
 }) => {
   return (
     <div className="relative flex items-center">
-      <div className="bg-black-crd flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full">
-        <img src={iconUrl} alt="Icon" className="size-full object-cover" />
+      <div className="flex 2xl:size-20 lg:size-[50px] shrink-0 items-center justify-center rounded-full overflow-hidden bg-black-crd">
+        <img src={iconUrl} alt="Icon" className="2xl:size-full size-[50px]  object-cover" />
       </div>
       <div className="ml-4 grow">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold italic text-white"> {title} </h2>
-          <span className="font-bold text-blue-400"> + {xpReward} xp</span>
+          <h2 className="2xl:text-2xl lg:text-lg font-bold italic text-white"> {title} </h2>
+          <span className="font-bold text-blue-400 text-[10px]"> + {xpReward} xp</span>
         </div>
-        <div className="mb-2 text-gray-300">
+        <div className="mb-2 text-gray-300 text-[13px]">
           {description} {points} points
         </div>
         <div className="h-3 overflow-hidden rounded-full bg-gray-700">

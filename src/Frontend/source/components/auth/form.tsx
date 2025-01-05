@@ -125,6 +125,7 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
       console.log('response: ', response);
 
       if (response.message) {
+        localStorage.setItem('username', formData.username);
         toast({
           title: 'Success',
           description: isSignup ? 'Account created successfully' : 'Logged in successfully',
