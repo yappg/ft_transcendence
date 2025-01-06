@@ -1,6 +1,6 @@
-import Circle from '@/components/landing-page/Circle';
-import circleData from '@/constants/circleData';
-import LandingCard from './LandingCard';
+import Circle from "@/components/landing-page/Circle";
+import circleData from "@/constants/circleData";
+import LandingCard from "./LandingCard";
 
 const Background = () => {
   return (
