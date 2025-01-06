@@ -21,7 +21,6 @@ class Player(AbstractUser):
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
 
-
     def __str__(self):
         if self.is_superuser:
             return f"{self.username}(Admin)"
@@ -46,6 +45,7 @@ class Player(AbstractUser):
 
             for achievement in achievements:
                 PlayerAchievement.objects.get_or_create(player=self.profile, achievement=achievement)
+
 
 class PlayerProfile(models.Model):
     status_choices = [

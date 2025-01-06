@@ -50,10 +50,15 @@ CORS_ALLOWED_ORIGINS = get_env_variable('CORS_ALLOWED_ORIGINS').split(',')
 # ===========================
 
 INSTALLED_APPS = [
+    # API documentation
     'drf_yasg',
+
+    # Monitoring
     'django_prometheus',
-    'daphne',
-    'channels',
+
+    # ASGI/Channels
+    'daphne', 'channels',
+    # Core Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,17 +66,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    # Third-party apps
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+
+    # Local apps
     'accounts', 'chat', 'game', 'relations',
 ]
 
 MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'accounts.middleware.AccessTokenMiddleware',
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,12 +97,8 @@ MIDDLEWARE = [
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-    "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
-    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 REST_FRAMEWORK = {
@@ -112,9 +116,9 @@ REST_FRAMEWORK = {
         'anon': '20/minute',
         'user': '100/minute',
     },
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ]
+    # 'DEFAULT_RENDERER_CLASSES': [
+    #     'rest_framework.renderers.JSONRenderer',
+    # ]
 }
 
 # ===========================
@@ -146,7 +150,7 @@ DATABASES = {
         'PASSWORD': get_env_variable('POSTGRES_PASSWORD'),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 200,
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -197,23 +201,30 @@ SESSION_CACHE_ALIAS = "default"
 # ===========================
 
 AUTH_USER_MODEL = 'accounts.Player'
-
 SITE_ID = 1
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {'min_length': 8},
+        'OPTIONS': {
+            'min_length': 8,
+        },
     },
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # ===========================
@@ -273,20 +284,8 @@ STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/Media/'
 MEDIA_ROOT = '/app/source/UsersMedia'
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
-
-# ===========================
-# EMAIL CONFIGURATION
-# ===========================
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = get_env_variable('EMAIL_HOST')
-# EMAIL_PORT = int(get_env_variable('EMAIL_PORT', '587'))
-# EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = get_env_variable('DEFAULT_FROM_EMAIL')
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 # ===========================
 # MISCELLANEOUS SETTINGS
