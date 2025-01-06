@@ -89,7 +89,7 @@ export const Header = () => {
         console.log("WebSocket connection closed by component unmount");
       };
     }
-  }, [user]);
+  }, []);
 
   if (!user)
     return (
