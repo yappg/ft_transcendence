@@ -22,7 +22,7 @@ const PlayerScore = ({
       <div className="flex size-[50px] items-center justify-center md:size-[60px]">
         {player ? (
           <Avatar
-            className={`size-full max-h-[35px] max-w-[35px] bg-black-crd md:max-h-[50px] md:max-w-[50px]`}
+            className={`size-full max-h-[35px] max-w-[35px] bg-black-crd md:max-h-[50px] md:max-w-[50px] lg:max-h-[75px] lg:max-w-[75px]`}
           >
             <AvatarImage src={player.avatar} alt="avatar" />
             <AvatarFallback className="bg-black-crd text-[10px]">CN</AvatarFallback>
@@ -47,7 +47,7 @@ const PlayerScore = ({
   );
 };
 
-const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
+const ScoreTable = ({ mode }: { mode: string }) => {
   const game = useGame();
   const p1 = game.player1 ? game.player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
   const p2 = game.player2
@@ -81,29 +81,21 @@ const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
         game.GameWinner = game.player2;
         game.setGameWinner(game.player2);
       }
-      // if (game.tournamentMatch === 0) {
-      //   game.setTournamentMatch(1);
-      // } else if (game.tournamentMatch === 1) {
-      //   game.setTournamentMatch(2);
-      // }
     }
   }, [game.GameScore]);
 
   useEffect(() => {
-    if (game.GameState === 'over') {
+    if (mode === 'tournament' && game.GameState === 'over') {
       if (game.tournamentMatch === 0) {
-        console.log('waaaaa l3adaw right', game.GameWinner);
         game.TournementTree.right.data.player = game.GameWinner;
-        console.log('waaaaa l3adaw right1', game.TournementTree.right.data.player);
+        game.setGameWinner(null);
       } else if (game.tournamentMatch === 1) {
-        console.log('waaaaa l3adaw left', game.GameWinner);
         game.TournementTree.left.data.player = game.GameWinner;
-        console.log('waaaaa l3adaw left1', game.TournementTree.left.data.player);
+        game.setGameWinner(null);
       } else {
-        console.log('waaaaa l3adaw else', game.GameWinner);
         game.TournementTree.data.player = game.GameWinner;
-        console.log('waaaaa l3adaw else1', game.TournementTree.data.player);
         game.setTournamentMatch(0);
+        game.setGameWinner(null);
       }
       game.setRounds(() => []);
     }
@@ -115,7 +107,7 @@ const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
         <Link href={'/games'}>
           {mode !== 'tournament' && <IoIosArrowBack className="size-[20px] md:size-[60px]" />}
         </Link>
-        <span className="hidden lg:block"> Game Arena</span>
+        <span className="hidden xl:block"> Game Arena</span>
       </div>
 
       <div className="flex size-full flex-col items-center justify-center gap-2">
@@ -123,7 +115,7 @@ const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
           <PlayerScore player={p1} score={game.GameScore[0]} isme={true} />
           <div className="flex h-full w-[100px] items-center  justify-center rounded-[10px] border-2 border-white-crd p-2 text-center text-[10px] text-white-crd">
             {game.GameState === 'start' ? (
-              <div className="flex lg:flex-col">
+              <div className="flex xl:flex-col">
                 <h1>Round</h1>
                 <h3>{game.Rounds.length + 1}</h3>
               </div>
@@ -134,14 +126,10 @@ const ScoreTable = ({ mode, map }: { map: string; mode: string }) => {
               <div>get ready</div>
             )}
           </div>
-          {/* {mode.indexOf('local') === -1 ? (
-            <PlayerScore player={game.opponent} score={game.GameScore[1]} isme={false} />
-          ) : ( */}
           <PlayerScore player={p2} score={game.GameScore[1]} isme={false} />
-          {/* )} */}
         </div>
 
-        <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd lg:flex">
+        <div className="hidden h-fit w-full items-end justify-between rounded-[10px] bg-black-crd xl:flex">
           {/* rounds  */}
           <div className="flex size-full h-[200px] flex-col items-center justify-start overflow-auto">
             <div className="flex h-[50px] w-full items-center justify-around border-b border-black-crd text-[18px] text-black-crd dark:border-white-crd dark:text-white-crd">

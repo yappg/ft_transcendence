@@ -57,6 +57,7 @@ export default function Page() {
                     </div>
                   }
                   customStyles={{ backgroundColor: 'rgba(255, 255, 0, 0.3)' }}
+                  id={PlayerLeaderBoard[0].id.toString()}
                 />
                 {PlayerLeaderBoard.length > 1 && (
                   <FriendsComponent
@@ -73,6 +74,7 @@ export default function Page() {
                       </div>
                     }
                     customStyles={{ backgroundColor: 'rgba(192, 192, 192, 0.3)' }}
+                    id={PlayerLeaderBoard[1].id.toString()}
                   />
                 )}
                 {PlayerLeaderBoard.length > 2 && (
@@ -90,6 +92,7 @@ export default function Page() {
                       </div>
                     }
                     customStyles={{ backgroundColor: 'rgba(205, 127, 50, 0.3)' }}
+                    id={PlayerLeaderBoard[2].id.toString()}
                   />
                 )}
               </div>
@@ -110,6 +113,7 @@ export default function Page() {
                     </div>
                   }
                   customStyles={{ backgroundColor: '' }}
+                  id={friend.id.toString()}
                 />
               ))}
             </div>

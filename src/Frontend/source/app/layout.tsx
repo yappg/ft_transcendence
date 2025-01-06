@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import { Toaster } from '@/components/ui/toaster';
 import { SideBarProvider } from '@/context/SideBarContext';
 import { GameProvider } from '@/context/GameContext';
+import { UserProvider } from '@/context/GlobalContext';
 
 const dayson = Days_One({
   subsets: ['latin'],
@@ -31,12 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true} className={`${dayson.variable} ${poppins.variable}`}>
+        <UserProvider>
           <GameProvider>
             <SideBarProvider>
               <Providers>{children}</Providers>
               <Toaster />
             </SideBarProvider>
           </GameProvider>
+        </UserProvider>
       </body>
     </html>
   );

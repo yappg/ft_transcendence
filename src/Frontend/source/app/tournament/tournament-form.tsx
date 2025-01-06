@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,12 +28,23 @@ interface TournamentFormProps {
 }
 
 const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
+  const [disabled, setDisabled] = useState<boolean>(false);
   const [players, setPlayers] = useState<Player[]>([
     { avatar: '', username: '' },
     { avatar: '', username: '' },
     { avatar: '', username: '' },
     { avatar: '', username: '' },
   ]);
+
+  useEffect(() => {
+    let unvalid = false;
+    players.map((player: Player) => {
+      if (player.avatar === '' ||  player.username === '' || player.username.length > 10) {
+        unvalid = true;
+      }
+    })
+    setDisabled(unvalid);
+  }, [players])
 
   const handleAvatarSelect = (index: number, avatar: string) => {
     const newPlayers = [...players];
@@ -49,7 +60,9 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onStartTournament(players);
+    if (!disabled) {
+      onStartTournament(players);
+    }
   };
 
   return (
@@ -107,8 +120,11 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
         >
           start
         </MyButton> */}
-        <Button type="submit" onClick={handleSubmit}>
-          Start Tournament
+        <Button
+        className={disabled? 'bg-black-crd' : 'bg-aqua'}
+          disable={disabled? 'true': 'false'}
+          type="submit" onClick={handleSubmit}>
+            Start Tournament
         </Button>
       </CardFooter>
     </Card>

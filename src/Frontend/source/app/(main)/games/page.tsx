@@ -33,7 +33,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
       className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/earth.png"
@@ -46,7 +46,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           }
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/air.png"
@@ -59,7 +59,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           }
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/fire.png"
@@ -72,7 +72,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           }
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <MapsCard
           height="100px"
           imageUrl="/water.png"
@@ -107,38 +107,60 @@ const GameModeSwiper = () => {
       autoplay={true}
       pagination={{ el: '.swiper-pagination', clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="swiper-container flex h-[70%] w-full items-center justify-center overflow-auto py-4"
+      className="swiper-container flex max-h-full w-full items-center justify-center overflow-auto py-4 md:h-[70%]"
     >
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <ModesCard
           height="100px"
           title="Local One vs One"
           description="Challenge a friend in a local one-on-one game mode."
           url={`/games?mode=one-vs-one-local`}
+          image={'/gameModes6.jpeg'}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <ModesCard
           height="100px"
           title="Tournament"
           description="Compete against other players in a tournament-style game mode."
           url={`/games?mode=tournament`}
+          image={'/gameModes7.jpeg'}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <ModesCard
           height="100px"
           title="One Vs One"
           description="Enter the thrilling world of one-on-one competition against another player."
           url={`/games?mode=one-vs-one`}
+          image={'/gameModes2.jpeg'}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
         <ModesCard
           height="100px"
           title="Local One vs One"
           description="Challenge a friend in a local one-on-one game mode."
           url={`/games?mode=one-vs-one-local`}
+          image={'/gameModes6.jpeg'}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
+        <ModesCard
+          height="100px"
+          title="Tournament"
+          description="Compete against other players in a tournament-style game mode."
+          url={`/games?mode=tournament`}
+          image={'/gameModes7.jpeg'}
+        />
+      </SwiperSlide>
+      <SwiperSlide className="h-full w-1/3 overflow-visible">
+        <ModesCard
+          height="100px"
+          title="One Vs One"
+          description="Enter the thrilling world of one-on-one competition against another player."
+          url={`/games?mode=one-vs-one`}
+          image={'/gameModes2.jpeg'}
         />
       </SwiperSlide>
     </Swiper>
@@ -155,11 +177,11 @@ const Game_modes = () => {
   }, [setIsActivated]);
 
   return (
-    <div className="flex w-full flex-col overflow-auto px-3 py-2">
+    <div className="flex size-full flex-col overflow-auto lg:p-3">
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center">
-        <img src="/games-logo.svg" alt="" className="size-[300px]" />
+        <img src="/games-logo.svg" alt="" className="h-[200px] lg:h-[260px]" />
       </div>
-      <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
+      <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden bg-black-crd md:rounded-[30px]">
         <div className="flex size-full items-center">
           {mode ? <MapsSwiper mode={mode} /> : <GameModeSwiper />}
         </div>
