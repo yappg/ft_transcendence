@@ -26,7 +26,7 @@ const EditProfilePicture = () => {
             className="size-full rounded-full"
             width={10}
             height={10}
-            unoptimized
+            unoptimized={true}
           />
         </div>
         <div className="h-full w-[300px] gap-8">

@@ -54,16 +54,14 @@ export const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
-  // ------Omar's code
   const { user } = useUser();
 
   useEffect(() => {
-    // fetchNotifications();
     if (user) {
       const ws = new WebSocket(
-        `ws://localhost:8080/ws/notifications/?user_id=${user.id}`,
+        `${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`
       );
-      console.log("WebSocket connection established");
+      console.log('WebSocket connection established');
 
       ws.onopen = () => {
         console.log("WebSocket connection opened");
@@ -102,7 +100,7 @@ export const Header = () => {
 
   const fetchUsers = async (value: string) => {
     try {
-      const res = await axios.get(`accounts/search-users/?search=${value}`);
+      const res = await axios.get(`/accounts/search-users/?search=${value}`);
       return res.data;
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -197,12 +195,12 @@ export const Header = () => {
                   }}
                 >
                   <Image
-                    src={`http://localhost:8080${player?.avatar}`}
-                    width={10}
-                    height={10}
+                    src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                     alt={`${player?.display_name}'s avatar`}
+                    width={40}
+                    height={40}
                     className="size-10 rounded-full"
-                    unoptimized
+                    unoptimized={true}
                   />
                   <span className="text-white">{player?.display_name}</span>
                 </div>
@@ -211,7 +209,7 @@ export const Header = () => {
           )}
           {filteredPlayers.length === 0 && value.length > 0 && (
             <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
-              <h1>No players found</h1>
+              <h1>looking for {value}...</h1>
             </div>
           )}
         </div>
