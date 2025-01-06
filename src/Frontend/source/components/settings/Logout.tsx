@@ -8,10 +8,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { TbLogout2 } from 'react-icons/tb';
-import { Card } from '@/components/settings/Card';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/alert-dialog";
+import { TbLogout2 } from "react-icons/tb";
+import { Card } from "@/components/settings/Card";
+import { useRouter } from "next/navigation";
 
 const Logout = () => {
   const router = useRouter();
@@ -19,24 +19,27 @@ const Logout = () => {
   const handleClick = () => {
     const fetchLogout = async () => {
       try {
-        const response = await fetch('http://localhost:8080/accounts/auth/logout/', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          "http://localhost:8080/accounts/auth/logout/",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogout();
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className=" size-full bg-transparent p-0">
+      <AlertDialogTrigger asChild className="size-full bg-transparent p-0">
         <div className="size-full">
           <Card title="Logout" Icon={TbLogout2} path="" />
         </div>
@@ -45,11 +48,14 @@ const Logout = () => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription className="text-black">
-            Are you sure you want to log out? You will need to log in again to access your account.
+            Are you sure you want to log out? You will need to log in again to
+            access your account.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="dark:text-white text-black">Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="text-black dark:text-white">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction onClick={handleClick}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

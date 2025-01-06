@@ -1,6 +1,6 @@
-import FriendServices from '@/services/friendServices';
-import { useState } from 'react';
-import { AiOutlineLoading } from 'react-icons/ai';
+import FriendServices from "@/services/friendServices";
+import { useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 
 export const UnBlockButton = ({
   name,
@@ -14,17 +14,21 @@ export const UnBlockButton = ({
     try {
       FriendServices.unblockFriend(name);
       setClicked(true);
-      setThisState('none');
+      setThisState("none");
     } catch {
-      console.log('error');
+      console.log("error");
     }
   }
   return (
     <button
-      className={`font-dayson flex size-full items-center justify-center rounded-[14px] bg-[#4C4D4E75] text-lg text-white shadow-2xl lg:rounded-[30px]`}
+      className={`flex size-full items-center justify-center rounded-[14px] bg-[#4C4D4E75] font-dayson text-lg text-white shadow-2xl lg:rounded-[30px]`}
       onClick={handleClick}
     >
-      {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Unblock'}
+      {clicked ? (
+        <AiOutlineLoading className="animate-spin text-[20px] text-white" />
+      ) : (
+        "Unblock"
+      )}
     </button>
   );
 };

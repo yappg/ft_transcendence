@@ -1,13 +1,19 @@
-import { History, useUser } from '@/context/GlobalContext';
-import MatchHistoryBoard from './MatchHistoryBoard';
+import { History, useUser } from "@/context/GlobalContext";
+import MatchHistoryBoard from "./MatchHistoryBoard";
 
-export const MatchHistory = ({ PlayerMatches }: { PlayerMatches: History[] }) => {
+export const MatchHistory = ({
+  PlayerMatches,
+}: {
+  PlayerMatches: History[];
+}) => {
   return (
-    <div className="relative w-full h-[300px] lg:h-full lg:w-[49%] bg-[#4C4D4E] overflow-hidden rounded-[14px] lg:rounded-[30px] shadow-2xl">
-      <div className="w-full h-[85%] overflow-y-scroll custom-scrollbar-container">
+    <div className="relative h-[300px] w-full overflow-hidden rounded-[14px] bg-[#4C4D4E] shadow-2xl lg:h-full lg:w-[49%] lg:rounded-[30px]">
+      <div className="custom-scrollbar-container h-[85%] w-full overflow-y-scroll">
         {PlayerMatches?.length === 0 || !PlayerMatches ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <h1 className="text-white font-bold text-center">No Match History</h1>
+          <div className="flex size-full items-center justify-center">
+            <h1 className="text-center font-bold text-white">
+              No Match History
+            </h1>
           </div>
         ) : (
           PlayerMatches?.map((match) => (
@@ -21,9 +27,13 @@ export const MatchHistory = ({ PlayerMatches }: { PlayerMatches: History[] }) =>
           ))
         )}
       </div>
-      <div className="absolute bottom-0 w-full bg-[#4C4D4E] h-[15%] border-t-2 border-[#B8B8B8] flex items-center justify-end gap-4 px-10">
-        <h1 className="2xl:text-[20px] lg:text-[15px] font-dayson text-[#B8B8B8]">Match History</h1>
-        <h1 className="2xl:text-[25px] lg:text-[20px] font-dayson text-[#B8B8B8]">{'>'}</h1>
+      <div className="absolute bottom-0 flex h-[15%] w-full items-center justify-end gap-4 border-t-2 border-[#B8B8B8] bg-[#4C4D4E] px-10">
+        <h1 className="font-dayson text-[#B8B8B8] lg:text-[15px] 2xl:text-[20px]">
+          Match History
+        </h1>
+        <h1 className="font-dayson text-[#B8B8B8] lg:text-[20px] 2xl:text-[25px]">
+          {">"}
+        </h1>
       </div>
     </div>
   );
