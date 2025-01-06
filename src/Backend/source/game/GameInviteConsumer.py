@@ -1,16 +1,17 @@
-# invite_consumer.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
 import json
 from accounts.models import Player, PlayerProfile
 from typing import Optional, Dict
-import GameInviteManager
+from .GameInviteManager import GameInviteManager
+from .MatchMaking import MatchMakingSystem
 
-invite_manager = GameInviteManager()
 
 class GameInviteConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
+        self.matchMakingSystem = MatchMakingSystem()
+        self.invite_manager = GameInviteManager(self.matchMakingSystem)
         super().__init__(*args, **kwargs)
         self.user = None
         self.invite_group = None
@@ -22,7 +23,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = self.scope["user"]
-        self.invite_group = f'invite_group_{self.user.id}'
+        self.invite_group = f'invite_group_{self.user.username}'
         
         # Add user to their personal invite group
         await self.channel_layer.group_add(self.invite_group, self.channel_name)
@@ -46,6 +47,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             action = data.get('action')
+            print('aaaaactionnn ',action)
 
             if action == 'send_invite':
                 await self.handle_send_invite(data)
@@ -64,27 +66,27 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
     async def handle_send_invite(self, data):
         """Handle sending game invites"""
         try:
-            receiver_id = data.get('receiver_id')
-            if not receiver_id:
-                await self.send_error('Receiver ID is required')
+            username = data.get('username')
+            if not username:
+                await self.send_error('Username is required')
                 return
 
             # Check if receiver exists and is available
-            receiver = await self.get_player(receiver_id)
-            if not receiver:
+            receiver = await `self.get_player(username)
+            if not receiver:`
                 await self.send_error('Invalid receiver')
                 return
 
             # Try to send the invite through the invite manager
-            invite_id = await invite_manager.send_invite(
-                self.user.id, receiver_id
+            invite_id = await self.invite_manager.send_invite(
+                self.user.username, username
             )
 
             if invite_id:
                 await self.send_json({
                     'type': 'invite_sent',
                     'invite_id': invite_id,
-                    'receiver_id': receiver_id
+                    'receiver': username
                 })
             else:
                 await self.send_error('Failed to send invite')
@@ -99,7 +101,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Invite ID is required')
             return
 
-        success = await invite_manager.handle_invite_response(
+        success = await self.invite_manager.handle_invite_response(
             invite_id, accepted=True
         )
 
@@ -118,7 +120,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Invite ID is required')
             return
 
-        success = await invite_manager.handle_invite_response(
+        success = await self.invite_manager.handle_invite_response(
             invite_id, accepted=False
         )
 
@@ -130,6 +132,47 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         else:
             await self.send_error('Failed to reject invite')
 
+    async def game_invite(self, event):
+        """Handle game invite messages"""
+        await self.send_json({
+            'type': 'game_invite',
+            'invite_id': event['invite_id'],
+            'sender_username': event['sender_username'],
+            'action': event['action']
+        })
+
+    async def game_accept(self, event):
+        """Handle game accept messages"""
+        await self.send_json({
+            'type': 'game_accept',
+            'invite_id': event['invite_id'],
+            'game_id': event.get('game_id'),
+            'action': 'accepted'
+        })
+
+    async def game_reject(self, event):
+        """Handle game reject messages"""
+        await self.send_json({
+            'type': 'game_reject',
+            'invite_id': event['invite_id'],
+            'action': 'rejected'
+        })
+
+    async def game_expire(self, event):
+        """Handle game expire messages"""
+        await self.send_json({
+            'type': 'game_expire',
+            'invite_id': event['invite_id'],
+            'action': 'expired'
+        })
+
+    async def game_error(self, event):
+        """Handle game error messages"""
+        await self.send_json({
+            'type': 'game_error',
+            'message': event['message'],
+            'action': 'error'
+        })
     # Websocket group event handlers
     async def invite_notification(self, event):
         """Handle invite-related notifications"""
@@ -141,14 +184,13 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
 
     # Helper methods
     @database_sync_to_async
-    def get_player(self, player_id: int) -> Optional[Dict]:
+    def get_player(self, username: str) -> Optional[Dict]:
         """Get player information from database"""
         try:
-            player = Player.objects.select_related('profile').get(id=player_id)
+            player = Player.objects.get(username=username)
             return {
-                'id': player.id,
                 'username': player.username,
-                'status': player.profile.status
+                'status': getattr(player.profile, 'status', 'unknown')
             }
         except ObjectDoesNotExist:
             return None
@@ -169,10 +211,9 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         try:
             players = Player.objects.select_related('profile').filter(
                 profile__status='available'
-            ).exclude(id=self.user.id)
+            ).exclude(username=self.user.username)
             
             return [{
-                'id': player.id,
                 'username': player.username,
                 'status': player.profile.status
             } for player in players]

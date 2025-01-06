@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # ===========================               
 # PATHS & ENVIRONMENT VARIABLES                                             
 # ===========================                                                                   
-                      
+     
 # Define the base directory of the project        
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -123,7 +123,6 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
