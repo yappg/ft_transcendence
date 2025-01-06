@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Link } from 'lucide-react';
 import { JSX } from 'react';
 const FriendsComponent = ({
   name,
@@ -6,6 +7,7 @@ const FriendsComponent = ({
   level,
   messagesLink,
   customStyles = {},
+  id,
 }: {
   name: string;
   ProfilePhoto: string;
@@ -14,6 +16,7 @@ const FriendsComponent = ({
   losses?: number;
   messagesLink: JSX.Element;
   customStyles?: React.CSSProperties;
+  id?: string;
 }): JSX.Element => {
   const achievements = [
     {
@@ -31,22 +34,27 @@ const FriendsComponent = ({
   ];
   return (
     <div
-      className="bg-black-crd flex lg:h-[150px] h-[70px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] sm:pl-4 lg:px-5 pl-2"
+      className="flex h-auto w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] bg-black-crd py-2 pl-2 sm:pl-4 lg:px-5"
       style={{
         ...customStyles,
       }}
     >
-      <div className="w-[80%] xl:min-w-[900px] flex flex-row justify-between items-center">
-        <div className="flex h-[75px] w-fit flex-row items-center justify-center sm:gap-8 gap-2 xl:gap-10">
-          <Avatar className="sm:size-[65px] size-[42px] transition-all duration-300 md:size-[60px] lg:size-[75px]">
+      <div className="flex w-4/5 flex-row items-center justify-between xl:min-w-[900px]">
+        <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-2 sm:gap-8 xl:gap-10">
+          <Avatar
+            className="size-full max-h-[35px] max-w-[35px] bg-green-300 transition-all duration-300 md:max-h-[50px] md:max-w-[50px] lg:max-h-[60px] lg:max-w-[60px]"
+            onClick={() => {
+              window.location.href = `/Profile/${id}`;
+            }}
+          >
             <AvatarImage src={ProfilePhoto} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="flex h-[75px] w-fit flex-col justify-center">
-            <h1 className="font-dayson text-[8px] sm:text-[15px] text-white opacity-[90%] transition-all duration-300 lg:text-[25px] xl:text-[27px] 2xl:text-[30px] dark:text-white">
+            <h1 className="font-dayson text-[8px] text-white opacity-[90%] transition-all duration-300 dark:text-white sm:text-[15px] lg:text-[25px] xl:text-[27px] 2xl:text-[30px]">
               {name}
             </h1>
-            <h1 className="font-coustard text-[5px] sm:text-[2px] text-white opacity-[30%] transition-all duration-300 md:text-[15px] xl:text-[25px]">
+            <h1 className="font-poppins text-[5px] text-white opacity-[30%] transition-all duration-300 sm:text-[2px] md:text-[15px] xl:text-[25px]">
               level {level}
             </h1>
           </div>
@@ -55,7 +63,7 @@ const FriendsComponent = ({
           {achievements.map((achievement, index) => (
             <Avatar
               key={index}
-              className="sm:-ml-[17px] -ml-[10px] sm:size-[40px] size-[20px] lg:size-[50px] transition-all duration-300 xl:size-[75px]"
+              className="ml-[-10px] size-[20px] transition-all duration-300 sm:ml-[-17px] sm:size-[40px] lg:size-[50px] xl:size-[75px]"
             >
               <AvatarImage src={achievement.icon} />
               <AvatarFallback>CN</AvatarFallback>
@@ -63,7 +71,7 @@ const FriendsComponent = ({
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-end w-[23%] -mr-[20px]">{messagesLink}</div>
+      <div className="flex w-[23%] items-center justify-end p-4">{messagesLink}</div>
     </div>
   );
 };

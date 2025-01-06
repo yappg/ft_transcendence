@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { SideBarContext } from '@/context/SideBarContext';
 import { useContext } from 'react';
@@ -21,7 +22,7 @@ import { userService } from '@/services/userService';
 import { useEffect } from 'react';
 import { ChartLine } from '@/components/Profile/ChartLine';
 
-const MapsSwiper = ({ mode }: { mode: string }) => {
+const MapsSwiper = () => {
   return (
     <Swiper
       effect={'coverflow'}
@@ -83,6 +84,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 
 const Home = () => {
   const { setIsActivated } = useContext(SideBarContext);
+
   const {
     user,
     setAchievements,
@@ -164,17 +166,17 @@ const Home = () => {
         <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
           <img src="/games-logo.svg" alt="" className="size-[300px]" />
         </div>
-        <div className=" custom-inner-shadow costum-little-shadow bg-black-crd relative flex h-full items-center overflow-hidden rounded-[30px]">
+        <div className=" custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
           <div className="flex size-full items-center">
             <MapsSwiper mode="" />
           </div>
         </div>
       </div>
-      <div className="flex h-[50%] w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
+      <div className="flex h-1/2 w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-10 ">
         <div className="h-[200px] w-full md:h-[100px] lg:h-[10%]">
           <DashboardCard playerMatches={PlayerMatches || []} />
         </div>
-        <div className="bg-black-crd realtive flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black md:h-[15%] lg:h-[15%]">
+        <div className="relative flex h-[150px] w-full items-center justify-between rounded-[30px] bg-black-crd md:h-[15%] lg:h-[15%]">
           {userAchievements && userAchievements.length > 0 ? (
             <HomeAchievement
               title={userAchievements[0].achievement.name}
@@ -202,8 +204,8 @@ const Home = () => {
         <div className=" h-[300px] w-full md:h-fit lg:h-2/5">
           <HomeLeaderboard playerLeaderBoard={PlayerLeaderBoard || []} />
         </div>
-        <div className=" bg-black-crd custom-scrollbar-container h-[300px] w-full overflow-y-scroll rounded-[30px] shadow-2xl md:h-fit lg:h-2/5 lg:overflow-hidden">
-          <div className="bg-black-crd gap2 flex size-full h-[300px] flex-row items-center justify-center lg:h-1/2 lg:flex-row xl:flex-row ">
+        <div className=" custom-scrollbar-container h-[300px] w-full overflow-y-scroll rounded-[30px] bg-black-crd shadow-2xl md:h-fit lg:h-2/5 lg:overflow-hidden">
+          <div className="gap2 flex size-full h-[300px] flex-row items-center justify-center bg-black-crd lg:h-1/2 lg:flex-row xl:flex-row ">
             <div className="h-4/5  w-1/2 items-start justify-start">
               <Chart total_games={user?.total_games} stats={user?.statistics} />
             </div>
@@ -211,7 +213,7 @@ const Home = () => {
               <Rating statistics={user?.statistics} />
             </div>
           </div>
-          <div className="bg-black-crd flex h-[300px] w-full items-center justify-center lg:h-1/2">
+          <div className="flex h-[300px] w-full items-center justify-center bg-black-crd lg:h-1/2">
             <ChartLine statistics={user?.statistics} />
           </div>
         </div>

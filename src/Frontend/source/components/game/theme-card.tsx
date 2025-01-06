@@ -24,7 +24,7 @@ const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) 
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.7)]">
+      <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.85)]">
         <div className="absolute inset-0 flex h-full flex-col justify-center p-8 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
           <h2 className="mb-4 text-4xl font-bold text-white">{title}</h2>
           <p className="mb-6 text-lg text-gray-300">{description}</p>
@@ -49,22 +49,16 @@ interface ModesCardProps {
   description: string;
   url: string;
   height: string;
+  image: string;
 }
 
-const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
+const ModesCard = ({ title, description, url, image }: ModesCardProps) => {
   const router = useRouter();
   return (
-    <div
-      className="costum-little-shadow group relative size-full overflow-visible rounded-3xl bg-black py-[20px] transition-all duration-700 ease-in-out hover:bg-[rgb(70,70,70)]"
-      style={{
-        height: `${height}px`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <div className="costum-little-shadow size-full overflow-visible rounded-3xl bg-black py-[20px] transition-all duration-700 ease-in-out hover:bg-[rgb(70,70,70)]">
       <div className="flex h-full flex-col items-start justify-between gap-4 p-8 opacity-100">
-        <div className="flex h-1/2 w-full items-center justify-center overflow-hidden rounded-md bg-[rgb(70,70,70)]">
-          <img src="Avatar.svg" alt="" className="size-[50px]" />
+        <div className="flex h-[150px] w-full items-center justify-center overflow-hidden rounded-md bg-[rgb(70,70,70)]">
+          <img src={image} alt="" className="size-full" />
         </div>
         <div className="size-full">
           <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">{title}</h2>
@@ -77,7 +71,7 @@ const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
               router.push(`${url}`);
             }}
           >
-            Select Map
+            Select mode
           </MyButton>
         </div>
       </div>

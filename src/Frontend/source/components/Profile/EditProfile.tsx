@@ -1,7 +1,13 @@
+'use client';
+
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
+import React, { useEffect } from 'react';
+
 export const EditProfile = ({ setThisState }: { setThisState: (state: string) => void }) => {
-  setThisState('self');
+  useEffect(() => {
+    setThisState('self');
+  }, [setThisState]);
   return (
     <Link
       href={'/settings'}
