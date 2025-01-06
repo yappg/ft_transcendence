@@ -46,7 +46,7 @@ export default function Page() {
               <div className="h-fit w-full bg-black-crd dark:bg-transparent">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
-                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[0].avatar}`}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[0].avatar}
                   level={PlayerLeaderBoard[0].level}
                   wins={PlayerLeaderBoard[0].games_won}
                   losses={PlayerLeaderBoard[0].games_loss}
@@ -57,12 +57,13 @@ export default function Page() {
                       </span>
                     </div>
                   }
-                  customStyles={{ backgroundColor: "rgba(255, 255, 0, 0.3)" }}
+                  customStyles={{ backgroundColor: 'rgba(255, 255, 0, 0.3)' }}
+                  achievements={PlayerLeaderBoard[0].Achievement}
                 />
                 {PlayerLeaderBoard.length > 1 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[1].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[1].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[1].avatar}
                     level={PlayerLeaderBoard[1].level}
                     wins={PlayerLeaderBoard[1].games_won}
                     losses={PlayerLeaderBoard[1].games_loss}
@@ -73,15 +74,14 @@ export default function Page() {
                         </span>
                       </div>
                     }
-                    customStyles={{
-                      backgroundColor: "rgba(192, 192, 192, 0.3)",
-                    }}
+                    customStyles={{ backgroundColor: 'rgba(192, 192, 192, 0.3)' }}
+                    achievements={PlayerLeaderBoard[1].Achievement}
                   />
                 )}
                 {PlayerLeaderBoard.length > 2 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[2].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[2].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[2].avatar}
                     level={PlayerLeaderBoard[2].level}
                     wins={PlayerLeaderBoard[2].games_won}
                     losses={PlayerLeaderBoard[2].games_loss}
@@ -92,33 +92,31 @@ export default function Page() {
                         </span>
                       </div>
                     }
-                    customStyles={{
-                      backgroundColor: "rgba(205, 127, 50, 0.3)",
-                    }}
+                    customStyles={{ backgroundColor: 'rgba(205, 127, 50, 0.3)' }}
+                    achievements={PlayerLeaderBoard[2].Achievement}
                   />
                 )}
               </div>
               {/* there is a problem here  duplicate the first 3 players*/}
-              {PlayerLeaderBoard.filter((friend, index) => index >= 3).map(
-                (friend, index) => (
-                  <FriendsComponent
-                    key={index + 3}
-                    name={friend.display_name}
-                    ProfilePhoto={`http://localhost:8080${friend.avatar}`}
-                    level={friend.level}
-                    wins={friend.games_won}
-                    losses={friend.games_loss}
-                    messagesLink={
-                      <div className="flex h-[70px] w-[100px] items-center justify-center rounded-full sm:h-[70px] lg:h-[150px] lg:w-[200px]">
-                        <span className="font-dayson text-[15px] text-white sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[40px]">
-                          {index + 4}
-                        </span>
-                      </div>
-                    }
-                    customStyles={{ backgroundColor: "" }}
-                  />
-                ),
-              )}
+              {PlayerLeaderBoard.filter((friend, index) => index >= 3).map((friend, index) => (
+                <FriendsComponent
+                  key={index + 3}
+                  name={friend.display_name}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + friend.avatar}
+                  level={friend.level}
+                  wins={friend.games_won}
+                  losses={friend.games_loss}
+                  messagesLink={
+                    <div className="flex h-[70px] w-[100px] items-center justify-center rounded-full sm:h-[70px] lg:h-[150px] lg:w-[200px]">
+                      <span className="font-dayson text-[15px] text-white sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[40px]">
+                        {index + 4}
+                      </span>
+                    </div>
+                  }
+                  customStyles={{ backgroundColor: '' }}
+                  achievements={friend.Achievement}
+                />
+              ))}
             </div>
           </div>
         </div>

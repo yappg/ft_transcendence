@@ -44,7 +44,7 @@ export const RightBar = ({
       <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-auto">
-            <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
+            <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Link>
@@ -65,8 +65,8 @@ export const RightBar = ({
                 key={friend.id}
               >
                 <AvatarImage
-                  src={`http://localhost:8080${friend.avatar}`}
-                  alt={friend.display_name || "User"}
+                  src={`${process.env.NEXT_PUBLIC_HOST}${friend.avatar}`}
+                  alt={friend.display_name || 'User'}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
@@ -92,8 +92,8 @@ export const RightBar = ({
                 key={chat.id}
               >
                 <AvatarImage
-                  src={`http://localhost:8080${chat.receiver.avatar}`}
-                  alt={chat.receiver.username || "User"}
+                  src={`${process.env.NEXT_PUBLIC_HOST}${chat.receiver.avatar}`}
+                  alt={chat.receiver.username || 'User'}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
