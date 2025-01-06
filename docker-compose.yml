@@ -87,7 +87,6 @@ services:
       container_name: backend
       build:
         context: ./src/Backend
-        # target: ${TEST:-production}
         target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
@@ -95,8 +94,8 @@ services:
         SIGNING_KEY: ${SIGNING_KEY}
         ALLOWED_HOSTS: ${ALLOWED_HOSTS}
         CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
-        CLIENT_ID_42: $${CLIENT_ID_42}
-        CLIENT_SECRET_42: $${CLIENT_SECRET_42}
+        CLIENT_ID_42: ${CLIENT_ID_42}
+        CLIENT_SECRET_42: ${CLIENT_SECRET_42}
         OAUTH_42_CALLBACK_URL: ${OAUTH_42_CALLBACK_URL}
         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
         GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -259,7 +258,7 @@ services:
         start_period: 5s
       restart: unless-stopped
 
-
+# /src/Backend/source/UsersMedia
 volumes:
 
   prometheus-data:
@@ -276,6 +275,14 @@ volumes:
   grafana-data:
     name: grafana
 
+  source-code:
+    name: media
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/otaraki/goinfre/school-projects/ft_transcendence/src/Backend/source/
+
   static-files:
     name: static
 
@@ -285,7 +292,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./src/Backend/source/UsersMedia
+      device: /Users/otaraki/goinfre/school-projects/ft_transcendence/src/Backend/source/UsersMedia
 
   redis-data:
     name: redis

@@ -255,8 +255,8 @@ class OAuth42LoginView(APIView):
         elif provider == 'google':
             Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
             client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
-            redirect_uri = settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL']
-            scope = settings.OAUTH2_PROVIDER_GOOGLE['SCOPE']
+            redirect_uri = quote(settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'])
+            scope = quote(settings.OAUTH2_PROVIDER_GOOGLE['SCOPE'])
             authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)

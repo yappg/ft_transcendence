@@ -15,7 +15,8 @@ class SearchUsersSerializer(serializers.ModelSerializer):
 
 
 class LeaderBoardSerializer(serializers.ModelSerializer):
-
+    Achievement = serializers.SerializerMethodField()
+    
     class Meta:
         model = PlayerProfile
         fields = [
@@ -24,6 +25,13 @@ class LeaderBoardSerializer(serializers.ModelSerializer):
             'level',
             'avatar',
             'games_won',
-            'games_loss'
+            'games_loss',
+            'Achievement'
         ]
         read_only_fields = ['__all__']
+
+    def get_Achievement(self, obj):
+        from .userManagmentSerlizers import PlayerAchievementSerializer
+        serializer = PlayerAchievementSerializer(obj.all_achievements_gained()[:3], many=True)
+        return serializer.data
+    

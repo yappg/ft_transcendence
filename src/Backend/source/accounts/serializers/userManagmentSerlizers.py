@@ -282,14 +282,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
-    def update(self, instance, validated_data):
-        if 'avatar_upload' in validated_data:
-            instance.avatar = validated_data.pop('avatar_upload')
-        if 'cover_upload' in validated_data:
-            instance.cover = validated_data.pop('cover_upload')
-
-        return super().update(instance, validated_data)
-
 class PlayerSettingsSerializer(serializers.ModelSerializer):
 
     updated_at = serializers.SerializerMethodField()
