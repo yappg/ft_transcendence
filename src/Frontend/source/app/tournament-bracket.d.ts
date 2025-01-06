@@ -1,5 +1,5 @@
-declare module 'tournament-bracket' {
-  import { FC } from 'react';
+declare module "tournament-bracket" {
+  import { FC } from "react";
 
   interface Team {
     name: string;
