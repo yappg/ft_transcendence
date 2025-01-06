@@ -54,7 +54,7 @@ export const Header = () => {
   useEffect(() => {
     if (user) {
       const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WS_URL}'/notifications/?user_id=${user.id}`
+        `${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`
       );
       console.log('WebSocket connection established');
 

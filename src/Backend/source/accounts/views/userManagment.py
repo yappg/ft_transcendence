@@ -13,14 +13,6 @@ from ..models import *
 from ..serializers.userManagmentSerlizers import *
 #--------------------------Players RESTFUL API ------------------------------
 
-## add a point for disabling account and activating it for abstract user
-# class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
-#     permission_classes = [IsAuthenticated]
-#     queryset = Player.objects.all()
-#     serializer_class = PlayerSerializer
-
-
-# exlude disabled profiles with is_active to false from the account return to front that the profile is private
 class PlayerProfileViewSet(viewsets.ModelViewSet):
     queryset = PlayerProfile.objects.all()
     serializer_class = PlayerProfileSerializer
@@ -44,7 +36,6 @@ class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MatchHistorySerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_queryset(self):
         if self.action == 'list':
             return MatchHistory.objects.all()[:10]
@@ -67,7 +58,6 @@ class MatchHistoryViewSet(viewsets.ReadOnlyModelViewSet):
                 {"error": "An error occurred while fetching match history"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
 class PlayerAchievementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PlayerAchievement.objects.all()

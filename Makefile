@@ -46,7 +46,7 @@ fclean:
 	@docker compose -p $(PROJECT) down --rmi all --volumes --remove-orphans
 	@$(MAKE) data-reset
 
-re: clean build
+re: clean up
 
 ########################################## DEVELOPMENT ##########################################
 
