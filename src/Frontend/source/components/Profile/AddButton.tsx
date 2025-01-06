@@ -1,6 +1,6 @@
-import FriendServices from '@/services/friendServices';
-import { AiOutlineLoading } from 'react-icons/ai';
-import { useState } from 'react';
+import FriendServices from "@/services/friendServices";
+import { AiOutlineLoading } from "react-icons/ai";
+import { useState } from "react";
 
 export const AddButton = ({
   name,
@@ -14,21 +14,21 @@ export const AddButton = ({
     try {
       await FriendServices.sendFriendRequest(name);
       setClicked(true);
-      setThisState('sent_invite');
+      setThisState("sent_invite");
     } catch (error: any) {
-      console.log('error', error);
+      console.log("error", error);
     }
   }
 
   return (
     <button
-      className="font-dayson flex h-[30px] w-[170px] items-center justify-center rounded-[14px] bg-blue-500 text-lg text-white shadow-2xl md:size-full lg:rounded-[30px] "
+      className="flex h-[30px] w-[170px] items-center justify-center rounded-[14px] bg-blue-500 font-dayson text-lg text-white shadow-2xl md:size-full lg:rounded-[30px] "
       onClick={handleClick}
     >
       {clicked ? (
         <AiOutlineLoading className="animate-spin text-[20px] text-white" />
       ) : (
-        'Add Friend'
+        "Add Friend"
       )}
     </button>
   );

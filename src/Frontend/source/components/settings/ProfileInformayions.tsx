@@ -1,10 +1,10 @@
-import { ImageCard } from './ImageCard';
-import { CoverCard } from './CoverCard';
-import { z } from 'zod';
-import { useUser } from '@/context/GlobalContext';
-import { useState } from 'react';
-import SettingsServices from '@/services/settingsServices';
-import { userService } from '@/services/userService';
+import { ImageCard } from "./ImageCard";
+import { CoverCard } from "./CoverCard";
+import { z } from "zod";
+import { useUser } from "@/context/GlobalContext";
+import { useState } from "react";
+import SettingsServices from "@/services/settingsServices";
+import { userService } from "@/services/userService";
 
 const ProfileInformations = () => {
   const { user, setUser } = useUser();
@@ -14,7 +14,9 @@ const ProfileInformations = () => {
     avatar: user?.avatar,
     cover: user?.cover,
   });
-  const [display_name, setDisplayName] = useState<string | null>(user?.display_name || '');
+  const [display_name, setDisplayName] = useState<string | null>(
+    user?.display_name || "",
+  );
   const [avatar_upload, setAvatarUpload] = useState<File | null>(null);
   const [cover_upload, setCoverUpload] = useState<File | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -29,7 +31,7 @@ const ProfileInformations = () => {
     setProfileState((prev: any) => ({ ...prev, [key]: value }));
   };
   const imageSchema = z.object({
-    type: z.enum(['image/jpeg', 'image/png']),
+    type: z.enum(["image/jpeg", "image/png"]),
     size: z.number().max(5 * 1024 * 1024),
   });
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +44,7 @@ const ProfileInformations = () => {
 
       if (!validationResult.success) {
         setAvatarUpload(null);
-        setProfileError('Invalid file type or size');
+        setProfileError("Invalid file type or size");
         return;
       }
       setAvatarUpload(file);
@@ -59,7 +61,7 @@ const ProfileInformations = () => {
 
       if (!validationResult.success) {
         setCoverUpload(null);
-        setCoverError('Invalid file type or size');
+        setCoverError("Invalid file type or size");
         return;
       }
 
@@ -82,20 +84,20 @@ const ProfileInformations = () => {
     try {
       const formData = new FormData();
       if (display_name && display_name !== user?.display_name) {
-        formData.append('display_name', display_name);
+        formData.append("display_name", display_name);
       }
       if (avatar_upload) {
-        formData.append('avatar_upload', avatar_upload);
+        formData.append("avatar_upload", avatar_upload);
       }
       if (cover_upload) {
-        formData.append('cover_upload', cover_upload);
+        formData.append("cover_upload", cover_upload);
       }
-      formData.append('errors', JSON.stringify(profileError));
+      formData.append("errors", JSON.stringify(profileError));
       const response = await SettingsServices.updateSettings(formData);
-      updateState('display_name', display_name);
+      updateState("display_name", display_name);
       const userData = await userService.getUserProfile();
       setUser(userData);
-      console.log('Settings updated successfully:', response);
+      console.log("Settings updated successfully:", response);
     } catch (error: any) {
       if (
         error.response?.data?.display_name?.length > 0 ||
@@ -112,7 +114,7 @@ const ProfileInformations = () => {
           setCoverError(error.response.data.cover_upload[0]);
         }
       } else {
-        setProfileError('An unexpected error occurred. Please try again.');
+        setProfileError("An unexpected error occurred. Please try again.");
       }
     }
   }
@@ -120,21 +122,25 @@ const ProfileInformations = () => {
   return (
     <div className="h-fit gap-10 border-2 border-[#B8B8B8] bg-[#00000099] shadow-2xl md:rounded-[50px] md:p-6">
       <div className="flex h-fit w-full items-center p-5 md:p-10">
-        <h1 className="font-dayson border-b-2 text-2xl font-bold tracking-wider text-white transition-all duration-200">
+        <h1 className="border-b-2 font-dayson text-2xl font-bold tracking-wider text-white transition-all duration-200">
           Profile Information
         </h1>
       </div>
       <div className="flex w-full flex-wrap items-center justify-start gap-[50px] py-6 sm:pl-12 xl:gap-[100px] 2xl:gap-[170px] 2xl:px-20">
         <ImageCard
-          selectedImage={avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar}
+          selectedImage={
+            avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar
+          }
           handleImageChange={handleImageChange}
-          profileError={avatarError || ''}
+          profileError={avatarError || ""}
         />
 
         <CoverCard
-          coverImage={cover_upload ? URL.createObjectURL(cover_upload) : user?.cover}
+          coverImage={
+            cover_upload ? URL.createObjectURL(cover_upload) : user?.cover
+          }
           handleCoverChange={handleCoverChange}
-          coverError={coverError || ''}
+          coverError={coverError || ""}
         />
       </div>
       <div className="flex h-fit w-full flex-col items-start justify-start py-6 pl-2 sm:px-12 md:gap-7 md:px-5 xl:gap-10 2xl:gap-20 2xl:pl-20">
@@ -165,20 +171,22 @@ const ProfileInformations = () => {
               <label className="text-sm text-white">Display name</label>
               <input
                 type="text"
-                value={display_name || ''}
+                value={display_name || ""}
                 onChange={handleNamechange}
                 className="w-[150px] rounded-md bg-white px-4 py-2 text-black outline-none sm:w-[200px]"
               />
-              {profileError && <p className="text-sm text-red-500">{profileError}</p>}
+              {profileError && (
+                <p className="text-sm text-red-500">{profileError}</p>
+              )}
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center justify-end ">
+        <div className="flex w-full items-center justify-end">
           <button
-            className={`${isClicked ? 'bg-green-500' : 'bg-white hover:bg-[#28AFB0]'} font-dayson h-[50px] w-[150px] rounded-md text-sm font-bold text-black transition-all duration-200 hover:bg-opacity-[90%] sm:w-[200px] sm:px-6 sm:py-3 sm:text-lg`}
+            className={`${isClicked ? "bg-green-500" : "bg-white hover:bg-[#28AFB0]"} h-[50px] w-[150px] rounded-md font-dayson text-sm font-bold text-black transition-all duration-200 hover:bg-opacity-[90%] sm:w-[200px] sm:px-6 sm:py-3 sm:text-lg`}
             onClick={handleClick}
           >
-            {isClicked ? 'Updated' : 'Update Profile'}
+            {isClicked ? "Updated" : "Update Profile"}
           </button>
         </div>
       </div>

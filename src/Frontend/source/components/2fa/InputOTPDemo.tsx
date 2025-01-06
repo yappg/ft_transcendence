@@ -3,8 +3,8 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { REGEXP_ONLY_DIGITS } from 'input-otp';
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 export function InputOTPDemo({
   value,

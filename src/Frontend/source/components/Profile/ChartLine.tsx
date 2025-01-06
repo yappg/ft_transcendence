@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
-import { Statistics } from '@/context/GlobalContext';
+} from "@/components/ui/chart";
+import { Statistics } from "@/context/GlobalContext";
 
 const chartConfig = {
   Wins: {
-    label: 'Wins',
-    color: 'hsl(var(--chart-2))',
+    label: "Wins",
+    color: "hsl(var(--chart-2))",
   },
   Losses: {
-    label: 'Losses',
-    color: 'hsl(var(--chart-1))',
+    label: "Losses",
+    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
@@ -29,37 +29,37 @@ export const ChartLine = ({ statistics }: { statistics: Statistics }) => {
   // }
   const chartData = [
     {
-      day: 'Monday',
+      day: "Monday",
       Wins: statistics?.graph_data[0]?.wins,
       Losses: statistics?.graph_data[0]?.losses,
     },
     {
-      day: 'Tuesday',
+      day: "Tuesday",
       Wins: statistics?.graph_data[1]?.wins,
       Losses: statistics?.graph_data[1]?.losses,
     },
     {
-      day: 'Wednesday',
+      day: "Wednesday",
       Wins: statistics?.graph_data[2]?.wins,
       Losses: statistics?.graph_data[2]?.losses,
     },
     {
-      day: 'Thursday',
+      day: "Thursday",
       Wins: statistics?.graph_data[3]?.wins,
       Losses: statistics?.graph_data[3]?.losses,
     },
     {
-      day: 'Friday',
+      day: "Friday",
       Wins: statistics?.graph_data[4]?.wins,
       Losses: statistics?.graph_data[4]?.losses,
     },
     {
-      day: 'Saturday',
+      day: "Saturday",
       Wins: statistics?.graph_data[5]?.wins,
       Losses: statistics?.graph_data[5]?.losses,
     },
     {
-      day: 'Sunday',
+      day: "Sunday",
       Wins: statistics?.graph_data[6]?.wins,
       Losses: statistics?.graph_data[6]?.losses,
     },

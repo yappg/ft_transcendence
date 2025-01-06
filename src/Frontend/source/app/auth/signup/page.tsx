@@ -1,16 +1,15 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-'use client';
-import React, { useState } from 'react';
-import Title from '@/components/auth/title';
-import { Form, MyLink } from '@/components/auth/form';
-import { getFields } from './fieldes';
-import withAuth from '@/context/requireAhuth';
+"use client";
+import React, { useState } from "react";
+import Title from "@/components/auth/title";
+import { Form, MyLink } from "@/components/auth/form";
+import { getFields } from "./fieldes";
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [verifyPassword, setVerifyPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
 
   const fields = getFields(
     username,
@@ -20,15 +19,15 @@ const Signup = () => {
     setUsername,
     setEmail,
     setPassword,
-    setVerifyPassword
+    setVerifyPassword,
   );
 
   const buttonProps = {
-    text: 'Signup',
+    text: "Signup",
     onClick: () => {
-      console.log('clicked');
-      let result = '';
-      fields.map((field) => (result += field.value + ' '));
+      console.log("clicked");
+      let result = "";
+      fields.map((field) => (result += field.value + " "));
       alert(result);
     },
   };
