@@ -1,5 +1,5 @@
-import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface UserActivityBoardProps {
   name: string;
   level: number;
@@ -15,30 +15,32 @@ const UserActivityBoard: React.FC<UserActivityBoardProps> = ({
   scores,
 }) => {
   return (
-    <div className="flex flex-col items-start justify-center text-white h-[80px] w-full 2xl:px-6 lg:px-4 overflow-hidden border-b-2 border-white border-opacity-[40%]">
-      <div className="flex items-center justify-start 2xl:gap-20 lg:gap-6 xl:gap-8 flex-row">
-        <div className="w-fit h-full flex flex-row 2xl:gap-4 lg:gap-5">
-          <Avatar className="2xl:size-[60px] xl:size-[40px]">
+    <div className="flex h-[80px] w-full flex-col items-start justify-center overflow-hidden border-b-2 border-white border-opacity-[40%] text-white lg:px-4 2xl:px-6">
+      <div className="flex flex-row items-center justify-start lg:gap-6 xl:gap-8 2xl:gap-20">
+        <div className="flex h-full w-fit flex-row lg:gap-5 2xl:gap-4">
+          <Avatar className="xl:size-[40px] 2xl:size-[60px]">
             <AvatarImage src={Profile} />
             <AvatarFallback>OT</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-start justify-center 2xl:w-[200px] lg:w-[100px]">
-            <p className="2xl:text-[17px] xl:text-[14px] md:text-[14px] sm:text-[18px] text-[14px]   font-dayson text-white">{name}</p>
-            <p className="2xl:text-[15px] lg:text-[12px] font-coustard text-white opecity-[50%]">
+          <div className="flex flex-col items-start justify-center lg:w-[100px] 2xl:w-[200px]">
+            <p className="font-dayson text-[14px] text-white sm:text-[18px] md:text-[14px]   xl:text-[14px] 2xl:text-[17px]">
+              {name}
+            </p>
+            <p className="font-poppins text-white opacity-[50%] lg:text-[12px] 2xl:text-[15px]">
               Level {level}
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between 2xl:w-[100px] lg:w-[50px]">
+        <div className="flex items-center justify-between lg:w-[50px] 2xl:w-[100px]">
           {scoresHistory && (
             <div
-              className={`2xl:text-[23px] lg:text-[15px] font-coustard ${scoresHistory.startsWith('+') ? 'text-[#66C3BD]' : 'text-[#FF0000]'}`}
+              className={`font-poppins lg:text-[15px] 2xl:text-[23px] ${scoresHistory.startsWith("+") ? "text-[#66C3BD]" : "text-[#FF0000]"}`}
             >
               <p>{scoresHistory}</p>
             </div>
           )}
           {scores && (
-            <div className="font-coustard text-white 2xl:text-[30px] lg:text-[19px]">
+            <div className="font-poppins text-white lg:text-[19px] 2xl:text-[30px]">
               <p>{scores}</p>
             </div>
           )}

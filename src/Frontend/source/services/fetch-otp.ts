@@ -15,7 +15,6 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
     if (error instanceof Error) {
       throw new Error(`Authentication error: ${error.message}`);
     }
-
     throw new Error('Authentication failed');
   }
 };
