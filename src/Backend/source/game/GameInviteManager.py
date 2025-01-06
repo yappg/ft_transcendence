@@ -1,6 +1,4 @@
-# game_invite.py
-
-from GameEngine import GamePlayer, PingPongGame
+from .GameEngine import GamePlayer, PingPongGame
 from channels.layers import get_channel_layer
 from channels.db import database_sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,15 +6,16 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 import asyncio
 import time
+from accounts.models import Player
 
 @dataclass
 class GameInvite:
     invite_id: str
-    sender_id: int
-    receiver_id: int
+    sender_username: str
+    receiver_username: str
     created_at: float
     status: str = 'pending'  # pending, accepted, rejected, expired
-    expiry_time: int = 30  # seconds
+    expiry_time: int = 120  # seconds
 
 class GameInviteManager:
     def __init__(self, matchmaking_system):
@@ -33,41 +32,42 @@ class GameInviteManager:
 
     async def _cleanup_loop(self):
         while self._running:
-            current_time = time.time()
-            expired_invites = [
-                invite_id for invite_id, invite in self.pending_invites.items()
-                if current_time - invite.created_at > invite.expiry_time
-            ]
+            # current_time = time.time()
+            # expired_invites = [
+            #     invite_id for invite_id, invite in self.pending_invites.items()
+            #     if current_time - invite.created_at > invite.expiry_time
+            # ]
             
-            for invite_id in expired_invites:
-                invite = self.pending_invites[invite_id]
-                await self._handle_expired_invite(invite)
-                del self.pending_invites[invite_id]
-            
-            await asyncio.sleep(5)  # Check every 5 seconds
+            # for invite_id in expired_invites:
+            #     print(f'expired id {invite_id}')
+            #     invite = self.pending_invites.get(invite_id)
+            #     await self._handle_expired_invite(invite)
+            #     del self.pending_invites[invite_id]
+            print('cleanup...')
+            await asyncio.sleep(30)
 
-    async def send_invite(self, sender_id: int, receiver_id: int) -> Optional[str]:
-        # Validate if both players are available
-        if not await self._can_send_invite(sender_id, receiver_id):
+
+    async def send_invite(self, sender_username: str, receiver_username: str) -> Optional[str]:
+        if not await self._can_send_invite(sender_username, receiver_username):
             return None
-        
-        invite_id = f"invite_{sender_id}_{receiver_id}_{int(time.time())}"
+        currTime = time.time()
+        invite_id = f"invite_{sender_username}_{receiver_username}_{int(currTime)}"
         invite = GameInvite(
             invite_id=invite_id,
-            sender_id=sender_id,
-            receiver_id=receiver_id,
-            created_at=time.time()
+            sender_username=sender_username,
+            receiver_username=receiver_username,
+            created_at=currTime
         )
         
         self.pending_invites[invite_id] = invite
+        print(f'set invite {self.pending_invites.get(invite_id)}')
         
-        # Notify receiver
         await self.channel_layer.group_send(
-            f'selfGroup_{receiver_id}',
+            f'invite_group_{receiver_username}',
             {
-                'type': 'game.invite',
+                'type': 'game_invite',
                 'invite_id': invite_id,
-                'sender_id': sender_id,
+                'sender_username': sender_username,
                 'action': 'receive'
             }
         )
@@ -75,7 +75,9 @@ class GameInviteManager:
         return invite_id
 
     async def handle_invite_response(self, invite_id: str, accepted: bool) -> bool:
+        print('dkhlt ', invite_id)
         invite = self.pending_invites.get(invite_id)
+        print(f'zabiii {invite}')
         if not invite or invite.status != 'pending':
             return False
 
@@ -86,26 +88,23 @@ class GameInviteManager:
 
     async def _handle_accepted_invite(self, invite: GameInvite) -> bool:
         try:
-            # Create players and add them to matchmaking
-            sender = await self._get_player(invite.sender_id)
-            receiver = await self._get_player(invite.receiver_id)
+            sender = await self._get_player(invite.sender_username)
+            receiver = await self._get_player(invite.receiver_username)
             
             if not sender or not receiver:
                 return False
 
-            # Create a direct game through matchmaking
-            game_id = self.matchmaking_system.generate_unique_game_id()
+            print("game iddd ")
+            game_id = self.matchmaking_system.generate_unique_game_id(self.matchmaking_system)
             new_game = PingPongGame(sender, receiver, gameID=game_id)
             
             self.matchmaking_system.games[game_id] = new_game
-            self.matchmaking_system.players_in_game.add(invite.sender_id)
-            self.matchmaking_system.players_in_game.add(invite.receiver_id)
+            self.matchmaking_system.players_in_game.add(invite.sender_username)
+            self.matchmaking_system.players_in_game.add(invite.receiver_username)
             
-            # Add players to game channel
             await self.channel_layer.group_add(f'game_{game_id}', sender.channel_name)
             await self.channel_layer.group_add(f'game_{game_id}', receiver.channel_name)
             
-            # Notify both players
             await self.matchmaking_system.notify_players(sender, receiver, game_id)
             
             invite.status = 'accepted'
@@ -119,9 +118,8 @@ class GameInviteManager:
     async def _handle_rejected_invite(self, invite: GameInvite) -> bool:
         invite.status = 'rejected'
         
-        # Notify sender of rejection
         await self.channel_layer.group_send(
-            f'selfGroup_{invite.sender_id}',
+            f'invite_group_{invite.sender_username}',
             {
                 'type': 'game.invite',
                 'invite_id': invite.invite_id,
@@ -135,10 +133,9 @@ class GameInviteManager:
     async def _handle_expired_invite(self, invite: GameInvite):
         invite.status = 'expired'
         
-        # Notify both players
-        for player_id in [invite.sender_id, invite.receiver_id]:
+        for username in [invite.sender_username, invite.receiver_username]:
             await self.channel_layer.group_send(
-                f'selfGroup_{player_id}',
+                f'invite_group_{username}',
                 {
                     'type': 'game.invite',
                     'invite_id': invite.invite_id,
@@ -147,23 +144,23 @@ class GameInviteManager:
             )
 
     @database_sync_to_async
-    def _can_send_invite(self, sender_id: int, receiver_id: int) -> bool:
+    def _can_send_invite(self, sender_username: str, receiver_username: str) -> bool:
         try:
             # Check if either player is in game or queue
-            if (sender_id in self.matchmaking_system.players_in_game or 
-                receiver_id in self.matchmaking_system.players_in_game or
-                sender_id in self.matchmaking_system.players_queue or
-                receiver_id in self.matchmaking_system.players_queue):
-                return False
+            # if (sender_username in self.matchmaking_system.players_in_game or 
+            #     receiver_username in self.matchmaking_system.players_in_game or
+            #     sender_username in self.matchmaking_system.players_queue or
+            #     receiver_username in self.matchmaking_system.players_queue):
+            #     return False
             
-            # Check if there's already a pending invite between these players
-            existing_invites = [
-                invite for invite in self.pending_invites.values()
-                if (invite.sender_id == sender_id and invite.receiver_id == receiver_id) or
-                   (invite.sender_id == receiver_id and invite.receiver_id == sender_id)
-            ]
-            if existing_invites:
-                return False
+            # # Check if there's already a pending invite between these players
+            # existing_invites = [
+            #     invite for invite in self.pending_invites.values()
+            #     if (invite.sender_username == sender_username and invite.receiver_username == receiver_username) or
+            #        (invite.sender_username == receiver_username and invite.receiver_username == sender_username)
+            # ]
+            # if existing_invites:
+            #     return False
                 
             return True
             
@@ -172,9 +169,9 @@ class GameInviteManager:
             return False
 
     @database_sync_to_async
-    def _get_player(self, player_id: int) -> Optional[GamePlayer]:
+    def _get_player(self, username: str) -> Optional[GamePlayer]:
         try:
-            player = Player.objects.select_related('profile').get(id=player_id)
-            return GamePlayer(player_id, player.username, f'selfGroup_{player_id}')
+            player = Player.objects.get(username=username)
+            return GamePlayer(username, player.username, f'invite_group_{username}')
         except ObjectDoesNotExist:
             return None
