@@ -9,9 +9,8 @@ from .MatchMaking import MatchMakingSystem
 
 
 class GameInviteConsumer(AsyncWebsocketConsumer):
+    invite_manager = GameInviteManager()
     def __init__(self, *args, **kwargs):
-        self.matchMakingSystem = MatchMakingSystem()
-        self.invite_manager = GameInviteManager(self.matchMakingSystem)
         super().__init__(*args, **kwargs)
         self.user = None
         self.invite_group = None
@@ -72,8 +71,8 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
                 return
 
             # Check if receiver exists and is available
-            receiver = await `self.get_player(username)
-            if not receiver:`
+            receiver = await self.get_player(username)
+            if not receiver:
                 await self.send_error('Invalid receiver')
                 return
 
@@ -137,7 +136,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         await self.send_json({
             'type': 'game_invite',
             'invite_id': event['invite_id'],
-            'sender_username': event['sender_username'],
             'action': event['action']
         })
 
@@ -148,6 +146,24 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             'invite_id': event['invite_id'],
             'game_id': event.get('game_id'),
             'action': 'accepted'
+        })
+    
+    async def game_found(self, event):
+        """Handle game found event"""
+        await self.send_json({
+            'type': 'game_found',
+            'opponent': event['opponent'],
+            'opponent_id': event['opponent_id'],
+            'game_id': event['game_id'],
+            'top_paddle': event['top_paddle'],
+            'message': event['message']
+        })
+
+    async def game_over(self, event):
+        """Handle game over event"""
+        await self.send_json({
+            'type': 'game_over',
+            'game_id': event['game_id']
         })
 
     async def game_reject(self, event):
