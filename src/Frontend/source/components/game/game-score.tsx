@@ -36,12 +36,12 @@ const PlayerScore = ({
       >
         <div className={`${isme ? '' : 'order-3'} h-[10px] w-full`}>
           {player ? (
-            <p className={`${isme ? '' : 'text-end'} `}>{player.username}</p>
+            <p className={`${isme ? "" : "text-end"} `}>{player.username}</p>
           ) : (
             <Skeleton className="size-full rounded-md bg-black-crd dark:bg-white-crd" />
           )}
         </div>
-        <div className={` w-full text-center text-white-crd`}>{score}</div>
+        <div className={`w-full text-center text-white-crd`}>{score}</div>
       </div>
     </div>
   );
@@ -119,7 +119,7 @@ const ScoreTable = ({ mode }: { mode: string }) => {
                 <h1>Round</h1>
                 <h3>{game.Rounds.length + 1}</h3>
               </div>
-            ) : game.GameState === 'over' ? (
+            ) : game.GameState === "over" ? (
               // <div className="flex size-full flex-col items-center justify-center border-white border-2 rounded-[10px]">
               <div>{`Winner :\n${game.GameWinner?.username}`}</div>
             ) : (
@@ -144,7 +144,7 @@ const ScoreTable = ({ mode }: { mode: string }) => {
             {game.Rounds.map((round, index) => (
               <div
                 key={index}
-                className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? '' : 'border-b border-black-crd dark:border-white-crd'} text-[18px] text-black-crd dark:text-white-crd`}
+                className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? "" : "border-b border-black-crd dark:border-white-crd"} text-[18px] text-black-crd dark:text-white-crd`}
               >
                 <div className="flex h-full w-1/3 items-center justify-center">{`${round.round}`}</div>
                 <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.winner}`}</div>

@@ -1,11 +1,15 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable react-hooks/exhaustive-deps */
-'use client';
+"use client";
 
-import { LocalGameManager, OnlineGameManager, PixiManager } from '@/components/game/pixi-manager';
-import { useGame } from '@/context/GameContext';
-import React, { useRef, useEffect } from 'react';
-import { useUser } from '@/context/GlobalContext';
+import {
+  LocalGameManager,
+  OnlineGameManager,
+  PixiManager,
+} from "@/components/game/pixi-manager";
+import { useGame } from "@/context/GameContext";
+import React, { useRef, useEffect } from "react";
+import { useUser } from "@/context/GlobalContext";
 
 const GameTable = ({ mode, map }: { map: string; mode: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
@@ -29,7 +33,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
           canvasContainerRef.current,
           map,
           game,
-          user?.user
+          user?.user,
         );
       }
     }
@@ -47,12 +51,16 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
 
   useEffect(() => {
     if (gameManagerRef.current) {
-      window.addEventListener('keydown', (event) => gameManagerRef!.current!.handleKeyDown(event));
-      window.addEventListener('keyup', (event) => gameManagerRef!.current!.handleKeyUp(event));
+      window.addEventListener("keydown", (event) =>
+        gameManagerRef!.current!.handleKeyDown(event),
+      );
+      window.addEventListener("keyup", (event) =>
+        gameManagerRef!.current!.handleKeyUp(event),
+      );
     }
     return () => {
-      window.removeEventListener('keydown', (event) =>
-        gameManagerRef!.current!.handleKeyDown(event)
+      window.removeEventListener("keydown", (event) =>
+        gameManagerRef!.current!.handleKeyDown(event),
       );
     };
   }, []);

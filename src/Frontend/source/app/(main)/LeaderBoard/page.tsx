@@ -1,10 +1,11 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-'use client';
-import FriendsComponent from '@/components/friends/FriendsComponent';
-import { SideBarContext } from '@/context/SideBarContext';
-import { useContext, useEffect } from 'react';
-import { useUser } from '@/context/GlobalContext';
-import { userService } from '@/services/userService';
+"use client";
+import FriendsComponent from "@/components/friends/FriendsComponent";
+import { SideBarContext } from "@/context/SideBarContext";
+import { useContext, useEffect } from "react";
+import { useUser } from "@/context/GlobalContext";
+import { userService } from "@/services/userService";
+// react-hooks/exhaustive-dep
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
 
@@ -29,7 +30,7 @@ export default function Page() {
     fetchPlayerLeaderBoard();
   }, [setPlayerLeaderBoard, setIsLoading]);
 
-  console.log('this is the fetched leaderboard2: ', PlayerLeaderBoard);
+  console.log("this is the fetched leaderboard2: ", PlayerLeaderBoard);
   if (!PlayerLeaderBoard)
     return (
       <div className="flex size-full items-center justify-center md:py-4 md:pl-6">
@@ -40,9 +41,9 @@ export default function Page() {
     <div className="size-full overflow-auto md:py-4 md:pl-6">
       <div className="costum-little-shadow size-full overflow-hidden bg-[#00000099] md:w-full md:rounded-[50px]">
         <div className="flex size-full w-full flex-col items-start justify-start">
-          <div className="size-full ">
+          <div className="size-full">
             <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-              <div className="bg-black-crd h-fit w-full dark:bg-transparent">
+              <div className="h-fit w-full bg-black-crd dark:bg-transparent">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
                   ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[0].avatar}`}

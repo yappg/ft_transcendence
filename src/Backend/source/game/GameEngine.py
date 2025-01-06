@@ -53,7 +53,7 @@ class GamePlayer:
         self.channel_name = channel_name
         self.status = 'waiting'# waiting, ready, playing, paused, 'over'
         self.paddle = None
-        self.map = 'air' # 'air','water','fire','earth'
+        self.map = 'fire' # 'air','water','fire','earth'
         self.score: List[int] = [0,0,0]
 
 class PingPongGame:
@@ -64,19 +64,17 @@ class PingPongGame:
         self.game_width = 75
         self.game_height = 100
         self.status = 'waiting'  # waiting, start, pause, over
-        self.ball = Ball(Vector2D(37.5, 50), Vector2D(40, 40))
+        self.ball = Ball(Vector2D(37.5, 50), Vector2D(0, 60))
 
         self.player1 = player1
-        self.player1.game_id = gameID
         self.player1.paddle = Paddle(Vector2D(37.5, 4.5))  # Lower paddle 
         self.player2 = player2
-        self.player2.game_id = gameID
         self.player2.paddle = Paddle(Vector2D(37.5, 96.5))  # Upper paddle
 
         self.winner = None
         self.map = 'water' # 'air','water','fire','earth'
         self.round = 0
-        self.round_win = 7
+        self.round_win = 1
         self.is_round_over = False
         self.round_status = 'playing'  #playing, over
         self.score_update_lock = asyncio.Lock()
@@ -131,11 +129,10 @@ class PingPongGame:
         return collosion_x and collosion_y
 
     def adjust_ball_angle(self, paddle: Paddle):
-        import math
 
         collisionPoint_x = self.ball.position.x - paddle.position.x
         normalized_collision = (collisionPoint_x - paddle.width/2) / (paddle.width / 2)
-        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 0.9)
+        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 5.5)
 
     async def check_for_rounds(self) :
         if (self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win):
@@ -152,9 +149,14 @@ class PingPongGame:
                     if sum(self.player1.score) > sum(self.player2.score):
                         self.winner = 'player1'
                         self.map = self.player1.map
+                        print(f'{GREEN}Winner: {self.pla}{RESET}')
+                        print(f'{GREEN}Winner: {self.winner}{RESET}')
+                        print(f'{GREEN}Map: {self.map}{RESET}')
                     elif sum(self.player1.score) < sum(self.player2.score):
                         self.winner = 'player2'
                         self.map = self.player2.map
+                        print(f'{GREEN}Winner: {self.winner}{RESET}')
+                        print(f'{GREEN}Map: {self.map}{RESET}')
                     else :
                         self.winner = 'draw'
                         self.map = 'air' #default map
@@ -165,17 +167,21 @@ class PingPongGame:
             return True
         return False
 
+
+
     async def check_scoring(self) -> bool: 
         async with self.score_update_lock:
             if self.ball.position.y <= 0: # Player 2 scores
                 self.player2.score[self.round] += 1
-                await self.ball.reset(-1.01)
+                await self.ball.reset(-1.00)
+                self.ball.velocity.x= 0
                 if self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win:
                     return False
                 return True
             elif self.ball.position.y >= 100:  # Player 1 scores
                 self.player1.score[self.round] += 1
-                await self.ball.reset(-1.01)
+                await self.ball.reset(-1.00)
+                self.ball.velocity.x= 0
                 if self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win:
                     return False
                 return True

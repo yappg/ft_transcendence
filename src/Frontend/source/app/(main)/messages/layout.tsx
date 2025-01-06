@@ -1,23 +1,36 @@
 /* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable react-hooks/exhaustive-deps */
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Chat } from '@/constants/chat';
-import { useUser } from '@/context/GlobalContext';
-import { useRouter } from 'next/navigation';
-import { ChatCard } from '@/components/chat/ChatCard';
-import { IoChevronBackOutline } from 'react-icons/io5';
-import { chatService } from '@/services/chatService';
-
+import React, { useEffect, useState } from "react";
+import { Chat } from "@/constants/chat";
+import { useUser } from "@/context/GlobalContext";
+import { useRouter } from "next/navigation";
+import { ChatCard } from "@/components/chat/ChatCard";
+import { IoChevronBackOutline } from "react-icons/io5";
+import { chatService } from "@/services/chatService";
+import { SideBarContext } from "@/context/SideBarContext";
+import { useContext } from "react";
 export default function ChatLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { setIsActivated } = useContext(SideBarContext);
+  useEffect(() => {
+    setIsActivated(7);
+  }, [setIsActivated]);
   const router = useRouter();
-  const { chats, messages, user, setMessages, setChats, lastMessages, setLastMessages } = useUser();
+  const {
+    chats,
+    messages,
+    user,
+    setMessages,
+    setChats,
+    lastMessages,
+    setLastMessages,
+  } = useUser();
   const [showChat, setShowChat] = useState(false);
   // I need to fecth only once the chats not every time the page is loaded
   // but once the user make a new chat i need to fetch the chats again
@@ -25,10 +38,10 @@ export default function ChatLayout({
   const fetchChats = async () => {
     try {
       const fetchedChats = await chatService.getChatList();
-      console.log('this is the fetched chat: ', fetchedChats);
+      console.log("this is the fetched chat: ", fetchedChats);
       setChats(fetchedChats);
     } catch (error) {
-      console.log('Failed to fetch chats or user details', error);
+      console.log("Failed to fetch chats or user details", error);
     }
   };
 
@@ -39,15 +52,18 @@ export default function ChatLayout({
   useEffect(() => {
     if (messages && messages.length > 0) {
       setShowChat(true);
-      console.log('called', user?.id);
+      console.log("called", user?.id);
     }
   }, [messages]);
 
   useEffect(() => {
     if (chats) {
       const messagesMap = chats.reduce(
-        (acc: any, chat: any) => ({ ...acc, [chat.id]: chat.last_message?.content }),
-        {}
+        (acc: any, chat: any) => ({
+          ...acc,
+          [chat.id]: chat.last_message?.content,
+        }),
+        {},
       );
       setLastMessages(messagesMap);
       setChats(chats);
@@ -67,7 +83,7 @@ export default function ChatLayout({
             onClick={() => {
               setShowChat(false);
               setMessages([]);
-              router.push('/messages');
+              router.push("/messages");
             }}
             className="absolute right-8 top-8 z-[99] size-[50px] rounded-md lg:hidden"
           >
@@ -81,7 +97,7 @@ export default function ChatLayout({
         )}
         <div className="size-full lg:w-2/5">
           <div
-            className={`costum-little-shadow size-full overflow-hidden rounded-[15px] bg-black-crd lg:block ${!showChat ? 'block' : 'hidden'}`}
+            className={`costum-little-shadow size-full overflow-hidden rounded-[15px] bg-black-crd lg:block ${!showChat ? "block" : "hidden"}`}
           >
             <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-black-crd px-4 font-dayson text-white">
               <h2>Listed Conversations</h2>
@@ -92,7 +108,7 @@ export default function ChatLayout({
                   <ChatCard
                     key={chat.id}
                     chatContent={chat}
-                    lastMessage={lastMessages?.[chat.id] || ''}
+                    lastMessage={lastMessages?.[chat.id] || ""}
                   />
                 ))}
             </div>

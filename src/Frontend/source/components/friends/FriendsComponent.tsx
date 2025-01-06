@@ -1,6 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Link } from 'lucide-react';
-import { JSX } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { JSX } from "react";
 const FriendsComponent = ({
   name,
   ProfilePhoto,
@@ -20,16 +19,16 @@ const FriendsComponent = ({
 }): JSX.Element => {
   const achievements = [
     {
-      name: 'Achievement 1',
-      icon: '/ach1.svg',
+      name: "Achievement 1",
+      icon: "/ach1.svg",
     },
     {
-      name: 'Achievement 2',
-      icon: '/ach1.svg',
+      name: "Achievement 2",
+      icon: "/ach1.svg",
     },
     {
-      name: 'Achievement 3',
-      icon: '/ach1.svg',
+      name: "Achievement 3",
+      icon: "/ach1.svg",
     },
   ];
   return (

@@ -1,18 +1,25 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import React, { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { buttonVariants } from '@/components/ui/button';
+import React, { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
 
 interface ButtonProps {
   children: string;
   onClick?: () => void;
-  type?: 'submit' | 'reset' | 'button';
+  type?: "submit" | "reset" | "button";
   className?: string;
   disabled?: boolean;
   route?: string;
 }
 
-const MyButton = ({ children, className, onClick, disabled, type, route }: ButtonProps) => {
+const MyButton = ({
+  children,
+  className,
+  onClick,
+  disabled,
+  type,
+  route,
+}: ButtonProps) => {
   const router = useRouter();
 
   const handleClick = () => {
