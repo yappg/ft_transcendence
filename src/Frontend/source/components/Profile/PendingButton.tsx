@@ -1,6 +1,6 @@
-import FriendServices from '@/services/friendServices';
-import { useState } from 'react';
-import { AiOutlineLoading } from 'react-icons/ai';
+import FriendServices from "@/services/friendServices";
+import { useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 export const PendingButton = ({
   name,
   setThisState,
@@ -13,9 +13,9 @@ export const PendingButton = ({
     try {
       FriendServices.acceptFriendRequest(name);
       setClicked(true);
-      setThisState('friend');
+      setThisState("friend");
     } catch {
-      console.log('error');
+      console.log("error");
     }
     setClicked(true);
     setTimeout(() => {
@@ -26,24 +26,32 @@ export const PendingButton = ({
     try {
       FriendServices.declineFriendRequest(name);
       setClicked(true);
-      setThisState('none');
+      setThisState("none");
     } catch {
-      console.log('error');
+      console.log("error");
     }
   }
   return (
     <div className="flex size-full flex-row gap-7">
       <button
-        className={`font-dayson flex h-full w-[50%] items-center justify-center rounded-[14px] bg-red-500 text-lg text-white shadow-2xl lg:rounded-[30px]`}
+        className={`flex h-full w-1/2 items-center justify-center rounded-[14px] bg-red-500 font-dayson text-lg text-white shadow-2xl lg:rounded-[30px]`}
         onClick={handleClickDecline}
       >
-        {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Decline'}
+        {clicked ? (
+          <AiOutlineLoading className="animate-spin text-[20px] text-white" />
+        ) : (
+          "Decline"
+        )}
       </button>
       <button
-        className={` font-dayson flex h-full w-[50%] items-center justify-center rounded-[14px] bg-green-400 text-lg text-white shadow-2xl lg:rounded-[30px]`}
+        className={` flex h-full w-1/2 items-center justify-center rounded-[14px] bg-green-400 font-dayson text-lg text-white shadow-2xl lg:rounded-[30px]`}
         onClick={handleClickAccept}
       >
-        {clicked ? <AiOutlineLoading className="animate-spin text-[20px] text-white" /> : 'Accept'}
+        {clicked ? (
+          <AiOutlineLoading className="animate-spin text-[20px] text-white" />
+        ) : (
+          "Accept"
+        )}
       </button>
     </div>
   );
