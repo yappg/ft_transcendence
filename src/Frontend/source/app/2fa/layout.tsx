@@ -1,5 +1,5 @@
-import Card from '@/components/generalUi/Card';
-import React, { ComponentType } from 'react';
+import Card from "@/components/generalUi/Card";
+import React, { ComponentType } from "react";
 
 export default function RootLayout({
   children,

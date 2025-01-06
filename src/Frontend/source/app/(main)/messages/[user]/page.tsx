@@ -2,13 +2,13 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line react-hooks/exhaustive-deps
-'use client';
-import React, { useState, useEffect } from 'react';
-import { Messages } from '@/components/chat/Messages';
-import { chatService } from '@/services/chatService';
-import { Chat, Message } from '@/constants/chat';
-import { useUser } from '@/context/GlobalContext';
-import { useParams } from 'next/navigation';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Messages } from "@/components/chat/Messages";
+import { chatService } from "@/services/chatService";
+import { Chat, Message } from "@/constants/chat";
+import { useUser } from "@/context/GlobalContext";
+import { useParams } from "next/navigation";
 
 export default function Page() {
   const [chatSelected, setChatSelected] = useState<Chat | null>(null);
@@ -31,7 +31,7 @@ export default function Page() {
         const lastMessage = fetchedMessages[fetchedMessages.length - 1];
         if (chats) {
           const updatedChats = chats.map((chat: Chat) =>
-            chat.id === chat_id ? { ...chat, last_message: lastMessage } : chat
+            chat.id === chat_id ? { ...chat, last_message: lastMessage } : chat,
           );
           setChats(updatedChats as Chat[]);
           setMessages(fetchedMessages);
@@ -40,7 +40,7 @@ export default function Page() {
         setMessages([]);
       }
     } catch (error) {
-      console.log('Failed to fetch messages', error);
+      console.log("Failed to fetch messages", error);
       setMessages([]);
     }
   };
@@ -56,7 +56,11 @@ export default function Page() {
   }, [chat_id]);
 
   if (!chatSelected) {
-    return <div className="flex size-full items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex size-full items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -65,7 +69,9 @@ export default function Page() {
         chatId={chat_id}
         currentChat={chatSelected}
         messages={messages as Message[]}
-        setMessages={setMessages as React.Dispatch<React.SetStateAction<Message[]>>}
+        setMessages={
+          setMessages as React.Dispatch<React.SetStateAction<Message[]>>
+        }
         receiverId={chatSelected?.receiver.id}
       />
     </div>
