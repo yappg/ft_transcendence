@@ -32,17 +32,15 @@ class MatchMakingSystem:
             self._matchmaking_task = asyncio.create_task(self.matchmaking_loop())
             print(f'{RED_BOLD}Matchmaking System Started{RESET}')
 
-    async def stop(self):
-        if self._running:
-            self._running = False
-            if self._matchmaking_task:
-                self._matchmaking_task.cancel()
-                try:
-                    await self._matchmaking_task
-                except asyncio.CancelledError:
-                    pass
-                self._matchmaking_task = None
-            print(f'{RED_BOLD}Matchmaking System Stopped{RESET}')
+    def generate_unique_game_id(self):
+        import random
+        import sys
+
+        while True:
+            randID = random.randint(1, 2000000)
+            if randID not in self.games:
+                print (f'Generated Game ID: {randID}')
+                return randID
 
     async def matchmaking_loop(self):
         i = 0
@@ -63,23 +61,21 @@ class MatchMakingSystem:
 
                     try:
                         await self.Update_players_state(player1_id, player2_id)
+                        game_ID = self.generate_unique_game_id()
+                        print(f'{YELLOW_BOLD}Game created AM here ID: {game_ID}{RESET}')
+                        new_game = PingPongGame(player1, player2, gameID=game_ID)
 
-                        # game_model = await self.create_game(player1_model, player2_model)
-                        # game_model = await database_sync_to_async(Game.objects.create)(player1=player1_model, player2=player2_model)
-
-                        game = PingPongGame(player1, player2, gameID=int(len(self.games)+1))
-                        # game = PingPongGame(player1, player2, game_model_id=game_model.id )
-                        self.games[game.game_id] = game
-                        print(f'{YELLOW_BOLD}Game created AM here ID: {game.game_id}{RESET}')
+                        self.games[new_game.game_id] = new_game
+                        print(f'{YELLOW_BOLD}Game created AM here ID: {new_game.game_id}{RESET}')
 
                         del self.players_queue[player1_id]
                         del self.players_queue[player2_id]
                         self.players_in_game.add(player1_id)
                         self.players_in_game.add(player2_id)
-                        await self.channel_layer.group_add(f'game_{game.game_id}', player1.channel_name)
-                        await self.channel_layer.group_add(f'game_{game.game_id}', player2.channel_name)
-                        print(f'{VIOLET_BOLD}Game created POAOAOAPAOPAOAss ID: {game.game_id}{RESET}')
-                        await self.notify_players(player1, player2, game.game_id)
+                        await self.channel_layer.group_add(f'game_{new_game.game_id}', player1.channel_name)
+                        await self.channel_layer.group_add(f'game_{new_game.game_id}', player2.channel_name)
+                        print(f'{VIOLET_BOLD}Game created POAOAOAPAOPAOAss ID: {new_game.game_id}{RESET}')
+                        await self.notify_players(player1, player2, new_game.game_id)
                     except Exception as e:
                         print(f'Error creating game: {str(e)}')
                 i += 1
@@ -88,6 +84,15 @@ class MatchMakingSystem:
                 print(f'{RED_BOLD}Error in matchmaking loop: {str(e)}{RESET}')
                 await asyncio.sleep(1)
 
+    # --------------------------->>>>>>>>game invite<<<<<<<<<<<<<---------------------------
+
+    #TODO to implement this method
+    async def invite_player(self):
+        player1 = GamePlayer()
+        gameID = self.generate_unique_game_id()
+        new_game = PingPongGame(player1, player1, gameID)
+
+    # --------------------------->>>>>>>>UTILS<<<<<<<<<<<<<---------------------------
     @database_sync_to_async
     def Update_players_state(self, player1_id, player2_id):
         try :
@@ -99,13 +104,10 @@ class MatchMakingSystem:
             player2_model.profile.save(update_fields=['status'])
         except Exception as e:
             #TODO handle the exception
+            print(f'Error Match_making; updating players state: {str(e)}')
             pass 
-        # return player1_model, player2_model
 
-    @database_sync_to_async
-    def create_game(self, player1, player2):
-        return Game.objects.create(player1=player1, player2=player2)
-
+    # --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
     async def notify_players(self, player1, player2, game_id):
         print(f'Notifying players: {player1.username} and {player2.username}')
         await self.channel_layer.send(

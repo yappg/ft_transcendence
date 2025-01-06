@@ -94,6 +94,9 @@ class ValidateOTPSerializer(serializers.Serializer):
     def validate(self, attrs):
         if not attrs.get('otp_token'):# or not attrs.get('username'):
             raise serializers.ValidationError({"error":"OTP Token required"})
+        # if not attrs.get('username'):
+        #     raise serializers.ValidationError({"error":"OTP Token required"})
+        return attrs
 
 class UpdateUserInfosSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(write_only=True, required=False)

@@ -7,10 +7,14 @@ import { Achievement } from '@/constants/achivemement';
 import AchievementBadge from '@/components/achievements/badge';
 import { useUser } from '@/context/GlobalContext';
 import { userService } from '@/services/userService';
-
+import { SideBarContext } from '@/context/SideBarContext';
+import { useContext } from 'react';
 const AchievementsPage: React.FC = () => {
   const { achievements, setAchievements, setIsLoading, isLoading } = useUser();
-
+  const { setIsActivated } = useContext(SideBarContext);
+  useEffect(() => {
+    setIsActivated(3);
+  }, [setIsActivated]);
   const fetchAchievements = async () => {
     setIsLoading(true);
     try {

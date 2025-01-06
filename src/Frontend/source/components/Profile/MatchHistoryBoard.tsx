@@ -1,4 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
 const MatchHistoryBoard = ({
   name,
   Profile,
@@ -17,14 +21,14 @@ const MatchHistoryBoard = ({
           <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${Profile}`} />
           <AvatarFallback>OT</AvatarFallback>
         </Avatar>
-        <p className="xl:text-[12px] text-[10px] font-dayson text-white">
-          {name.length > 10 ? name.slice(0, 10) + '' : name}
+        <p className="font-dayson text-[10px] text-white xl:text-[12px]">
+          {name.length > 10 ? name.slice(0, 10) + "" : name}
         </p>
       </div>
       <div className="flex h-full w-fit items-center justify-center">
         <p
-          className={`2xl:text-[17px] xl:text-[11px] md:text-[11px] sm:text-[18px] text-[14px] font-dayson ${
-            Player1score < Player2score ? 'text-[#C1382C]' : 'text-[#5FB2AD]'
+          className={`font-dayson text-[14px] sm:text-[18px] md:text-[11px] xl:text-[11px] 2xl:text-[17px] ${
+            Player1score < Player2score ? "text-[#C1382C]" : "text-[#5FB2AD]"
           }`}
         >
           {Player1score < Player2score
