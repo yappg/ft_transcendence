@@ -45,7 +45,11 @@ const GameContext = createContext<GameContextType>({
   // setGameWinner: () => {},
 });
 
-export const GameProvider = ({ children }: ReactNode) => {
+export const GameProvider:  React.FC<{ children: ReactNode }> = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [GameId, setGameId] = useState<number>(0);
   const [GameScore, setGameScore] = useState<[number, number]>([0, 0]);
   const [Rounds, setRounds] = useState<RoundsProps[]>([]);

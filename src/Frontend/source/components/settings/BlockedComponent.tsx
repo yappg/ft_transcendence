@@ -1,11 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Button from '../2fa/Button';
-import { useState } from 'react';
-import { AiOutlineLoading } from 'react-icons/ai';
-import FriendServices from '@/services/friendServices';
-import { chatService } from '@/services/chatService';
-import { useUser } from '@/context/GlobalContext';
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Button from "../2fa/Button";
+import { useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
+import FriendServices from "@/services/friendServices";
+import { chatService } from "@/services/chatService";
+import { useUser } from "@/context/GlobalContext";
+/* eslint-disable tailwindcss/no-custom-classname */
 const BlockedComponent = ({
   name,
   ProfilePhoto,
@@ -31,7 +31,7 @@ const BlockedComponent = ({
       await FriendServices.unblockFriend(name);
       refreshData();
     } catch (error) {
-      console.error('Error unblocking user:', error);
+      console.error("Error unblocking user:", error);
     } finally {
       setClicked(false);
     }
@@ -43,19 +43,19 @@ const BlockedComponent = ({
           <AvatarImage src={ProfilePhoto} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <h1 className="font-dayson text-[16px] text-white opacity-[50%] opacity-[90%] transition-all duration-300 sm:text-[18px] lg:text-[25px] xl:text-[27px] 2xl:text-[25px] dark:text-white">
+        <h1 className="font-dayson text-[16px] text-white opacity-[50%] opacity-[90%] transition-all duration-300 dark:text-white sm:text-[18px] lg:text-[25px] xl:text-[27px] 2xl:text-[25px]">
           {name}
         </h1>
       </div>
       <div className="flex h-[80px] w-fit flex-col justify-center">
         <button
-          className={` font-coustard flex w-[130px] justify-center rounded-md bg-[#00000026] py-2 text-white transition-all duration-300`}
+          className={`font-coustard flex w-[130px] justify-center rounded-md bg-[#00000026] py-2 text-white transition-all duration-300`}
           onClick={handleClick}
         >
           {clicked ? (
             <AiOutlineLoading className="animate-spin text-[20px] text-white" />
           ) : (
-            'Unblock'
+            "Unblock"
           )}
         </button>
       </div>

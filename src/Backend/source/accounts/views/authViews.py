@@ -183,7 +183,7 @@ class ValidateOTP(APIView):
     authentication_classes = []
 
     def post(self, request):
-        serializer = self.serializer_class(request.data)
+        serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_200_OK)
 
