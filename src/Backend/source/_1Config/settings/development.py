@@ -1,26 +1,21 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv
- 
-# ===========================               
-# PATHS & ENVIRONMENT VARIABLES                                             
-# ===========================                                                                   
-                      
-# Define the base directory of the project        
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from the .env file if it exists will be added after TODO
-load_dotenv(BASE_DIR.parent.parent / ".env")
+# ===========================
+# PATHS & ENVIRONMENT VARIABLES
+# ===========================
+
+# Define the base directory of the project
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ===========================
 # SECURITY SETTINGS
 # ===========================
 
 # Secret key for cryptographic signing
-SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
-   
+SECRET_KEY = os.getenv('SIGNING_KEY')
+
 # Enable debug mode for development only (disable in production)
 DEBUG = True
 
@@ -31,12 +26,13 @@ ALLOWED_HOSTS = ['*']
 # CORS CONFIGURATION
 # ===========================
 
-CORS_ALLOW_ALL_ORIGINS = False  # Restrict origins
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     # 'http://frontend:3000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
+    'https://accounts.google.com',
 ]
 
 # ===========================
@@ -231,27 +227,28 @@ SWAGGER_SETTINGS = {
     },
 }
 
-# OAuth2 Configuration for 42 API TODO ENV
+# OAuth2 Configuration for 42 API
 OAUTH2_PROVIDER_42 = {
-    'CLIENT_ID': os.getenv("CLIENT_ID_42"),
-    'CLIENT_SECRET': os.getenv("CLIENT_SECRET_42"),
+    'CLIENT_ID': os.getenv('CLIENT_ID_42'),
+    'CLIENT_SECRET': os.getenv('CLIENT_SECRET_42'),
     'AUTHORIZATION_URL': 'https://api.intra.42.fr/oauth/authorize',
     'TOKEN_URL': 'https://api.intra.42.fr/oauth/token',
     'USERDATA_URL': 'https://api.intra.42.fr/v2/me',
-    'CALLBACK_URL': 'http://localhost:3000/auth/login',
+    'CALLBACK_URL': os.getenv('OAUTH_42_CALLBACK_URL'),
     'SCOPE': 'public',
 }
 
-# OAuth2 Configuration for Google API TODO ENV
+# OAuth2 Configuration for Google API
 OAUTH2_PROVIDER_GOOGLE = {
-    'CLIENT_ID': os.getenv("GOOGLE_CLIENT_ID"),
-    'CLIENT_SECRET': os.getenv("GOOGLE_CLIENT_SECRET"),
+    'CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
+    'CLIENT_SECRET': os.getenv('GOOGLE_CLIENT_SECRET'),
     'AUTHORIZATION_URL': 'https://accounts.google.com/o/oauth2/auth',
     'TOKEN_URL': 'https://oauth2.googleapis.com/token',
     'USERDATA_URL': 'https://www.googleapis.com/oauth2/v3/userinfo',
-    'CALLBACK_URL': 'http://localhost:3000/auth/login?provider=google',
+    'CALLBACK_URL': os.getenv('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
+
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION
@@ -281,10 +278,10 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR.parent, 'staticfiles')
+STATIC_URL = '/Static/'
+STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'UsersMedia')
+MEDIA_ROOT = '/app/source/UsersMedia'
 
 # ===========================
 # MISCELLANEOUS SETTINGS

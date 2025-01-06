@@ -9,10 +9,10 @@ class AccountsConfig(AppConfig):
         from .models import Achievement
         from django.contrib.auth import get_user_model
 
-        def create_admin_user(sender, **kwargs):
+        def create_admin_user(sender, **kwargs):            
             User = get_user_model()
             admin_username = 'admin'
-            admin_email = 'admin@example.com'
+            admin_email = 'admin@django.com'
             admin_password = 'admin'
 
             if not User.objects.filter(username=admin_username).exists():
@@ -25,7 +25,7 @@ class AccountsConfig(AppConfig):
             else:
                 print(f"Admin user '{admin_username}' already exists.")
 
-        def seed_achievements(sender, **kwargs):
+        def seed_achievements(sender, **kwargs):            
             if Achievement.objects.count() == 0:
                 default_achievements = [
                     {"name" : "Air Explorer", "description" : "Play 5 games in air biome.", "xp_gain" : 250, "condition" : 5, "image" : "achievements/colored/air/1.png" , "image_bw" : "achievements/bw/air/1.png"},
@@ -94,9 +94,9 @@ class AccountsConfig(AppConfig):
                     {"name": "khriz man pro max 1", "description": "loss 3 matches in row", "xp_gain": 69, "condition": 3, "image" : "achievements/colored/losser/4.png", "image_bw" : "achievements/bw/losser/4.png"},
                     {"name": "khriz man pro max 2", "description": "loss 6 matches in row", "xp_gain": 69, "condition": 6, "image" : "achievements/colored/losser/5.png", "image_bw" : "achievements/bw/losser/5.png"},
                     {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 12, "image" : "achievements/colored/losser/6.png", "image_bw" : "achievements/bw/losser/6.png"},
-
                 ]
 
+                print(f"DEBUG ===== CALLING EM ")
                 for achievement in default_achievements:
                     Achievement.objects.get_or_create(
                         name=achievement["name"],
@@ -108,5 +108,5 @@ class AccountsConfig(AppConfig):
                             "image_bw": achievement["image_bw"],
                         },
                     )
-        post_migrate.connect(create_admin_user, sender=self)
-        post_migrate.connect(seed_achievements, sender=self)
+        post_migrate.connect(create_admin_user, sender=self, weak=False)
+        post_migrate.connect(seed_achievements, sender=self, weak=False)

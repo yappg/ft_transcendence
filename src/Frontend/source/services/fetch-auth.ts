@@ -1,5 +1,5 @@
 export class AuthClient {
-  private static readonly BASE_URL = 'http://localhost:8080/accounts/auth';
+  private static readonly BASE_URL = process.env.NEXT_PUBLIC_API_URL + '/accounts/auth';
   private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
     delete data.password2;
     console.log(data);
@@ -9,6 +9,7 @@ export class AuthClient {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(data),
       });

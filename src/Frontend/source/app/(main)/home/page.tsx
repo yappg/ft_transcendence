@@ -161,11 +161,9 @@ const Home = () => {
     fetchAchievements();
     fetchLeaderboard();
   }, []);
-  console.log(user);
-  if (isLoading) return <div>Loading...</div>;
-  let userAchievements: Achievement[] = achievements || [];
-  if (!user) return <div>Loading...</div>;
-  userAchievements = user?.achievements;
+
+  if (isLoading || !user) return <div>Loading...</div>;
+  const userAchievements = achievements || [];
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
       <div className="h-1/2 w-full lg:h-full lg:w-3/5">
@@ -176,7 +174,7 @@ const Home = () => {
             width={300}
             height={300}
             className="size-[300px]"
-            unoptimized
+            unoptimized={true}
           />
         </div>
         <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
@@ -198,7 +196,7 @@ const Home = () => {
               progress={userAchievements[0].progress}
               xpReward={userAchievements[0].achievement.xp_gain}
               ratio={userAchievements[0].achievement.condition}
-              iconUrl={"http://localhost:8080" + userAchievements[0].image}
+              iconUrl={process.env.NEXT_PUBLIC_HOST + userAchievements[0].image}
             />
           ) : (
             <div className="flex size-full items-center justify-center">

@@ -32,11 +32,11 @@ export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
       <div className="flex items-center gap-5">
         <Image
           className="size-12 rounded-full object-cover"
-          src={`http://localhost:8080${chatContent.receiver.avatar}`}
+          src={process.env.NEXT_PUBLIC_HOST + chatContent.receiver.avatar}
           alt="avatar"
           width={10}
           height={10}
-          unoptimized
+          unoptimized={true}
         />
         <div className="flex flex-col">
           <span className="text-base font-medium text-white">
