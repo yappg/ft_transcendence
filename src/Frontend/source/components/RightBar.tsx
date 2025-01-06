@@ -1,16 +1,20 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import Link from 'next/link';
-import { FaComments } from 'react-icons/fa6';
-import { FaUsers } from 'react-icons/fa';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useContext } from 'react';
-import { SideBarContext } from '@/context/SideBarContext';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Friend } from '@/components/friends/UserFriendsNav';
-import FriendServices from '@/services/friendServices';
-import { useUser } from '@/context/GlobalContext';
-export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) => void }) => {
+import Link from "next/link";
+import { FaComments } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useContext } from "react";
+import { SideBarContext } from "@/context/SideBarContext";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Friend } from "@/components/friends/UserFriendsNav";
+import FriendServices from "@/services/friendServices";
+import { useUser } from "@/context/GlobalContext";
+export const RightBar = ({
+  handleRightClick,
+}: {
+  handleRightClick: (id: number) => void;
+}) => {
   const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
   const { chats, user } = useUser();
@@ -27,7 +31,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
       const friendsData = await FriendServices.getFriends();
       setFriends(friendsData.data);
     } catch (error: any) {
-      console.log('Error fetching friends:', error);
+      console.log("Error fetching friends:", error);
     }
   };
 
@@ -37,7 +41,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
 
   return (
     <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
-      <div className="costum-little-shadow bg-black-crd flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px]">
+      <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-auto">
             <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
@@ -48,7 +52,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
           <Link href="/friends">
             <FaUsers
               onClick={() => handleClick(6)}
-              className="hover:text-aqua hover:dark:text-fire-red size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300  dark:text-white"
+              className="size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300 hover:text-aqua dark:text-white  hover:dark:text-fire-red"
             />
           </Link>
         </div>
@@ -62,19 +66,19 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
               >
                 <AvatarImage
                   src={`http://localhost:8080${friend.avatar}`}
-                  alt={friend.display_name || 'User'}
+                  alt={friend.display_name || "User"}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             ))}
         </div>
       </div>
-      <div className="costum-little-shadow bg-black-crd flex min-h-[300px] w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] pt-4">
+      <div className="costum-little-shadow flex min-h-[300px] w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] bg-black-crd pt-4">
         <div className="flex items-center justify-center">
           <Link href="/messages">
             <FaComments
               onClick={() => handleClick(7)}
-              className="hover:text-aqua hover:dark:text-fire-red size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300 dark:text-white"
+              className="size-10 text-[rgba(28,28,28,0.5)] transition-all duration-300 hover:text-aqua dark:text-white hover:dark:text-fire-red"
             />
           </Link>
         </div>
@@ -89,7 +93,7 @@ export const RightBar = ({ handleRightClick }: { handleRightClick: (id: number) 
               >
                 <AvatarImage
                   src={`http://localhost:8080${chat.receiver.avatar}`}
-                  alt={chat.receiver.username || 'User'}
+                  alt={chat.receiver.username || "User"}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

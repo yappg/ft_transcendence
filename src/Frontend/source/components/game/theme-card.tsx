@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import React from 'react';
-import { MyButton } from '../generalUi/Button';
-import { useRouter } from 'next/navigation';
+"use client";
+import React from "react";
+import { MyButton } from "../generalUi/Button";
+import { useRouter } from "next/navigation";
 
 interface GameCardProps {
   title: string;
@@ -12,7 +12,13 @@ interface GameCardProps {
   height: string;
 }
 
-const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) => {
+const MapsCard = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  height,
+}: GameCardProps) => {
   const router = useRouter();
   return (
     <div
@@ -20,8 +26,8 @@ const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) 
       style={{
         height: `${height}px`,
         backgroundImage: `url(${imageUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.7)]">
@@ -55,11 +61,11 @@ const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
   const router = useRouter();
   return (
     <div
-      className="costum-little-shadow group relative size-full rounded-3xl py-[20px] overflow-visible"
+      className="costum-little-shadow group relative size-full overflow-visible rounded-3xl py-[20px]"
       style={{
         height: `${height}px`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {/* Background container with hover darkening */}
@@ -67,7 +73,9 @@ const ModesCard = ({ title, description, url, height }: ModesCardProps) => {
 
       {/* Content (Title, Description, Button) */}
       <div className="absolute inset-0 flex h-full flex-col justify-center p-8 opacity-100 transition-opacity duration-300 ease-in-out">
-        <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">{title}</h2>
+        <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">
+          {title}
+        </h2>
         <p className="mb-6 text-lg text-[rgb(180,180,180)]">{description}</p>
         <div className="flex w-full justify-center lg:justify-start lg:pl-8">
           <MyButton

@@ -1,11 +1,11 @@
-'use client';
-import { History } from '@/context/GlobalContext';
-import MatchHistoryComponent from '@/components/MatchHistory/HistoryComponent';
-import { useContext, useEffect } from 'react';
-import { SideBarContext } from '@/context/SideBarContext';
-import { useUser } from '@/context/GlobalContext';
-import { userService } from '@/services/userService';
-
+"use client";
+import { History } from "@/context/GlobalContext";
+import MatchHistoryComponent from "@/components/MatchHistory/HistoryComponent";
+import { useContext, useEffect } from "react";
+import { SideBarContext } from "@/context/SideBarContext";
+import { useUser } from "@/context/GlobalContext";
+import { userService } from "@/services/userService";
+/* eslint-disable react-hooks/exhaustive-deps */
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
 
@@ -32,11 +32,13 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="size-full overflow-auto md:py-4 md:pl-6 ">
-      <div className=" custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
+    <div className="size-full overflow-auto md:py-4 md:pl-6">
+      <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.length === 0 && (
           <div className="flex size-full items-center justify-center">
-            <h1 className="font-dayson text-2xl font-bold text-white">No Matches Found</h1>
+            <h1 className="font-dayson text-2xl font-bold text-white">
+              No Matches Found
+            </h1>
           </div>
         )}
         {PlayerMatches?.map((match: History) => (
