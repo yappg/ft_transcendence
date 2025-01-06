@@ -35,16 +35,12 @@ class SocketManager extends WebSocket {
 
   updateBallPosition(data: any) {
     if (data) {
-      console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
 
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
 
-      console.log('scale_x:', scale_x);
-      console.log('scale_y:', scale_y);
-      // console.log('new_x:', data);
       if (this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
         this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
@@ -83,6 +79,7 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.opponent = message.data.opponent;
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
+        // TODO Synchonize the velocity of the ball
         if (this.pixiManager.isTopPaddle) {
           this.pixiManager.dy = -20;
         } else {
@@ -91,7 +88,7 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        this.sendData({ action: 'ready', game_id: message.data.game_id });
+        this.sendData({ action: 'ready', game_id: message.data.game_id, map: this.pixiManager.map });
       case 'UpdateBall':
         // this.pixiManager.app.ticker.add(() => {
           // console.log("jfjkbkfskbfskje", message.game_state.ball);
@@ -120,13 +117,18 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);
         break;
+      case 'GameEnd':
+        this.pixiManager.game.gameState = 'over';
+        this.pixiManager.game.setGameState('over');
+        this.close();
+        break;
       default:
         break;
     }
   }
 
   close() {
-    this.close();
+    super.close();
   }
 }
 

@@ -21,7 +21,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
-          `/${map}.png`,
+          map,
           game
         );
       }
@@ -29,7 +29,7 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
-          `/${map}.png`,
+          map,
           game,
           user?.user
         );
