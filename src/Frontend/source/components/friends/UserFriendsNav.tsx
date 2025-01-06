@@ -174,11 +174,11 @@ const UserFriendsNav = (): JSX.Element => {
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10">
-        <div className="flex h-fit w-[250px] flex-row items-center justify-between md:w-[300px]">
-          <Avatar className="max-w-[120px] sm:size-[60px] md:size-auto">
+      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10 py-3">
+        <div className="flex h-fit w-[190px] flex-row items-center justify-between md:w-[260px] lg:gap-5">
+          <Avatar className="max-w-[70px] lg:size-[60px] md:size-[50px] sm:size-[60px] size-[45px]">
             <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`} />
-            <AvatarFallback className="font-dayson m-2 size-[60px] bg-[rgba(28,28,28,0.5)] text-lg text-white md:size-[80px]">
+            <AvatarFallback className="m-2 size-[60px] bg-[rgba(28,28,28,0.5)] font-dayson text-lg text-white md:size-[20px]">
               {user?.display_name}
             </AvatarFallback>
           </Avatar>
@@ -191,7 +191,7 @@ const UserFriendsNav = (): JSX.Element => {
             </h1>
           </div>
         </div>
-        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 sm:gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
+        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
           {headers.map((header, index) => (
             <Link href="#" key={index} onClick={() => setActiveIndex(index)}>
               <h1
