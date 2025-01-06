@@ -20,7 +20,7 @@ export const ImageCard = ({
         alt="Profile picture"
         width={80}
         height={80}
-        unoptimized
+        unoptimized={true}
         className="size-[60px] rounded-full bg-white bg-cover object-cover sm:size-[80px]"
       />
       <div className="flex h-full w-fit flex-col items-start justify-center gap-2">
