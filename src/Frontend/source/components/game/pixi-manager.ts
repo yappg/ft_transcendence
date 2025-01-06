@@ -1,11 +1,11 @@
-import * as PIXI from 'pixi.js';
-import { GlowFilter } from 'pixi-filters';
-import { Assets, Sprite, Graphics } from 'pixi.js';
-import SocketManager from './socket-manager';
-import { User } from '@/context/GlobalContext';
-import socketManager from './socket-manager';
-import { basename } from 'path';
-import { Scale } from 'lucide-react';
+import * as PIXI from "pixi.js";
+import { GlowFilter } from "pixi-filters";
+import { Assets, Sprite, Graphics } from "pixi.js";
+import SocketManager from "./socket-manager";
+import { User } from "@/context/GlobalContext";
+import socketManager from "./socket-manager";
+import { basename } from "path";
+import { Scale } from "lucide-react";
 
 // Global Game Manager
 
@@ -15,11 +15,11 @@ export abstract class PixiManager {
   bottomRacket!: PIXI.Graphics;
   ball!: PIXI.Graphics;
   backgroundImage: string;
-  keysPressed: Set<string> = new Set('');
+  keysPressed: Set<string> = new Set("");
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
-  gameState: string = 'waiting';
+  gameState: string = "waiting";
   screenWidth: number = 0;
   screenHeight: number = 0;
   ballMovementSpeed: number = 0;
@@ -30,19 +30,22 @@ export abstract class PixiManager {
   dx = 0;
   dy = 1;
 
-constructor(container: HTMLElement, backgroundImage: string, game: any) {
+  constructor(container: HTMLElement, backgroundImage: string, game: any) {
     this.app = new PIXI.Application();
     this.backgroundImage = backgroundImage;
     this.paddleWidth = 0;
     this.game = game;
-    this.game.gameState = 'waiting';
+    this.game.gameState = "waiting";
     this.initWindow(container).then(() => {});
   }
 
   async initWindow(container: HTMLElement) {
     await this.app.init({
-      background: '#000000',
-      resizeTo: document.getElementById('table') as HTMLElement | Window | undefined,
+      background: "#000000",
+      resizeTo: document.getElementById("table") as
+        | HTMLElement
+        | Window
+        | undefined,
     });
     this.screenWidth = this.app.screen.width;
     this.screenHeight = this.app.screen.height;
@@ -66,7 +69,7 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
       this.paddleWidth,
       this.paddleheight,
       0xff0000,
-      0x000000
+      0x000000,
     );
     this.bottomRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
@@ -74,7 +77,7 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
       this.paddleWidth,
       this.paddleheight,
       0x00ffff,
-      0x000000
+      0x000000,
     );
 
     this.ball = this.createBall(0, 0, this.screenWidth / 35, 0xff0000);
@@ -108,7 +111,7 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
     width: number,
     height: number,
     color: number,
-    glowColor: number
+    glowColor: number,
   ) {
     const racket = new Graphics();
 
@@ -133,10 +136,10 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
   displayText(text: string) {
     if (!this.app.stage.children.includes(this.waitingText)) {
       const style = new PIXI.TextStyle({
-        fontFamily: 'Days One',
+        fontFamily: "Days One",
         fontSize: 64,
-        fill: '#ff0000',
-        align: 'center',
+        fill: "#ff0000",
+        align: "center",
       });
 
       this.waitingText = new PIXI.Text({ text: text, style: style });
@@ -173,13 +176,13 @@ constructor(container: HTMLElement, backgroundImage: string, game: any) {
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
     console.log(`Key down: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 
   handleKeyUp(event: KeyboardEvent) {
     this.keysPressed.delete(event.key);
     console.log(`Key up: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 }
 
@@ -190,13 +193,16 @@ export class LocalGameManager extends PixiManager {
 
     const baseSpeed = 1;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
-    const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
+    const currentScreenDiagonal = Math.sqrt(
+      this.screenWidth ** 2 + this.screenHeight ** 2,
+    );
 
-    this.ballMovementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
+    this.ballMovementSpeed =
+      (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
 
     this.updateBallPosition(
       this.ball.x + this.dx * this.ballMovementSpeed,
-      this.ball.y + this.dy * this.ballMovementSpeed
+      this.ball.y + this.dy * this.ballMovementSpeed,
     );
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
@@ -244,7 +250,8 @@ export class LocalGameManager extends PixiManager {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
       }
-      this.dy = (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
+      this.dy =
+        (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
         this.app.stage.removeChild(this.ball);
@@ -252,11 +259,11 @@ export class LocalGameManager extends PixiManager {
         this.ball.y = this.screenHeight / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.gameState = 'waiting';
-          this.game.setGameState('waiting');
+          this.game.gameState = "waiting";
+          this.game.setGameState("waiting");
         } else {
-          this.game.gameState = 'over';
-          this.game.setGameState('over');
+          this.game.gameState = "over";
+          this.game.setGameState("over");
         }
       }
       this.ball.x = this.screenWidth / 2;
@@ -271,8 +278,8 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = 'start';
-      this.game.setGameState('start');
+      this.game.gameState = "start";
+      this.game.setGameState("start");
     });
   }
 
@@ -285,49 +292,55 @@ export class LocalGameManager extends PixiManager {
     const baseScreenWidth = 75;
     const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.1;
 
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+    if (
+      this.keysPressed.has("ArrowLeft") &&
+      !this.keysPressed.has("ArrowRight")
+    ) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
     }
 
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+    if (
+      this.keysPressed.has("ArrowRight") &&
+      !this.keysPressed.has("ArrowLeft")
+    ) {
       bottomRacket.x = Math.min(
         this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
+        bottomRacket.x + movementSpeed,
       );
     }
 
     if (
-      (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
-      !this.keysPressed.has('d') &&
-      !this.keysPressed.has('D')
+      (this.keysPressed.has("a") || this.keysPressed.has("A")) &&
+      !this.keysPressed.has("d") &&
+      !this.keysPressed.has("D")
     ) {
       this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
     }
 
     if (
-      (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
-      !this.keysPressed.has('a') &&
-      !this.keysPressed.has('A')
+      (this.keysPressed.has("d") || this.keysPressed.has("D")) &&
+      !this.keysPressed.has("a") &&
+      !this.keysPressed.has("A")
     ) {
       this.topRacket.x = Math.min(
         this.screenWidth - this.topRacket.width,
-        this.topRacket.x + movementSpeed
+        this.topRacket.x + movementSpeed,
       );
     }
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === 'waiting') {
-      this.displayText('Get\nReady');
+    if (this.game.gameState === "waiting") {
+      this.displayText("Get\nReady");
       this.handleWaitingState();
     }
-    if (this.game.gameState === 'start') {
+    if (this.game.gameState === "start") {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === 'over') {
+    if (this.game.gameState === "over") {
       this.removeGameElements();
-      this.displayText('Game\nOver');
+      this.displayText("Game\nOver");
     }
   }
 }
@@ -338,9 +351,14 @@ export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
   user: User | null;
 
-  constructor(container: HTMLElement, backgroundImage: string, game: any, user: User | null) {
+  constructor(
+    container: HTMLElement,
+    backgroundImage: string,
+    game: any,
+    user: User | null,
+  ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager('ws://localhost:8080/ws/game/');
+    this.socketManager = new socketManager("ws://localhost:8080/ws/game/");
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
@@ -356,26 +374,58 @@ export class OnlineGameManager extends PixiManager {
 
     const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.4;
 
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+    if (
+      this.keysPressed.has("ArrowLeft") &&
+      !this.keysPressed.has("ArrowRight")
+    ) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
       if (this.isTopPaddle) {
-        this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x });
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x:
+            (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
+        });
       } else {
-        this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x: bottomRacket.x * scale_x,
+        });
       }
     }
-    
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+
+    if (
+      this.keysPressed.has("ArrowRight") &&
+      !this.keysPressed.has("ArrowLeft")
+    ) {
       bottomRacket.x = Math.min(
         this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
+        bottomRacket.x + movementSpeed,
       );
       if (this.isTopPaddle) {
-        console.log('move_paddle Istop', this.screenWidth ,bottomRacket.x,this.paddleWidth,scale_x);
-        this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x });
+        console.log(
+          "move_paddle Istop",
+          this.screenWidth,
+          bottomRacket.x,
+          this.paddleWidth,
+          scale_x,
+        );
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x:
+            (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
+        });
       } else {
-        console.log('move_paddle NotTp', this.screenWidth ,bottomRacket.x,this.paddleWidth,scale_x);
-        this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+        console.log(
+          "move_paddle NotTp",
+          this.screenWidth,
+          bottomRacket.x,
+          this.paddleWidth,
+          scale_x,
+        );
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x: bottomRacket.x * scale_x,
+        });
       }
     }
   }
@@ -385,10 +435,10 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === 'waiting') {
+    if (this.game.gameState === "waiting") {
       this.handleWaitingState();
     }
-    if (this.game.gameState === 'start') {
+    if (this.game.gameState === "start") {
       if (this.app.stage.children.includes(this.waitingText)) {
         this.app.stage.removeChild(this.waitingText);
       }
@@ -399,9 +449,9 @@ export class OnlineGameManager extends PixiManager {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === 'over') {
+    if (this.game.gameState === "over") {
       this.removeGameElements();
-      this.displayText('Game\nOver');
+      this.displayText("Game\nOver");
     }
   }
 
@@ -426,47 +476,45 @@ export class OnlineGameManager extends PixiManager {
   //   //   const score2 = data.opponent_score[data.round];
   //   //   this.game.GameScore =  [score1, score2];
   //   // }
-  
 
-    handlegameupdates() {
-      
-      if (!this.app) return;
-      // console.log(`width: ${this.screenWidth}, height: ${this.screenHeight}`);
-      if (!this.ball) this.app.stage.addChild(this.ball);
+  handlegameupdates() {
+    if (!this.app) return;
+    // console.log(`width: ${this.screenWidth}, height: ${this.screenHeight}`);
+    if (!this.ball) this.app.stage.addChild(this.ball);
 
-      const scale_x = this.screenWidth / 75; 
-      const scale_y = this.screenHeight / 100;
+    const scale_x = this.screenWidth / 75;
+    const scale_y = this.screenHeight / 100;
 
-      const frontendDeltaTime = 0.016 // this.app.ticker.FPS; // Calculate frontend delta time
-      // console.log('frontendDeltaTime:', frontendDeltaTime);
+    const frontendDeltaTime = 0.016; // this.app.ticker.FPS; // Calculate frontend delta time
+    // console.log('frontendDeltaTime:', frontendDeltaTime);
 
-      this.ball.x =this.ball.x + (this.dx *frontendDeltaTime * scale_x) //(frontendDeltaTime/backendDeltaTime);
-      this.ball.y =this.ball.y + (this.dy *frontendDeltaTime * scale_y) //(frontendDeltaTime/backendDeltaTime);
-      
-      this.updateBallPosition(this.ball.x , this.ball.y);
-      // if (this.ball.y <= 0 || this.ball.y >= this.screenHeight) {
-      //   const score1 = this.game.GameScore[0];
-      //   const score2 = this.game.GameScore[1];
-      //   this.dx = 0;
-      //   this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
-      //   this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (this.bottomRacket.x + this.paddleWidth)) * 1 / scale_x });
-      //   this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
-      //   this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (this.bottomRacket.x + this.paddleWidth)) * 1 / scale_x });
-      //   if (this.ball.y <= 0) {
-      //     this.game.setGameScore([Math.min(score1 + 1, 6), score2]);
-      //     this.game.GameScore[0] = Math.min(score1 + 1, 6);
-      //   } else {
-      //     this.game.setGameScore([score1, Math.min(score2 + 1)]);
-      //     this.game.GameScore[1] = Math.min(score1 + 1, 7);
-      //     // this.game.GameScore[1] += 1;
-      //   }
-      //   this.ball.x = this.screenWidth / 2;
-      //   this.ball.y = this.screenHeight / 2;
-      // }
-    }
+    this.ball.x = this.ball.x + this.dx * frontendDeltaTime * scale_x; //(frontendDeltaTime/backendDeltaTime);
+    this.ball.y = this.ball.y + this.dy * frontendDeltaTime * scale_y; //(frontendDeltaTime/backendDeltaTime);
 
-    handleWaitingState() {
-      this.app.stage.removeChild(this.ball);
-      this.displayText('Get\nReady');
-    }
+    this.updateBallPosition(this.ball.x, this.ball.y);
+    // if (this.ball.y <= 0 || this.ball.y >= this.screenHeight) {
+    //   const score1 = this.game.GameScore[0];
+    //   const score2 = this.game.GameScore[1];
+    //   this.dx = 0;
+    //   this.topRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
+    //   this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (this.bottomRacket.x + this.paddleWidth)) * 1 / scale_x });
+    //   this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
+    //   this.socketManager.sendData({ action: 'move_paddle', new_x: (this.screenWidth - (this.bottomRacket.x + this.paddleWidth)) * 1 / scale_x });
+    //   if (this.ball.y <= 0) {
+    //     this.game.setGameScore([Math.min(score1 + 1, 6), score2]);
+    //     this.game.GameScore[0] = Math.min(score1 + 1, 6);
+    //   } else {
+    //     this.game.setGameScore([score1, Math.min(score2 + 1)]);
+    //     this.game.GameScore[1] = Math.min(score1 + 1, 7);
+    //     // this.game.GameScore[1] += 1;
+    //   }
+    //   this.ball.x = this.screenWidth / 2;
+    //   this.ball.y = this.screenHeight / 2;
+    // }
+  }
+
+  handleWaitingState() {
+    this.app.stage.removeChild(this.ball);
+    this.displayText("Get\nReady");
+  }
 }

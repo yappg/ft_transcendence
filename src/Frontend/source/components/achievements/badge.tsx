@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import React from "react";
 
 const AchievementBadge = ({
-  title = 'First Achievement',
-  description = 'play first game and win with',
+  title = "First Achievement",
+  description = "play first game and win with",
   points = 10,
   progress = 0.75,
   xpReward = 1000,
   ratio = 1,
-  iconUrl = '/api/placeholder/80/80',
+  iconUrl = "/api/placeholder/80/80",
 }: {
   title: string;
   description: string;
@@ -19,8 +19,8 @@ const AchievementBadge = ({
   iconUrl: string;
 }) => {
   return (
-    <div className="bg-black-crd relative flex h-[132px] w-full items-center rounded-3xl p-4">
-      <div className="bg-black-crd flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full">
+    <div className="relative flex h-[132px] w-full items-center rounded-3xl bg-black-crd p-4">
+      <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black-crd">
         <img src={iconUrl} alt="Icon" className="size-full object-cover" />
       </div>
       <div className="ml-4 grow">
@@ -33,7 +33,7 @@ const AchievementBadge = ({
         </div>
         <div className="h-3 overflow-hidden rounded-full bg-gray-700">
           <div
-            className={`h-full rounded-full transition-all duration-300 ${progress > 0 ? 'bg-green-500' : 'bg-blue-500'}`}
+            className={`h-full rounded-full transition-all duration-300 ${progress > 0 ? "bg-green-500" : "bg-blue-500"}`}
             style={{ width: `${(progress / ratio) * 100}%` }}
           />
         </div>

@@ -1,22 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable tailwindcss/no-custom-classname */
-'use client';
-import { SideBarContext } from '@/context/SideBarContext';
-import { useContext, useEffect } from 'react';
-import { MapsCard, ModesCard } from '@/components/game/theme-card';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+"use client";
+import { SideBarContext } from "@/context/SideBarContext";
+import { useContext, useEffect } from "react";
+import { MapsCard, ModesCard } from "@/components/game/theme-card";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
-import { EffectCoverflow, Autoplay, Pagination, Navigation } from 'swiper/modules';
+import {
+  EffectCoverflow,
+  Autoplay,
+  Pagination,
+  Navigation,
+} from "swiper/modules";
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
     <Swiper
-      effect={'coverflow'}
+      effect={"coverflow"}
       grabCursor={true}
       centeredSlides={true}
       loop={true}
@@ -29,7 +34,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
         modifier: 2.5,
       }}
       autoplay={true}
-      pagination={{ el: '.swiper-pagination', clickable: true }}
+      pagination={{ el: ".swiper-pagination", clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
       className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
     >
@@ -76,7 +81,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 const GameModeSwiper = () => {
   return (
     <Swiper
-      effect={'coverflow'}
+      effect={"coverflow"}
       grabCursor={true}
       centeredSlides={true}
       loop={true}
@@ -89,7 +94,7 @@ const GameModeSwiper = () => {
         modifier: 2.5,
       }}
       autoplay={true}
-      pagination={{ el: '.swiper-pagination', clickable: true }}
+      pagination={{ el: ".swiper-pagination", clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
       className="swiper-container flex h-[70%] w-full items-center justify-center overflow-auto py-4"
     >
@@ -132,14 +137,14 @@ const GameModeSwiper = () => {
 const Game_modes = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const searchParams = useSearchParams();
-  const mode = searchParams.get('mode');
+  const mode = searchParams.get("mode");
 
   useEffect(() => {
     setIsActivated(2);
   }, [setIsActivated]);
 
   return (
-    <div className="w-full flex flex-col px-3 py-2 overflow-auto">
+    <div className="flex w-full flex-col overflow-auto px-3 py-2">
       <div className="z-10 mb-[-100px] flex h-[200px] items-center justify-center">
         <img src="/games-logo.svg" alt="" className="size-[300px]" />
       </div>
