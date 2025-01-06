@@ -194,11 +194,13 @@ export const Header = () => {
                     setValue("");
                   }}
                 >
-                  <img
+                  <Image
                     src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                     alt={`${player?.display_name}'s avatar`}
+                    width={40}
+                    height={40}
                     className="size-10 rounded-full"
-                    unoptimized
+                    unoptimized={true}
                   />
                   <span className="text-white">{player?.display_name}</span>
                 </div>
@@ -207,7 +209,7 @@ export const Header = () => {
           )}
           {filteredPlayers.length === 0 && value.length > 0 && (
             <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
-              <h1>No players found</h1>
+              <h1>looking for {value}...</h1>
             </div>
           )}
         </div>

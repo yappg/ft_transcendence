@@ -21,7 +21,7 @@ export const CoverCard = ({
         width={200}
         height={100}
         className="size-[60px] rounded-md bg-white bg-cover object-cover sm:w-[150px] lg:w-[200px]"
-        unoptimized
+        unoptimized={true}
       />
       <div className="flex h-full w-fit flex-col items-start justify-center gap-2">
         <h1 className="text-lg tracking-wider text-white">Cover Picture</h1>

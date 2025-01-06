@@ -44,7 +44,7 @@ export const DashboardCard = ({
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
               height={40}
               width={40}
-              unoptimized
+              unoptimized={true}
             />
             <div className="flex flex-col items-start justify-center gap-2">
               <h1 className="font-dayson text-sm text-white">
@@ -71,7 +71,7 @@ export const DashboardCard = ({
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
               height={40}
               width={40}
-              unoptimized
+              unoptimized={true}
             />
             <RiArrowRightSLine className="font-dayson font-bold text-white sm:text-[80px] lg:text-[50px]" />
           </div>

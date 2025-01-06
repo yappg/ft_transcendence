@@ -138,6 +138,6 @@ export const SecurityComponent = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
