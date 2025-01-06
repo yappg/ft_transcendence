@@ -20,7 +20,7 @@ export default function ChatLayout({
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(7);
-  }, [setIsActivated]);
+  }, []);
   const router = useRouter();
   const {
     chats,

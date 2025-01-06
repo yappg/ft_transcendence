@@ -11,7 +11,7 @@ export default function Page() {
 
   useEffect(() => {
     setIsActivated(5);
-  }, [setIsActivated]);
+  }, []);
 
   const { PlayerMatches, setIsLoading, setPlayerMatches } = useUser();
 

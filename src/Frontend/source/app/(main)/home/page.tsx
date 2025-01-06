@@ -89,7 +89,6 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
 };
 
 const Home = () => {
-  const { setIsActivated } = useContext(SideBarContext);
   const {
     user,
     setAchievements,

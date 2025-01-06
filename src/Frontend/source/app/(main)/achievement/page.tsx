@@ -14,7 +14,7 @@ const AchievementsPage: React.FC = () => {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(3);
-  }, [setIsActivated]);
+  }, []);
   const fetchAchievements = async () => {
     setIsLoading(true);
     try {
