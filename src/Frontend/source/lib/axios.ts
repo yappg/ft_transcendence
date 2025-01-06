@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
@@ -14,7 +14,7 @@ axiosInstance.interceptors.response.use(
   (error: any) => {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
+        case 401: // Unauthorized
           document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           window.location.href = '/auth/login';
@@ -23,7 +23,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

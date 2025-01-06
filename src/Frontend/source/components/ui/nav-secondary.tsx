@@ -1,6 +1,6 @@
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { type LucideIcon } from 'lucide-react';
+import React from "react";
+import { useRouter } from "next/navigation";
+import { type LucideIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -8,7 +8,7 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 export function NavSecondary({
   items,
   ...props
@@ -30,14 +30,14 @@ export function NavSecondary({
           headers: {
             'Content-Type': 'application/json',
           },
-        });
+        );
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogout();
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
   return (
     <SidebarGroup {...props}>
@@ -46,12 +46,14 @@ export function NavSecondary({
           {items.map((item: any) => (
             <SidebarMenuItem
               key={item.title}
-              onClick={item.title === 'logout' ? handleClick : undefined}
+              onClick={item.title === "logout" ? handleClick : undefined}
             >
               <SidebarMenuButton asChild>
                 <a href={item.url}>
                   <item.icon className="text-black dark:text-white" />
-                  <span className="font-dayson text-black dark:text-white">{item.title}</span>
+                  <span className="font-dayson text-black dark:text-white">
+                    {item.title}
+                  </span>
                 </a>
               </SidebarMenuButton>
               {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
