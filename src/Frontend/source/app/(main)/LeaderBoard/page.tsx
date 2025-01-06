@@ -11,7 +11,7 @@ export default function Page() {
 
   useEffect(() => {
     setIsActivated(4);
-  }, [setIsActivated]);
+  }, []);
 
   const { PlayerLeaderBoard, setPlayerLeaderBoard, setIsLoading } = useUser();
 

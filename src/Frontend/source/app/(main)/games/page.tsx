@@ -141,7 +141,7 @@ const Game_modes = () => {
 
   useEffect(() => {
     setIsActivated(2);
-  }, [setIsActivated]);
+  }, []);
 
   return (
     <div className="flex w-full flex-col overflow-auto px-3 py-2">
