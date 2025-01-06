@@ -1,9 +1,11 @@
-import * as PIXI from 'pixi.js';
-import { GlowFilter } from 'pixi-filters';
-import { Assets, Sprite, Graphics } from 'pixi.js';
-import SocketManager from './socket-manager';
-import { User } from '@/context/GlobalContext';
-import socketManager from './socket-manager';
+import * as PIXI from "pixi.js";
+import { GlowFilter } from "pixi-filters";
+import { Assets, Sprite, Graphics } from "pixi.js";
+import SocketManager from "./socket-manager";
+import { User } from "@/context/GlobalContext";
+import socketManager from "./socket-manager";
+// import { basename } from "path";
+// import { Scale } from "lucide-react";
 
 // Global Game Manager
 
@@ -13,10 +15,11 @@ export abstract class PixiManager {
   bottomRacket!: PIXI.Graphics;
   ball!: PIXI.Graphics;
   backgroundImage: string;
-  keysPressed: Set<string> = new Set('');
+  keysPressed: Set<string> = new Set("");
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
+  gameState: string = "waiting";
   screenWidth: number = 0;
   screenHeight: number = 0;
   ballMovementSpeed: number = 0;
@@ -28,22 +31,23 @@ export abstract class PixiManager {
   dx = 0;
   dy = 1;
 
-  constructor(container: HTMLElement, map: string, game: any) {
+constructor(container: HTMLElement, map: string, game: any) {
     this.app = new PIXI.Application();
     this.backgroundImage = `/${map}.png`;
     this.paddleWidth = 0;
     this.game = game;
-    this.map = map
-    console.log('Game:', this.game);
-    console.log('Gamepassed', game);
+    this.map = map;
     this.game.gameState = 'waiting';
     this.initWindow(container).then(() => {});
   }
 
   async initWindow(container: HTMLElement) {
     await this.app.init({
-      background: '#000000',
-      resizeTo: document.getElementById('table') as HTMLElement | Window | undefined,
+      background: "#000000",
+      resizeTo: document.getElementById("table") as
+        | HTMLElement
+        | Window
+        | undefined,
     });
     this.screenWidth = this.app.screen.width;
     this.screenHeight = this.app.screen.height;
@@ -67,7 +71,7 @@ export abstract class PixiManager {
       this.paddleWidth,
       this.paddleheight,
       0xff0000,
-      0x000000
+      0x000000,
     );
     this.bottomRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
@@ -75,7 +79,7 @@ export abstract class PixiManager {
       this.paddleWidth,
       this.paddleheight,
       0x00ffff,
-      0x000000
+      0x000000,
     );
 
     this.ball = this.createBall(0, 0, this.screenWidth / 35, 0xff0000);
@@ -106,7 +110,7 @@ export abstract class PixiManager {
     width: number,
     height: number,
     color: number,
-    glowColor: number
+    glowColor: number,
   ) {
     const racket = new Graphics();
 
@@ -128,13 +132,13 @@ export abstract class PixiManager {
     return racket;
   }
 
-  displayText(text: string) {
+  displayText( text: string ) {
     if (!this.app.stage.children.includes(this.waitingText)) {
       const style = new PIXI.TextStyle({
-        fontFamily: 'Days One',
+        fontFamily: "Days One",
         fontSize: 64,
-        fill: '#ff0000',
-        align: 'center',
+        fill: "#ff0000",
+        align: "center",
       });
 
       this.waitingText = new PIXI.Text({ text: text, style: style });
@@ -171,13 +175,13 @@ export abstract class PixiManager {
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
     console.log(`Key down: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 
   handleKeyUp(event: KeyboardEvent) {
     this.keysPressed.delete(event.key);
     console.log(`Key up: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(', ')}`);
+    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 }
 
@@ -188,14 +192,14 @@ export class LocalGameManager extends PixiManager {
 
     const baseSpeed = 1;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
-    const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
-
-    this.ballMovementSpeed = (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
-
-    this.updateBallPosition(
-      this.ball.x + this.dx * this.ballMovementSpeed,
-      this.ball.y + this.dy * this.ballMovementSpeed
+    const currentScreenDiagonal = Math.sqrt(
+      this.screenWidth ** 2 + this.screenHeight ** 2,
     );
+
+    this.ballMovementSpeed =
+      (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
+
+    this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
       this.dx *= -1;
@@ -210,9 +214,8 @@ export class LocalGameManager extends PixiManager {
       this.dy *= -1;
 
       const collisionPoint = this.ball.x - this.topRacket.x;
-      const normalizedCollisionPoint =
-        (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
-
+      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+    
       this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
 
@@ -224,8 +227,7 @@ export class LocalGameManager extends PixiManager {
     ) {
       this.dy *= -1;
       const collisionPoint = this.ball.x - this.bottomRacket.x;
-      const normalizedCollisionPoint =
-        (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
 
       this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
@@ -246,7 +248,7 @@ export class LocalGameManager extends PixiManager {
         this.game.setTotalScore([this.game.totalScore[0], this.game.totalScore[1] + 1]);
         this.game.totalScore[1] += 1;
       }
-      this.dy = (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
+      this.dy = (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1? 1 : -1;
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
         this.app.stage.removeChild(this.ball);
@@ -256,7 +258,8 @@ export class LocalGameManager extends PixiManager {
         if (this.round < 3) {
           this.game.gameState = 'waiting';
           this.game.setGameState('waiting');
-        } else {
+        }
+        else {
           this.game.gameState = 'over';
           this.game.setGameState('over');
           const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
@@ -277,8 +280,8 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = 'start';
-      this.game.setGameState('start');
+      this.game.gameState = "start";
+      this.game.setGameState("start");
     });
   }
 
@@ -291,49 +294,55 @@ export class LocalGameManager extends PixiManager {
     const baseScreenWidth = 75;
     const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
 
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+    if (
+      this.keysPressed.has("ArrowLeft") &&
+      !this.keysPressed.has("ArrowRight")
+    ) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
     }
 
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+    if (
+      this.keysPressed.has("ArrowRight") &&
+      !this.keysPressed.has("ArrowLeft")
+    ) {
       bottomRacket.x = Math.min(
         this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
+        bottomRacket.x + movementSpeed,
       );
     }
 
     if (
-      (this.keysPressed.has('a') || this.keysPressed.has('A')) &&
-      !this.keysPressed.has('d') &&
-      !this.keysPressed.has('D')
+      (this.keysPressed.has("a") || this.keysPressed.has("A")) &&
+      !this.keysPressed.has("d") &&
+      !this.keysPressed.has("D")
     ) {
       this.topRacket.x = Math.max(0, this.topRacket.x - movementSpeed);
     }
 
     if (
-      (this.keysPressed.has('d') || this.keysPressed.has('D')) &&
-      !this.keysPressed.has('a') &&
-      !this.keysPressed.has('A')
+      (this.keysPressed.has("d") || this.keysPressed.has("D")) &&
+      !this.keysPressed.has("a") &&
+      !this.keysPressed.has("A")
     ) {
       this.topRacket.x = Math.min(
         this.screenWidth - this.topRacket.width,
-        this.topRacket.x + movementSpeed
+        this.topRacket.x + movementSpeed,
       );
     }
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === 'waiting') {
-      this.displayText('Get\nReady');
+    if (this.game.gameState === "waiting") {
+      this.displayText("Get\nReady");
       this.handleWaitingState();
     }
-    if (this.game.gameState === 'start') {
+    if (this.game.gameState === "start") {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === 'over') {
+    if (this.game.gameState === "over") {
       this.removeGameElements();
-      this.displayText('Game\nOver');
+      this.displayText("Game\nOver");
     }
   }
 }
@@ -344,9 +353,14 @@ export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
   user: User | null;
 
-  constructor(container: HTMLElement, backgroundImage: string, game: any, user: User | null) {
+  constructor(
+    container: HTMLElement,
+    backgroundImage: string,
+    game: any,
+    user: User | null
+  ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager('ws://localhost:8080/ws/game/');
+    this.socketManager = new socketManager("ws://localhost:8080/ws/game/");
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
@@ -360,46 +374,60 @@ export class OnlineGameManager extends PixiManager {
 
     if (!bottomRacket || !app) return;
 
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.4;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
 
-    if (this.keysPressed.has('ArrowLeft') && !this.keysPressed.has('ArrowRight')) {
+    if (
+      this.keysPressed.has("ArrowLeft") &&
+      !this.keysPressed.has("ArrowRight")
+    ) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
       if (this.isTopPaddle) {
         this.socketManager.sendData({
-          action: 'move_paddle',
-          new_x: (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
+          action: "move_paddle",
+          new_x:
+            (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
         });
       } else {
-        this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x: bottomRacket.x * scale_x,
+        });
       }
     }
 
-    if (this.keysPressed.has('ArrowRight') && !this.keysPressed.has('ArrowLeft')) {
+    if (
+      this.keysPressed.has("ArrowRight") &&
+      !this.keysPressed.has("ArrowLeft")
+    ) {
       bottomRacket.x = Math.min(
         this.screenWidth - bottomRacket.width,
-        bottomRacket.x + movementSpeed
+        bottomRacket.x + movementSpeed,
       );
       if (this.isTopPaddle) {
         console.log(
-          'move_paddle Istop',
+          "move_paddle Istop",
           this.screenWidth,
           bottomRacket.x,
           this.paddleWidth,
-          scale_x
+          scale_x,
         );
         this.socketManager.sendData({
-          action: 'move_paddle',
-          new_x: (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
+          action: "move_paddle",
+          new_x:
+            (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
         });
       } else {
         console.log(
-          'move_paddle NotTp',
+          "move_paddle NotTp",
           this.screenWidth,
           bottomRacket.x,
           this.paddleWidth,
-          scale_x
+          scale_x,
         );
-        this.socketManager.sendData({ action: 'move_paddle', new_x: bottomRacket.x * scale_x });
+        this.socketManager.sendData({
+          action: "move_paddle",
+          new_x: bottomRacket.x * scale_x,
+        });
       }
     }
   }
@@ -409,10 +437,10 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === 'waiting') {
+    if (this.game.gameState === "waiting") {
       this.handleWaitingState();
     }
-    if (this.game.gameState === 'start') {
+    if (this.game.gameState === "start") {
       if (this.app.stage.children.includes(this.waitingText)) {
         this.app.stage.removeChild(this.waitingText);
       }
@@ -423,33 +451,18 @@ export class OnlineGameManager extends PixiManager {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === 'over') {
+    if (this.game.gameState === "over") {
       this.removeGameElements();
-      this.displayText('Game\nOver');
+      this.displayText("Game\nOver");
     }
   }
 
-  // handlegameupdates() {
-  //   if (!this.ball || !this.app) return;
-
-  //   // const baseSpeed = 0.5;
-  //   const baseSpeed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
-  //   // this.ballMovementSpeed = Math.sqrt(this.dx**2 + this.dy**2);
-
-  //   const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
-  //   const currentScreenDiagonal = Math.sqrt(this.screenWidth ** 2 + this.screenHeight ** 2);
-
-  //   this.ballMovementSpeed = (baseScreenDiagonal / currentScreenDiagonal) * baseSpeed;
-  //   this.updateBallPosition(
-  //     this.ball.x + this.dx * this.ballMovementSpeed,
-  //     this.ball.y + this.dy * this.ballMovementSpeed
-  //   );
-  // }
-  //   // updateScore(data: any) {
-  //   //   const score1 = data.self_score[data.round];
-  //   //   const score2 = data.opponent_score[data.round];
-  //   //   this.game.GameScore =  [score1, score2];
-  //   // }
+    // updateScore(data: any) {
+    //   const score1 = data.self_score[data.round];
+    //   const score2 = data.opponent_score[data.round];
+    //   this.game.GameScore =  [score1, score2];
+    // }
+  
 
   handlegameupdates() {
     if (!this.app) return;
@@ -489,6 +502,6 @@ export class OnlineGameManager extends PixiManager {
 
   handleWaitingState() {
     this.app.stage.removeChild(this.ball);
-    this.displayText('Get\nReady');
+    this.displayText("Get\nReady");
   }
 }

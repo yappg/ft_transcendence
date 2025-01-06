@@ -1,16 +1,20 @@
-'use client';
+"use client";
 
-import '@/app/globals.css';
-import { RightBar } from '@/components/RightBar';
-import { SideBar } from '@/components/SideBar';
-import { Header } from '@/components/header';
-import { UserProvider, useUser } from '@/context/GlobalContext';
-import { SideBarContext } from '@/context/SideBarContext';
-import { usePathname } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import "@/app/globals.css";
+import { RightBar } from "@/components/RightBar";
+import { SideBar } from "@/components/SideBar";
+import { Header } from "@/components/header";
+import { UserProvider, useUser } from "@/context/GlobalContext";
+import { SideBarContext } from "@/context/SideBarContext";
+import { usePathname } from "next/navigation";
+import { useContext, useEffect } from "react";
 import { onlineService } from '@/services/onlineService';
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/* eslint-disable tailwindcss/no-custom-classname */
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const { isActivated, setIsActivated } = useContext(SideBarContext);
   const handleRightClick = (id: number) => {
@@ -55,7 +59,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <RightBar handleRightClick={handleRightClick} />
       </div>
-
       <div className="col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] md:col-span-10 md:col-start-2">
         {children}
       </div>

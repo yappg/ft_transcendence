@@ -1,5 +1,10 @@
-import { ChevronRight, MoreHorizontal, Plus } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+/* eslint-disable tailwindcss/no-custom-classname */
+import { ChevronRight, MoreHorizontal, Plus } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,7 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 export function NavWorkspaces({
   workspaces,
 }: {

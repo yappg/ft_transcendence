@@ -1,39 +1,40 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
-import { OAuthClient } from '@/services/fetch-oauth';
-import { useSearchParams } from 'next/navigation';
-import axiosInstance from '@/lib/axios';
+import React, { useEffect } from "react";
+import { OAuthClient } from "@/services/fetch-oauth";
+import { useSearchParams } from "next/navigation";
+import axiosInstance from "@/lib/axios";
 
 function Title() {
-  const code = useSearchParams().get('code');
-  const provider = useSearchParams().get('provider');
+  const code = useSearchParams().get("code");
+  const provider = useSearchParams().get("provider");
 
   useEffect(() => {
     if (code) {
-      if (provider && provider === 'google') {
+      if (provider && provider === "google") {
         axiosInstance
-          .get('http://localhost:8080/accounts/oauth/callback/google/', {
+          .get("http://localhost:8080/accounts/oauth/callback/google/", {
             params: {
               code: code,
             },
           })
-          .then(() => (window.location.href = '/home'))
+          .then(() => (window.location.href = "/home"))
           .catch((error) => {
             console.log(error);
-            window.location.href = '/auth/login';
+            window.location.href = "/auth/login";
           });
       } else {
-        console.log('--------42', code);
+        console.log("--------42", code);
         axiosInstance
-          .get('http://localhost:8080/accounts/oauth/callback/42/', {
+          .get("http://localhost:8080/accounts/oauth/callback/42/", {
             params: {
               code: code,
             },
           })
-          .then(() => (window.location.href = '/home'))
+          .then(() => (window.location.href = "/home"))
           .catch((error) => {
             console.log(error);
-            window.location.href = '/auth/login';
+            window.location.href = "/auth/login";
           });
       }
     }
@@ -71,7 +72,9 @@ function Title() {
         </div>
       </div>
       <div className="h-4/6 font-dayson text-[30px] dark:text-white">
-        <h1 className="h-[45px] text-[2.7rem] md:h-[80px] md:text-[4.2rem]">Authenticate</h1>
+        <h1 className="h-[45px] text-[2.7rem] md:h-[80px] md:text-[4.2rem]">
+          Authenticate
+        </h1>
         <h1 className="flex items-start justify-start gap-2">
           your
           <span className="text-primary dark:text-primary-dark">account</span>

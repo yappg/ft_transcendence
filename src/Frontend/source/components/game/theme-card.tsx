@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import React from 'react';
-import { MyButton } from '../generalUi/Button';
-import { useRouter } from 'next/navigation';
+"use client";
+import React from "react";
+import { MyButton } from "../generalUi/Button";
+import { useRouter } from "next/navigation";
 
 interface GameCardProps {
   title: string;
@@ -12,7 +12,13 @@ interface GameCardProps {
   height: string;
 }
 
-const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) => {
+const MapsCard = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  height,
+}: GameCardProps) => {
   const router = useRouter();
   return (
     <div
@@ -20,8 +26,8 @@ const MapsCard = ({ title, description, imageUrl, url, height }: GameCardProps) 
       style={{
         height: `${height}px`,
         backgroundImage: `url(${imageUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="absolute inset-0 overflow-hidden bg-black-crd transition-all duration-700 ease-in group-hover:bg-[rgba(0,0,0,0.85)]">

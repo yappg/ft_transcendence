@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import { JSX, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import FriendsComponent from '@/components/friends/FriendsComponent';
-import FriendRequestCard from './FriendRequestCard';
-import FriendServices from '@/services/friendServices';
-import { useEffect } from 'react';
-import { toast } from '@/hooks/use-toast';
-import { FaCommentDots } from 'react-icons/fa';
-import { useUser } from '@/context/GlobalContext';
-
+import Link from "next/link";
+import { JSX, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import FriendsComponent from "@/components/friends/FriendsComponent";
+import FriendRequestCard from "./FriendRequestCard";
+import FriendServices from "@/services/friendServices";
+import { useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
+import { FaCommentDots } from "react-icons/fa";
+import { useUser } from "@/context/GlobalContext";
+/* eslint-disable tailwindcss/no-custom-classname */
 export interface Friend {
   id: number;
   display_name: string;
@@ -33,7 +33,11 @@ const UserFriendsNav = (): JSX.Element => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     return date.toLocaleDateString(undefined, options);
   };
 
@@ -42,7 +46,7 @@ const UserFriendsNav = (): JSX.Element => {
     const displayInvit = async () => {
       try {
         const response = await FriendServices.getFriendRequests();
-        console.log('Friends Requests\n', response.data);
+        console.log("Friends Requests\n", response.data);
         if (response.message) {
           setRequests(response.data);
         } else if (response.error) {
@@ -50,10 +54,10 @@ const UserFriendsNav = (): JSX.Element => {
         }
       } catch (error) {
         toast({
-          title: 'Authentication failed',
-          description: 'Oups Somthing went wrong !',
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white',
+          title: "Authentication failed",
+          description: "Oups Somthing went wrong !",
+          variant: "destructive",
+          className: "bg-primary-dark border-none text-white",
         });
       }
     };
@@ -65,7 +69,7 @@ const UserFriendsNav = (): JSX.Element => {
     const displayFriends = async () => {
       try {
         const response = await FriendServices.getFriends();
-        console.log('Friends:', response.data);
+        console.log("Friends:", response.data);
         if (response.message) {
           setFriends(response.data);
         } else if (response.error) {
@@ -73,10 +77,10 @@ const UserFriendsNav = (): JSX.Element => {
         }
       } catch (error) {
         toast({
-          title: 'Authentication failed',
-          description: 'Oups Somthing went wrong !',
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white',
+          title: "Authentication failed",
+          description: "Oups Somthing went wrong !",
+          variant: "destructive",
+          className: "bg-primary-dark border-none text-white",
         });
       }
     };
@@ -84,26 +88,30 @@ const UserFriendsNav = (): JSX.Element => {
   }, [user]);
 
   const headers = [
-    { title: 'Your Friends', href: '' },
-    { title: 'Invitations', href: '' },
+    { title: "Your Friends", href: "" },
+    { title: "Invitations", href: "" },
   ];
 
   const handleRequestDeclined = (username: string) => {
     if (!user) return;
-    const declinedRequest = Requests?.find((req: any) => req.sender_display_name === username);
+    const declinedRequest = Requests?.find(
+      (req: any) => req.sender_display_name === username,
+    );
     if (declinedRequest) {
       setRequests((prevRequests: any) =>
-        prevRequests.filter((req: any) => req.sender_display_name !== username)
+        prevRequests.filter((req: any) => req.sender_display_name !== username),
       );
     }
   };
 
   const handleRequestAccepted = (username: string) => {
     if (!user) return;
-    const acceptedRequest = Requests?.find((req: any) => req.sender_display_name === username);
+    const acceptedRequest = Requests?.find(
+      (req: any) => req.sender_display_name === username,
+    );
     if (acceptedRequest) {
       setRequests((prevRequests: any) =>
-        prevRequests.filter((req: any) => req.sender_display_name !== username)
+        prevRequests.filter((req: any) => req.sender_display_name !== username),
       );
       const newFriend = {
         display_name: acceptedRequest.sender_display_name,
@@ -174,7 +182,7 @@ const UserFriendsNav = (): JSX.Element => {
               {user?.display_name.substring(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <h1 className="font-dayson text-[15px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
               {user?.display_name && user?.display_name.length < 9
                 ? user?.display_name
@@ -191,8 +199,8 @@ const UserFriendsNav = (): JSX.Element => {
               <h1
                 className={`${
                   activeIndex === index
-                    ? 'border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]'
-                    : 'text-white opacity-[60%]'
+                    ? "border-b-2 border-[#28AFB0] text-[#28AFB0] opacity-[100%] dark:border-[#E43222] dark:text-[#E43222]"
+                    : "text-white opacity-[60%]"
                 } cursor-pointer text-center font-dayson transition-all duration-300 md:text-[18px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px]`}
               >
                 {header.title}

@@ -1,14 +1,14 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import React from 'react';
-import { z } from 'zod';
-import { useToast } from '@/hooks/use-toast';
-import InputBar from './input-bar';
-import { MyButton } from '@/components/generalUi/Button';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { AuthClient } from '@/services/fetch-auth';
+import React from "react";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import InputBar from "./input-bar";
+import { MyButton } from "@/components/generalUi/Button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthClient } from "@/services/fetch-auth";
 
-type FieldType = 'input' | 'password' | 'email' | 'text' | 'number' | 'date';
+type FieldType = "input" | "password" | "email" | "text" | "number" | "date";
 
 interface FormField {
   Icon: React.ElementType;
@@ -37,9 +37,13 @@ interface MyLinkProps {
 }
 
 // Validation schemas
-const emailSchema = z.string().email('Invalid email format');
-const passwordSchema = z.string().min(8, 'Password must be at least 8 characters');
-const usernameSchema = z.string().min(3, 'Username must be at least 3 characters');
+const emailSchema = z.string().email("Invalid email format");
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
+const usernameSchema = z
+  .string()
+  .min(3, "Username must be at least 3 characters");
 
 export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
   return (
@@ -57,7 +61,11 @@ export const MyLink: React.FC<MyLinkProps> = ({ text, href }) => {
   );
 };
 
-export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => {
+export const Form: React.FC<FormProps> = ({
+  fields,
+  buttonProps,
+  isSignup,
+}) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -88,16 +96,18 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
     });
 
     if (isSignup) {
-      const passwordField = fields.find((f) => f.placeholder === 'password');
-      const confirmPasswordField = fields.find((f) => f.placeholder === 'password2');
+      const passwordField = fields.find((f) => f.placeholder === "password");
+      const confirmPasswordField = fields.find(
+        (f) => f.placeholder === "password2",
+      );
 
       if (
         passwordField &&
         confirmPasswordField &&
         passwordField.value !== confirmPasswordField.value
       ) {
-        newErrors.confirmPassword = 'Passwords do not match';
-        newErrors[fields[3].placeholder] = 'Passwords do not match';
+        newErrors.confirmPassword = "Passwords do not match";
+        newErrors[fields[3].placeholder] = "Passwords do not match";
       }
     }
 
@@ -117,41 +127,46 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
         acc[field.placeholder] = field.value;
         return acc;
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     );
 
     try {
-      const response = await (isSignup ? AuthClient.signup(formData) : AuthClient.signin(formData));
-      console.log('response: ', response);
+      const response = await (isSignup
+        ? AuthClient.signup(formData)
+        : AuthClient.signin(formData));
+      console.log("response: ", response);
 
       if (response.message) {
-        localStorage.setItem('username', formData.username);
+        localStorage.setItem("username", formData.username);
         toast({
-          title: 'Success',
-          description: isSignup ? 'Account created successfully' : 'Logged in successfully',
-          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+          title: "Success",
+          description: isSignup
+            ? "Account created successfully"
+            : "Logged in successfully",
+          className: "bg-primary border-none text-white bg-opacity-20",
         });
-        console.log('formData: ', formData);
-        console.log('response: ', response);
-        console.log('isSignup: ', isSignup);
-        if (isSignup) {
-          router.push('/home');
+        console.log("formData: ", formData);
+        console.log("response: ", response);
+        console.log("isSignup: ", isSignup);
+        if (response.enabled_2fa) {
+          router.push("/2fa/login-2fa");
           return;
         }
+        router.push("/home");
       }
       if (response.error)
         toast({
-          title: 'Authentication failed',
+          title: "Authentication failed",
           description: response.error,
-          variant: 'destructive',
-          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+          variant: "destructive",
+          className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
     } catch (error) {
       toast({
-        title: 'Authentication failed',
-        description: 'Oups Somthing went wrong !',
-        variant: 'destructive',
-        className: 'bg-primary-dark border-none text-white',
+        title: "Authentication failed",
+        description: "Oups Somthing went wrong !",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white",
       });
     } finally {
       setIsSubmitting(false);
@@ -160,7 +175,10 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
 
   return (
     <div className="flex w-full items-center justify-center px-4 py-8 sm:px-12 md:px-20 md:py-16 lg:px-5 lg:py-2">
-      <form className="flex size-full flex-col items-start gap-8" onSubmit={handleSubmit}>
+      <form
+        className="flex size-full flex-col items-start gap-8"
+        onSubmit={handleSubmit}
+      >
         <div className="flex w-full flex-col gap-5">
           {fields.map((field) => (
             <div key={field.placeholder} className="w-full">
@@ -175,12 +193,14 @@ export const Form: React.FC<FormProps> = ({ fields, buttonProps, isSignup }) => 
                   const error = validateField(field);
                   setErrors((prev) => ({
                     ...prev,
-                    [field.placeholder]: error || '',
+                    [field.placeholder]: error || "",
                   }));
                 }}
               />
               {errors[field.placeholder] && (
-                <p className="mt-1 text-sm text-red-500">{errors[field.placeholder]}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors[field.placeholder]}
+                </p>
               )}
             </div>
           ))}

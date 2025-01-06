@@ -1,4 +1,4 @@
-import { OnlineGameManager } from './pixi-manager';
+import { OnlineGameManager } from "./pixi-manager";
 
 class SocketManager extends WebSocket {
   // socket: WebSocket;
@@ -8,7 +8,7 @@ class SocketManager extends WebSocket {
     super(url);
 
     this.onopen = () => {
-      console.log('WebSocket connection established');
+      console.log("WebSocket connection established");
     };
 
     this.onmessage = (event) => {
@@ -17,11 +17,11 @@ class SocketManager extends WebSocket {
     };
 
     this.onclose = () => {
-      console.log('WebSocket connection closed');
+      console.log("WebSocket connection closed");
     };
 
     this.onerror = (error) => {
-      console.log('WebSocket error:', error);
+      console.log("WebSocket error:", error);
     };
   }
 
@@ -35,16 +35,12 @@ class SocketManager extends WebSocket {
 
   updateBallPosition(data: any) {
     if (data) {
-      console.log('Wata fink asahbi ');
       const scale_x = this.pixiManager.screenWidth / 75;
       const scale_y = this.pixiManager.screenHeight / 100;
 
       const new_x = scale_x * data.position.x;
       const new_y = scale_y * data.position.y;
 
-      console.log('scale_x:', scale_x);
-      console.log('scale_y:', scale_y);
-      // console.log('new_x:', data);
       if (this.pixiManager.isTopPaddle) {
         this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
         this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
@@ -77,11 +73,12 @@ class SocketManager extends WebSocket {
 
   async handleSocketMessage(message: any) {
     switch (message.type) {
-      case 'acknowledgeOpponent':
+      case "acknowledgeOpponent":
         this.pixiManager.game.gameId = message.data.game_id;
         this.pixiManager.game.opponent = message.data.opponent;
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
+        // TODO Synchonize the velocity of the ball
         if (this.pixiManager.isTopPaddle) {
           this.pixiManager.dy = -20;
         } else {
@@ -101,10 +98,10 @@ class SocketManager extends WebSocket {
       case 'UpdatePaddle':
         this.updatePaddlePosition(message);
         break;
-      case 'UpdateScore':
+      case "UpdateScore":
         let score1 = 0;
         let score2 = 0;
-        console.log('message:', message);
+        console.log("message:", message);
         if (this.pixiManager.isTopPaddle) {
           score1 = message.data.top[message.data.round];
           score2 = message.data.bottom[message.data.round];
@@ -113,10 +110,15 @@ class SocketManager extends WebSocket {
           score2 = message.data.top[message.data.round];
         }
         this.pixiManager.game.setGameScore([score1, score2]);
-        console.log('scoroooor: ', this.pixiManager.game.GameScore);
-      case 'gameState':
+        console.log("scoroooor: ", this.pixiManager.game.GameScore);
+      case "gameState":
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);
+        break;
+      case 'GameEnd':
+        this.pixiManager.game.gameState = 'over';
+        this.pixiManager.game.setGameState('over');
+        this.close();
         break;
       default:
         break;
@@ -124,7 +126,7 @@ class SocketManager extends WebSocket {
   }
 
   close() {
-    this.close();
+    super.close();
   }
 }
 
