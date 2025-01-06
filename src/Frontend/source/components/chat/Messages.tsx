@@ -148,14 +148,14 @@ export const Messages: React.FC<MessagesProps> = ({
       <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
-            <img
+            <Image
               onClick={() => router.push(`/Profile/${currentChat?.receiver.id}`)}
               src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
               width={70}
               height={70}
-              unoptimized
+              unoptimized={true}
             />
           </div>
           <div>

@@ -36,7 +36,7 @@ export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
           alt="avatar"
           width={10}
           height={10}
-          unoptimized
+          unoptimized={true}
         />
         <div className="flex flex-col">
           <span className="text-base font-medium text-white">

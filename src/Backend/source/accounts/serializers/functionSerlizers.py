@@ -32,6 +32,7 @@ class LeaderBoardSerializer(serializers.ModelSerializer):
 
     def get_Achievement(self, obj):
         from .userManagmentSerlizers import PlayerAchievementSerializer
-        serializer = PlayerAchievementSerializer(obj.all_achievements_gained()[:3], many=True)
+        achievements = obj.all_achievements_gained().order_by('-achievement__xp_gain')[:3]
+        serializer = PlayerAchievementSerializer(achievements, many=True)
         return serializer.data
     

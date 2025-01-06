@@ -16,13 +16,13 @@ export const HomeLeaderboard = ({
             key={index}
             className={`flex w-full flex-1 items-start justify-start gap-4 border-b-2 px-8 pt-5 lg:gap-8 ${index === 0 ? "" : "flex md:hidden lg:flex"} ${index > 2 ? "hidden" : ""}`}
           >
-            <img
+            <Image
               src={`${process.env.NEXT_PUBLIC_HOST}${leaderboard.avatar}`}
               alt="avatar"
               className="size-[40px] rounded-full object-cover lg:size-[50px]"
               width={40}
               height={40}
-              unoptimized
+              unoptimized={true}
             />
             <div className="flex flex-col items-start justify-center lg:gap-4">
               <h1 className="font-poppins text-sm text-white lg:text-[20px]">
