@@ -10,7 +10,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
 import { useUser } from "@/context/GlobalContext";
-
+import { Skeleton } from "@/components/ui/skeleton";
 const Signup2fa = () => {
   const [value, setValue] = useState("");
   const [QRcode, setQRcode] = useState("");
@@ -110,7 +110,7 @@ const Signup2fa = () => {
 
       {isLoading || localLoading ? (
         <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
-          Loading...
+          <Skeleton className="size-[200px] rounded-md bg-black-crd" />
         </h1>
       ) : QRcode ? (
         <div className="flex size-[200px] items-center justify-center rounded-md border border-white-crd bg-white">
