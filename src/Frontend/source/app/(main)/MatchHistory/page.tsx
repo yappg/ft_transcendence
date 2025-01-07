@@ -49,7 +49,7 @@ export default function Page() {
       </div>
     );
   return (
-    <div className="size-full overflow-auto md:py-4 md:pl-6">
+    <div className="size-full flex flex-col items-center justify-center">
       <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.length === 0 && (
           <div className="flex size-full items-center justify-center">
