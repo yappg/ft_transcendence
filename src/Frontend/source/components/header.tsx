@@ -17,6 +17,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { notificationsService } from "@/services/notificationsService";
 import { Notification } from "@/constants/notifications";
 import Image from "next/image";
+import { Skeleton } from "./ui/skeleton";
 export interface Root {
   count: number;
   results: Result[];
@@ -91,9 +92,13 @@ export const Header = () => {
 
   if (!user)
     return (
-      <h1 className="flex size-[200px] items-center justify-center rounded-md font-dayson text-[30px] text-gray-600">
-        Loading...
-      </h1>
+      <div className="flex h-full w-full items-center justify-between">
+        <Skeleton className="lg:h-[50px] w-[50%] rounded-[30px] bg-black-crd h-[20px] md:h-[30px]" />
+        <div className="flex h-full w-[50%] items-center justify-end gap-2">
+          <Skeleton className="lg:h-[50px] lg:w-[200px] lg:rounded-[30px] size-[17px] sm:size-[20px] md:size-[50px] rounded-full bg-black-crd " />
+          <Skeleton className=" size-[17px] sm:size-[20px] md:size-[50px] lg:size-[70px] rounded-full bg-black-crd " />
+        </div>
+      </div>
     );
 
   const fetchUsers = async (value: string) => {
@@ -148,7 +153,7 @@ export const Header = () => {
             </h1>
             {path.id === 1 && (
               <span className="font-dayson text-[16px] font-black text-aqua dark:text-fire-red sm:text-[20px] md:text-[25px] lg:text-[32px] xl:text-[36px]">
-                {user.username}
+                {user?.username}
               </span>
             )}
           </div>
