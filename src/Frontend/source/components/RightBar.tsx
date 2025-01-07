@@ -99,8 +99,8 @@ export const RightBar = ({
                 key={chat.id}
               >
                 <AvatarImage
-                  src={`http://localhost:8080${chat.receiver.avatar}`}
-                  alt={chat.receiver.username || "User"}
+                  src={`${process.env.NEXT_PUBLIC_HOST}${chat.receiver.avatar}`}
+                  alt={chat.receiver.username || 'User'}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

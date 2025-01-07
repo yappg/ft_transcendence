@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from django.conf import settings
-from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
 # ===========================
@@ -10,53 +8,57 @@ from django.core.exceptions import ImproperlyConfigured
 # ===========================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR.parent.parent / ".env")
 
 def get_env_variable(var_name):
     try:
         return os.getenv(var_name)
     except KeyError:
-        raise ImproperlyConfigured(f"Set the {var_name} environment variable")
+        raise ImproperlyConfigured(f"{var_name} environment variable is not set")
 
 # ===========================
 # SECURITY SETTINGS
 # ===========================
 
-SECRET_KEY = os.getenv('JWT_SIGNING_KEY')
+SECRET_KEY = get_env_variable('SIGNING_KEY')
 
 DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
 # Security Headers
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False  # TODO will be handled by nginx
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # TODO will nginx
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_HSTS_PRELOAD = False
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = False
+# SECURE_HSTS_SECONDS = 0
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = 'DENY'
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+# SECURE_HSTS_PRELOAD = False
 
 # ===========================
 # CORS CONFIGURATION
 # ===========================
 
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = get_env_variable('CORS_ALLOWED_ORIGINS').split(',')
-CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+# CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 # ===========================
 # APPLICATION CONFIGURATION
 # ===========================
 
 INSTALLED_APPS = [
+    # API documentation
     'drf_yasg',
+
+    # Monitoring
     'django_prometheus',
-    'daphne',
-    'channels',
+
+    # ASGI/Channels
+    'daphne', 'channels',
+    # Core Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -64,20 +66,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    # Third-party apps
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'accounts',
-    'chat',
-    'game',
-    'relations',
+
+    # Local apps
+    'accounts', 'chat', 'game', 'relations',
 ]
 
 MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'accounts.middleware.AccessTokenMiddleware',
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -93,14 +95,10 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-    "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
-    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 REST_FRAMEWORK = {
@@ -118,9 +116,9 @@ REST_FRAMEWORK = {
         'anon': '20/minute',
         'user': '100/minute',
     },
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ]
+    # 'DEFAULT_RENDERER_CLASSES': [
+    #     'rest_framework.renderers.JSONRenderer',
+    # ]
 }
 
 # ===========================
@@ -152,7 +150,7 @@ DATABASES = {
         'PASSWORD': get_env_variable('POSTGRES_PASSWORD'),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 200,
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -203,36 +201,31 @@ SESSION_CACHE_ALIAS = "default"
 # ===========================
 
 AUTH_USER_MODEL = 'accounts.Player'
+SITE_ID = 1
 
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = True
-# ACCOUNT_AUTHENTICATION_METHOD = 'username'
-# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#         # 'OPTIONS': {
-#         #     'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#         'OPTIONS': {
-#             'min_length': 8,
-#         },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#         # 'OPTIONS': {
-#         #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-#         # },
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        },
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 # ===========================
 # OAUTH2 CONFIGURATION
@@ -257,7 +250,6 @@ OAUTH2_PROVIDER_GOOGLE = {
     'CALLBACK_URL': get_env_variable('OAUTH_GOOGLE_CALLBACK_URL'),
     'SCOPE': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
 }
-
 
 # ===========================
 # TEMPLATES & URL CONFIGURATION
@@ -287,25 +279,13 @@ TEMPLATES = [
 # STATIC & MEDIA FILES
 # ===========================
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/Static/'
+STATIC_ROOT = '/app/source/staticfiles'
 MEDIA_URL = '/Media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UsersMedia')
+MEDIA_ROOT = '/app/source/UsersMedia'
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
-
-# ===========================
-# EMAIL CONFIGURATION
-# ===========================
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = get_env_variable('EMAIL_HOST')
-# EMAIL_PORT = int(get_env_variable('EMAIL_PORT', '587'))
-# EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = get_env_variable('DEFAULT_FROM_EMAIL')
 
 # ===========================
 # MISCELLANEOUS SETTINGS
