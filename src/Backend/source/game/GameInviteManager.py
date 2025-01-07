@@ -46,7 +46,7 @@ class GameInviteManager:
                 await self._handle_expired_invite(invite)
                 del self.pending_invites[invite_id]
             print('cleanup...')
-            await asyncio.sleep(30)
+            await asyncio.sleep(5)
 
 
     async def send_invite(self, sender_username: str, receiver_username: str) -> Optional[str]:
