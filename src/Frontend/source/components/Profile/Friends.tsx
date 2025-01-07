@@ -1,13 +1,24 @@
 import { Player } from "@/context/GlobalContext";
 import UserActivityBoard from "./UserActivityBoard";
+import { Skeleton } from "../ui/skeleton";
 /* eslint-disable tailwindcss/no-custom-classname */
 export const Friends = ({ players }: { players: Player[] }) => {
   return (
-    <div className="h-[300px]·w-full·overflow-hidden·rounded-[14px]·bg-[#4C4D4E]·shadow-2xl·lg:h-full·lg:w-[49%]·lg:rounded-[30px] relative">
+    <div className="relative h-[300px] w-full overflow-hidden rounded-[14px] bg-[#4C4D4E] shadow-2xl lg:h-full lg:w-1/2 lg:rounded-[30px]">
       <div className="custom-scrollbar-container h-[85%] w-full overflow-y-scroll">
-        {!players || players?.length === 0 ? (
-          <div className="flex·size-full items-center justify-center">
+        {!players ? (
+          <div className="flex size-full items-center justify-center">
             <h1 className="center·font-bold·text-white">No friends</h1>
+          </div>
+        ) : players?.length === 0 ? (
+            <div className="size-full costum-scrollbar-container flex flex-col justify-center items-center">
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            {/* <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
+            <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton> */}
           </div>
         ) : (
           players.map((user) => (
