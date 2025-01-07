@@ -46,7 +46,7 @@ class GameInviteManager:
                 await self._handle_expired_invite(invite)
                 del self.pending_invites[invite_id]
             print('cleanup...')
-            await asyncio.sleep(30)
+            await asyncio.sleep(5)
 
 
     async def send_invite(self, sender_username: str, receiver_username: str) -> Optional[str]:
@@ -62,7 +62,7 @@ class GameInviteManager:
         # Store the invite and verify it's stored
         self.pending_invites[invite_id] = invite
         print('Debug - New invite created:', invite_id)
-        print('Debug - Current pending invites:', self.pending_invites)
+        print('Debug -OLLLALLALLALLALALALALALALALALL Current pending invites:', sender_username)#self.pending_invites)
         
         await self.channel_layer.group_send(
             f'invite_group_{receiver_username}',
@@ -77,9 +77,10 @@ class GameInviteManager:
         return invite_id
 
     async def handle_invite_response(self, invite_id: str, accepted: bool) -> bool:
-        print('Debug - All pending invites:', self.pending_invites)
-        print('Debug - Looking for invite_id:', invite_id)
+        # print('Debug - All pending invites:', self.pending_invites)
+        # print('Debug - Looking for invite_id:', invite_id)
         invite = self.pending_invites.get(invite_id)
+        print(invite)
         if not invite or invite.status != 'pending':
             print('Debug - Invite not found or not pending')
             return False
@@ -120,12 +121,13 @@ class GameInviteManager:
 
     async def _handle_rejected_invite(self, invite: GameInvite) -> bool:
         invite.status = 'rejected'
-        
+        print (f'rejected {invite}')
         await self.channel_layer.group_send(
             f'invite_group_{invite.sender_username}',
             {
-                'type': 'game_invite',
-                'invite_id': invite.invite_id,
+                'type': 'game_reject',
+                # 'invite_id': invite.invite_id,
+                # 'sender_username': invite.sender_username,
                 'action': 'rejected'
             }
         )

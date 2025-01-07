@@ -10,17 +10,25 @@ import { useParams } from "next/navigation";
 /* eslint-disable react-hooks/exhaustive-deps */
 export default function Page() {
   const params = useParams();
-  const id = Number(params.UserId);
+  const id = parseInt(params.UserId);
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
-  useEffect(() => {
-    try {
-      fetcherestprofiles.getRestUser(id).then((data) => {
+
+  useEffect( () => {
+    const fetcherestprofile = async () =>
+      {
+        console.log("fetcherestprofile");
+        try {
+        const data = await fetcherestprofiles.getRestUser(id);
         setPlayerRestProfile(data);
-      });
-    } catch (error) {
-      console.log(error);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (id)
+    {
+      fetcherestprofile();
     }
-  }, []);
+  }, [id]);
 
   // need to add online status
   return (
@@ -37,10 +45,12 @@ export default function Page() {
               filter: "blur(10px)",
             }}
           ></div>
+          {PlayerRestProfile && 
           <UserInfo
             userProfile={PlayerRestProfile as User}
             state={PlayerRestProfile?.relation || ""}
           />
+            } 
         </div>
         <div className="custom-scrollbar-container flex h-1/2 w-full items-start justify-start overflow-y-scroll lg:h-3/5">
           <UserSummary
