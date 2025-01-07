@@ -1,6 +1,7 @@
 "use client";
 import { History } from "@/context/GlobalContext";
 import MatchHistoryComponent from "@/components/MatchHistory/HistoryComponent";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useContext, useEffect } from "react";
 import { SideBarContext } from "@/context/SideBarContext";
 import { useUser } from "@/context/GlobalContext";
@@ -31,8 +32,24 @@ export default function Page() {
     fetchPlayerMatches();
   }, []);
 
+  if (!PlayerMatches)
+    return (
+      <div className="flex size-full flex-col items-center justify-center gap-2 bg-black-crd rounded-[50px] overflow-hidden ml-5">
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+      </div>
+    );
   return (
-    <div className="size-full overflow-auto md:py-4 md:pl-6">
+    <div className="size-full flex flex-col items-center justify-center">
       <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.length === 0 && (
           <div className="flex size-full items-center justify-center">
