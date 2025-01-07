@@ -11,13 +11,12 @@ import { TreeGenerator } from 'tournament-bracket-tree';
 import 'tournament-bracket-tree/dist/index.css';
 
 const mapTournamentToNode = (game: any) => {
-  console.log('node passed: ', game.player.avatar);
   return (
     <div
       className="size-[60px] lg:size-[77px]
                 "
     >
-      {game.player.avatar.startsWith('./') ? (
+      {game.player && game.player.avatar.startsWith('./') ? (
         <div className="flex flex-col items-center justify-center gap-2">
           <img
             src={game.player.avatar}

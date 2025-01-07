@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useGame, Player } from '@/context/GameContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RoundsProps } from '@/context/GameContext';
 import { Skeleton } from '../ui/skeleton';
 
@@ -49,11 +49,16 @@ const PlayerScore = ({
 
 const ScoreTable = ({ mode }: { mode: string }) => {
   const game = useGame();
-  const p1 = game.player1 ? game.player1 : ({ username: 'player1', avatar: '/logo.svg' } as Player);
-  const p2 = game.player2
-    ? game.player2
-    : ({ username: 'player2', avatar: '/Avatar.svg' } as Player);
+  const [p1, setP1] = useState(null);
+  const [p2, setP2] = useState(null);
+  // const p1 = game.player1;
+  // const p2 = game.player2;
   console.log('players:', game.player1, game.player2);
+
+  useEffect(() => {
+    setP1(game.player1);
+    setP2(game.player2);
+  }, [game.player1, game.player2])
 
   useEffect(() => {
     if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
