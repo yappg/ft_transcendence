@@ -7,15 +7,13 @@ ENV NODE_ENV=development
 
 WORKDIR /app
 
-COPY ./source/package.json ./
-# ./source/yarn.lock ./
-
-RUN yarn install
-
 EXPOSE 3000
 
-CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 5; done"]
-# CMD ["tail", "-f", "/dev/null"]
+CMD ["sh", "-c", \
+     "echo 'starting development enviremnt' && \
+     yarn install && \
+     while true; do yarn dev || echo 'Server crashed, restarting...'; sleep 2; done" \
+    ]
 
 ######################################
 # Stage 2: Build stage
@@ -24,16 +22,18 @@ CMD ["sh", "-c", "while true; do yarn dev || echo 'Server crashed, restarting...
 FROM node:alpine AS builder
 
 ENV NODE_ENV=production
+ENV NODE_NO_WARNINGS=1
 
-WORKDIR /app/source
+WORKDIR /app
 
-COPY ./source/package.json  ./
+COPY ./source/package.json ./source/yarn.lock ./
 
-RUN yarn install --frozen-lockfile --production
+RUN yarn install --frozen-lockfile
 
-COPY . /
+COPY ./source ./
 
-RUN yarn build
+# RUN yarn build
+CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
 # Stage 3: Production build stage
@@ -42,13 +42,18 @@ RUN yarn build
 FROM node:alpine AS production
 
 ENV NODE_ENV=production
+ENV NODE_NO_WARNINGS=1
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+COPY ./source/package.json ./source/yarn.lock ./
+
+RUN yarn install --frozen-lockfile --production
+
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
-ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["yarn", "start"]
 # CMD [ "tail", "-f", "/dev/null" ]

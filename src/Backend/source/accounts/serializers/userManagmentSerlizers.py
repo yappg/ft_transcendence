@@ -78,22 +78,22 @@ class StatisticsSerializer(serializers.ModelSerializer):
     def get_air_ratio(self, obj):
         if obj.total_games == 0:
             return 0.0
-        return (obj.air_wins / obj.total_games) * 100
+        return round((obj.air_wins / obj.total_games) * 100, 2)
 
     def get_water_ratio(self, obj):
         if obj.total_games == 0:
             return 0.0
-        return (obj.water_wins / obj.total_games) * 100
+        return round((obj.water_wins / obj.total_games) * 100, 2)
 
     def get_fire_ratio(self, obj):
         if obj.total_games == 0:
             return 0.0
-        return (obj.fire_wins / obj.total_games) * 100
+        return round((obj.fire_wins / obj.total_games) * 100, 2)
 
     def get_earth_ratio(self, obj):
         if obj.total_games == 0:
             return 0.0
-        return (obj.earth_wins / obj.total_games) * 100
+        return round((obj.earth_wins / obj.total_games) * 100, 2)
 
     def get_graph_data(self, obj):
         return obj.daily_stats(obj.settings.stats_graph_days)
@@ -118,7 +118,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
     avatar = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
-
     avatar_upload = serializers.ImageField(write_only=True, required=False)
     cover_upload = serializers.ImageField(write_only=True, required=False)
 
@@ -198,11 +197,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_is_private(self, obj):
         return obj.settings.private_profile
 
-    def get_cover(self, obj):
-        return obj.cover.url
-
     def get_avatar(self, obj):
-        return obj.avatar.url
+        return obj.avatar.url if obj.avatar else None
+
+    def get_cover(self, obj):
+        return obj.cover.url if obj.cover else None
 
     def get_achievements(self, obj):
         LIMIT = 15
@@ -227,8 +226,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         return MatchHistorySerializer(obj.all_matches()[:LIMIT], many=True).data
 
     def get_xp(self, obj):
-        xp_percentage = (obj.xp / obj.calculate_level_up_xp()) * 100
-        return xp_percentage
+        return round((obj.xp / obj.calculate_level_up_xp()) * 100, 2)
 
     def get_username(self, obj):
         return obj.player.username
@@ -251,7 +249,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("max bio size is 500 characters")
         return value
 
-    def validate_avatar(self, value):
+    def validate_avatar_upload(self, value):
         size_max = 2 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
@@ -263,7 +261,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
         return value
 
-    def validate_cover(self, value):
+    def validate_cover_upload(self, value):
         size_max = 5 * 1024 * 1024
         allowed_types = ['image/jpeg', 'image/png']
 
@@ -283,7 +281,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             instance.cover = validated_data.pop('cover_upload')
 
         return super().update(instance, validated_data)
-
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
 
@@ -306,10 +303,15 @@ class PlayerSettingsSerializer(serializers.ModelSerializer):
 
 
 class MatchHistoryProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = PlayerProfile
         fields = ['id', 'display_name', 'level', 'avatar']
         read_only_fields = ['id', 'display_name', 'level', 'avatar']
+
+    def get_avatar(self, obj):
+        return obj.avatar.url if obj.avatar else None
 
 
 class MatchHistorySerializer(serializers.ModelSerializer):

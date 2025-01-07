@@ -66,7 +66,7 @@ class SignInSerializer(serializers.Serializer):
 
 class GenerateOTPSerializer(serializers.Serializer):
     username = serializers.CharField()
-    
+
     def validate(self, attrs):
         if not attrs.get('username'):
             raise serializers.ValidationError({"error":"Username required"})
@@ -124,6 +124,10 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
             if not user.check_password(attrs['old_password']):
                 raise serializers.ValidationError(
                     {"error": "Current password is incorrect"}
+                )
+            if user.check_password(attrs['new_password']):
+                raise serializers.ValidationError(
+                    {"error": "New password cannot be the same as the old password"}
                 )
         return attrs
 

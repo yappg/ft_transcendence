@@ -184,7 +184,7 @@ const Home = () => {
             width={100}
             height={100}
             className="size-[300px]"
-            unoptimized
+            unoptimized={true}
           />
         </div>
         <div className="custom-inner-shadow costum-little-shadow flex h-full lg:h-3/4 items-center overflow-hidden rounded-[30px] bg-black-crd p-3">
@@ -206,7 +206,7 @@ const Home = () => {
               progress={userAchievements[0].progress}
               xpReward={userAchievements[0].achievement.xp_gain}
               ratio={userAchievements[0].achievement.condition}
-              iconUrl={"http://localhost:8080" + userAchievements[0].image}
+              iconUrl={process.env.NEXT_PUBLIC_HOST + userAchievements[0].image}
             />
           ) : (
             <div className="flex size-full items-center justify-center">

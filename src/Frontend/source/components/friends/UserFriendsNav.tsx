@@ -149,7 +149,7 @@ const UserFriendsNav = (): JSX.Element => {
               <FriendsComponent
                 key={index}
                 name={friend.display_name}
-                ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${friend.avatar}`}
                 level={friend.level}
                 messagesLink={
                   <div className="flex items-center justify-center">
@@ -171,7 +171,7 @@ const UserFriendsNav = (): JSX.Element => {
               <FriendRequestCard
                 key={index}
                 name={invitation.sender_display_name}
-                ProfilePhoto={`http://localhost:8080${invitation.sender_avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${invitation.sender_avatar}`}
                 vari={formatDate(invitation.created_at)}
                 onRequestAccepted={handleRequestAccepted}
                 onRequestDeclined={handleRequestDeclined}

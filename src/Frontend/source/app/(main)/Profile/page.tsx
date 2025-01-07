@@ -17,11 +17,11 @@ export default function Page() {
           <div
             className="absolute z-0 size-full min-h-[400px]"
             style={{
-              backgroundImage: `url(http://localhost:8080${user?.cover})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              filter: "blur(10px)",
+              backgroundImage: `url(${process.env.NEXT_PUBLIC_HOST + user?.cover})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              filter: 'blur(10px)',
             }}
           ></div>
           <UserInfo userProfile={user as User} state="null" />
