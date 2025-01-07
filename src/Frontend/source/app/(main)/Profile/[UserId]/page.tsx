@@ -10,22 +10,23 @@ import { useParams } from "next/navigation";
 /* eslint-disable react-hooks/exhaustive-deps */
 export default function Page() {
   const params = useParams();
-  const id = Number(params.UserId);
-  console.log('id--->', id);
+  const id = parseInt(params.UserId);
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
-  
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
+    const fetcherestprofile = async () =>
+      {
+        console.log("fetcherestprofile");
+        try {
         const data = await fetcherestprofiles.getRestUser(id);
         setPlayerRestProfile(data);
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        console.log(error);
       }
     };
-
-    if (id) {
-      fetchProfile();
+    if (id)
+    {
+      fetcherestprofile();
     }
   }, [id]);
 
