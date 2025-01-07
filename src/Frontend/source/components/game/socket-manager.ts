@@ -3,9 +3,14 @@ import { OnlineGameManager } from "./pixi-manager";
 class SocketManager extends WebSocket {
   // socket: WebSocket;
   pixiManager!: OnlineGameManager;
-
-  constructor(url: string) {
-    super(url);
+  game_id: string;
+  constructor(url: string, game_id: string) {
+    let newUrl = url;
+    if (game_id && game_id !== "") {
+      newUrl = url + "?game_id=" + game_id;
+    }
+    super(newUrl);
+    this.game_id = game_id;
 
     this.onopen = () => {
       console.log("WebSocket connection established");
