@@ -30,15 +30,19 @@ const GameArena = () => {
         game.setPlayer2(game.TournementTree.left.data.player);
       }
     } else if (mode === 'one-vs-one') {
-      console.log(user);
-      game.setPlayer1({
-        username: user?.user?.username || '',
-        avatar: 'http://localhost:8080' + user?.user?.avatar || '',
-      } as Player);
-      game.setPlayer2({
-        username: game.opponent?.username || '',
-        avatar: game.opponent?.avatar || '',
-      } as Player);
+      
+      if (user.user?.user?.username && user?.user?.avatar) {
+        game.setPlayer1({
+          username: user?.user?.username,
+          avatar: 'http://localhost:8080' + user?.user?.avatar,
+        } as Player);
+      } 
+      if (game?.opponent?.username && game?.opponent?.avatar) {
+        game.setPlayer2({
+          username: game.opponent?.username,
+          avatar: game.opponent?.avatar,
+        } as Player);
+      }
     } else {
       game.setPlayer1({ username: 'player1', avatar: '/Avatar.svg' } as Player);
       game.setPlayer2({ username: 'player2', avatar: '/Avatar.svg' } as Player);
