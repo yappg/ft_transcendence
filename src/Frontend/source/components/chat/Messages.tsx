@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { IoSend } from "react-icons/io5";
 import { FiPlus, FiMoreVertical } from "react-icons/fi";
 import { IoGameController } from "react-icons/io5";
@@ -10,12 +10,10 @@ import { MessageBubble } from "@/components/chat/MessageBubb";
 import { chatService } from "@/services/chatService";
 import FriendServices from "@/services/friendServices";
 import { useChatWebSocket } from "@/hooks/useChatWebSocket";
-import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
-import { useGameChatWebSocket } from "@/hooks/useGameChatsocket";
-
+import { GameInviteContext } from "@/context/gameInviteConetx";
 interface MessagesProps {
   chatId: number;
   currentChat: Chat;
@@ -41,7 +39,7 @@ export const Messages: React.FC<MessagesProps> = ({
   const router = useRouter();
   const { toast } = useToast();
   const [gameInviteSocket, setGameInviteSocket] = useState<WebSocket | null>(null);
-
+  const { sendGameInvite } = useContext(GameInviteContext);
   const handleBlockUser = async () => {
     if (isBlocked === true) {
       console.log("Unblocking user:", currentChat?.receiver.username);
@@ -142,43 +140,16 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   }, [user?.id, chats]);
   
+
+
   
-  const handleInviteResponse = (inviteId: string, accepted: boolean) => {
-    if (!gameInviteSocket || gameInviteSocket.readyState !== WebSocket.OPEN) return;
-    
-    gameInviteSocket.send(JSON.stringify({
-      action: accepted ? 'accept_invite' : 'reject_invite',
-      invite_id: inviteId
-    }));
-    
-    toast({
-      title: accepted ? "Accepted Game Invite" : "Declined Game Invite",
-      description: accepted ? "Joining game..." : "Invite declined",
-      className: "bg-primary-dark border-none text-white",
-    });
-  };
+  const [onclicked, setOnclicked] = useState(false);
   
+
   const handleGameInvite = async () => {
     try {
-      useGameChatWebSocket({
-        currentChat,
-        handleInviteResponse,
-      });
-      
-      if (gameInviteSocket && gameInviteSocket.readyState === WebSocket.OPEN) {
-        gameInviteSocket.send(JSON.stringify({
-          type: 'game_invite',
-          action: 'send_invite',
-        }));
-        
-        toast({
-          title: "Game Invite Sent",
-          description: `Invite sent to ${currentChat?.receiver.usernameGame}`,
-          className: "bg-primary-dark border-none text-white",
-        });
-      } else {
-        throw new Error("WebSocket connection not available");
-      }
+      // setOnclicked(true);
+      sendGameInvite(currentChat?.receiver.usernameGame);
       setShowMoreOptions(false);
     } catch (error) {
       console.log("Failed to send game invite", error);

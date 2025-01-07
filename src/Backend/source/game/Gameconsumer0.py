@@ -36,6 +36,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             if not matchmake_system._running:
                 await matchmake_system.start()
             await self.accept()
+            if self.scope.get('url_route', {}).get('kwargs', {}).get('game_id', None):
+                self.game_id = self.scope.get('url_route', {}).get('kwargs', {}).get('game_id', None)
+                self.game =  matchmake_system.games[self.game_id]
+                if self.game and self.game.status == 'waiting':
+                    self.game.start_game()
 
             # await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
             if  not self.player_in_QG():
@@ -43,7 +48,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             else:
                 print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
         except Exception as e:
-            print(f'\n{RED}[Error in Connect {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Connect {str(e)}]{RESET}\n')
             await self.close()
 
     def player_in_QG(self):
@@ -53,7 +58,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             action  = data.get('action')
-            print(f'\n{YELLOW}data: [{data}]{RESET}\n')
+            # print(f'\n{YELLOW}data: [{data}]{RESET}\n')
 
             if action == 'ready':
                 game_id = data.get('game_id', None)
@@ -71,7 +76,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await asyncio.sleep(2)
 
                 if self.game.status == 'waiting':
-                    print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
+                    # print(f'\n{BLUE}[Game Ready to Start]{RESET}\n')
                     self.game.start_game()
                     await self.broadcast_ready()
 
@@ -90,7 +95,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             elif action == 'disconnect':
                 await self.close()
         except Exception as e:
-            print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
     
@@ -107,13 +112,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game.update(delta_time):
                     await self.broadcast_ball_move()
                 if await self.game.check_scoring():
-                    print(f'\n{YELLOW}[Scoring herrrrreeee ] {self.game.round} player1({self.game.player1.username}):{self.game.player1.score}, player2({self.game.player2.username}):{self.game.player2.score} {RESET}\n')
+                    # print(f'\n{YELLOW}[Scoring herrrrreeee ] {self.game.round} player1({self.game.player1.username}):{self.game.player1.score}, player2({self.game.player2.username}):{self.game.player2.score} {RESET}\n')
                     await self.broadcast_ball_move()
                 if await self.game.check_for_rounds():
                     await self.broadcast_score_update()
                     await self.broadcast_end_round()
                     if self.game.round <= 2:
-                        print(f'\n{RED}[Round {self.game.round}]{RESET}\n')
+                        # print(f'\n{RED}[Round {self.game.round}]{RESET}\n')
                         await asyncio.sleep(5)
                     else:
                         break
@@ -121,9 +126,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.broadcast_ball_move()
                 await asyncio.sleep(delta_time)
         except Exception as e:
-            print(f'\n{RED}[Error in Game Loop {str(e)} {self.game.round}]{RESET}\n')
+            # print(f'\n{RED}[Error in Game Loop {str(e)} {self.game.round}]{RESET}\n')
         finally :
-            print(f'\n{YELLOW}[Game Over]{RESET}\n')
+            # print(f'\n{YELLOW}[Game Over]{RESET}\n')
             await self.handle_game_end()
             self.game_tick = None
 
@@ -161,7 +166,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 }
             )
         except Exception as e:
-            print(f'\n{RED}[Error in Score Update {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Score Update {str(e)}]{RESET}\n')
 
     async def paddle_move(self, event):
         await self.safe_send({
@@ -249,9 +254,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             if self.game_id in matchmake_system.games:
                 del matchmake_system.games[self.game_id]
         except Exception as e:
-            print(f'{RED}[Error in Game End {str(e)}]{RESET}')
+            # print(f'{RED}[Error in Game End {str(e)}]{RESET}')
         finally:
-            print (f'{RED}[Game End {self.game_id}]{RESET}')
+            # print (f'{RED}[Game End {self.game_id}]{RESET}')
             await self.close()
 
     @database_sync_to_async
@@ -269,7 +274,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
             return True
         except Exception as e:
-            print(f'\n{RED}[Error in Saving Game Result {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Saving Game Result {str(e)}]{RESET}\n')
             #TODO handle the exception
             return False
 
@@ -294,7 +299,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         try:
             if self.game:
                 if self.game.status == 'playing':
-                    print (f'{RED}[Unexpected Disconnection l; {self.user.username}]{RESET}')
+                    # print (f'{RED}[Unexpected Disconnection l; {self.user.username}]{RESET}')
                     winner =  'player1' if self.user.id == self.game.player2.id else 'player2'
                     await self.unexpected_disconnect(self.user.id, self.opponent.id, winner) #TODO kifach 'player2'?
                 self.game.status = 'over'
@@ -302,10 +307,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     del matchmake_system.games[self.game_id]
                 await self.broadcast_disconnection()
                 await self.channel_layer.group_discard(f'game_{self.game_id}', self.channel_name)
-                print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
+                # print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
             await super().disconnect(close_code)
         except Exception as e:
-            print(f'\n{RED}[Error in Disconnect {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Disconnect {str(e)}]{RESET}\n')
 
     async def broadcast_disconnection(self):
         await matchmake_system.channel_layer.group_send(
@@ -335,13 +340,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.Gameplayer = self.game.player1
 
     async def unexpected_disconnect(self, player1_id, player2_id, result_value):
-        print(f'\n{RED}[Unexpected Disconnection]{RESET}\n')
+        # print(f'\n{RED}[Unexpected Disconnection]{RESET}\n')
 
         result_saved = await self.save_game_result(player1_id, player2_id, result_value)
         if result_saved:
-            print(f'\n{RED}[Result Saved]{RESET}\n')
+            # print(f'\n{RED}[Result Saved]{RESET}\n')
         else:
-            print(f'\n{RED}[Result Not Saved]{RESET}\n')
+            # print(f'\n{RED}[Result Not Saved]{RESET}\n')
 
         if self.user.id in matchmake_system.players_in_game:
             matchmake_system.players_in_game.remove(self.user.id)
@@ -356,7 +361,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 return
             await self.send(text_data=json.dumps(data))
         except Exception as e:
-            print(f'\n{RED}[Error in Safe Send {str(e)}]{RESET}\n')
+            # print(f'\n{RED}[Error in Safe Send {str(e)}]{RESET}\n')
     
     #------------------------------------>>>>>util functions<<<<<<<------------------------------
 
