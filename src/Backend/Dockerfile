@@ -18,8 +18,10 @@ RUN pip install --upgrade pip \
 EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-CMD ["sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 || echo 'Server crashed, restarting...'; sleep 5; done"]
-# CMD [ "tail", "-f", "/dev/null" ]
+CMD ["sh", "-c", \
+     "echo 'starting development enviremnt' && \
+     while true; do python manage.py runserver 0.0.0.0:8080 && echo 'Server crashed, restarting...' && sleep 2; done" \
+    ]
 
 ######################################
 # Stage 2: Production build stage (for nginx)

@@ -35,10 +35,10 @@ class Ball:
         self.position = Vector2D(37.5, 50)
         self.velocity *= UniVect
 
-@dataclass 
+@dataclass
 class Paddle:
     position: Vector2D
-    width: float = 7.5  
+    width: float = 7.5
     height: float = 2.5
 
     def move(self, new_x: float):
@@ -67,7 +67,7 @@ class PingPongGame:
         self.ball = Ball(Vector2D(37.5, 50), Vector2D(0, 60))
 
         self.player1 = player1
-        self.player1.paddle = Paddle(Vector2D(37.5, 4.5))  # Lower paddle 
+        self.player1.paddle = Paddle(Vector2D(37.5, 4.5))  # Lower paddle
         self.player2 = player2
         self.player2.paddle = Paddle(Vector2D(37.5, 96.5))  # Upper paddle
 
@@ -97,7 +97,7 @@ class PingPongGame:
         return False
 
         # if await self.check_game_end():
-        #     return False 
+        #     return False
         # if await self.check_for_rounds():
         #     return True
 
@@ -111,11 +111,11 @@ class PingPongGame:
 
         if self.check_paddle_collision(self.player1.paddle):
             self.ball.velocity.y = abs(self.ball.velocity.y)  # Move right
-            self.adjust_ball_angle(self.player1.paddle) 
+            self.adjust_ball_angle(self.player1.paddle)
             changed = True
         elif self.check_paddle_collision(self.player2.paddle):
             self.ball.velocity.y = -abs(self.ball.velocity.y)  # Move left
-            self.adjust_ball_angle(self.player2.paddle) 
+            self.adjust_ball_angle(self.player2.paddle)
             changed = True
         return changed
 
@@ -169,7 +169,7 @@ class PingPongGame:
 
 
 
-    async def check_scoring(self) -> bool: 
+    async def check_scoring(self) -> bool:
         async with self.score_update_lock:
             if self.ball.position.y <= 0: # Player 2 scores
                 self.player2.score[self.round] += 1

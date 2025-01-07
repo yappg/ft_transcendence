@@ -16,7 +16,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret key for cryptographic signing
 SECRET_KEY = os.getenv('SIGNING_KEY')
 
-# Enable debug mode for development only (disable in production)
 DEBUG = True
 
 # Allow all hosts for development (update for production)
@@ -144,7 +143,7 @@ DATABASES = {
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 600,  # Extend connection lifetime to 10 minutes
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -191,21 +190,15 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        # 'OPTIONS': {
-            # 'user_attributes': ('username', 'email', 'first_name', 'last_name'),
-        # },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,  # Enforces a minimum length of 8 characters
+            'min_length': 8,
         },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        # 'OPTIONS': {
-        #     'password_list_path': '/path/to/common-passwords.txt',  # Optional customization
-        # },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',

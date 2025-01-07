@@ -9,7 +9,7 @@ class AccountsConfig(AppConfig):
         from .models import Achievement
         from django.contrib.auth import get_user_model
 
-        def create_admin_user(sender, **kwargs):            
+        def create_admin_user(sender, **kwargs):
             User = get_user_model()
             admin_username = 'admin'
             admin_email = 'admin@django.com'
@@ -25,7 +25,7 @@ class AccountsConfig(AppConfig):
             else:
                 print(f"Admin user '{admin_username}' already exists.")
 
-        def seed_achievements(sender, **kwargs):            
+        def seed_achievements(sender, **kwargs):
             if Achievement.objects.count() == 0:
                 default_achievements = [
                     {"name" : "Air Explorer", "description" : "Play 5 games in air biome.", "xp_gain" : 250, "condition" : 5, "image" : "achievements/colored/air/1.png" , "image_bw" : "achievements/bw/air/1.png"},
@@ -96,7 +96,6 @@ class AccountsConfig(AppConfig):
                     {"name": "khriz man pro max 3", "description": "loss 12 matches in row", "xp_gain": 69, "condition": 12, "image" : "achievements/colored/losser/6.png", "image_bw" : "achievements/bw/losser/6.png"},
                 ]
 
-                print(f"DEBUG ===== CALLING EM ")
                 for achievement in default_achievements:
                     Achievement.objects.get_or_create(
                         name=achievement["name"],
