@@ -44,7 +44,7 @@ export function NavMain({
           <SidebarMenuButton
             asChild
             isActive={item.isActive}
-            onClick={() => handleItemClick(item.title)}
+            onClick={() => handleItemClick(item.title)}//chart
           >
             <a href={item.url}>
               <item.icon className="text-black dark:text-white" />
@@ -58,3 +58,4 @@ export function NavMain({
     </SidebarMenu>
   );
 }
+

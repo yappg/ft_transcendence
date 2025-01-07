@@ -54,8 +54,6 @@ class FriendsListView(APIView):
         except Player.DoesNotExist:
             return Response({"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
-
 class PendingInvitationsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -113,6 +111,12 @@ class FriendInvitationView(APIView):
 
         if sender == receiver:
             return Response({"error": "You cannot send a friend request to yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if FriendInvitation.objects.filter(
+            Q(sender=sender , receiver=receiver) |
+            Q(sender=receiver , receiver=sender)
+        ).exists():
+            return Response({"error": "you already sent an invitation to this user"}, status=status.HTTP_400_BAD_REQUEST)
 
         if Friends.objects.filter(
             Q(friend_requester=sender , friend_responder=receiver) |

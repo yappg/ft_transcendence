@@ -9,7 +9,7 @@ import { chatService } from "@/services/chatService";
 import { Chat, Message } from "@/constants/chat";
 import { useUser } from "@/context/GlobalContext";
 import { useParams } from "next/navigation";
-
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Page() {
   const [chatSelected, setChatSelected] = useState<Chat | null>(null);
   const { chats, messages, setMessages, setChats } = useUser();
@@ -57,9 +57,7 @@ export default function Page() {
 
   if (!chatSelected) {
     return (
-      <div className="flex size-full items-center justify-center">
-        Loading...
-      </div>
+      <Skeleton className="size-full rounded-md bg-black-crd" />
     );
   }
 
