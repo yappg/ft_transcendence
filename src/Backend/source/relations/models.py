@@ -32,8 +32,7 @@ class Friends(models.Model):
             raise ValidationError("Cannot be friends with yourself")
 
         super().save(*args, **kwargs)
-        
-        try:        
+        try:
             chat_room = ChatRoom.objects.filter(name=f"{self.friend_requester.username}_{self.friend_responder.username}_room").first()
             chat_room_reverse = ChatRoom.objects.filter(name=f"{self.friend_responder.username}_{self.friend_requester.username}_room").first()
 
@@ -43,7 +42,7 @@ class Friends(models.Model):
                 chat_room.save()
         except ChatRoom.DoesNotExist:
             pass
-        
+
 
 class FriendInvitation(models.Model):
     sender = models.ForeignKey(Player, related_name='sent_invitations', on_delete=models.CASCADE)
