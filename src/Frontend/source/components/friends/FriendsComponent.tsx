@@ -1,11 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { JSX } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Achievement } from '@/constants/achivemement';
+import { JSX } from 'react';
 const FriendsComponent = ({
   name,
   ProfilePhoto,
   level,
   messagesLink,
   customStyles = {},
+  achievements = [],
 }: {
   name: string;
   ProfilePhoto: string;
@@ -14,21 +16,8 @@ const FriendsComponent = ({
   losses?: number;
   messagesLink: JSX.Element;
   customStyles?: React.CSSProperties;
+  achievements?: any[];
 }): JSX.Element => {
-  const achievements = [
-    {
-      name: "Achievement 1",
-      icon: "/ach1.svg",
-    },
-    {
-      name: "Achievement 2",
-      icon: "/ach1.svg",
-    },
-    {
-      name: "Achievement 3",
-      icon: "/ach1.svg",
-    },
-  ];
   return (
     <div
       className="flex h-[100px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] bg-black-crd pl-2 sm:pl-4 lg:h-[150px] lg:px-5"
@@ -63,9 +52,7 @@ const FriendsComponent = ({
           ))}
         </div> */}
       </div>
-      <div className="mr-[-20px] flex w-[23%] items-center justify-end">
-        {messagesLink}
-      </div>
+      <div className="-mr-[20px] flex w-[23%] items-center justify-end">{messagesLink}</div>
     </div>
   );
 };

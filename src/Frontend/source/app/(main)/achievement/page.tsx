@@ -20,25 +20,23 @@ const AchievementsPage: React.FC = () => {
     setIsLoading(true);
     try {
       const fetchedAchievements = await userService.getAchievements();
-      const mappedAchievements: Achievement[] = fetchedAchievements.map(
-        (data: any) => ({
-          player: data.player,
-          achievement: {
-            name: data.achievement.name,
-            description: data.achievement.description,
-            xp_gain: data.achievement.xp_gain,
-            condition: data.achievement.condition,
-          },
-          date_earned: data.date_earned,
-          image: data.image,
-          xpReward: data.achievement.xp_gain,
-          ratio: data.achievement.condition,
-          progress: data.progress,
-          iconUrl: data.image,
-          gained: data.gained,
-          dateEarned: data.date_earned,
-        }),
-      );
+      const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
+        player: data.player,
+        achievement: {
+          name: data.achievement.name,
+          description: data.achievement.description,
+          xp_gain: data.achievement.xp_gain,
+          condition: data.achievement.condition,
+        },
+        date_earned: data.date_earned,
+        image: data.image,
+        xpReward: data.achievement.xp_gain,
+        ratio: data.achievement.condition,
+        progress: data.progress,
+        iconUrl: data.image,
+        gained: data.gained,
+        dateEarned: data.date_earned,
+      }));
       setAchievements(mappedAchievements);
     } catch (err) {
       setAchievements([]);
@@ -91,7 +89,7 @@ const AchievementsPage: React.FC = () => {
             progress={achievement.progress}
             xpReward={achievement.achievement.xp_gain}
             ratio={achievement.achievement.condition}
-            iconUrl={"http://localhost:8080" + achievement.image}
+            iconUrl={process.env.NEXT_PUBLIC_HOST + achievement.image}
           />
         ))}
     </div>

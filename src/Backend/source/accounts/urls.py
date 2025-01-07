@@ -67,7 +67,7 @@ urlpatterns = [
     path('user-achievements/', UserAchivementView , name='user_achievements'),
 
 # search views
-    path ('search-users/', SearchUsersView.as_view(), name='search_users'), #?search=....
+    path ('search-users/', SearchUsersView.as_view(), name='search_users'),
     # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
