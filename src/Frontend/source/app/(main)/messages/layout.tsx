@@ -20,7 +20,8 @@ export default function ChatLayout({
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(7);
-  }, [setIsActivated]);
+  }, []);
+
   const router = useRouter();
   const {
     chats,
@@ -74,7 +75,7 @@ export default function ChatLayout({
     <div className="flex w-full overflow-hidden lg:p-4">
       <div className="relative flex size-full gap-8">
         <div className="hidden h-full items-center justify-center lg:flex lg:w-3/5 lg:flex-row">
-          <div className="costum-little-shadow bg-black-crd hidden size-full flex-col items-center justify-center rounded-2xl lg:flex">
+          <div className="costum-little-shadow hidden size-full flex-col items-center justify-center rounded-2xl bg-black-crd lg:flex">
             {children}
           </div>
         </div>

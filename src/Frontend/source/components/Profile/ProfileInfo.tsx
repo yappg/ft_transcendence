@@ -13,10 +13,10 @@ export const ProfileInfo = ({
         {display_name}
       </h1>
       <div className="flex items-center justify-start gap-2 pb-8">
-        <h1 className="font-dayson text-xl font-bold text-[#B6B6B6]">
+        <h1 className="font-dayson text-sm font-bold text-[#B6B6B6]">
           @{username}
         </h1>
-        <h1 className="font-dayson text-xl font-bold text-[#B6B6B6]">
+        <h1 className="font-dayson text-sm font-bold text-[#B6B6B6]">
           Level {level}
         </h1>
       </div>

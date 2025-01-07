@@ -95,7 +95,7 @@ export function SidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="gap-10 ">
+      <SidebarHeader className="gap-10">
         <h1 className="font-dayson text-[25px] text-black dark:text-white">
           Ping Pong
         </h1>

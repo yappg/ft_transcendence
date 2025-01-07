@@ -6,7 +6,7 @@ export const InfoTitle = ({
   value: number;
 }) => {
   return (
-    <div className="flex w-[160px] flex-col items-center justify-start gap-2 lg:flex-row lg:justify-between">
+    <div className="flex w-[160px] flex-col items-center justify-end gap-2 lg:flex-row lg:justify-between">
       <h1 className="font-dayson text-[12px] font-bold text-white lg:text-lg">
         {title}
       </h1>

@@ -20,8 +20,8 @@ const UserSummary = ({
   if (!user) return <div>Loading...</div>;
   const { total_games, achievements } = user;
   return (
-    <div className="custom-scrollbar-container flex size-full flex-col items-center overflow-y-scroll bg-[#242627]/90 pb-3 lg:h-full lg:flex-row">
-      <div className="flex h-fit w-full flex-col  items-start justify-start px-2 lg:h-full lg:w-[63%] lg:px-1">
+    <div className="flex h-fit w-full flex-col items-center overflow-x-hidden overflow-y-scroll bg-[#242627]/90 scrollbar-hide lg:h-full lg:flex-row">
+      <div className="z-50 flex h-fit w-full flex-col items-center justify-center gap-2 lg:h-full lg:w-[63%]">
         <Achievments achievements={achievements} />
         {!is_private ? (
           <div className="flex h-fit w-full flex-col items-center justify-start gap-9 lg:h-full lg:flex-row lg:px-7 xl:py-5 2xl:gap-12 2xl:py-10">
@@ -34,9 +34,9 @@ const UserSummary = ({
           </div>
         )}
       </div>
-      <div className="m-8 flex h-[900px] w-full flex-col items-center justify-center gap-10 rounded-[14px] bg-[#4C4D4E] shadow-2xl md:gap-2 lg:h-[90%] lg:w-[37%] lg:rounded-[30px]">
+      <div className="z-50 m-8 flex size-full flex-col items-center justify-center gap-10 rounded-[14px] bg-[#4C4D4E] shadow-2xl md:gap-2 lg:h-[90%] lg:w-[37%] lg:rounded-[30px]">
         <div className="flex h-1/2 w-full flex-col items-center justify-center gap-20 sm:gap-2 xl:flex-row">
-          <div className="h-1/2  w-full sm:h-full sm:w-1/2">
+          <div className="h-1/2 w-full sm:h-full sm:w-1/2">
             <Chart total_games={total_games} stats={user?.statistics} />
           </div>
           <Rating statistics={user?.statistics} />
@@ -48,4 +48,5 @@ const UserSummary = ({
     </div>
   );
 };
+
 export default UserSummary;

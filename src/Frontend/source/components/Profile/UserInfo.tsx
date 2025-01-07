@@ -54,7 +54,7 @@ const UserInfo = ({
           />
         );
       case "self":
-        return <EditProfile setThisState={setThisState} />;
+        return <EditProfile />;
       case "blocked":
         return (
           <UnBlockButton
@@ -67,24 +67,26 @@ const UserInfo = ({
     }
   };
   return (
-    <div className="absolute z-50 flex size-full min-h-[400px] flex-col items-center justify-between px-6 py-4 lg:flex-row 2xl:px-10">
+    <div className="absolute z-50 flex size-full flex-col items-center justify-between px-6 py-4 lg:flex-row 2xl:px-10">
       <div className="flex h-fit w-full flex-col items-center justify-start gap-12 lg:h-full lg:w-fit lg:flex-row lg:items-end lg:justify-start">
-        <Avatar url={`http://localhost:8080${userProfile?.avatar}`} />
+        <div className="flex h-full w-1/2 items-end justify-center">
+          <Avatar url={`http://localhost:8080${userProfile?.avatar}`} />
+        </div>
         <ProfileInfo
           display_name={userProfile?.display_name}
           username={userProfile?.username}
           level={userProfile?.level}
         />
       </div>
-      <div className="flex h-fit w-full flex-col items-end justify-between gap-10 pr-6 lg:h-full lg:w-fit">
-        <div className="flex w-full flex-row items-center justify-center gap-4 lg:w-fit lg:flex-col lg:items-start lg:justify-start">
+      <div className="flex size-full flex-col items-end justify-end gap-0 lg:h-full lg:w-fit lg:gap-10 lg:pr-6">
+        <div className="flex h-[60px] w-full flex-row items-center justify-center gap-0 lg:h-full lg:flex-col lg:items-end lg:justify-end">
           <InfoTitle title={"Wins: "} value={userProfile?.games_won} />
           <Separator className="block lg:hidden" orientation="vertical" />
           <InfoTitle title={"Losses: "} value={userProfile?.games_loss} />
           <Separator className="block lg:hidden" orientation="vertical" />
           <InfoTitle title={"Winrate: "} value={userProfile?.win_ratio} />
         </div>
-        <div className="flex h-[70px] w-full items-center justify-center md:w-[270px]">
+        <div className="flex size-full h-[100px] w-full items-center justify-center">
           {renderContent()}
         </div>
       </div>
