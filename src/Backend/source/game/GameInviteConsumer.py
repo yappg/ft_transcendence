@@ -17,6 +17,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         
     async def connect(self):
         """Handle WebSocket connection"""
+        print('GameInviteConsumer connected', self.scope)
         if not self.scope["user"].is_authenticated:
             await self.close()
             return
@@ -136,6 +137,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         await self.send_json({
             'type': 'game_invite',
             'invite_id': event['invite_id'],
+            'sender_username': event['sender_username'],
             'action': event['action']
         })
 

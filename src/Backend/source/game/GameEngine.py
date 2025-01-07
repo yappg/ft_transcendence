@@ -58,7 +58,7 @@ class GamePlayer:
 
 class PingPongGame:
     def __init__(self, player1, player2, gameID: int):
-        print(f'\033[31;1mCreating game with ID: {gameID} BETWEEN {player1.username} AND {player2.username}\033[0m')
+        # print(f'\033[31;1mCreating game with ID: {gameID} BETWEEN {player1.username} AND {player2.username}\033[0m')
 
         self.game_id = gameID
         self.game_width = 75
@@ -85,7 +85,7 @@ class PingPongGame:
         start_time = time.time()
         while self.player1.status != 'ready' or self.player2.status != 'ready':
             if start_time - time.time() > 10:
-                print(f'{RED}Timeout{RESET}')
+                # print(f'{RED}Timeout{RESET}')
                 self.status = 'over'
                 return  
             time.sleep(0.2)
@@ -131,14 +131,14 @@ class PingPongGame:
 
     async def check_for_rounds(self) :
         if (self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win):
-            print (f'{YELLOW}Round {self.round}, score: {self.player1.score}, {self.player2.score}{RESET}')
+            # print (f'{YELLOW}Round {self.round}, score: {self.player1.score}, {self.player2.score}{RESET}')
             self.round += 1
             # self.ball.reset(0)
 
             if self.round == 3:
-                print(f'{GREEN}Game Over{RESET}')
-                print(f'{GREEN}Player 1: {self.player1.username} - {self.player1.score}{RESET}')
-                print(f'{GREEN}Player 2: {self.player1.username} - {self.player2.score}{RESET}')
+                # print(f'{GREEN}Game Over{RESET}')
+                # print(f'{GREEN}Player 1: {self.player1.username} - {self.player1.score}{RESET}')
+                # print(f'{GREEN}Player 2: {self.player1.username} - {self.player2.score}{RESET}')
                 async with self.score_update_lock:
                     if sum(self.player1.score) > sum(self.player2.score):
                         self.winner = 'player1'
