@@ -51,7 +51,7 @@ const AchievementsPage: React.FC = () => {
     fetchAchievements();
   }, []);
 
-  if (!isLoading) {
+  if (isLoading) {
     return (
       <div className="custom-scrollbar-container grid size-full grid-cols-1 flex-wrap gap-2 overflow-y-auto p-4 md:grid-cols-2 xl:grid-cols-3">
         <Skeleton className="flex h-[132px] w-full items-center rounded-3xl bg-black-crd p-4" />

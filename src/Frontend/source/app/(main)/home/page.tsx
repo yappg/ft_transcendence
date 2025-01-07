@@ -47,42 +47,42 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
       autoplay={true}
       pagination={{ el: ".swiper-pagination", clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="swiper-container flex h-[70%] w-full items-center justify-center py-4"
+      className="swiper-container flex h-full lg:h-[70%] w-full items-center justify-center py-4"
     >
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/earth.png"
           title="Earth"
           description="earth could shake or make or fake"
-          url={``}
+          url={`/one-vs-one/earth`}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/air.png"
           title="Air"
           description="Air: The invisible killer we can not live without"
-          url={``}
+          url={`/one-vs-one/air`}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/fire.png"
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
-          url={``}
+          url={`/one-vs-one/fire`}
         />
       </SwiperSlide>
-      <SwiperSlide className="overflow-visible">
+      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/water.png"
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url={``}
+          url={`/one-vs-one/water`}
         />
       </SwiperSlide>
     </Swiper>
@@ -175,19 +175,19 @@ const Home = () => {
     );
   userAchievements = user?.achievements;
   return (
-    <div className="custom-scrollbar-container flex size-full flex-col gap-[150px] overflow-y-scroll lg:flex-row lg:gap-0 lg:overflow-hidden xl:gap-8">
+    <div className="custom-scrollbar-container flex size-full flex-col lg:flex-row lg:gap-0 lg:gap-6 gap-4">
       <div className="h-1/2 w-full lg:h-full lg:w-3/5">
-        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center">
+        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center hidden lg:flex">
           <Image
             src="/games-logo.svg"
             alt=""
-            width={300}
-            height={300}
+            width={100}
+            height={100}
             className="size-[300px]"
             unoptimized
           />
         </div>
-        <div className="custom-inner-shadow costum-little-shadow relative flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd">
+        <div className="custom-inner-shadow costum-little-shadow flex h-full lg:h-3/4 items-center overflow-hidden rounded-[30px] bg-black-crd p-3">
           <div className="flex size-full items-center">
             <MapsSwiper mode="" />
           </div>
