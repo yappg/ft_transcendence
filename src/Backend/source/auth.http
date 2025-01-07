@@ -1,6 +1,6 @@
 
 ##########
-POST https://localhost:443/api/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {

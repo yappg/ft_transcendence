@@ -1,17 +1,19 @@
 
 services:
-    # container-exporter:
-    #   container_name: cadvisor
-    #   image: gcr.io/cadvisor/cadvisor
-    #   volumes:
-    #     - /:/rootfs:ro
-    #     - /var/run:/var/run:ro
-    #     - /sys:/sys:ro
-    #     - /var/run/docker.sock:/var/run/docker.sock:ro
-    #     - /dev/disk/:/dev/disk:ro
-    #   networks:
-    #     - transcendence
-    #   restart: unless-stopped
+    container-exporter:
+      container_name: cadvisor
+      image: gcr.io/cadvisor/cadvisor
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:ro
+        - /sys:/sys:ro
+        - ${HOME}/goinfre/.docker/run/docker.sock:/var/run/docker.sock:ro
+        - /dev/disk/:/dev/disk:ro
+      networks:
+        - transcendence
+      ports:
+        - 8000:8080
+      restart: unless-stopped
 
     web:
       container_name: nginx
@@ -27,19 +29,13 @@ services:
       ports:
         - 0.0.0.0:80:80
         - 0.0.0.0:443:443
-      # depends_on:
+      depends_on:
         # frontend:
         #   condition: service_healthy
         # backend:
         #   condition: service_healthy
-        # grafana:
-        #   condition: service_healthy
-      # healthcheck:
-      #   test: ["CMD", "curl", "-f", "http://localhost:80"]
-      #   interval: 10s
-      #   timeout: 5s
-      #   retries: 3
-      #   start_period: 5s
+        grafana:
+          condition: service_healthy
       restart: always
 
     web-exporter:
@@ -48,9 +44,9 @@ services:
       command: --nginx.scrape-uri=http://web:8080/stub_status
       networks:
         - transcendence
-      # depends_on:
-      #   web:
-      #     condition: service_healthy
+      depends_on:
+        web:
+          condition: service_started
       restart: unless-stopped
 
 
@@ -74,19 +70,19 @@ services:
         - transcendence
       ports:
         - 3000:3000
-      # healthcheck:
-      #   test: ["CMD", "curl", "-f", "http://localhost:3000/"]
-      #   interval: 10s
-      #   timeout: 10s
-      #   retries: 5
-      #   start_period: 30s
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+        interval: 30s
+        timeout: 20s
+        retries: 10
+        start_period: 120s
       restart: always
-
 
     backend:
       container_name: backend
       build:
         context: ./src/Backend
+        # target: ${TEST:-builder}
         target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
@@ -122,10 +118,10 @@ services:
           condition: service_healthy
       healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
-        interval: 15s
-        timeout: 10s
-        retries: 5
-        start_period: 30s
+        interval: 30s
+        timeout: 20s
+        retries: 10
+        start_period: 120s
       restart: always
 
 
@@ -203,7 +199,6 @@ services:
       image: prometheus
       volumes:
         - prometheus-data:/prometheus
-        # - "./src/Services/prometheus:/etc/prometheus:ro"
       networks:
         - transcendence
       restart: always
@@ -258,30 +253,20 @@ services:
         start_period: 5s
       restart: unless-stopped
 
-# /src/Backend/source/UsersMedia
 volumes:
-
   prometheus-data:
     name: prometheus
     # driver: local
     # driver_opts:
     #   type: none
     #   o: bind
-    #   device: ./data/prometheus
+    #   device: ${PWD}/data/prometheus
 
   alert-manager-data:
     name: alert-manager
 
   grafana-data:
     name: grafana
-
-  source-code:
-    name: media
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /Users/otaraki/goinfre/school-projects/ft_transcendence/src/Backend/source/
 
   static-files:
     name: static
@@ -292,15 +277,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/otaraki/goinfre/school-projects/ft_transcendence/src/Backend/source/UsersMedia
-
-  redis-data:
-    name: redis
-    # driver: local
-    # driver_opts:
-    #   type: none
-    #   o: bind
-    #   device: ./data/redis
+      device: ${PWD}/src/Backend/source/UsersMedia
 
   postgres-data:
     name: postgres
@@ -308,7 +285,10 @@ volumes:
     # driver_opts:
     #   type: none
     #   o: bind
-    #   device: ./data/postgres
+    #   device: ${PWD}/data/postgres
+
+  redis-data:
+    name: redis
 
 
 networks:

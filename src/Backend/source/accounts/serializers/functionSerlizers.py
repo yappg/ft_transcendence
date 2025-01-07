@@ -16,7 +16,7 @@ class SearchUsersSerializer(serializers.ModelSerializer):
 
 class LeaderBoardSerializer(serializers.ModelSerializer):
     Achievement = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = PlayerProfile
         fields = [
@@ -35,4 +35,3 @@ class LeaderBoardSerializer(serializers.ModelSerializer):
         achievements = obj.all_achievements_gained().order_by('-achievement__xp_gain')[:3]
         serializer = PlayerAchievementSerializer(achievements, many=True)
         return serializer.data
-    

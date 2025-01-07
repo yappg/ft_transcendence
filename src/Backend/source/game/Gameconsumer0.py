@@ -25,36 +25,56 @@ class GameConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
 
     async def connect(self):
-        if not self.scope["user"].is_authenticated:
+        if not self.scope.get("user") or not self.scope["user"].is_authenticated:
+            print(f'{RED}[Unauthenticated connection attempt]{RESET}')
             await self.close()
             return
+
         try:
             self.user = self.scope["user"]
             self.opponent = None
             self.Gameplayer = None
-            print(f'\n{GREEN}[User Authenticated {self.user}]{RESET}\n')
+            self.game_id = None  # Add explicit initialization
+
+            print(f'{GREEN}[User Authenticated {self.user}]{RESET}')
 
             if not matchmake_system._running:
                 await matchmake_system.start()
             await self.accept()
 
             await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
-            if  not self.player_in_QG():
-                print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
+
+            # Add validation before checking queue status
+            if not hasattr(self.user, 'id'):
+                raise ValueError("Invalid user object")
+
+            if not self.player_in_QG():
+                print(f'{YELLOW}[Adding Player to Queue]{RESET}')
                 await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
             else:
-                print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
+                print(f'{YELLOW}[User Already in a Game]{RESET}')
+
         except Exception as e:
-            print(f'\n{RED}[Error in Connect {str(e)}]{RESET}\n')
+            print(f'{RED}[Error in Connect: {str(e)}]{RESET}')
             await self.close()
+            return
 
     def player_in_QG(self):
         return (self.user.id in matchmake_system.players_in_game) and (self.user.id in matchmake_system.players_queue)
 
     async def receive(self, text_data):
+        if not text_data:
+            return
+
         try:
             data = json.loads(text_data)
-            action  = data.get('action')
+            if not isinstance(data, dict):
+                raise ValueError("Invalid message format")
+
+            action = data.get('action')
+            if not action:
+                return
+
             print(f'\n{YELLOW}data: [{data}]{RESET}\n')
 
             if action == 'ready':
@@ -62,7 +82,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 game_id = data.get('game_id', None)
                 if not game_id :
                     return
-                self.game_id = game_id 
+                self.game_id = game_id
                 self.game = matchmake_system.games[int(data.get('game_id'))]
                 if not self.game:
                     return
@@ -94,12 +114,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
             #TODO handle the exception
             pass
-    
+
     #------------------------------------>>>>> Game loop <<<<<<<------------------------------
     async def start_game_loop(self):
         try :
             await self.broadcast_ball_move()
-            
+
             while self.game and self.game.status == 'playing'\
                 and self.game.player1.status == 'ready'\
                 and self.game.player2.status == 'ready':
@@ -133,7 +153,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.safe_send(
             {
                 "type": "acknowledgeOpponent",
-                "data": { 
+                "data": {
                     'message': event['message'],
                     'opponent': event['opponent'],
                     'top_paddle': event['top_paddle'],
@@ -239,20 +259,30 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def handle_game_end(self):
         if not self.game:
             return
+
         try:
             await self.broadcast_game_end()
-            if self.game.winner :
+
+            if self.game.winner and hasattr(self.game, 'player1') and hasattr(self.game, 'player2'):
                 await self.save_game_result(self.game.player1.id, self.game.player2.id, self.game.winner)
-            if self.user.id in matchmake_system.players_in_game:
-                matchmake_system.players_in_game.remove(self.user.id)
-            if self.opponent.id in matchmake_system.players_in_game:
-                matchmake_system.players_in_game.remove(self.opponent.id)
-            if self.game_id in matchmake_system.games:
+
+            # Use getattr for safer attribute access
+            player_id = getattr(self.user, 'id', None)
+            opponent_id = getattr(self.opponent, 'id', None)
+
+            if player_id and player_id in matchmake_system.players_in_game:
+                matchmake_system.players_in_game.remove(player_id)
+            if opponent_id and opponent_id in matchmake_system.players_in_game:
+                matchmake_system.players_in_game.remove(opponent_id)
+
+            if self.game_id and self.game_id in matchmake_system.games:
                 del matchmake_system.games[self.game_id]
+
         except Exception as e:
-            print(f'{RED}[Error in Game End {str(e)}]{RESET}')
+            print(f'{RED}[Error in Game End: {str(e)}]{RESET}')
         finally:
-            print (f'{RED}[Game End {self.game_id}]{RESET}')
+            if hasattr(self, 'game_id'):
+                print(f'{RED}[Game End {self.game_id}]{RESET}')
             await self.close()
 
     @database_sync_to_async
@@ -343,10 +373,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def set_Gameplayers_to_consumer(self):
         if self.game.player1.id != self.user.id:
-            self.opponent = self.game.player1 
+            self.opponent = self.game.player1
             self.Gameplayer = self.game.player2
         else :
-            self.opponent = self.game.player2 
+            self.opponent = self.game.player2
             self.Gameplayer = self.game.player1
 
     async def unexpected_disconnect(self, player1_id, player2_id, result_value):
@@ -365,14 +395,18 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     #------------------------------------>>>>>util functions<<<<<<<------------------------------
     async def safe_send(self, data):
+        if not self.channel_layer or not self.channel_name:
+            return
+
         try:
-            #check if the connection is still open
-            if self.channel_layer is None or not self.channel_name:
-                return
+            # Validate data structure before sending
+            if not isinstance(data, dict):
+                raise ValueError("Invalid data format for sending")
+
             await self.send(text_data=json.dumps(data))
         except Exception as e:
-            print(f'\n{RED}[Error in Safe Send {str(e)}]{RESET}\n')
-    
+            print(f'{RED}[Error in Safe Send: {str(e)}]{RESET}')
+
     #------------------------------------>>>>>util functions<<<<<<<------------------------------
 
 
