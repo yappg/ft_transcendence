@@ -48,7 +48,7 @@ export default function RootLayout({
           <RightBar handleRightClick={handleRightClick} />
         </div>
 
-        <div className="col-start-0 z-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] md:col-span-10 md:col-start-2">
+        <div className="col-start-0 z-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] md:col-span-10 md:col-start-2 min-h-[500px]">
           {children}
         </div>
       </div>

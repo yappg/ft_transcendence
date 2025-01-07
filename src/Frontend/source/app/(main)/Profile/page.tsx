@@ -2,12 +2,13 @@
 import UserInfo from "@/components/Profile/UserInfo";
 import UserSummary from "@/components/Profile/UserSummary";
 import { User, useUser } from "@/context/GlobalContext";
+import { Skeleton } from "@/components/ui/skeleton";
 /* eslint-disable tailwindcss/no-custom-classname */
 export default function Page() {
   const { user } = useUser();
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Skeleton className="size-full rounded-md bg-black-crd" />;
   }
   return (
     <div className="custom-scrollbar-container size-full overflow-y-scroll md:py-4 md:pl-6">

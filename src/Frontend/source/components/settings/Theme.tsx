@@ -15,6 +15,7 @@ const Theme = () => {
             width={150}
             height={150}
             alt={""}
+            unoptimized
           ></Image>
         </button>
         <h1 className="font-dayson text-lg text-white">Light</h1>
@@ -25,11 +26,12 @@ const Theme = () => {
           onClick={() => setTheme("dark")}
         >
           <Image
-            src="white.png"
+            src="Dark.png"
             className="size-full"
             width={150}
             height={150}
             alt={""}
+            unoptimized
           ></Image>
         </button>
         <h1 className="font-dayson text-lg text-white">Dark</h1>
@@ -40,11 +42,12 @@ const Theme = () => {
           onClick={() => setTheme("system")}
         >
           <Image
-            src="white.png"
+            src="Dark.png"
             className="size-full"
             width={150}
             height={150}
             alt={""}
+            unoptimized
           ></Image>
         </button>
         <h1 className="font-dayson text-lg text-white">System</h1>

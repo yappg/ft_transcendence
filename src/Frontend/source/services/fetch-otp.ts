@@ -6,6 +6,7 @@ import { useUser } from '@/context/GlobalContext';
 
 export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
   try {
+    console.log('name', name, 'value', value);
     const response = await axios.post(`/accounts/2fa/${endpoint}/`, {
       username: name,
       otp_token: value,

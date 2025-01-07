@@ -43,11 +43,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 #########
 POST http://localhost:8080/relations/friends/invite/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MDMxMjMxLCJpYXQiOjE3MzU3NzIwMzEsImp0aSI6IjhlZTA2MjBlYzZlMjRlMjI4YjYyY2I2NDNhMjhhNWQ2IiwidXNlcl9pZCI6NX0.RjFSJ6qXcb_9XfG7j4q2h4uBwoWu6Y5cVsLhmEJ4z2M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2NDczODIyLCJpYXQiOjE3MzYyMTQ2MjIsImp0aSI6IjU3NDJjNDY2M2ZmMTRmNTA5NmI1YWJmMmU0YzEyNmY3IiwidXNlcl9pZCI6OH0.789qfdGdavBwOJDfgZb63l4k5E2ZtrNWQMpEla92R9c
 Content-Type: application/json
 
 {
-    "receiver":"client7_8o6irh36xnat"
+    "receiver":"client_pmf728ametmf"
 }
 
 #########
@@ -61,11 +61,11 @@ Content-Type: application/json
 
 ##########################################
 POST http://localhost:8080/relations/friends/accept/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjU1NjU4LCJpYXQiOjE3MzUyNTMyNTgsImp0aSI6ImNjNjA1OGUxOGVmYzRjYTE5YzBlN2ZiYjZmNWVmMWMwIiwidXNlcl9pZCI6Nn0.KVapdK9_O7ogIyIv4O0GPYw3ejkLau3K7sQWuhPHWw0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2NDczNDc1LCJpYXQiOjE3MzYyMTQyNzUsImp0aSI6ImJjNDBjNmZhMDliNjQ2MGJhN2QyZTY4MjMzZWZlZTcyIiwidXNlcl9pZCI6Mn0.BX7sy_fp2ufT7QC0OISskkdBvFFk-km9GrWrEaJ_OUc
 Content-Type: application/json
 
 {
-    "sender":"client1_5jaikj2r11z7"
+    "sender":"meryeme"
 }
 
 ############################################

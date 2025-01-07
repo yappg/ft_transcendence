@@ -12,6 +12,7 @@ const Login2fa = () => {
   const myString = "Go >";
   const username = localStorage.getItem("username");
   const handleClick = async () => {
+    console.log(value);
     try {
       const response = (await sendOtp(
         "validate-otp",
@@ -19,7 +20,6 @@ const Login2fa = () => {
         username || null,
       )) as any;
 
-      console.log(response.data);
       if (response.data.message) {
         toast({
           title: "success",
