@@ -33,7 +33,6 @@ export default function RootLayout({
   }, []);
 
   return (
-    // <UserProvider>
     <div className=" grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] overflow-auto overflow-hidden bg-linear-gradient dark:bg-linear-gradient-dark md:gap-[8px] md:p-8">
       <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
         <SideBar pathname={pathname} handleRightClick={handleRightClick} />
@@ -43,11 +42,11 @@ export default function RootLayout({
       </div>
       <div
         className={`${
-          isActivated === 7 ||
-          isActivated === 6 ||
-          isActivated === 4 ||
-          isActivated === 6 ||
-          isActivated === 9 ||
+          // isActivated === 7 ||
+          // isActivated === 6 ||
+          // isActivated === 4 ||
+          // isActivated === 6 ||
+          // isActivated === 9 ||
           pathname === '/friends' ||
           pathname === '/LeaderBoard' ||
           pathname === '/Profile' ||
@@ -63,6 +62,5 @@ export default function RootLayout({
         {children}
       </div>
     </div>
-    // </UserProvider>
   );
 }
