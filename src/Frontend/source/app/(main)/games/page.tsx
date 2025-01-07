@@ -138,10 +138,21 @@ const Game_modes = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
+  const game_id = searchParams.get("game_id");
+  const router = useRouter();
+  useEffect(() => {
+    if (game_id) {
+      router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${game_id}`);
+    }
+  }, [game_id]);
 
   useEffect(() => {
     setIsActivated(2);
   }, []);
+
+  if (game_id) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex size-full flex-col px-3 py-2">

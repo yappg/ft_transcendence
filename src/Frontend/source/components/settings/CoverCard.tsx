@@ -19,7 +19,7 @@ export const CoverCard = ({
         src={`${imageUrl}` || "/ProfilePicture.svg"}
         alt="Cover picture"
         width={200}
-        height={100}
+        height={200}
         className="size-[60px] rounded-md bg-white bg-cover object-cover sm:w-[150px] lg:w-[200px]"
         unoptimized={true}
       />

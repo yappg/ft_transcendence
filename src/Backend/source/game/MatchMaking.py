@@ -86,11 +86,7 @@ class MatchMakingSystem:
 
     # --------------------------->>>>>>>>game invite<<<<<<<<<<<<<---------------------------
 
-    #TODO to implement this method
-    async def invite_player(self):
-        player1 = GamePlayer()
-        gameID = self.generate_unique_game_id()
-        new_game = PingPongGame(player1, player1, gameID)
+    
 
     # --------------------------->>>>>>>>UTILS<<<<<<<<<<<<<---------------------------
     @database_sync_to_async

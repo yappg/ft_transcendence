@@ -50,7 +50,6 @@ export default function Page() {
     );
   return (
     <div className="size-full flex flex-col items-center justify-center">
-      <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.length === 0 && (
           <div className="flex size-full items-center justify-center">
             <h1 className="font-dayson text-2xl font-bold text-white">
@@ -58,6 +57,7 @@ export default function Page() {
             </h1>
           </div>
         )}
+          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.map((match: History) => (
           <MatchHistoryComponent
             key={match.id}
