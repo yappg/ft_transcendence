@@ -42,7 +42,7 @@ export const RightBar = ({
   }, [user]);
 
   return (
-    <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
+    <div className="hidden h-full w-3/4 flex-col items-center justify-start gap-7 transition-all duration-300 md:flex">
       <div className="costum-little-shadow flex h-full min-h-[300px] h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd pt-3 gap-5">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-[60px]">
@@ -80,7 +80,7 @@ export const RightBar = ({
           )}
         </div>
       </div>
-      <div className="costum-little-shadow flex min-h-[300px] w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] bg-black-crd pt-4">
+      <div className="costum-little-shadow flex w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] bg-black-crd pt-4 h-full">
         <div className="flex items-center justify-center">
           <Link href="/messages">
             <FaComments
