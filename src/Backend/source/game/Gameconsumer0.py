@@ -36,6 +36,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             if not matchmake_system._running:
                 await matchmake_system.start()
             await self.accept()
+            if self.scope.get('url_route').get('kwargs').get('game_id', None):
+                self.game_id = self.scope.get('url_route').get('kwargs').get('game_id', None)
+                self.game =  matchmake_system.games[self.game_id]
+                if self.game and self.game.status == 'waiting':
+                    print(f'\n{YELLOW}[Game MOLLALALA{self.scope.get('url_route')} Found]{RESET}\n')
+                    self.game.start_game()
+                    return
 
             # await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
             if  not self.player_in_QG():
@@ -360,13 +367,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     
     #------------------------------------>>>>>util functions<<<<<<<------------------------------
 
-
-#TODO handle the exception of sending on a closed scoket
 #TODO handle the game end and disconnections
 #TODO reset the jwt duration to normal
 #TODO GameInvite
-#TODO [Error in Safe Send Attempt to send on a closed protocol]
-#TODO make sure why the broadcast_game_end is not sending the message
 
-#_______________________________Sbject requirements _______________________________________
+    #_______________________________Sbject requirements _______________________________________
 # 1- the app should be protected against XSS attacks

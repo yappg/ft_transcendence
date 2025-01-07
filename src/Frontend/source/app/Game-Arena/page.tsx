@@ -11,6 +11,7 @@ const GameArena = () => {
   const searchParams = useSearchParams();
   const map = searchParams.get("map");
   const mode = searchParams.get("mode");
+  const game_id = searchParams.get("game_id");
 
   return (
     <GameProvider>
@@ -22,7 +23,7 @@ const GameArena = () => {
         <div className="size-full flex items-center justify-center">
           <div className="size-full overflow-hidden max-w-[calc(3*(100vh-200px)/4)] lg:max-w-[calc(280vh/4)] xl:w-5/6 justify-center items-center flex">
             {/* still one bug in small screens when width is smaller than height need to limit height */}
-            <GameTable mode={mode || ""} map={map || ""} />
+            <GameTable mode={mode || ""} map={map || ""} game_id={game_id || ""} />
           </div>
         </div>
         {/* abilities */}
