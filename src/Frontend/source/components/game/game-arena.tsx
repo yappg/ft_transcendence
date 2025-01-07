@@ -12,13 +12,13 @@ import React, { useRef, useEffect } from "react";
 import socketManager from "./socket-manager";
 import { useUser } from "@/context/GlobalContext";
 
-const GameTable = ({ mode, map }: { map: string; mode: string }) => {
+const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id: string }) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const game = useGame();
   const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
-  const socketRef = useRef<WebSocket | null>(null);
+  // const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (mode.indexOf("local") !== -1) {
@@ -36,14 +36,15 @@ const GameTable = ({ mode, map }: { map: string; mode: string }) => {
           map,
           game,
           user?.user,
+          game_id,
         );
       }
     }
-    // return () => {
-    //   if (gameManagerRef.current?.app) {
-    //     gameManagerRef.current.app.destroy(true);
-    //   }
-    // };
+    return () => {
+      if (gameManagerRef.current.socketManager) {
+        gameManagerRef.current.socketManager.destroy(true);
+      }
+    };
   }, []);
 
   useEffect(() => {

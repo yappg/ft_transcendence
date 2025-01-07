@@ -7,14 +7,15 @@ from typing import Optional, Dict
 from .GameInviteManager import GameInviteManager
 from .MatchMaking import MatchMakingSystem
 
+invite_manager = GameInviteManager()
 class GameInviteConsumer(AsyncWebsocketConsumer):
-    invite_manager = GameInviteManager()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
         self.invite_group = None
 
     async def connect(self):
+        print('GameInviteConsumer connected', self.scope)
         if not self.scope["user"].is_authenticated:
             await self.close()
             return
@@ -28,8 +29,10 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         # Update user status to available
         await self.update_user_status('available')
 
-    async def disconnect(self):
+
+    async def disconnect(self, close_code):
         if self.user:
+            print(f'GameInviteConsumer disconnected {self.user.username}')
             # Remove from invite group
             await self.channel_layer.group_discard(self.invite_group, self.channel_name)
             # Update user status
@@ -64,7 +67,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
                 await self.send_error('Invalid receiver')
                 return
             # Try to send the invite through the invite manager
-            invite_id = await self.invite_manager.send_invite(
+            invite_id = await invite_manager.send_invite(
                 self.user.username, username
             )
             if invite_id:
@@ -84,7 +87,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Invite ID is required')
             return
 
-        success = await self.invite_manager.handle_invite_response(
+        success = await invite_manager.handle_invite_response(
             invite_id, accepted=True
         )
 
@@ -102,7 +105,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Invite ID is required')
             return
 
-        success = await self.invite_manager.handle_invite_response(
+        success = await invite_manager.handle_invite_response(
             invite_id, accepted=False
         )
 
@@ -118,6 +121,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         await self.send_json({
             'type': 'game_invite',
             'invite_id': event['invite_id'],
+            'sender_username': event['sender_username'],
             'action': event['action']
         })
 
@@ -148,14 +152,12 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
     async def game_reject(self, event):
         await self.send_json({
             'type': 'game_reject',
-            'invite_id': event['invite_id'],
             'action': 'rejected'
         })
 
     async def game_expire(self, event):
         await self.send_json({
             'type': 'game_expire',
-            'invite_id': event['invite_id'],
             'action': 'expired'
         })
 
@@ -173,7 +175,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
     async def status_update(self, event):
         await self.send_json(event)
 
-    # Helper methods
     @database_sync_to_async
     def get_player(self, username: str) -> Optional[Dict]:
         try:

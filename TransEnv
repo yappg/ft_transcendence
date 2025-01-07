@@ -1,0 +1,49 @@
+##############################################################################################################################################
+#   STAGE SETTINGS
+##############################################################################################################################################
+
+ENV="development"
+
+##############################################################################################################################################
+#   ENV_FRONTEND
+##############################################################################################################################################
+
+NEXT_PUBLIC_HOST="https://localhost:443"
+NEXT_PUBLIC_API_URL="https://localhost:443/api"
+NEXT_PUBLIC_WS_URL="wss://localhost:443/ws"
+
+##############################################################################################################################################
+#   ENV_BACKEND
+##############################################################################################################################################
+
+SIGNING_KEY="TransgendergGame3334-CreatedBy:ObikaPipoOtarakiEl-binxAaaaaaandMerryyyyyyy!@#$%^&*()_+"
+
+ALLOWED_HOSTS="*"
+CORS_ALLOWED_ORIGINS="https://localhost:443,https://localhost,https://accounts.google.com"
+
+CLIENT_ID_42="u-s4t2ud-1baa27e8252de771dcea3ea9d1e7993d5508444cd623a7426c7cc6c0c2777653"
+CLIENT_SECRET_42="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"
+OAUTH_42_CALLBACK_URL=https://localhost:443/auth/login
+GOOGLE_CLIENT_ID="696693176238-1innrjpis5jo5k9fq12lki31ugn8del3.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="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"
+OAUTH_GOOGLE_CALLBACK_URL="https://localhost/auth/login?provider=google"
+
+##############################################################################################################################################
+#   ENV_DATA
+##############################################################################################################################################
+
+REDIS_PASS="mypassword"
+POSTGRES_DB="mydatabase"
+POSTGRES_USER="myuser"
+POSTGRES_PASSWORD="mypassword"
+
+##############################################################################################################################################
+#   ENV_GRAFANA & ENV_DISCORD_ALERTS
+##############################################################################################################################################
+
+GRAFANA_ADMIN_USER="myuser"
+GRAFANA_ADMIN_PASSWORD="mypassword"
+
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1242387243105124363/pDj8Ce7W56V4PXM5SrJPcZY5RvuXPwdqlf1BRBR_CaK8XxB3UZLTeiAXbUxo1irL-r7C"
+
+##############################################################################################################################################
