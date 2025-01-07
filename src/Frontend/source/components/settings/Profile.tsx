@@ -11,6 +11,7 @@ import SettingsServices from "@/services/settingsServices";
 import { IconLock } from "@tabler/icons-react";
 import { IconLockOpen2 } from "@tabler/icons-react";
 import { Switch } from "../ui/switch";
+import { Skeleton } from "../ui/skeleton";
 
 export default function ProfileInfo() {
   const { user } = useUser();
@@ -22,9 +23,7 @@ export default function ProfileInfo() {
   }, [user?.is_private]);
   if (!user) {
     return (
-      <div className="flex size-full items-center justify-center">
-        <h1 className="text-2xl text-white">Loading...</h1>
-      </div>
+      <Skeleton className="size-full rounded-md bg-black-crd" />
     );
   }
   const handlePrivacy = async () => {

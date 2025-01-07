@@ -19,7 +19,7 @@ class FriendPendingSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendInvitation
         fields = ['sender', 'receiver', 'created_at', 'sender_display_name', 'sender_avatar', 'sender_level']
-    
+
     def get_sender_display_name(self, obj):
         return obj.sender.profile.display_name
     def get_sender_avatar(self, obj):
@@ -50,16 +50,14 @@ class ProfileFriendsSerializer(serializers.ModelSerializer):
         return obj.friend_requester.profile.display_name
 
     def get_level(self, obj):
-        print(f"request user is {self.context['request'].user}")
         if self.context['request'].user == obj.friend_requester:
             return obj.friend_responder.profile.level
         return obj.friend_requester.profile.level
 
     def get_avatar(self, obj):
-        print(f"request user is {self.context['request'].user}")
         if self.context['request'].user == obj.friend_requester:
-            return obj.friend_responder.profile.avatar.url
-        return obj.friend_requester.profile.avatar.url
+            return obj.friend_responder.profile.avatar.url if obj.friend_responder.profile.avatar else None
+        return obj.friend_requester.profile.avatar.url if obj.friend_requester.profile.avatar else None
 
 
 class FriendsSerializer(serializers.ModelSerializer):

@@ -4,8 +4,8 @@
 
 FROM python:alpine AS development
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV DJANGO_SETTINGS_MODULE=_1Config.settings.development
 
 WORKDIR /app/source
@@ -13,8 +13,7 @@ WORKDIR /app/source
 COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && chmod -R +x /app
+    && pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
@@ -28,8 +27,8 @@ CMD ["sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 || echo
 
 FROM python:alpine AS production
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
 
 WORKDIR /app/source
@@ -39,9 +38,9 @@ COPY ./source/requirements.txt ./
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY . ../
+COPY . /app
 
-RUN chmod -R +x /app/config
+RUN chmod +x /app/config/autoDeploy.sh
 
 EXPOSE 8080
 

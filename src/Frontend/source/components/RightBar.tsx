@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { Friend } from "@/components/friends/UserFriendsNav";
 import FriendServices from "@/services/friendServices";
 import { useUser } from "@/context/GlobalContext";
+import { Skeleton } from "./ui/skeleton";
+import { User } from "@/context/GlobalContext";
 export const RightBar = ({
   handleRightClick,
 }: {
@@ -40,10 +42,10 @@ export const RightBar = ({
   }, [user]);
 
   return (
-    <div className="hidden h-full w-fit flex-col items-center justify-start gap-7 transition-all duration-300 md:flex ">
-      <div className="costum-little-shadow flex h-full max-h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd">
+    <div className="hidden h-full w-3/4 flex-col items-center justify-start gap-7 transition-all duration-300 md:flex">
+      <div className="costum-little-shadow flex h-full min-h-[300px] h-screen w-[80px] flex-col items-center justify-start overflow-hidden rounded-[50px] bg-black-crd pt-3 gap-5">
         <Link href="/Profile" onClick={() => handleClick(9)}>
-          <Avatar className="size-auto">
+          <Avatar className="size-[60px]">
             <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
@@ -57,23 +59,28 @@ export const RightBar = ({
           </Link>
         </div>
         <div className="custom-scrollbar-container flex size-full flex-col items-center gap-3">
-          {friends.length > 0 &&
-            friends.map((friend) => (
+          {
+            friends ? (
+            friends.length > 0 &&
+            friends.map((friend: User) => (
               <Avatar
                 onClick={() => router.push(`/Profile/${friend.id}`)}
-                className="size-[60px] cursor-pointer  rounded-full transition-transform duration-300 hover:scale-110"
-                key={friend.id}
-              >
-                <AvatarImage
-                  src={`http://localhost:8080${friend.avatar}`}
-                  alt={friend.display_name || "User"}
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            ))}
+                      className="size-[55px] cursor-pointer  rounded-full transition-transform duration-300 hover:scale-110"
+                      key={friend.id}
+                    >
+                      <AvatarImage
+                        src={`http://localhost:8080${friend.avatar}`}
+                        alt={friend.display_name || "User"}
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  ))
+          ) : (
+            <Skeleton className="size-[60px] rounded-full bg-black-crd dark:bg-white-crd" />
+          )}
         </div>
       </div>
-      <div className="costum-little-shadow flex min-h-[300px] w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] bg-black-crd pt-4">
+      <div className="costum-little-shadow flex w-[80px] flex-col items-center justify-start gap-2 overflow-hidden rounded-[40px] bg-black-crd pt-4 h-full">
         <div className="flex items-center justify-center">
           <Link href="/messages">
             <FaComments
@@ -92,8 +99,8 @@ export const RightBar = ({
                 key={chat.id}
               >
                 <AvatarImage
-                  src={`http://localhost:8080${chat.receiver.avatar}`}
-                  alt={chat.receiver.username || "User"}
+                  src={`${process.env.NEXT_PUBLIC_HOST}${chat.receiver.avatar}`}
+                  alt={chat.receiver.username || 'User'}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

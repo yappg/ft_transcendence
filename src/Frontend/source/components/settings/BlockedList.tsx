@@ -2,6 +2,7 @@ import { useUser } from "@/context/GlobalContext";
 import BlockedComponent from "./BlockedComponent";
 import FriendServices from "@/services/friendServices";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 export interface Blocked {
   id: number;
@@ -28,7 +29,11 @@ const BlockedList = () => {
     fetchBlockedList();
   }, []);
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex size-full items-center justify-center">
+        <Skeleton className="h-[80%] w-[83%] rounded-[50px] bg-[#4C4D4E] 2xl:p-28" />
+      </div>
+    );
   }
   return (
     <div className="size-full 2xl:p-28">
@@ -39,7 +44,7 @@ const BlockedList = () => {
               <BlockedComponent
                 key={index}
                 name={user?.username}
-                ProfilePhoto={`http://localhost:8080${user?.avatar}`}
+                ProfilePhoto={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`}
                 callback={fetchBlockedList}
               />
             ))
