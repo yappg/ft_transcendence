@@ -36,6 +36,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             return {
                 'id': receiver.profile.id,
                 'username': receiver.profile.display_name,
+                'usernameGame': receiver.username,
                 'avatar': receiver.profile.avatar.url if receiver.profile.avatar else None
             }
         return None

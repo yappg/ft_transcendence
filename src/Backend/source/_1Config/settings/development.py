@@ -147,7 +147,7 @@ DATABASES = {
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 600,  # Extend connection lifetime to 10 minutes
+        'CONN_MAX_AGE': 0,  # Extend connection lifetime to 10 minutes
     }
 }
 
