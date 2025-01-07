@@ -7,34 +7,28 @@ from typing import Optional, Dict
 from .GameInviteManager import GameInviteManager
 from .MatchMaking import MatchMakingSystem
 
-
 class GameInviteConsumer(AsyncWebsocketConsumer):
     invite_manager = GameInviteManager()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
         self.invite_group = None
-        
+
     async def connect(self):
-        """Handle WebSocket connection"""
         if not self.scope["user"].is_authenticated:
             await self.close()
             return
 
         self.user = self.scope["user"]
         self.invite_group = f'invite_group_{self.user.username}'
-        
         # Add user to their personal invite group
         await self.channel_layer.group_add(self.invite_group, self.channel_name)
-        
         # Accept the connection
         await self.accept()
-        
         # Update user status to available
         await self.update_user_status('available')
 
-    async def disconnect(self, close_code):
-        """Handle WebSocket disconnection"""
+    async def disconnect(self):
         if self.user:
             # Remove from invite group
             await self.channel_layer.group_discard(self.invite_group, self.channel_name)
@@ -42,7 +36,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.update_user_status('offline')
 
     async def receive(self, text_data):
-        """Handle incoming WebSocket messages"""
         try:
             data = json.loads(text_data)
             action = data.get('action')
@@ -56,31 +49,24 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
                 await self.handle_reject_invite(data)
             else:
                 await self.send_error('Invalid action')
-
-        except json.JSONDecodeError:
-            await self.send_error('Invalid JSON format')
         except Exception as e:
             await self.send_error(f'Error processing request: {str(e)}')
 
     async def handle_send_invite(self, data):
-        """Handle sending game invites"""
         try:
             username = data.get('username')
             if not username:
                 await self.send_error('Username is required')
                 return
-
             # Check if receiver exists and is available
             receiver = await self.get_player(username)
             if not receiver:
                 await self.send_error('Invalid receiver')
                 return
-
             # Try to send the invite through the invite manager
             invite_id = await self.invite_manager.send_invite(
                 self.user.username, username
             )
-
             if invite_id:
                 await self.send_json({
                     'type': 'invite_sent',
@@ -89,13 +75,11 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
                 })
             else:
                 await self.send_error('Failed to send invite')
-
         except Exception as e:
             await self.send_error(f'Error sending invite: {str(e)}')
 
     async def handle_accept_invite(self, data):
-        """Handle accepting game invites"""
-        invite_id = data.get('invite_id')
+        invite_id = data.get('invite_id') 
         if not invite_id:
             await self.send_error('Invite ID is required')
             return
@@ -113,7 +97,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Failed to accept invite')
 
     async def handle_reject_invite(self, data):
-        """Handle rejecting game invites"""
         invite_id = data.get('invite_id')
         if not invite_id:
             await self.send_error('Invite ID is required')
@@ -132,7 +115,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error('Failed to reject invite')
 
     async def game_invite(self, event):
-        """Handle game invite messages"""
         await self.send_json({
             'type': 'game_invite',
             'invite_id': event['invite_id'],
@@ -140,7 +122,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         })
 
     async def game_accept(self, event):
-        """Handle game accept messages"""
         await self.send_json({
             'type': 'game_accept',
             'invite_id': event['invite_id'],
@@ -149,7 +130,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         })
     
     async def game_found(self, event):
-        """Handle game found event"""
         await self.send_json({
             'type': 'game_found',
             'opponent': event['opponent'],
@@ -160,14 +140,12 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         })
 
     async def game_over(self, event):
-        """Handle game over event"""
         await self.send_json({
             'type': 'game_over',
             'game_id': event['game_id']
         })
 
     async def game_reject(self, event):
-        """Handle game reject messages"""
         await self.send_json({
             'type': 'game_reject',
             'invite_id': event['invite_id'],
@@ -175,7 +153,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         })
 
     async def game_expire(self, event):
-        """Handle game expire messages"""
         await self.send_json({
             'type': 'game_expire',
             'invite_id': event['invite_id'],
@@ -183,25 +160,22 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         })
 
     async def game_error(self, event):
-        """Handle game error messages"""
         await self.send_json({
             'type': 'game_error',
             'message': event['message'],
             'action': 'error'
         })
     # Websocket group event handlers
+
     async def invite_notification(self, event):
-        """Handle invite-related notifications"""
         await self.send_json(event)
 
     async def status_update(self, event):
-        """Handle status update notifications"""
         await self.send_json(event)
 
     # Helper methods
     @database_sync_to_async
     def get_player(self, username: str) -> Optional[Dict]:
-        """Get player information from database"""
         try:
             player = Player.objects.get(username=username)
             return {
@@ -238,12 +212,17 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             return []
 
     async def send_error(self, message: str):
-        """Send error message to client"""
-        await self.send_json({
-            'type': 'error',
-            'message': message
-        })
+        try:
+            await self.send_json({
+                'type': 'error',
+                'message': message
+            })
+        except Exception as e:
+            print(f"Error sending error message: {str(e)}")
 
     async def send_json(self, content: dict):
-        """Send JSON message to client"""
-        await self.send(text_data=json.dumps(content))
+        try:
+            await self.send(text_data=json.dumps(content))
+        except Exception as e:
+            print(f"Error sending JSON: {str(e)}")
+
