@@ -21,7 +21,6 @@ class Player(AbstractUser):
     verified_otp=models.BooleanField(default=False)
     otp_secret_key=models.CharField(max_length=255, default=None, null=True, blank=True)
 
-
     def __str__(self):
         if self.is_superuser:
             return f"{self.username}(Admin)"
@@ -46,6 +45,7 @@ class Player(AbstractUser):
 
             for achievement in achievements:
                 PlayerAchievement.objects.get_or_create(player=self.profile, achievement=achievement)
+
 
 class PlayerProfile(models.Model):
     status_choices = [
@@ -100,7 +100,6 @@ class PlayerProfile(models.Model):
     water_wins =  models.PositiveIntegerField(default=0)
     fire_wins =  models.PositiveIntegerField(default=0)
     earth_wins =  models.PositiveIntegerField(default=0)
-
 
     last_login = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -174,7 +173,7 @@ class PlayerProfile(models.Model):
 
     def update_win_ratio(self):
         if self.total_games != 0:
-            self.win_ratio = (self.games_won / self.total_games) * 100
+            self.win_ratio = round((self.games_won / self.total_games) * 100, 2)
         else:
             self.win_ratio = 0.0
 
@@ -182,7 +181,6 @@ class PlayerProfile(models.Model):
         def update_achievements(achievements, progress):
             for achievement in achievements:
                 try:
-                    # print(f"Achievement: {achievement}, Progress: {progress}")
                     achievement = Achievement.objects.get(name=achievement)
                     player_achievement = PlayerAchievement.objects.get(player=self, achievement=achievement)
 

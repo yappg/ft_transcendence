@@ -71,6 +71,7 @@ export interface LeaderBoard {
   avatar: string;
   games_won: number;
   games_loss: number;
+  Achievement: Achievement[]; 
 }
 
 interface UserContextType {

@@ -3,7 +3,7 @@ import { Chat, Message } from '@/constants/chat';
 
 class ChatService {
   private sockets: Map<number, WebSocket> = new Map();
-  
+
   async getChatList(): Promise<Chat[]> {
     const response = await axios.get('/chat/list/');
     return response.data;
@@ -26,7 +26,7 @@ class ChatService {
       return this.sockets.get(chatId)!;
     }
 
-    const socketUrl = `ws://localhost:8080/ws/chat/${chatId}/`;
+    const socketUrl = `${process.env.NEXT_PUBLIC_WS_URL}/chat/${chatId}/`;
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {

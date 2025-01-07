@@ -14,6 +14,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext } from "react";
 import { GameInviteProvider } from "@/context/gameInviteConetx";
 
+import { Skeleton } from "@/components/ui/skeleton";
 export default function ChatLayout({
   children,
 }: Readonly<{
@@ -22,7 +23,7 @@ export default function ChatLayout({
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(7);
-  }, [setIsActivated]);
+  }, []);
   const router = useRouter();
   const {
     chats,
@@ -36,7 +37,7 @@ export default function ChatLayout({
   const [showChat, setShowChat] = useState(false);
   // I need to fecth only once the chats not every time the page is loaded
   // but once the user make a new chat i need to fetch the chats again
-
+  
   const fetchChats = async () => {
     try {
       const fetchedChats = await chatService.getChatList();
@@ -46,18 +47,18 @@ export default function ChatLayout({
       console.log("Failed to fetch chats or user details", error);
     }
   };
-
+  
   useEffect(() => {
     fetchChats();
   }, []);
-
+  
   useEffect(() => {
     if (messages && messages.length > 0) {
       setShowChat(true);
       console.log("called", user?.id);
     }
   }, [messages]);
-
+  
   useEffect(() => {
     if (chats) {
       const messagesMap = chats.reduce(
@@ -72,6 +73,13 @@ export default function ChatLayout({
     }
   }, [chats]);
   // The user should be able to access other players profiles through the chat interface.
+  if (!user)
+    return (
+      <div className="flex size-full gap-10">
+        <Skeleton className="h-full w-[60%] rounded-[50px] bg-black-crd" />
+        <Skeleton className="h-full w-[40%] rounded-[50px] bg-black-crd" />
+      </div>
+    );
   return (
     <GameInviteProvider>
 
@@ -84,12 +92,12 @@ export default function ChatLayout({
         </div>
         {showChat && (
           <button
-          onClick={() => {
-            setShowChat(false);
-            setMessages([]);
-            router.push("/messages");
-          }}
-          className="absolute right-8 top-8 z-[99] size-[50px] rounded-md lg:hidden"
+            onClick={() => {
+              setShowChat(false);
+              setMessages([]);
+              router.push("/messages");
+            }}
+            className="absolute right-8 top-8 z-[99] size-[50px] rounded-[50px] lg:hidden"
           >
             <IoChevronBackOutline className="size-6" />
           </button>

@@ -20,7 +20,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex h-full w-[45%] items-center p-4 lg:p-10 xl:gap-20 2xl:gap-24 ${
+      className={`flex h-full w-[45%] items-center p-4 lg:p-10 xl:gap-5 2xl:gap-12 md:gap-0 sm:gap-12 gap-3 ${
         reverse ? "flex-row-reverse" : ""
       }`}
     >
@@ -29,14 +29,14 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           reverse ? "flex-row-reverse" : ""
         }`}
       >
-        <Avatar className="md:size-[90px] lg:size-[80px] xl:size-[100px]">
+        <Avatar className="md:size-[65px] lg:size-[80px] xl:size-[100px]">
           <AvatarImage src={profilePhoto} />
           <AvatarFallback className="m-2 size-[80px] bg-[rgba(28,28,28,0.5)] font-dayson text-lg text-white">
             {playerName.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div
-          className={`flex h-[75px] flex-col md:w-[140px] lg:w-[210px] xl:w-[250px] 2xl:w-[300px] ${
+          className={`flex h-[75px] flex-col justify-center md:w-[140px] lg:w-[210px] xl:w-[250px] 2xl:w-[300px] ${
             reverse ? "items-end" : ""
           }`}
         >
