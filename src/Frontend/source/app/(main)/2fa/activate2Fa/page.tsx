@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable tailwindcss/no-custom-classname */
-import axiosInstance from "@/lib/axios";
+import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
 import { useUser } from "@/context/GlobalContext";
 import { Skeleton } from "@/components/ui/skeleton";
+
 const Signup2fa = () => {
   const [value, setValue] = useState('');
   const [QRcode, setQRcode] = useState('');
@@ -104,13 +105,8 @@ const Signup2fa = () => {
       </h1>
 
       {isLoading || localLoading ? (
-<<<<<<< HEAD
-        <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
-          <Skeleton className="size-[200px] rounded-md bg-black-crd" />
-=======
         <h1 className="border-white-crd font-dayson flex size-[200px] items-center justify-center rounded-md border text-[30px] text-gray-600">
           Loading...
->>>>>>> f88bc90dbce343a4ecc3a65149771a717c3dda9e
         </h1>
       ) : QRcode ? (
         <div className="border-white-crd flex size-[200px] items-center justify-center rounded-md border bg-white">

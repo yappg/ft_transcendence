@@ -92,11 +92,13 @@ class SignInView(APIView):
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
+                # secure=False,
                 httponly=False
             )
             resp.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
+                # secure=True,
                 httponly=False
             )
             return resp
