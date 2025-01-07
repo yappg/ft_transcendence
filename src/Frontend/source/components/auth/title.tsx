@@ -13,7 +13,7 @@ function Title() {
     if (code) {
       if (provider && provider === 'google') {
         axios
-          .get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/callback/google/', {
+          .get('/accounts/oauth/callback/google/', {
             params: {
               code: code,
             },
@@ -26,7 +26,7 @@ function Title() {
       } else {
         console.log('--------42', code);
         axios
-          .get(process.env.NEXT_PUBLIC_API_URL + '/accounts/oauth/callback/42/', {
+          .get('/accounts/oauth/callback/42/', {
             params: {
               code: code,
             },
