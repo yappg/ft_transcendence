@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
@@ -118,7 +119,6 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -143,7 +143,7 @@ DATABASES = {
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': 200,
     }
 }
 

@@ -5,7 +5,6 @@ const SettingsServices = {
     return axios.patch('/accounts/user-profile/', data);
   },
   async updatePrivacy(privacy: boolean) {
-    console.log('privacy:111111111ewewewewewewewewew ', privacy);
     return axios.patch('/accounts/user-settings/', { private_profile: privacy });
   },
   async get2fa() {

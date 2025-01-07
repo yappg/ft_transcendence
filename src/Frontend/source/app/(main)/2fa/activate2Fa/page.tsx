@@ -1,16 +1,17 @@
-'use client';
+"use client";
+/* eslint-disable tailwindcss/no-custom-classname */
+import axios from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { InputOTPDemo } from "@/components/2fa/InputOTPDemo";
+import { MyButton } from "@/components/generalUi/Button";
+import { QRCodeSVG } from "qrcode.react";
+import { sendOtp } from "@/services/fetch-otp";
+import { toast } from "@/hooks/use-toast";
+import { useUser } from "@/context/GlobalContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { InputOTPDemo } from '@/components/2fa/InputOTPDemo';
-import { MyButton } from '@/components/generalUi/Button';
-import { QRCodeSVG } from 'qrcode.react'; // Changed to more stable QR code library
-import { sendOtp } from '@/services/fetch-otp';
-import { toast } from '@/hooks/use-toast';
-import { useUser } from '@/context/GlobalContext';
-import axios from '@/lib/axios';
-``
 const Signup2fa = () => {
   const [value, setValue] = useState('');
   const [QRcode, setQRcode] = useState('');
