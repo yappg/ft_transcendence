@@ -355,7 +355,7 @@ export class OnlineGameManager extends PixiManager {
     user: User | null
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager("ws://localhost:8080/ws/game/");
+    this.socketManager = new socketManager(`${process.env.NEXT_PUBLIC_WS_URL}/game/`);
     this.user = user;
     this.socketManager.setPixiManager(this);
   }

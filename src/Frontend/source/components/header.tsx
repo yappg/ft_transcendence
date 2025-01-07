@@ -58,9 +58,7 @@ export const Header = () => {
 
   useEffect(() => {
     if (user) {
-      const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`
-      );
+      const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`);
       console.log('WebSocket connection established');
 
       ws.onopen = () => {
@@ -89,7 +87,7 @@ export const Header = () => {
         console.log("WebSocket connection closed by component unmount");
       };
     }
-  }, []);
+  }, [user]);
 
   if (!user)
     return (
