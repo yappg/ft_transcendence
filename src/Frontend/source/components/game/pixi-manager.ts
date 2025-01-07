@@ -287,7 +287,7 @@ export class LocalGameManager extends PixiManager {
     if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 75;
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.1;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
 
     if (
       this.keysPressed.has("ArrowLeft") &&
