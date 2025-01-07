@@ -7,12 +7,9 @@ services:
         - /:/rootfs:ro
         - /var/run:/var/run:ro
         - /sys:/sys:ro
-        - ${HOME}/goinfre/.docker/run/docker.sock:/var/run/docker.sock:ro
         - /dev/disk/:/dev/disk:ro
       networks:
         - transcendence
-      ports:
-        - 8000:8080
       restart: unless-stopped
 
     web:
@@ -70,20 +67,20 @@ services:
         - transcendence
       ports:
         - 3000:3000
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
-        interval: 30s
-        timeout: 20s
-        retries: 10
-        start_period: 120s
+      # healthcheck:
+      #   test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      #   interval: 30s
+      #   timeout: 20s
+      #   retries: 10
+      #   start_period: 15s
       restart: always
 
     backend:
       container_name: backend
       build:
         context: ./src/Backend
-        # target: ${TEST:-builder}
-        target: ${ENV:-production}
+        target: ${TEST:-production}
+        # target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
       environment:
@@ -101,7 +98,7 @@ services:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
       volumes:
-# # DEV ==============>
+# DEV ==============>
         - ./src/Backend/config:/app/config:rw
         - ./src/Backend/source:/app/source:rw
 # ==================>
@@ -116,12 +113,12 @@ services:
           condition: service_healthy
         database:
           condition: service_healthy
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
-        interval: 30s
-        timeout: 20s
-        retries: 10
-        start_period: 120s
+      # healthcheck:
+      #   test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
+      #   interval: 30s
+      #   timeout: 20s
+      #   retries: 10
+      #   start_period: 15s
       restart: always
 
 
@@ -141,7 +138,7 @@ services:
         test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
         interval: 10s
         timeout: 5s
-        retries: 3
+        retries: 5
         start_period: 5s
       restart: always
 
@@ -174,7 +171,7 @@ services:
         test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
         interval: 10s
         timeout: 5s
-        retries: 3
+        retries: 5
         start_period: 5s
       restart: always
 
@@ -249,7 +246,7 @@ services:
         test: ["CMD", "curl", "-f", "http://localhost:3000"]
         interval: 10s
         timeout: 5s
-        retries: 3
+        retries: 5
         start_period: 5s
       restart: unless-stopped
 
