@@ -49,7 +49,7 @@ export default function Settings() {
     }
   };
   return (
-    <div className="size-full overflow-auto md:py-4 md:pl-6">
+    <div className="size-full flex items-center justify-center">
       <div className="costum-little-shadow flex size-full flex-col-reverse overflow-hidden bg-black-crd md:rounded-[50px] lg:flex-row">
         <div className="flex h-[10%] w-full flex-row border-l-2 border-[#0000008C] bg-[#0000008C] lg:h-full lg:w-1/6 lg:flex-col xl:w-2/6 xl:max-w-[300px]">
           <div className="hidden h-full w-0 items-center justify-center border-b-2 border-black lg:flex lg:h-1/3 lg:w-full">

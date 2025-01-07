@@ -5,6 +5,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
 import { useUser } from "@/context/GlobalContext";
 import { userService } from "@/services/userService";
+import { Skeleton } from "@/components/ui/skeleton";
 // react-hooks/exhaustive-dep
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
@@ -29,12 +30,20 @@ export default function Page() {
     };
     fetchPlayerLeaderBoard();
   }, [setPlayerLeaderBoard, setIsLoading]);
-
-  console.log("this is the fetched leaderboard2: ", PlayerLeaderBoard);
   if (!PlayerLeaderBoard)
     return (
-      <div className="flex size-full items-center justify-center md:py-4 md:pl-6">
-        <h1 className="font-dayson text-[40px] font-bold"> No User</h1>
+      <div className="flex size-full flex-col items-center justify-center gap-2 bg-black-crd rounded-[50px] overflow-hidden ml-5">
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
       </div>
     );
   return (
@@ -51,7 +60,7 @@ export default function Page() {
                   wins={PlayerLeaderBoard[0].games_won}
                   losses={PlayerLeaderBoard[0].games_loss}
                   messagesLink={
-                    <div className="flex h-[70px] w-[90%] items-center justify-center rounded-l-full bg-[#FFFF00] bg-opacity-[40%] sm:h-[70px] sm:w-full lg:h-[150px] lg:w-[90%]">
+                    <div className="flex h-[100px] w-[90%] items-center justify-center rounded-l-full bg-[#FFFF00] bg-opacity-[40%] sm:h-[100px] sm:w-full lg:h-[150px] lg:w-[90%]">
                       <span className="font-dayson text-[15px] text-[#FFFF00] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                         1st
                       </span>
@@ -68,7 +77,7 @@ export default function Page() {
                     wins={PlayerLeaderBoard[1].games_won}
                     losses={PlayerLeaderBoard[1].games_loss}
                     messagesLink={
-                      <div className="flex h-[70px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[70px] sm:w-3/4 lg:h-[150px]">
+                      <div className="flex h-[100px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[100px] sm:w-3/4 lg:h-[150px]">
                         <span className="font-dayson text-[15px] text-[#C0C0C0] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                           2nd
                         </span>
@@ -86,7 +95,7 @@ export default function Page() {
                     wins={PlayerLeaderBoard[2].games_won}
                     losses={PlayerLeaderBoard[2].games_loss}
                     messagesLink={
-                      <div className="flex h-[70px] w-3/5 items-center justify-center rounded-l-full bg-[#CD7F32] bg-opacity-[50%] sm:h-[70px] sm:w-3/5 lg:h-[150px] lg:w-3/5">
+                      <div className="flex h-[100px] w-3/5 items-center justify-center rounded-l-full bg-[#CD7F32] bg-opacity-[50%] sm:h-[100px] sm:w-3/5 lg:h-[150px] lg:w-3/5">
                         <span className="font-dayson text-[15px] text-[#CD7F32] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                           3rd
                         </span>

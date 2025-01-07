@@ -83,7 +83,7 @@ POST http://localhost:8080/api/accounts/auth/signin/
 Content-Type: application/json
 
 {
-    "username": "client4",
+    "username": "client1",
     "password": "password"
 }
 
@@ -94,7 +94,7 @@ POST http://localhost:8080/api/accounts/JWT/token/
 Content-Type: application/json
 
 {
-    "username": "client1",
+    "username": "client2",
     "password": "password"
 }
 
