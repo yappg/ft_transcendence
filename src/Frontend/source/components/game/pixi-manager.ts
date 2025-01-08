@@ -287,7 +287,7 @@ export class LocalGameManager extends PixiManager {
     if (!bottomRacket || !app) return;
 
     const baseScreenWidth = 75;
-    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.1;
+    const movementSpeed = (this.screenWidth / baseScreenWidth) * 0.5;
 
     if (
       this.keysPressed.has("ArrowLeft") &&
@@ -347,15 +347,17 @@ export class LocalGameManager extends PixiManager {
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
   user: User | null;
-
+  game_id: string;
   constructor(
     container: HTMLElement,
     backgroundImage: string,
     game: any,
-    user: User | null
+    user: User | null,
+    game_id: string
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager("ws://localhost:8080/ws/game/");
+    this.socketManager = new socketManager(`${process.env.NEXT_PUBLIC_WS_URL}/game/`, game_id);
+    this.game_id = game_id;
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
