@@ -3,9 +3,14 @@ import { OnlineGameManager } from "./pixi-manager";
 class SocketManager extends WebSocket {
   // socket: WebSocket;
   pixiManager!: OnlineGameManager;
-
-  constructor(url: string) {
-    super(url);
+  game_id: string;
+  constructor(url: string, game_id: string) {
+    let newUrl = url;
+    if (game_id && game_id !== "") {
+      newUrl = url + "?game_id=" + game_id;
+    }
+    super(newUrl);
+    this.game_id = game_id;
 
     this.onopen = () => {
       console.log("WebSocket connection established");
@@ -79,11 +84,11 @@ class SocketManager extends WebSocket {
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
         // TODO Synchonize the velocity of the ball
-        if (this.pixiManager.isTopPaddle) {
-          this.pixiManager.dy = -20;
-        } else {
-          this.pixiManager.dy = 20;
-        }
+        // if (this.pixiManager.isTopPaddle) {
+        //   this.pixiManager.dy = -20;
+        // } else {
+        //   this.pixiManager.dy = 20;
+        // }
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));

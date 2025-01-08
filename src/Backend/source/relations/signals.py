@@ -16,7 +16,7 @@ def create_friend_invitation_notification(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
             recipient=instance.receiver,
-            message=f'You have a new friend invitation from {instance.sender.username}',
+            message=f'You have a new friend invitation from {instance.sender.profile.display_name}',
             Type=Notification_Type.FRIEND_REQUEST.value
         )
 
@@ -25,10 +25,9 @@ def create_friend_notification(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
             recipient=instance.friend_requester,
-            message=f'{instance.friend_responder.username} accepted your Invitation',
+            message=f'{instance.friend_responder.profile.display_name} accepted your Invitation',
             Type=Notification_Type.FRIEND_REQUEST.value
         )
-
 
 @receiver(post_save, sender=Notification)
 def notification_created(sender, instance, created, **kwargs):

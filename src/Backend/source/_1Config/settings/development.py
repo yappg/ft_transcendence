@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
@@ -28,10 +29,10 @@ ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    # 'http://frontend:3000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'https://accounts.google.com',
+    'https://api.intra.42.fr',
 ]
 
 # ===========================
@@ -118,7 +119,6 @@ REST_FRAMEWORK = {
 # ===========================
 # CHANNELS CONFIGURATION
 # ===========================
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -143,7 +143,7 @@ DATABASES = {
         'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
         'HOST': 'database',
         'PORT': '5432',
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': 200,
     }
 }
 

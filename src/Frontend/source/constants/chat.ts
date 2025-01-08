@@ -23,6 +23,7 @@ export interface ReceiverData {
   avatar: string;
   id: number;
   username: string;
+  usernameGame: string;
 }
 export interface Chat {
   created_at: string;

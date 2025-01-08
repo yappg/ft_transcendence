@@ -14,7 +14,7 @@ axiosInstance.interceptors.response.use(
   (error: any) => {
     if (error.response) {
       switch (error.response.status) {
-        case 401: // Unauthorized
+        case 401:
           document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           window.location.href = '/auth/login';

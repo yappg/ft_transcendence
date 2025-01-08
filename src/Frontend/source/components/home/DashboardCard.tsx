@@ -37,7 +37,7 @@ export const DashboardCard = ({
             }`}
           ></div>
           <div className="absolute inset-0 bg-black/50"></div>
-          <div className="relative flex size-full items-center justify-between p-1 px-5">
+          <div className="relative flex size-full items-center justify-between py-7 px-5">
             <Image
               src={playerMatches[0]?.player1.avatar}
               alt="avatar"
@@ -47,21 +47,21 @@ export const DashboardCard = ({
               unoptimized={true}
             />
             <div className="flex flex-col items-start justify-center gap-2">
-              <h1 className="font-dayson text-sm text-white">
+              <h1 className="font-dayson md:text-sm text-white text-lg">
                 {playerMatches[0]?.player1.display_name.slice(0, 7)}
               </h1>
-              <h1 className="font-dayson text-sm text-green-500">
+              <h1 className="font-dayson md:text-sm text-green-500 text-lg">
                 {playerMatches[0]?.player1_score}
               </h1>
             </div>
-            <h1 className="font-coustard text-[30px] text-white xl:text-[45px]">
+            <h1 className="font-coustard text-[35px] text-white xl:text-[45px] md:text-[30px]">
               VS
             </h1>
             <div className="flex flex-col items-end justify-end gap-2">
-              <h1 className="font-dayson text-sm text-white">
+              <h1 className="font-dayson md:text-sm text-white text-lg">
                 {playerMatches[0]?.player2.display_name.slice(0, 7)}
               </h1>
-              <h1 className="font-dayson text-sm text-red-500">
+              <h1 className="font-dayson md:text-sm text-red-500 text-lg">
                 {playerMatches[0]?.player2_score}
               </h1>
             </div>
@@ -73,7 +73,7 @@ export const DashboardCard = ({
               width={40}
               unoptimized={true}
             />
-            <RiArrowRightSLine className="font-dayson font-bold text-white sm:text-[80px] lg:text-[50px]" />
+            <RiArrowRightSLine className="font-dayson font-bold text-white sm:text-[80px] md:text-[50px] text-[40px]" />
           </div>
         </div>
       ) : (

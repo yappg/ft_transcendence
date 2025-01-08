@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.authenticate import CotumAuthentication
@@ -34,7 +34,6 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls'), name='accounts'),
     path('api/relations/', include('relations.urls'), name='relations'),
     path('api/chat/', include('chat.urls'), name='chat'),
-
 ]
 
 if settings.DEBUG == True:
