@@ -17,8 +17,6 @@ const GameArena = () => {
   const user = useUser();
 
   useEffect(() => {
-    console.log('mode:', mode);
-    console.log('map:', map);
     if (mode === 'tournament') {
       if (game.tournamentMatch === 0) {
         game.setPlayer1(game.TournementTree.right.right.data.player);
@@ -53,7 +51,7 @@ const GameArena = () => {
   return (
     <div className="flex h-screen w-full flex-col bg-linear-gradient dark:bg-linear-gradient-dark xl:flex-row xl:gap-8 xl:px-8">
       <div className="flex h-[100px] w-full items-center justify-center xl:h-full xl:w-1/2">
-        <ScoreTable mode={mode || ''} map={map || ''}></ScoreTable>
+        <ScoreTable mode={mode || ''}></ScoreTable>
       </div>
       {/* game table */}
       <div className="flex size-full items-center justify-center lg:p-8 xl:w-1/2">

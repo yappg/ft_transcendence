@@ -27,7 +27,7 @@ const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id:
           game
         );
       }
-    } else {
+    } else if (mode === 'one-vs-one') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
