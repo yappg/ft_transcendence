@@ -11,7 +11,7 @@ export const Friends = ({ players }: { players: Player[] }) => {
             <h1 className="center·font-bold·text-white">No friends</h1>
           </div>
         ) : players?.length === 0 ? (
-            <div className="size-full costum-scrollbar-container flex flex-col justify-center items-center">
+          <div className="costum-scrollbar-container flex size-full flex-col items-center justify-center">
             <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
             <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>
             <Skeleton className="flex h-[80px] w-full border-b-2 border-white-crd bg-black-crd"></Skeleton>

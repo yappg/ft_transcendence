@@ -11,9 +11,9 @@ import { useUser } from "@/context/GlobalContext";
 const Login2fa = () => {
   const [value, setValue] = React.useState("");
   const [storedusename, setStoredusename] = React.useState<string | null>(null);
-
+  const uname = window?.localStorage?.getItem("username") ?? null;
   React.useEffect(() => {
-    setStoredusename(localStorage.getItem("username"));
+    setStoredusename(uname);
   }, []);
 
   const myString = "Go >";

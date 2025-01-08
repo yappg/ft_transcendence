@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import React, { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -12,11 +12,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { MyButton } from '@/components/generalUi/Button';
-import InputBar from '@/components/auth/input-bar';
+} from "@/components/ui/card";
+import { MyButton } from "@/components/generalUi/Button";
+import InputBar from "@/components/auth/input-bar";
 
-const avatars = ['./air.png', './earth.png', './fire.png', './water.png'];
+const avatars = ["./air.png", "./earth.png", "./fire.png", "./water.png"];
 
 interface Player {
   avatar: string;
@@ -30,21 +30,25 @@ interface TournamentFormProps {
 const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [players, setPlayers] = useState<Player[]>([
-    { avatar: '', username: '' },
-    { avatar: '', username: '' },
-    { avatar: '', username: '' },
-    { avatar: '', username: '' },
+    { avatar: "", username: "" },
+    { avatar: "", username: "" },
+    { avatar: "", username: "" },
+    { avatar: "", username: "" },
   ]);
 
   useEffect(() => {
     let unvalid = false;
     players.map((player: Player) => {
-      if (player.avatar === '' ||  player.username === '' || player.username.length > 10) {
+      if (
+        player.avatar === "" ||
+        player.username === "" ||
+        player.username.length > 10
+      ) {
         unvalid = true;
       }
-    })
+    });
     setDisabled(unvalid);
-  }, [players])
+  }, [players]);
 
   const handleAvatarSelect = (index: number, avatar: string) => {
     const newPlayers = [...players];
@@ -77,7 +81,10 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
         <form onSubmit={handleSubmit}>
           {players.map((player, index) => (
             <div key={index} className="mb-6">
-              <Label htmlFor={`player-${index}`} className="mb-2 block text-[rgb(200,200,200)]">
+              <Label
+                htmlFor={`player-${index}`}
+                className="mb-2 block text-[rgb(200,200,200)]"
+              >
                 Player {index + 1}
               </Label>
               <div className="flex items-center space-x-4">
@@ -85,10 +92,13 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
                   {avatars.map((avatar, avatarIndex) => (
                     <Avatar
                       key={avatarIndex}
-                      className={`cursor-pointer ${player.avatar === avatar ? 'ring-2 ring-primary' : ''}`}
+                      className={`cursor-pointer ${player.avatar === avatar ? "ring-2 ring-primary" : ""}`}
                       onClick={() => handleAvatarSelect(index, avatar)}
                     >
-                      <AvatarImage src={avatar} alt={`Avatar ${avatarIndex + 1}`} />
+                      <AvatarImage
+                        src={avatar}
+                        alt={`Avatar ${avatarIndex + 1}`}
+                      />
                       <AvatarFallback>A{avatarIndex + 1}</AvatarFallback>
                     </Avatar>
                   ))}
@@ -121,10 +131,12 @@ const TournamentForm = ({ onStartTournament }: TournamentFormProps) => {
           start
         </MyButton> */}
         <Button
-        className={disabled? 'bg-black-crd' : 'bg-aqua'}
-          disable={disabled? 'true': 'false'}
-          type="submit" onClick={handleSubmit}>
-            Start Tournament
+          className={disabled ? "bg-black-crd" : "bg-aqua"}
+          disabled={disabled}
+          type="submit"
+          onClick={handleSubmit}
+        >
+          Start Tournament
         </Button>
       </CardFooter>
     </Card>

@@ -28,7 +28,7 @@ const GameTable = ({
   const gameManagerRef = useRef<PixiManager | null>(null);
 
   useEffect(() => {
-    if (mode.indexOf('local') !== -1 || mode === 'tournament') {
+    if (mode.indexOf("local") !== -1 || mode === "tournament") {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
@@ -36,7 +36,7 @@ const GameTable = ({
           game,
         );
       }
-    } else if (mode === 'one-vs-one') {
+    } else if (mode === "one-vs-one") {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
@@ -48,14 +48,14 @@ const GameTable = ({
       }
     }
 
-      return () => {
-        if (mode === 'one-vsone') {
-          const om = gameManagerRef.current as OnlineGameManager;
-          om?.socketManager.close();
-        }
-        // if (gameManagerRef.current?.app) {
-        //   gameManagerRef.current.app.destroy(true);
-        // }
+    return () => {
+      if (mode === "one-vsone") {
+        const om = gameManagerRef.current as OnlineGameManager;
+        om?.socketManager.close();
+      }
+      // if (gameManagerRef.current?.app) {
+      //   gameManagerRef.current.app.destroy(true);
+      // }
     };
   }, []);
 

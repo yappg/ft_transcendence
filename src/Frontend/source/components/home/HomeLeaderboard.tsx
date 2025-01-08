@@ -16,7 +16,7 @@ export const HomeLeaderboard = ({
         {playerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
           <div
             key={index}
-            className={`flex w-full flex-1 items-start justify-start gap-4 border-b-2 px-3 pt-3 lg:gap-8 ${index === 0 ? "" : "flex md:hidden lg:flex"} ${index > 2 ? "hidden" : ""}`}
+            className={`flex w-full flex-1 items-start justify-start gap-4 border-b-2 px-3 pt-3 lg:gap-8`}
           >
             <Image
               src={`${process.env.NEXT_PUBLIC_HOST}${leaderboard.avatar}`}

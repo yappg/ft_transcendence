@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
 const Theme = () => {
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
   return (
     <div className="m-10 flex size-4/5 flex-col items-center justify-center md:flex-row">
       <div className="flex h-full w-1/3 flex-col items-center justify-center gap-3">

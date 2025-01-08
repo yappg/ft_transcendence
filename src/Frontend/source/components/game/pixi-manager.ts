@@ -46,7 +46,7 @@ export abstract class PixiManager {
   async initWindow(container: HTMLElement) {
     await this.app.init({
       background: "#000000",
-      resizeTo: document.getElementById("table") as
+      resizeTo: document?.getElementById("table") as
         | HTMLElement
         | Window
         | undefined,
@@ -192,7 +192,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 0.5;
+    const baseSpeed = 0.8;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -247,12 +247,18 @@ export class LocalGameManager extends PixiManager {
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
-        this.game.setTotalScore([this.game.totalScore[0] + 1, this.game.totalScore[1]]);
+        this.game.setTotalScore([
+          this.game.totalScore[0] + 1,
+          this.game.totalScore[1],
+        ]);
         this.game.totalScore[0] += 1;
       } else {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
-        this.game.setTotalScore([this.game.totalScore[0], this.game.totalScore[1] + 1]);
+        this.game.setTotalScore([
+          this.game.totalScore[0],
+          this.game.totalScore[1] + 1,
+        ]);
         this.game.totalScore[1] += 1;
       }
       this.dy =
@@ -264,14 +270,17 @@ export class LocalGameManager extends PixiManager {
         this.ball.y = this.screenHeight / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.GameState = 'waiting';
-          this.game.setGameState('waiting');
+          this.game.GameState = "waiting";
+          this.game.setGameState("waiting");
         } else {
-          this.game.GameState = 'over';
-          this.game.setGameState('over');
-          const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
+          this.game.GameState = "over";
+          this.game.setGameState("over");
+          const sleepmoment = new Promise((resolve) =>
+            setTimeout(resolve, 4000),
+          );
           await sleepmoment;
           this.game.setInGame(false);
+          // this.game.setGameWinner(null);
           this.game.setTournamentMatch(this.game.tournamentMatch + 1);
         }
       }

@@ -8,6 +8,7 @@ const FriendsComponent = ({
   messagesLink,
   customStyles = {},
   achievements = [],
+  id,
 }: {
   name: string;
   ProfilePhoto: string;
@@ -17,6 +18,7 @@ const FriendsComponent = ({
   messagesLink: JSX.Element;
   customStyles?: React.CSSProperties;
   achievements?: any[];
+  id?: number;
 }): JSX.Element => {
   return (
     <div
@@ -28,11 +30,11 @@ const FriendsComponent = ({
       <div className="flex w-4/5 flex-row items-center justify-between xl:min-w-[900px]">
         <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-5 sm:gap-10 xl:gap-10">
           <Avatar className="size-[42px] transition-all duration-300 sm:size-[65px] md:size-[60px] lg:size-[75px]">
-            <AvatarImage 
-            src={ProfilePhoto} 
-                        onClick={() => {
-              window.location.href = `/Profile/${id}`;
-            }}
+            <AvatarImage
+              src={ProfilePhoto}
+              onClick={() => {
+                window.location.href = `/Profile/${id}`;
+              }}
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
