@@ -154,7 +154,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const ws = await onlineService.createWebSocketConnection();
     } catch (err) {
-      console.log("err");
+      console.log("err --< OFF LINE<--> ", err);
     }
   };
 
@@ -165,7 +165,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       const userData = await userService.getUserProfile();
       setUser(userData);
       setUserId(userData.id);
-      console.log("userData fetched :", userData.display_name);
+      console.log("userData --< <-->  display_name", userData.display_name);
     } catch (err) {
       setError(
         err instanceof Error ? err : new Error("Failed to fetch current user"),

@@ -30,6 +30,7 @@ export const RightBar = ({
 
   const fetchFriends = async () => {
     try {
+      console.log("fetching friends or No?");
       const friendsData = await FriendServices.getFriends();
       setFriends(friendsData.data);
     } catch (error: any) {
@@ -39,14 +40,14 @@ export const RightBar = ({
 
   useEffect(() => {
     fetchFriends();
-  }, [user]);
+  }, []);
 
   return (
     <div className="hidden h-full w-3/4 flex-col items-center justify-start gap-7 transition-all duration-300 md:flex">
       <div className="costum-little-shadow flex h-full min-h-[300px] w-[80px] flex-col items-center justify-start gap-5 overflow-hidden rounded-[50px] bg-black-crd pt-3">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-[60px]">
-            <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
+            <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Link>
@@ -68,10 +69,10 @@ export const RightBar = ({
                 key={friend.id}
               >
                 <AvatarImage
-                  src={`http://localhost:8080${friend.avatar}`}
+                  src={`${process.env.NEXT_PUBLIC_HOST}${friend.avatar}`}
                   alt={friend.display_name || "User"}
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{friend.display_name.charAt(0)}</AvatarFallback>
               </Avatar>
             ))
           ) : (

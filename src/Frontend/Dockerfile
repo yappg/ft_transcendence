@@ -32,8 +32,8 @@ RUN yarn install --frozen-lockfile
 
 COPY ./source ./
 
-# RUN yarn build
-CMD [ "tail", "-f", "/dev/null" ]
+RUN yarn build
+# CMD [ "tail", "-f", "/dev/null" ]
 
 ######################################
 # Stage 3: Production build stage

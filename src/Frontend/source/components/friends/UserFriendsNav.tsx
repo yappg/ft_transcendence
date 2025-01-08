@@ -191,7 +191,9 @@ const UserFriendsNav = (): JSX.Element => {
         {user ? (
           <div className="flex h-fit w-[160px] flex-row items-center justify-between gap-5 sm:w-[180px] md:w-[190px] lg:w-[200px] lg:gap-5">
             <Avatar className="size-[45px] max-w-[70px] sm:size-[50px] md:size-[50px] lg:size-[60px]">
-              <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
+              <AvatarImage
+                src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`}
+              />
               <AvatarFallback className="m-2 size-[60px] bg-[rgba(28,28,28,0.5)] font-dayson text-lg text-white md:size-[20px]">
                 {user?.display_name}
               </AvatarFallback>

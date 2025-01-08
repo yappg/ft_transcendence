@@ -11,11 +11,18 @@ import { GameProvider } from "@/context/GameContext";
 import ScoreTable from "@/components/game/game-score";
 
 const GameArena = () => {
-  const params = useParams();
-  const map = params.map as string;
-  const mode = params.mode as string;
-  const game_id = params.game_id as string;
+  const params = useSearchParams();
+  const map = params.get("map") as string;
+  const mode = params.get("mode") as string;
+  const game_id = params.get("game_id") as string;
 
+  if (!params) {
+    return (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <input placeholder="Search..." />
+      </React.Suspense>
+    );
+  }
   return (
     <GameProvider>
       <div className="flex h-screen w-auto flex-col bg-linear-gradient dark:bg-linear-gradient-dark lg:flex-row xl:gap-8 xl:px-8">

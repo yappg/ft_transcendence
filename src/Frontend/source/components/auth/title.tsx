@@ -2,16 +2,17 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
+
+"use client";
 import React, { useEffect } from "react";
 import { OAuthClient } from "@/services/fetch-oauth";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import axios from "@/lib/axios";
 
 function Title() {
-  const params = useParams();
-  const code = params.code as string;
-  const provider = params.provider as string;
-
+  const params = useSearchParams();
+  const code = params.get("code") as string;
+  const provider = params.get("provider") as string;
   useEffect(() => {
     if (code) {
       if (provider && provider === "google") {
@@ -42,10 +43,41 @@ function Title() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (code) {
+      if (provider && provider === "google") {
+        axios
+        .get("/accounts/oauth/callback/google/", {
+          params: {
+            code: code,
+          },
+        })
+        .then(() => (window.location.href = "/home"))
+        .catch((error) => {
+          console.log(error);
+          window.location.href = "/auth/login";
+        });
+      } else {
+        console.log("--------42", code);
+        axios
+        .get("/accounts/oauth/callback/42/", {
+          params: {
+            code: code,
+          },
+        })
+        .then(() => (window.location.href = "/home"))
+        .catch((error) => {
+          console.log(error);
+          window.location.href = "/auth/login";
+        });
+      }
+    }
+  }, []);
   const handleGoogle = () => {
     OAuthClient.google();
   };
-
+  
   const handleIntra42 = () => {
     OAuthClient.intra42();
   };

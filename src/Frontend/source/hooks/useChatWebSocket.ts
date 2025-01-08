@@ -1,8 +1,3 @@
-// Import React hooks needed for managing WebSocket state and lifecycle:
-// - useState: For managing local state
-// - useEffect: For handling side effects like WebSocket setup/cleanup
-// - useRef: For maintaining a mutable reference to the WebSocket instance
-// - useCallback: For memoizing the message handler function
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Message, Chat } from "@/constants/chat";
 import { chatService } from "@/services/chatService";

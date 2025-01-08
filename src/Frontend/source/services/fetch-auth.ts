@@ -1,15 +1,19 @@
 export class AuthClient {
-  private static readonly BASE_URL = process.env.NEXT_PUBLIC_API_URL + '/accounts/auth';
-  private static async fetchWithAuth(endpoint: string, data: Record<string, any>) {
+  private static readonly BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL + "/accounts/auth";
+  private static async fetchWithAuth(
+    endpoint: string,
+    data: Record<string, any>,
+  ) {
     delete data.password2;
     console.log(data);
     try {
       const response = await fetch(`${AuthClient.BASE_URL}/${endpoint}/`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(data),
       });
@@ -19,15 +23,15 @@ export class AuthClient {
         throw new Error(`Authentication error: ${error.message}`);
       }
 
-      throw new Error('Authentication failed');
+      throw new Error("Authentication failed");
     }
   }
 
   static async signup(data: Record<string, any>) {
-    return this.fetchWithAuth('signup', data);
+    return this.fetchWithAuth("signup", data);
   }
 
   static async signin(data: Record<string, any>) {
-    return this.fetchWithAuth('signin', data);
+    return this.fetchWithAuth("signin", data);
   }
 }

@@ -281,14 +281,14 @@ class OAuth42CallbackView(APIView):
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
 
         code = request.GET.get('code')
-        print('--------42', code);
+        # print('--------42', code);
         if not code:
             return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
 
         data = APIdata(code, provider)
         response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
         token_data = response.json()
-        print(token_data)
+        # print(token_data)
 
         if 'access_token' not in token_data:
             return Response({'error': 'Failed to obtain access token'}, status=status.HTTP_200_OK)

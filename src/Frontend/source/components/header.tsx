@@ -71,7 +71,7 @@ export const Header = () => {
       ws.onmessage = (event) => {
         console.log("WebSocket message received:", event.data);
         const data = JSON.parse(event.data);
-        console.log("----------HERE IS THE NEW EVET", data);
+        console.log("----HERE IS THE NEW EVET", data);
 
         setNotifications((prev: any) => [data, ...prev]);
         setNotificationCount((prev: any) => prev + 1);

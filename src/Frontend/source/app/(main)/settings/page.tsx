@@ -14,6 +14,7 @@ import { useState, useEffect, useContext } from "react";
 import Profile from "@/components/settings/Profile";
 import { SideBarContext } from "@/context/SideBarContext";
 import BlockedList from "@/components/settings/BlockedList";
+import React from "react";
 export default function Settings() {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
@@ -36,8 +37,15 @@ export default function Settings() {
       path: "blocked",
     },
   ];
-  const params = useParams();
-  const current = params.field as string;
+  const params = useSearchParams();
+  const current = params.get("field") as string;
+  if (!params) {
+    return (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <input placeholder="Search..." />
+      </React.Suspense>
+    );
+  }
   const renderContent = () => {
     switch (current) {
       case "profile":

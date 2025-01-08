@@ -25,7 +25,6 @@ const Signup = () => {
   const buttonProps = {
     text: "Signup",
     onClick: () => {
-      console.log("clicked");
       let result = "";
       fields.map((field) => (result += field.value + " "));
       alert(result);
