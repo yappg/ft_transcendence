@@ -35,6 +35,8 @@ ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
 
 WORKDIR /app/source
 
+RUN apk add --no-cache curl
+
 COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
@@ -48,4 +50,3 @@ EXPOSE 8080
 
 ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
-# CMD [ "tail", "-f", "/dev/null" ]

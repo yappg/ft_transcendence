@@ -48,7 +48,6 @@ urlpatterns = [
 # JWT tokens
     path('JWT/token/', TokenObtainPairView.as_view(), name='token'),
     path('JWT/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('JWT/token/validate/', TokenValidateView.as_view(), name='token_validate'),
 
 #2fa
     path('2fa/generate-uri/', GenerateURI.as_view(), name='generate_uri'),
@@ -68,16 +67,6 @@ urlpatterns = [
 
 # search views
     path ('search-users/', SearchUsersView.as_view(), name='search_users'),
-    # path ('search-friends', Search)
 
     path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
-    # path('settings/', SettingsView.as_view(), name='settings'),
-    # path('oauth/login/google/', GoogleLoginView.as_view(), name='google_login'),
-
-
-# TODO disable_account, delete_account
-    # path('disable_account/', UserHistoryView , name='user_game_history'),
-    # path('delete_account/', UserHistoryView , name='user_game_history'),
-
 ]
-# TODO auth with Oauth username And Vice #########

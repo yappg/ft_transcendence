@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Achievement } from '@/constants/achivemement';
-import { JSX } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Achievement } from "@/constants/achivemement";
+import { JSX } from "react";
 const FriendsComponent = ({
   name,
   ProfilePhoto,
@@ -28,7 +28,12 @@ const FriendsComponent = ({
       <div className="flex w-4/5 flex-row items-center justify-between xl:min-w-[900px]">
         <div className="flex h-[75px] w-fit flex-row items-center justify-center gap-5 sm:gap-10 xl:gap-10">
           <Avatar className="size-[42px] transition-all duration-300 sm:size-[65px] md:size-[60px] lg:size-[75px]">
-            <AvatarImage src={ProfilePhoto} />
+            <AvatarImage 
+            src={ProfilePhoto} 
+                        onClick={() => {
+              window.location.href = `/Profile/${id}`;
+            }}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="flex h-[75px] w-fit flex-col justify-center">
@@ -40,19 +45,10 @@ const FriendsComponent = ({
             </h1>
           </div>
         </div>
-        {/* <div className="relative flex size-auto w-fit flex-row">
-          {achievements.map((achievement, index) => (
-            <Avatar
-              key={index}
-              className="ml-[-10px] size-[20px] transition-all duration-300 sm:ml-[-17px] sm:size-[40px] lg:size-[50px] xl:size-[75px]"
-            >
-              <AvatarImage src={achievement.icon} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          ))}
-        </div> */}
       </div>
-      <div className="-mr-[20px] flex w-[23%] items-center justify-end">{messagesLink}</div>
+      <div className="mr-[-20px] flex w-[23%] items-center justify-end">
+        {messagesLink}
+      </div>
     </div>
   );
 };

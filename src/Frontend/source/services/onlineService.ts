@@ -8,27 +8,27 @@ class OnlineService {
       this.socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/online/`);
 
       this.socket.onopen = () => {
-        console.log('Connected to WebSocket server');
+        console.log("Connected to WebSocket server");
       };
 
       this.socket.onclose = (event) => {
-        console.log('Disconnected from WebSocket server:', event);
+        console.log("Disconnected from WebSocket server:", event);
       };
 
       this.socket.onerror = (error) => {
-        console.log('WebSocket error:', error); // change to log
+        console.log("WebSocket error:", error);
       };
 
       this.socket.onmessage = (event) => {
         try {
         } catch (error) {
-          console.log('Failed to parse WebSocket message:', error);
+          console.log("Failed to parse WebSocket message:", error);
         }
       };
 
       return this.socket;
     } catch (error) {
-      console.log('Failed to create WebSocket connection:', error);
+      console.log("Failed to create WebSocket connection:", error);
       throw error;
     }
   }

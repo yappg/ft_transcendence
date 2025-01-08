@@ -44,7 +44,7 @@ export const PendingButton = ({
         )}
       </button>
       <button
-        className={` flex h-full w-1/2 items-center justify-center rounded-[14px] bg-green-400 font-dayson text-lg text-white shadow-2xl lg:rounded-[30px]`}
+        className={`flex h-full w-1/2 items-center justify-center rounded-[14px] bg-green-400 font-dayson text-lg text-white shadow-2xl lg:rounded-[30px]`}
         onClick={handleClickAccept}
       >
         {clicked ? (

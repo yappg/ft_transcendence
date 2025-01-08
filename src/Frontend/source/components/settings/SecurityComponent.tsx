@@ -1,5 +1,6 @@
-import { Switch } from "@/components/ui/switch";
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+import { Switch } from "@/components/ui/switch";
 import { User } from "@/constants/chat";
 import { useState } from "react";
 import { Activate_2fa } from "./Activate_2fa";
@@ -39,6 +40,7 @@ export const SecurityComponent = () => {
   };
   const [currentEnabled2fa, setCurrentEnabled2fa] = useState(false);
   const [update2fa, setUpdate2fa] = useState(false);
+
   useEffect(() => {
     const get2fa = async () => {
       const response = await SettingsServices.get2fa();
@@ -86,7 +88,7 @@ export const SecurityComponent = () => {
       if (update2fa) {
         setUpdate2fa(true);
         setCurrentEnabled2fa(true);
-        router.push("/2fa/activate2Fa");
+        router.push("/profile2fa/activate2Fa");
       } else {
         await SettingsServices.update2fa(false);
         setCurrentEnabled2fa(false);

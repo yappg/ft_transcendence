@@ -3,8 +3,6 @@ from asgiref.sync import sync_to_async
 from django.utils import timezone
 from .models import PlayerProfile
 
-# TODO need the frontend to trigger this conusmer for setting the online status and last login
-
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -29,4 +27,3 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
             profile.save(update_fields=['is_online', 'last_login'] if is_online else ['is_online'])
         except PlayerProfile.DoesNotExist:
             pass
-

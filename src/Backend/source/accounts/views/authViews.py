@@ -160,7 +160,6 @@ class VerifyOTP(APIView):
             serializer = self.serializer_class(data=request.data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            # TODO must retrieve the user from the request cookie, to fetch the user from the database
 
             username = request.data.get('username')
             otp_token = request.data.get('otp_token')
@@ -233,7 +232,6 @@ class DisableOTP(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # TODO must retrieve the user from the request cookie, to fetch the user from the database
         try:
             username = request.data.get('username')
             if not username:
@@ -263,9 +261,9 @@ class OAuth42LoginView(APIView):
     authentication_classes = []
 
     def get(self, request, provider):
-
         if request.user.is_authenticated:
             return Response({'error': 'You are already authenticated'}, status=status.HTTP_200_OK)
+
         if provider == '42':
             Auth_url = settings.OAUTH2_PROVIDER_42['AUTHORIZATION_URL']
             client_id_42 = settings.OAUTH2_PROVIDER_42['CLIENT_ID']
@@ -292,46 +290,50 @@ class OAuth42CallbackView(APIView):
     authentication_classes = []
 
     def get(self, request, provider):
+        if (provider != '42' and provider != 'google'):
+            return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
+
+        code = request.GET.get('code')
+        if not code:
+            return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
+
+        data = APIdata(code, provider)
         try:
-            if (provider != '42' and provider != 'google'):
-                return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)
+            response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
+            response.raise_for_status()  # Raises an HTTPError for bad responses
+            token_data = response.json()
+        except requests.exceptions.RequestException as e:
+            return Response({'error': 'Failed to fetch token error there was an error'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
-            code = request.GET.get('code')
-            if not code:
-                return Response({'error': 'No code provided'}, status=status.HTTP_200_OK)
+        if 'access_token' not in token_data:
+            return Response({'error': 'Failed to obtain access token'}, status=status.HTTP_200_OK)
 
-            data = APIdata(code, provider)
-            try:
-                response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
-                response.raise_for_status()  # Raises an HTTPError for bad responses
-                token_data = response.json()
-            except requests.exceptions.RequestException as e:
-                return Response({'error': 'Failed to fetch token error there was an error'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-
-            if 'access_token' not in token_data:
-                return Response({'error': 'Failed to obtain access token'}, status=status.HTTP_200_OK)
-
-            try:
-                user_data = fetch_user_data(token_data['access_token'], provider)
-                user = store_user_data(user_data, provider)
-            except Exception as e:
-                return Response({'error': 'Failed to process user data error there was an error'}, status=status.HTTP_400_BAD_REQUEST)
-
-            access_token, refresh_token = generate_tokens(user)
-            resp = Response({'message':f'logged in Successfully Using {provider}.'}, status=status.HTTP_200_OK)
-            resp.set_cookie(
-                key='access_token',
-                value=access_token,
-                httponly=False
-            )
-            resp.set_cookie(
-                key='refresh_token',
-                value=refresh_token,
-                httponly=False
-            )
-            return resp
+        try:
+            user_data = fetch_user_data(token_data['access_token'], provider)
+            user = store_user_data(user_data, provider)
         except Exception as e:
-            return Response({'error': 'error there was an error'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Failed to process user data error there was an error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        access_token, refresh_token = generate_tokens(user)
+        resp = Response({'message':f'logged in Successfuly Using {provider}.'}, status=status.HTTP_200_OK)
+        resp.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=False
+        )
+        resp.set_cookie(
+            key='refresh_token',
+            value=refresh_token,
+            httponly=False
+        )
+        return resp
+
+
+# class TokenValidateView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         return Response({'message': 'Token is valid'}, status=status.HTTP_200_OK)
 
 class UpdateUserInfos(APIView):
     permission_classes = [IsAuthenticated]

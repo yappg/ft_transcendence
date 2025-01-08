@@ -50,7 +50,7 @@ class MatchMakingSystem:
                     print('Matchmaking Loop')
                     print(f'Players in Queue: {len(self.players_queue)}')
                     print(f'Players in Game: {len(self.players_in_game)}')
-                    print(f'Players in Game: {self.players_in_game}')  
+                    print(f'Players in Game: {self.players_in_game}')
                     print(f'Players indices in Queue: {self.players_queue.keys()}')
                     print(f'Games in Progress: {len(self.games)}')
 
@@ -86,7 +86,7 @@ class MatchMakingSystem:
 
     # --------------------------->>>>>>>>game invite<<<<<<<<<<<<<---------------------------
 
-    
+
 
     # --------------------------->>>>>>>>UTILS<<<<<<<<<<<<<---------------------------
     @database_sync_to_async
@@ -99,45 +99,46 @@ class MatchMakingSystem:
             player1_model.profile.save(update_fields=['status'])
             player2_model.profile.save(update_fields=['status'])
         except Exception as e:
-            #TODO handle the exception
-            print(f'Error Match_making; updating players state: {str(e)}')
-            pass 
+            # print(f'Error Match_making; updating players state: {str(e)}')
+            pass
 
     # --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
     async def notify_players(self, player1, player2, game_id):
         print(f'Notifying players: {player1.username} and {player2.username}')
-        await self.channel_layer.send(
-            player1.channel_name,
-            {
+        try:
+            avatar_url1 = Player.objects.select_related('profile').get(id=player1.id).profile.avatar.url
+            avatar_url2 = Player.objects.select_related('profile').get(id=player2.id).profile.avatar.url
+            await self.channel_layer.send(
+                player1.channel_name,
+                {
                 'type': 'game.found',
                 'opponent': str(player2.username),
-                'opponent_id': player2.id,
+                'opponent_avatar': avatar_url2,
                 'top_paddle': False,
                 'game_id': game_id,
                 'message': "Game found, Get Ready to play!!"
-            }
-        )
-        await self.channel_layer.send(
-            player2.channel_name,
-            {
-                'type': 'game.found',
-                'opponent': str(player1.username),
-                'opponent_id': player1.id,
-                'game_id': game_id,
-                'top_paddle': True,
-                'message': "Game found, Get Ready to play!!"
-            }
-        )
+            })
+            await self.channel_layer.send(
+                player2.channel_name,
+                {
+                    'type': 'game.found',
+                    'opponent': str(player1.username),
+                    'opponent_avatar': avatar_url1,
+                    'game_id': game_id,
+                    'top_paddle': True,
+                    'message': "Game found, Get Ready to play!!"
+                })
+        except Exception as e:
+            # print(f'Error in notify_players: {str(e)}')
+            pass
 
     async def add_player_to_queue(self, player_id, username, channel_name):
         if player_id in self.players_queue:
-            print(f'Player {player_id} already in Queue')
+            # print(f'Player {player_id} already in Queue')
             return
-        print(f'Adding player to queue: {player_id}')
+        # print(f'Adding player to queue: {player_id}')
         self.players_queue[player_id] = GamePlayer(player_id, username, channel_name)
 
     async def remove_player_from_queue(self, player_id):
         if player_id in self.players_queue:
             del self.players_queue[player_id]
-    
-

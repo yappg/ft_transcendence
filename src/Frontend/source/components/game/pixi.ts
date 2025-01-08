@@ -342,7 +342,6 @@ export class OnlineGameManager extends PixiManager {
   ) {
     super(container, backgroundImage, game);
     this.socketManager = socketManager;
-    this.socketManager.setPixiManager(this);
     this.user = user;
     this.game.gameState = "waiting";
     this.game.setGameState("waiting");
@@ -381,7 +380,6 @@ export class OnlineGameManager extends PixiManager {
 
   updateToppaddlePosition(x: number) {
     if (x >= 0 && x <= this.screenWidth - this.paddleWidth)
-      // TODO: adapt screenwidth and paddlewidth to backend
       this.topRacket.x = x;
   }
 

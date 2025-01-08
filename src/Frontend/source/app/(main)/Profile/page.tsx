@@ -1,32 +1,40 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import UserInfo from "@/components/Profile/UserInfo";
 import UserSummary from "@/components/Profile/UserSummary";
-import { User, useUser } from "@/context/GlobalContext";
 import { Skeleton } from "@/components/ui/skeleton";
-/* eslint-disable tailwindcss/no-custom-classname */
-export default function Page() {
-  const { user } = useUser();
+import { User, useUser } from "@/context/GlobalContext";
+import { useEffect } from "react";
 
-  if (!user) {
+export default function Page() {
+  const { user, fetchCurrentUserDetails } = useUser();
+
+  useEffect(() => {
+    fetchCurrentUserDetails();
+  }, [user?.username]);
+
+  if (!user?.username) {
     return <Skeleton className="size-full rounded-md bg-black-crd" />;
   }
   return (
-    <div className="custom-scrollbar-container size-full overflow-y-scroll md:py-4 md:pl-6">
-      <div className="costum-little-shadow size-full gap-8 overflow-hidden md:rounded-[50px]">
-        <div className="relative col-start-1 flex h-3/5 w-full items-center justify-center lg:h-2/5">
+    <div className="flex size-full items-center justify-center overflow-y-scroll scrollbar-hide md:py-4 md:pl-6">
+      <div className="costum-little-shadow size-full gap-8 overflow-x-hidden bg-black-crd scrollbar-hide md:rounded-xl">
+        <div className="relative z-0 col-start-1 flex h-2/3 w-full items-start justify-center lg:h-1/2">
           <div
-            className="absolute z-0 size-full min-h-[400px]"
+            className="absolute z-20 h-[110%] w-[120%]"
             style={{
               backgroundImage: `url(${process.env.NEXT_PUBLIC_HOST + user?.cover})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              filter: 'blur(10px)',
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              filter: "blur(10px)",
             }}
           ></div>
-          <UserInfo userProfile={user as User} state="null" />
+          <UserInfo userProfile={user as User} state="self" />
         </div>
-        <div className="flex h-[45%] w-full items-start justify-start lg:h-3/5">
+        <div className="z-50 flex size-full items-start justify-center">
           <UserSummary
             user={user as User}
             userFriends={user?.friends}

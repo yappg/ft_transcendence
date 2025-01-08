@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
-
 # ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
@@ -20,7 +19,7 @@ SECRET_KEY = os.getenv('SIGNING_KEY')
 DEBUG = True
 
 # Allow all hosts for development (update for production)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 # ===========================
 # CORS CONFIGURATION
@@ -28,12 +27,7 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-    'https://accounts.google.com',
-    'https://api.intra.42.fr',
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split(',')
 
 # ===========================
 # APPLICATION CONFIGURATION
@@ -288,8 +282,3 @@ USE_TZ = True
 
 # Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-#TODO fixing tokens being sent in the Authorization header
-#TODO implement the jwt sliding token
-#TODO finalise the oauth2 implementation
-#TODO understand the asyncio role

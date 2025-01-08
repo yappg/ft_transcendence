@@ -1,11 +1,13 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import * as PIXI from "pixi.js";
 import { GlowFilter } from "pixi-filters";
 import { Assets, Sprite, Graphics } from "pixi.js";
 import SocketManager from "./socket-manager";
 import { User } from "@/context/GlobalContext";
 import socketManager from "./socket-manager";
-import { basename } from "path";
-import { Scale } from "lucide-react";
+// import { basename } from "path";
+// import { Scale } from "lucide-react";
 
 // Global Game Manager
 
@@ -31,13 +33,13 @@ export abstract class PixiManager {
   dx = 0;
   dy = 1;
 
-constructor(container: HTMLElement, map: string, game: any) {
+  constructor(container: HTMLElement, map: string, game: any) {
     this.app = new PIXI.Application();
     this.backgroundImage = `/${map}.png`;
     this.paddleWidth = 0;
     this.game = game;
     this.map = map;
-    this.game.gameState = 'waiting';
+    this.game.gameState = "waiting";
     this.initWindow(container).then(() => {});
   }
 
@@ -92,9 +94,6 @@ constructor(container: HTMLElement, map: string, game: any) {
   }
 
   abstract handleGameStates(): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateGame(x: number, y: number): void;
   abstract handlegameupdates(): void;
   abstract handleWaitingState(): void;
 
@@ -135,7 +134,7 @@ constructor(container: HTMLElement, map: string, game: any) {
     return racket;
   }
 
-  displayText( text: string ) {
+  displayText(text: string) {
     if (!this.app.stage.children.includes(this.waitingText)) {
       const style = new PIXI.TextStyle({
         fontFamily: "Days One",
@@ -193,7 +192,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 1;
+    const baseSpeed = 0.5;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -202,7 +201,10 @@ export class LocalGameManager extends PixiManager {
     this.ballMovementSpeed =
       (currentScreenDiagonal / baseScreenDiagonal) * baseSpeed;
 
-    this.updateBallPosition(this.ball.x + this.dx * this.ballMovementSpeed, this.ball.y + this.dy * this.ballMovementSpeed);
+    this.updateBallPosition(
+      this.ball.x + this.dx * this.ballMovementSpeed,
+      this.ball.y + this.dy * this.ballMovementSpeed,
+    );
 
     if (this.ball.x <= 0 || this.ball.x >= this.screenWidth) {
       this.dx *= -1;
@@ -217,8 +219,9 @@ export class LocalGameManager extends PixiManager {
       this.dy *= -1;
 
       const collisionPoint = this.ball.x - this.topRacket.x;
-      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
-    
+      const normalizedCollisionPoint =
+        (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+
       this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
 
@@ -230,7 +233,8 @@ export class LocalGameManager extends PixiManager {
     ) {
       this.dy *= -1;
       const collisionPoint = this.ball.x - this.bottomRacket.x;
-      const normalizedCollisionPoint = (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
+      const normalizedCollisionPoint =
+        (collisionPoint - this.paddleWidth / 2) / (this.paddleWidth / 2);
 
       this.dx = normalizedCollisionPoint * (Math.abs(this.dx) + 0.5);
     }
@@ -243,11 +247,16 @@ export class LocalGameManager extends PixiManager {
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
+        this.game.setTotalScore([this.game.totalScore[0] + 1, this.game.totalScore[1]]);
+        this.game.totalScore[0] += 1;
       } else {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
+        this.game.setTotalScore([this.game.totalScore[0], this.game.totalScore[1] + 1]);
+        this.game.totalScore[1] += 1;
       }
-      this.dy = (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1? 1 : -1;
+      this.dy =
+        (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
         this.app.stage.removeChild(this.ball);
@@ -255,12 +264,15 @@ export class LocalGameManager extends PixiManager {
         this.ball.y = this.screenHeight / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.gameState = 'waiting';
+          this.game.GameState = 'waiting';
           this.game.setGameState('waiting');
-        }
-        else {
-          this.game.gameState = 'over';
+        } else {
+          this.game.GameState = 'over';
           this.game.setGameState('over');
+          const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
+          await sleepmoment;
+          this.game.setInGame(false);
+          this.game.setTournamentMatch(this.game.tournamentMatch + 1);
         }
       }
       this.ball.x = this.screenWidth / 2;
@@ -275,7 +287,7 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = "start";
+      this.game.GameState = "start";
       this.game.setGameState("start");
     });
   }
@@ -327,22 +339,22 @@ export class LocalGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.displayText("Get\nReady");
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }
   }
 }
 
-// Online Game Manager
+// Online Game Managerƒ
 
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
@@ -353,10 +365,13 @@ export class OnlineGameManager extends PixiManager {
     backgroundImage: string,
     game: any,
     user: User | null,
-    game_id: string
+    game_id: string,
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager(`${process.env.NEXT_PUBLIC_WS_URL}/game/`, game_id);
+    this.socketManager = new socketManager(
+      `${process.env.NEXT_PUBLIC_WS_URL}/game/`,
+      game_id,
+    );
     this.game_id = game_id;
     this.user = user;
     this.socketManager.setPixiManager(this);
@@ -434,10 +449,10 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       if (this.app.stage.children.includes(this.waitingText)) {
         this.app.stage.removeChild(this.waitingText);
       }
@@ -448,18 +463,17 @@ export class OnlineGameManager extends PixiManager {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }
   }
 
-    // updateScore(data: any) {
-    //   const score1 = data.self_score[data.round];
-    //   const score2 = data.opponent_score[data.round];
-    //   this.game.GameScore =  [score1, score2];
-    // }
-  
+  // updateScore(data: any) {
+  //   const score1 = data.self_score[data.round];
+  //   const score2 = data.opponent_score[data.round];
+  //   this.game.GameScore =  [score1, score2];
+  // }
 
   handlegameupdates() {
     if (!this.app) return;

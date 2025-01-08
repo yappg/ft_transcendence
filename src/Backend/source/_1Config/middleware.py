@@ -40,7 +40,7 @@ class TokenAuthMiddleware(BaseMiddleware):
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
                 user = await self.get_user(payload['user_id'])
                 scope['user'] = user
-                print(f'User: {user}')
+                # print(f'User: {user}')
             except:
                 scope['user'] = AnonymousUser()
         else:

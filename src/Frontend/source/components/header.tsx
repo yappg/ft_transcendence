@@ -5,6 +5,7 @@ import { useUser } from "@/context/GlobalContext";
 import NotificationBell from "@/components/notifications/notifications";
 import { SidebarLeft } from "@/components/ui/sidebar-left";
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import {
   SidebarInset,
   SidebarProvider,
@@ -14,7 +15,6 @@ import { Input } from "./ui/input";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { IoCloseOutline } from "react-icons/io5";
-import { notificationsService } from "@/services/notificationsService";
 import { Notification } from "@/constants/notifications";
 import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
@@ -59,8 +59,10 @@ export const Header = () => {
 
   useEffect(() => {
     if (user) {
-      const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`);
-      console.log('WebSocket connection established');
+      const ws = new WebSocket(
+        `${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`,
+      );
+      console.log("WebSocket connection established");
 
       ws.onopen = () => {
         console.log("WebSocket connection opened");
@@ -69,7 +71,7 @@ export const Header = () => {
       ws.onmessage = (event) => {
         console.log("WebSocket message received:", event.data);
         const data = JSON.parse(event.data);
-        console.log("----------HERE IS THE NEW EVET", data);
+        console.log("----HERE IS THE NEW EVET", data);
 
         setNotifications((prev: any) => [data, ...prev]);
         setNotificationCount((prev: any) => prev + 1);
@@ -92,11 +94,11 @@ export const Header = () => {
 
   if (!user)
     return (
-      <div className="flex h-full w-full items-center justify-between">
-        <Skeleton className="lg:h-[50px] w-[50%] rounded-[30px] bg-black-crd h-[20px] md:h-[30px]" />
-        <div className="flex h-full w-[50%] items-center justify-end gap-2">
-          <Skeleton className="lg:h-[50px] lg:w-[200px] lg:rounded-[30px] size-[17px] sm:size-[20px] md:size-[50px] rounded-full bg-black-crd " />
-          <Skeleton className=" size-[17px] sm:size-[20px] md:size-[50px] lg:size-[70px] rounded-full bg-black-crd " />
+      <div className="flex size-full items-center justify-between">
+        <Skeleton className="h-[20px] w-2/4 rounded-[30px] bg-black-crd md:h-[30px] lg:h-[50px]" />
+        <div className="flex h-full w-2/4 items-center justify-end gap-2">
+          <Skeleton className="size-[17px] rounded-full bg-black-crd sm:size-[20px] md:size-[50px] lg:h-[50px] lg:w-[200px] lg:rounded-[30px]" />
+          <Skeleton className="size-[17px] rounded-full bg-black-crd sm:size-[20px] md:size-[50px] lg:size-[70px]" />
         </div>
       </div>
     );
