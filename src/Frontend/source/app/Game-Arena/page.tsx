@@ -1,49 +1,76 @@
-/* eslint-disable tailwindcss/classnames-order */
-/* eslint-disable tailwindcss/no-custom-classname */
-/* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import React from "react";
-import GameTable from "@/components/game/game-arena";
-import { useParams, useSearchParams } from "next/navigation";
-import { GameProvider } from "@/context/GameContext";
-import ScoreTable from "@/components/game/game-score";
+import React, { useEffect } from 'react';
+import GameTable from '@/components/game/game-arena';
+import { useSearchParams } from 'next/navigation';
+import { Player, useGame } from '@/context/GameContext';
+import ScoreTable from '@/components/game/game-score';
+import { useUser } from '@/context/GlobalContext';
 
 const GameArena = () => {
-  const params = useSearchParams();
-  const map = params.get("map") as string;
-  const mode = params.get("mode") as string;
-  const game_id = params.get("game_id") as string;
+  const searchParams = useSearchParams();
+  const map = searchParams.get('map');
+  const mode = searchParams.get('mode');
+  const game_id = searchParams.get("game_id");
+  const game = useGame();
+  const user = useUser();
 
-  if (!params) {
-    return (
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <input placeholder="Search..." />
-      </React.Suspense>
-    );
-  }
+  console.log("game_id", game_id);  
+  console.log("mode", mode);
+  console.log("map", map);
+
+  useEffect(() => {
+    if (mode === 'tournament') {
+      if (game.tournamentMatch === 0) {
+        game.setPlayer1(game.TournementTree.right.right.data.player);
+        game.setPlayer2(game.TournementTree.right.left.data.player);
+      } else if (game.tournamentMatch === 1) {
+        game.setPlayer1(game.TournementTree.left.right.data.player);
+        game.setPlayer2(game.TournementTree.left.left.data.player);
+      } else {
+        game.setPlayer1(game.TournementTree.right.data.player);
+        game.setPlayer2(game.TournementTree.left.data.player);
+      }
+    } else if (mode === 'one-vs-one') {
+      
+      if (user.user?.username && user?.user?.avatar) {
+        game.setPlayer1({
+          username: user?.user?.username,
+          avatar: process.env.NEXT_PUBLIC_HOST + user?.user?.avatar,
+        } as Player);
+      } 
+      if (game?.opponent?.username && game?.opponent?.avatar) {
+        game.setPlayer2({
+          username: game.opponent?.username,
+          avatar: game.opponent?.avatar,
+        } as Player);
+      }
+    } else {
+      game.setPlayer1({ username: 'player1', avatar: '/Avatar.svg' } as Player);
+      game.setPlayer2({ username: 'player2', avatar: '/Avatar.svg' } as Player);
+    }
+  }, [mode, user, game.opponent, game.TournementTree]);
+
+  // if (!searchParams) {
+  //   return (
+  //     <React.Suspense fallback={<div>Loading...</div>}>
+  //       <input placeholder="Search..." />
+  //     </React.Suspense>
+  //   );
+  // }
   return (
-    <GameProvider>
-      <div className="flex h-screen w-auto flex-col bg-linear-gradient dark:bg-linear-gradient-dark lg:flex-row xl:gap-8 xl:px-8">
-        <div className="flex h-[100px] w-full items-center justify-center lg:h-full xl:w-auto">
-          <ScoreTable mode={mode || ""} map={map || ""}></ScoreTable>
-        </div>
-        {/* game table */}
-        <div className="flex size-full items-center justify-center">
-          <div className="flex size-full max-w-[calc(3*(100vh-200px)/4)] items-center justify-center overflow-hidden lg:max-w-[calc(280vh/4)] xl:w-5/6">
-            {/* still one bug in small screens when width is smaller than height need to limit height */}
-            <GameTable
-              mode={mode || ""}
-              map={map || ""}
-              game_id={game_id || ""}
-            />
-          </div>
-        </div>
-        {/* abilities */}
-        <div className="col-start-7 col-end-8 h-[100px] bg-black"></div>
+    <div className="flex h-screen w-full flex-col bg-linear-gradient dark:bg-linear-gradient-dark xl:flex-row xl:gap-8 xl:px-8">
+      <div className="flex h-[100px] w-full items-center justify-center xl:h-full xl:w-1/2">
+        <ScoreTable mode={mode || ''}></ScoreTable>
       </div>
-    </GameProvider>
+      {/* game table */}
+      <div className="flex size-full items-center justify-center lg:p-8 xl:w-1/2">
+        <div className="flex size-full max-w-[calc(3*(100vh-130px)/4)] items-center justify-center overflow-hidden xl:max-w-[calc(280vh/4)]">
+          <GameTable mode={mode || ''} map={map || ''} game_id={game_id || ""} />
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -177,13 +177,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  useEffect(() => {
-    fetchCurrentUserDetails();
-    setOnlineStatus();
-    return () => {
-      onlineService.closeConnection();
-    };
-  }, [user?.username]);
+  // useEffect(() => {
+  //   fetchCurrentUserDetails();
+  //   setOnlineStatus();
+  //   return () => {
+  //     onlineService.closeConnection();
+  //   };
+  // }, [user?.username]);
 
   return (
     <UserContext.Provider

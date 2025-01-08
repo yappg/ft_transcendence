@@ -6,8 +6,8 @@ import { Assets, Sprite, Graphics } from "pixi.js";
 import SocketManager from "./socket-manager";
 import { User } from "@/context/GlobalContext";
 import socketManager from "./socket-manager";
-import { basename } from "path";
-import { Scale } from "lucide-react";
+// import { basename } from "path";
+// import { Scale } from "lucide-react";
 
 // Global Game Manager
 
@@ -94,9 +94,6 @@ export abstract class PixiManager {
   }
 
   abstract handleGameStates(): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateTopPaddlePosition(isMyPaddle: boolean, position: number): void;
-  // abstract updateGame(x: number, y: number): void;
   abstract handlegameupdates(): void;
   abstract handleWaitingState(): void;
 
@@ -195,7 +192,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 1;
+    const baseSpeed = 0.5;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -250,9 +247,13 @@ export class LocalGameManager extends PixiManager {
       if (this.ball.y <= 0) {
         this.game.setGameScore([score1 + 1, score2]);
         this.game.GameScore[0] += 1;
+        this.game.setTotalScore([this.game.totalScore[0] + 1, this.game.totalScore[1]]);
+        this.game.totalScore[0] += 1;
       } else {
         this.game.setGameScore([score1, score2 + 1]);
         this.game.GameScore[1] += 1;
+        this.game.setTotalScore([this.game.totalScore[0], this.game.totalScore[1] + 1]);
+        this.game.totalScore[1] += 1;
       }
       this.dy =
         (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
@@ -263,11 +264,15 @@ export class LocalGameManager extends PixiManager {
         this.ball.y = this.screenHeight / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.gameState = "waiting";
-          this.game.setGameState("waiting");
+          this.game.GameState = 'waiting';
+          this.game.setGameState('waiting');
         } else {
-          this.game.gameState = "over";
-          this.game.setGameState("over");
+          this.game.GameState = 'over';
+          this.game.setGameState('over');
+          const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
+          await sleepmoment;
+          this.game.setInGame(false);
+          this.game.setTournamentMatch(this.game.tournamentMatch + 1);
         }
       }
       this.ball.x = this.screenWidth / 2;
@@ -282,7 +287,7 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = "start";
+      this.game.GameState = "start";
       this.game.setGameState("start");
     });
   }
@@ -334,22 +339,22 @@ export class LocalGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.displayText("Get\nReady");
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }
   }
 }
 
-// Online Game Manager
+// Online Game Managerƒ
 
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
@@ -444,10 +449,10 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       if (this.app.stage.children.includes(this.waitingText)) {
         this.app.stage.removeChild(this.waitingText);
       }
@@ -458,7 +463,7 @@ export class OnlineGameManager extends PixiManager {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }

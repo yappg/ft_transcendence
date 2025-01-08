@@ -32,7 +32,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable react-hooks/exhaustive-deps */
-const MapsSwiper = ({ mode }: { mode: string }) => {
+const MapsSwiper = () => {
   return (
     <Swiper
       effect={"coverflow"}

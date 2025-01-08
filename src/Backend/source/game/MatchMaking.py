@@ -106,28 +106,31 @@ class MatchMakingSystem:
     # --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
     async def notify_players(self, player1, player2, game_id):
         print(f'Notifying players: {player1.username} and {player2.username}')
-        await self.channel_layer.send(
-            player1.channel_name,
-            {
+        try:
+            avatar_url1 = Player.objects.select_related('profile').get(id=player1.id).profile.avatar.url
+            avatar_url2 = Player.objects.select_related('profile').get(id=player2.id).profile.avatar.url
+            await self.channel_layer.send(
+                player1.channel_name,
+                {
                 'type': 'game.found',
                 'opponent': str(player2.username),
-                'opponent_id': player2.id,
+                'opponent_avatar': avatar_url2,
                 'top_paddle': False,
                 'game_id': game_id,
                 'message': "Game found, Get Ready to play!!"
-            }
-        )
-        await self.channel_layer.send(
-            player2.channel_name,
-            {
-                'type': 'game.found',
-                'opponent': str(player1.username),
-                'opponent_id': player1.id,
-                'game_id': game_id,
-                'top_paddle': True,
-                'message': "Game found, Get Ready to play!!"
-            }
-        )
+            })
+            await self.channel_layer.send(
+                player2.channel_name,
+                {
+                    'type': 'game.found',
+                    'opponent': str(player1.username),
+                    'opponent_avatar': avatar_url1,
+                    'game_id': game_id,
+                    'top_paddle': True,
+                    'message': "Game found, Get Ready to play!!"
+                })
+        except Exception as e:
+            print(f'Error in notify_players: {str(e)}')
 
     async def add_player_to_queue(self, player_id, username, channel_name):
         if player_id in self.players_queue:

@@ -177,8 +177,8 @@ const UserFriendsNav = (): JSX.Element => {
               />
             ))
           ) : (
-            <div className="flex h-full items-center justify-center bg-black-crd text-center font-bold text-white">
-              No invitations{" "}
+            <div className="flex h-full items-center justify-center text-center font-bold text-white">
+              No invitations{' '}
             </div>
           )}
         </div>
@@ -231,7 +231,7 @@ const UserFriendsNav = (): JSX.Element => {
           ))}
         </div>
       </div>
-      <div className="h-[90%] w-full">{renderContent()}</div>
+      <div className="size-full bg-black-crd">{renderContent()}</div>
     </div>
   );
 };

@@ -126,7 +126,7 @@ class PingPongGame:
     def adjust_ball_angle(self, paddle: Paddle):
 
         collisionPoint_x = self.ball.position.x - paddle.position.x
-        normalized_collision = (collisionPoint_x - paddle.width/2) / (paddle.width / 2)
+        normalized_collision = (collisionPoint_x - paddle.width) / (paddle.width / 2)
         self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 5.5)
 
     async def check_for_rounds(self) :
@@ -136,9 +136,6 @@ class PingPongGame:
             # self.ball.reset(0)
 
             if self.round == 3:
-                # print(f'{GREEN}Game Over{RESET}')
-                # print(f'{GREEN}Player 1: {self.player1.username} - {self.player1.score}{RESET}')
-                # print(f'{GREEN}Player 2: {self.player1.username} - {self.player2.score}{RESET}')
                 async with self.score_update_lock:
                     if sum(self.player1.score) > sum(self.player2.score):
                         self.winner = 'player1'
