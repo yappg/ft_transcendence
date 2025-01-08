@@ -1,6 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '../ui/button';
-import { useState } from 'react';
+/* eslint-disable tailwindcss/classnames-order */
+import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,27 +10,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { z } from 'zod';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { z } from "zod";
 const ProfileShema = z.object({
-  email: z.string().email('Invalid email'),
-  name: z.string().min(3, 'Username is too short'),
-  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email("Invalid email"),
+  name: z.string().min(3, "Username is too short"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
 });
 const EditProfile = () => {
   const [profile, setProfile] = useState({
-    username: 'Meryem22',
-    name: 'Meryem',
-    email: 'test.ts@gmail.com',
-    oldPassword: '123',
+    username: "Meryem22",
+    name: "Meryem",
+    email: "test.ts@gmail.com",
+    oldPassword: "123",
   });
   const [newProfile, setNewProfile] = useState({
     username: profile.username,
     name: profile.name,
     email: profile.email,
-    oldPass: '',
-    newPass: '',
+    oldPass: "",
+    newPass: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isClicked, setIsClicked] = useState(false);
@@ -54,7 +55,7 @@ const EditProfile = () => {
         email: newProfile.email,
         oldPassword: newProfile.oldPass,
       });
-      setNewProfile({ ...newProfile, oldPass: '', newPass: '' });
+      setNewProfile({ ...newProfile, oldPass: "", newPass: "" });
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors = error.errors.reduce((acc: any, curr: any) => {
@@ -70,7 +71,7 @@ const EditProfile = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#28AFB0] sm:max-w-[425px] dark:bg-[#C1382C]">
+      <DialogContent className="bg-[#28AFB0] dark:bg-[#C1382C] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
@@ -91,29 +92,39 @@ const EditProfile = () => {
               }}
             />
             {errors.name && (
-              <p className="font-coustard mt-1 text-sm text-red-500">{errors.name}</p>
+              <p className="mt-1 font-poppins text-sm text-red-500">
+                {errors.name}
+              </p>
             )}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="Old Password" className="text-right">
               Old Password
             </Label>
-            <Input id="Old Password" className="col-span-3" onChange={() => {}} />
+            <Input
+              id="Old Password"
+              className="col-span-3"
+              onChange={() => {}}
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="New Password" className="text-right">
               New Password
             </Label>
-            <Input id="New Password" className="col-span-3" onChange={() => {}} />
+            <Input
+              id="New Password"
+              className="col-span-3"
+              onChange={() => {}}
+            />
           </div>
         </div>
         <DialogFooter>
           <Button
             type="submit"
-            className={`${isClicked ? 'bg-green-500 text-white shadow-md' : ''}`}
+            className={`${isClicked ? "bg-green-500 text-white shadow-md" : ""}`}
             onClick={handleSave}
           >
-            {isClicked ? 'Saved!' : 'Save Changes'}
+            {isClicked ? "Saved!" : "Save Changes"}
           </Button>
         </DialogFooter>
       </DialogContent>

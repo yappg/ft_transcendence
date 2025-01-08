@@ -56,24 +56,26 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
   const { user } = useUser();
   const game = useGame();
 
-  console.log("moooooode", mode);
   useEffect(() => {
-    if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
-      const newRound = {
-        round: game.Rounds.length + 1,
-        winner: game.GameScore[0] > game.GameScore[1] ? "Player 1" : "Player 2",
-        score: game.GameScore,
-      };
+    if (mode) {
+      if (game.GameScore[0] > 6 || game.GameScore[1] > 6) {
+        const newRound = {
+          round: game.Rounds.length + 1,
+          winner:
+            game.GameScore[0] > game.GameScore[1] ? "Player 1" : "Player 2",
+          score: game.GameScore,
+        };
 
-      game.setRounds((prevRounds: RoundsProps[]) => {
-        const updatedRounds = [...prevRounds, newRound];
-        return updatedRounds as RoundsProps[];
-      });
+        game.setRounds((prevRounds: RoundsProps[]) => {
+          const updatedRounds = [...prevRounds, newRound];
+          return updatedRounds as RoundsProps[];
+        });
 
-      game.setGameScore([0, 0]);
-      game.GameScore = [0, 0];
+        game.setGameScore([0, 0]);
+        game.GameScore = [0, 0];
+      }
     }
-  }, [game]);
+  }, [game, mode]);
 
   return (
     <div className="relative flex size-full items-center justify-around gap-1 px-8 xl:flex-col xl:gap-8">
@@ -87,9 +89,11 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
 
       <div className="flex size-full flex-col items-center justify-center gap-2">
         <div className="gap-15 flex w-full items-center justify-around p-2 font-dayson text-[20px] dark:text-white md:text-[35px]">
-          <PlayerScore player={user} score={game.GameScore[0]} isme={true} />
+          {game && (
+            <PlayerScore player={user} score={game.GameScore[0]} isme={true} />
+          )}
           <div className="flex h-full w-[100px] items-center justify-center rounded-[10px] border-2 border-white-crd p-2 text-center text-[10px] text-white-crd">
-            {game.GameState === "start" ? (
+            {game && game.GameState === "start" ? (
               <div className="flex lg:flex-col">
                 <h1>Round</h1>
                 <h3>{game.Rounds.length + 1}</h3>
@@ -101,18 +105,20 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
               <div>get ready</div>
             )}
           </div>
-          {mode.indexOf("local") === -1 ? (
+          {game && mode && mode.indexOf("local") === -1 ? (
             <PlayerScore
               player={game.opponent}
               score={game.GameScore[1]}
               isme={false}
             />
           ) : (
-            <PlayerScore
-              player={{ username: "player2" } as User}
-              score={game.GameScore[1]}
-              isme={false}
-            />
+            game && (
+              <PlayerScore
+                player={{ username: "player2" } as User}
+                score={game.GameScore[1]}
+                isme={false}
+              />
+            )
           )}
         </div>
 
@@ -130,16 +136,17 @@ const ScoreTable = ({ mode, map }: { mode: string; map: string }) => {
                 {"score"}
               </div>
             </div>
-            {game.Rounds.map((round, index) => (
-              <div
-                key={index}
-                className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? "" : "border-b border-black-crd dark:border-white-crd"} text-[18px] text-black-crd dark:text-white-crd`}
-              >
-                <div className="flex h-full w-1/3 items-center justify-center">{`${round.round}`}</div>
-                <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.winner}`}</div>
-                <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.score[0]}/${round.score[1]}`}</div>
-              </div>
-            ))}
+            {game &&
+              game.Rounds.map((round, index) => (
+                <div
+                  key={index}
+                  className={`flex h-[50px] w-full items-center justify-around ${index == 2 ? "" : "border-b border-black-crd dark:border-white-crd"} text-[18px] text-black-crd dark:text-white-crd`}
+                >
+                  <div className="flex h-full w-1/3 items-center justify-center">{`${round.round}`}</div>
+                  <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.winner}`}</div>
+                  <div className="flex h-full w-1/3 items-center justify-center border-l border-black-crd dark:border-white-crd">{`${round.score[0]}/${round.score[1]}`}</div>
+                </div>
+              ))}
           </div>
         </div>
       </div>

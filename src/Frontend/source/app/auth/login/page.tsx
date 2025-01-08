@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 "use client";
 import React from "react";
 import Title from "@/components/auth/title";

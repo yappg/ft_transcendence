@@ -1,5 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line react-hooks/exhaustive-deps
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable tailwindcss/classnames-order */
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
@@ -20,23 +23,25 @@ const AchievementsPage: React.FC = () => {
     setIsLoading(true);
     try {
       const fetchedAchievements = await userService.getAchievements();
-      const mappedAchievements: Achievement[] = fetchedAchievements.map((data: any) => ({
-        player: data.player,
-        achievement: {
-          name: data.achievement.name,
-          description: data.achievement.description,
-          xp_gain: data.achievement.xp_gain,
-          condition: data.achievement.condition,
-        },
-        date_earned: data.date_earned,
-        image: data.image,
-        xpReward: data.achievement.xp_gain,
-        ratio: data.achievement.condition,
-        progress: data.progress,
-        iconUrl: data.image,
-        gained: data.gained,
-        dateEarned: data.date_earned,
-      }));
+      const mappedAchievements: Achievement[] = fetchedAchievements.map(
+        (data: any) => ({
+          player: data.player,
+          achievement: {
+            name: data.achievement.name,
+            description: data.achievement.description,
+            xp_gain: data.achievement.xp_gain,
+            condition: data.achievement.condition,
+          },
+          date_earned: data.date_earned,
+          image: data.image,
+          xpReward: data.achievement.xp_gain,
+          ratio: data.achievement.condition,
+          progress: data.progress,
+          iconUrl: data.image,
+          gained: data.gained,
+          dateEarned: data.date_earned,
+        }),
+      );
       setAchievements(mappedAchievements);
     } catch (err) {
       setAchievements([]);

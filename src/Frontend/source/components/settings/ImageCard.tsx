@@ -10,7 +10,7 @@ export const ImageCard = ({
   profileError: string;
 }) => {
   let imageUrl = selectedImage;
-  if (imageUrl && !imageUrl.startsWith('blob')) {
+  if (imageUrl && !imageUrl.startsWith("blob")) {
     imageUrl = `${process.env.NEXT_PUBLIC_HOST}${imageUrl}`;
   }
   return (

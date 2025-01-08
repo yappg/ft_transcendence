@@ -1,3 +1,6 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import UserInfo from "@/components/Profile/UserInfo";
 import UserSummary from "@/components/Profile/UserSummary";
@@ -6,31 +9,25 @@ import { useState } from "react";
 import { useEffect } from "react";
 import fetcherestprofiles from "@/services/fetcherestprofiles";
 import { useParams } from "next/navigation";
-/* eslint-disable tailwindcss/no-custom-classname */
-/* eslint-disable react-hooks/exhaustive-deps */
 export default function Page() {
   const params = useParams();
-  const id = parseInt(params.UserId);
+  const id = parseInt(params.UserId as string);
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
 
   useEffect(() => {
-    const fetcherestprofile = async () =>
-      {
-        console.log("fetcherestprofile");
-        try {
+    const fetcherestprofile = async () => {
+      try {
         const data = await fetcherestprofiles.getRestUser(id);
         setPlayerRestProfile(data);
       } catch (error) {
         console.log(error);
       }
     };
-    if (id)
-    {
+    if (id) {
       fetcherestprofile();
     }
   }, [id]);
 
-  // need to add online status
   return (
     <div className="relative size-full overflow-auto md:py-4 md:pl-6">
       {PlayerRestProfile ? (
@@ -40,10 +37,10 @@ export default function Page() {
               className="absolute z-0 size-full min-h-[400px]"
               style={{
                 backgroundImage: `url(${process.env.NEXT_PUBLIC_HOST}${PlayerRestProfile?.cover})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                filter: 'blur(10px)',
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                filter: "blur(10px)",
               }}
             ></div>
             <UserInfo

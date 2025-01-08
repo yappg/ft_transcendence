@@ -22,9 +22,7 @@ export default function ProfileInfo() {
     }
   }, [user?.is_private]);
   if (!user) {
-    return (
-      <Skeleton className="size-full rounded-md bg-black-crd" />
-    );
+    return <Skeleton className="size-full rounded-md bg-black-crd" />;
   }
   const handlePrivacy = async () => {
     const newPrivacyState = !privacy;

@@ -23,7 +23,7 @@ const UserActivityBoard: React.FC<UserActivityBoardProps> = ({
             <AvatarFallback>OT</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start justify-center lg:w-[100px] 2xl:w-[200px]">
-            <p className="font-dayson text-[14px] text-white sm:text-[18px] md:text-[14px]   xl:text-[14px] 2xl:text-[17px]">
+            <p className="font-dayson text-[14px] text-white sm:text-[18px] md:text-[14px] xl:text-[14px] 2xl:text-[17px]">
               {name}
             </p>
             <p className="font-poppins text-white opacity-[50%] lg:text-[12px] 2xl:text-[15px]">

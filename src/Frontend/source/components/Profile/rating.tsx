@@ -2,7 +2,7 @@ import { RatingElement } from "./RatingElement";
 import { Statistics } from "@/context/GlobalContext";
 const Rating = ({ statistics }: { statistics: Statistics }) => {
   return (
-    <div className="flex h-full w-1/2 flex-col items-center justify-center gap-9  lg:gap-3 xl:gap-9">
+    <div className="flex h-full w-1/2 flex-col items-center justify-center gap-9 lg:gap-3 xl:gap-9">
       <div className="flex size-fit items-center justify-center gap-9 md:gap-10 lg:gap-2 xl:gap-9">
         <RatingElement
           color="#766153"

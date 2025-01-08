@@ -9,7 +9,7 @@ export const EditProfile = ({
   return (
     <Link
       href={"/settings"}
-      className="absolute right-4 top-4 flex size-fit items-center justify-center rounded-[10px] bg-[#B7B7B7]  p-1 lg:static"
+      className="absolute right-4 top-4 flex size-fit items-center justify-center rounded-[10px] bg-[#B7B7B7] p-1 lg:static"
     >
       <HiOutlinePencilSquare size={30} color="black" />
     </Link>

@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -12,7 +13,15 @@ import React, { useRef, useEffect } from "react";
 import socketManager from "./socket-manager";
 import { useUser } from "@/context/GlobalContext";
 
-const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id: string }) => {
+const GameTable = ({
+  mode,
+  map,
+  game_id,
+}: {
+  map: string;
+  mode: string;
+  game_id: string;
+}) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const game = useGame();
   const user = useUser();
@@ -26,7 +35,7 @@ const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id:
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
           map,
-          game
+          game,
         );
       }
     } else {
@@ -41,9 +50,9 @@ const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id:
       }
     }
     return () => {
-      if (gameManagerRef.current.socketManager) {
-        gameManagerRef.current.socketManager.destroy(true);
-      }
+      // if (gameManagerRef.current.socketManager) {
+      //   gameManagerRef.current.socketManager.destroy(true);
+      // }
     };
   }, []);
 

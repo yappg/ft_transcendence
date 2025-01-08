@@ -10,7 +10,7 @@ export const CoverCard = ({
   coverError: string;
 }) => {
   let imageUrl = coverImage;
-  if (imageUrl && !imageUrl.startsWith('blob')) {
+  if (imageUrl && !imageUrl.startsWith("blob")) {
     imageUrl = `${process.env.NEXT_PUBLIC_HOST}${imageUrl}`;
   }
   return (

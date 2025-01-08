@@ -1,10 +1,11 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import { GoCheckCircle } from "react-icons/go";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import FriendServices from "@/services/friendServices";
 import { toast } from "@/hooks/use-toast";
 import { JSX } from "react";
-/* eslint-disable tailwindcss/no-custom-classname */
 type FriendRequestCardProps = {
   name: string;
   ProfilePhoto: string;
@@ -73,10 +74,10 @@ const FriendRequestCard = ({
 
   return (
     <div
-      className="flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] bg-black-crd sm:px-10 xl:px-16 2xl:px-28 border-2"
+      className="flex h-[150px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] bg-black-crd sm:px-10 xl:px-16 2xl:px-28"
       style={customStyles}
     >
-      <div className="lg:w-[300px] flex h-[75px] flex-row items-center justify-start gap-8 md:w-[150px] xl:w-[400px] xl:gap-10 2xl:w-[500px]">
+      <div className="flex h-[75px] flex-row items-center justify-start gap-8 md:w-[150px] lg:w-[300px] xl:w-[400px] xl:gap-10 2xl:w-[500px]">
         <Avatar className="size-[50px] transition-all duration-300 md:size-[70px] lg:size-[75px]">
           <AvatarImage src={ProfilePhoto} />
           <AvatarFallback>CN</AvatarFallback>

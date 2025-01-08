@@ -97,7 +97,7 @@ export const SideBar = ({
           })}
       </div>
       <Link
-        className={`flex size-[50px] items-center justify-center `}
+        className={`flex size-[50px] items-center justify-center`}
         href="/settings"
         onClick={() => {
           if (isActivated == 8) handleRightClick(0);

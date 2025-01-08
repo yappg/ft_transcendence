@@ -1,9 +1,12 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { RiSettings5Fill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa6";
 import { BsFillBrushFill, BsKeyFill, BsBoxArrowLeft } from "react-icons/bs";
 import { Card } from "@/components/settings/Card";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Theme from "@/components/settings/Theme";
 import { ImBlocked } from "react-icons/im";
 import Logout from "@/components/settings/Logout";
@@ -11,7 +14,6 @@ import { useState, useEffect, useContext } from "react";
 import Profile from "@/components/settings/Profile";
 import { SideBarContext } from "@/context/SideBarContext";
 import BlockedList from "@/components/settings/BlockedList";
-/* eslint-disable tailwindcss/no-custom-classname */
 export default function Settings() {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
@@ -34,8 +36,8 @@ export default function Settings() {
       path: "blocked",
     },
   ];
-  let param = useSearchParams();
-  const current = param.get("field");
+  const params = useParams();
+  const current = params.field as string;
   const renderContent = () => {
     switch (current) {
       case "profile":
@@ -49,7 +51,7 @@ export default function Settings() {
     }
   };
   return (
-    <div className="size-full flex items-center justify-center">
+    <div className="flex size-full items-center justify-center">
       <div className="costum-little-shadow flex size-full flex-col-reverse overflow-hidden bg-black-crd md:rounded-[50px] lg:flex-row">
         <div className="flex h-[10%] w-full flex-row border-l-2 border-[#0000008C] bg-[#0000008C] lg:h-full lg:w-1/6 lg:flex-col xl:w-2/6 xl:max-w-[300px]">
           <div className="hidden h-full w-0 items-center justify-center border-b-2 border-black lg:flex lg:h-1/3 lg:w-full">

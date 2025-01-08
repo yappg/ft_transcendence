@@ -3,6 +3,7 @@ import { History } from "@/context/GlobalContext";
 import Image from "next/image";
 import { RiArrowRightSLine } from "react-icons/ri";
 /* eslint-disable tailwindcss/no-custom-classname */
+
 export const DashboardCard = ({
   playerMatches,
 }: {
@@ -37,7 +38,7 @@ export const DashboardCard = ({
             }`}
           ></div>
           <div className="absolute inset-0 bg-black/50"></div>
-          <div className="relative flex size-full items-center justify-between py-7 px-5">
+          <div className="relative flex size-full items-center justify-between px-5 py-7">
             <Image
               src={playerMatches[0]?.player1.avatar}
               alt="avatar"
@@ -47,21 +48,21 @@ export const DashboardCard = ({
               unoptimized={true}
             />
             <div className="flex flex-col items-start justify-center gap-2">
-              <h1 className="font-dayson md:text-sm text-white text-lg">
+              <h1 className="font-dayson text-lg text-white md:text-sm">
                 {playerMatches[0]?.player1.display_name.slice(0, 7)}
               </h1>
-              <h1 className="font-dayson md:text-sm text-green-500 text-lg">
+              <h1 className="font-dayson text-lg text-green-500 md:text-sm">
                 {playerMatches[0]?.player1_score}
               </h1>
             </div>
-            <h1 className="font-coustard text-[35px] text-white xl:text-[45px] md:text-[30px]">
+            <h1 className="font-coustard text-[35px] text-white md:text-[30px] xl:text-[45px]">
               VS
             </h1>
             <div className="flex flex-col items-end justify-end gap-2">
-              <h1 className="font-dayson md:text-sm text-white text-lg">
+              <h1 className="font-dayson text-lg text-white md:text-sm">
                 {playerMatches[0]?.player2.display_name.slice(0, 7)}
               </h1>
-              <h1 className="font-dayson md:text-sm text-red-500 text-lg">
+              <h1 className="font-dayson text-lg text-red-500 md:text-sm">
                 {playerMatches[0]?.player2_score}
               </h1>
             </div>
@@ -73,7 +74,7 @@ export const DashboardCard = ({
               width={40}
               unoptimized={true}
             />
-            <RiArrowRightSLine className="font-dayson font-bold text-white sm:text-[80px] md:text-[50px] text-[40px]" />
+            <RiArrowRightSLine className="font-dayson text-[40px] font-bold text-white sm:text-[80px] md:text-[50px]" />
           </div>
         </div>
       ) : (

@@ -1,4 +1,6 @@
 "use client";
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 
 import "@/app/globals.css";
 import { RightBar } from "@/components/RightBar";
@@ -23,7 +25,7 @@ export default function RootLayout({
   return (
     <UserProvider>
       <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] overflow-hidden bg-linear-gradient dark:bg-linear-gradient-dark md:gap-[8px] md:p-4">
-        <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center hidden md:flex">
+        <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center md:flex">
           <SideBar pathname={pathname} handleRightClick={handleRightClick} />
         </div>
         <div className="col-start-0 z-50 col-span-full row-start-1 flex items-center justify-start pt-2 transition-all duration-300 md:col-span-10 md:col-start-2">
@@ -48,7 +50,7 @@ export default function RootLayout({
           <RightBar handleRightClick={handleRightClick} />
         </div>
 
-        <div className="col-start-0 z-0 col-span-full row-span-8 row-start-2 md:col-span-10 md:col-start-2 flex items-center justify-center md:p-2">
+        <div className="col-start-0 z-0 col-span-full row-span-8 row-start-2 flex items-center justify-center md:col-span-10 md:col-start-2 md:p-2">
           {children}
         </div>
       </div>

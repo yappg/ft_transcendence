@@ -1,19 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
-import { OAuthClient } from '@/services/fetch-oauth';
-import { useSearchParams } from 'next/navigation';
-import axios from '@/lib/axios';
+import React, { useEffect } from "react";
+import { OAuthClient } from "@/services/fetch-oauth";
+import { useParams } from "next/navigation";
+import axios from "@/lib/axios";
 
 function Title() {
-  const code = useSearchParams().get("code");
-  const provider = useSearchParams().get("provider");
+  const params = useParams();
+  const code = params.code as string;
+  const provider = params.provider as string;
 
   useEffect(() => {
     if (code) {
-      if (provider && provider === 'google') {
+      if (provider && provider === "google") {
         axios
-          .get('/accounts/oauth/callback/google/', {
+          .get("/accounts/oauth/callback/google/", {
             params: {
               code: code,
             },
@@ -24,9 +27,9 @@ function Title() {
             window.location.href = "/auth/login";
           });
       } else {
-        console.log('--------42', code);
+        console.log("--------42", code);
         axios
-          .get('/accounts/oauth/callback/42/', {
+          .get("/accounts/oauth/callback/42/", {
             params: {
               code: code,
             },
@@ -62,12 +65,12 @@ function Title() {
           <img
             src="/42.svg"
             alt="google"
-            className=" h-full py-[0.35rem] dark:hidden"
+            className="h-full py-[0.35rem] dark:hidden"
           />
           <img
             src="/42-dark.svg"
             alt="google"
-            className=" hidden h-full py-[0.35rem] dark:block"
+            className="hidden h-full py-[0.35rem] dark:block"
           />
         </div>
       </div>

@@ -1,3 +1,6 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { History } from "@/context/GlobalContext";
 import MatchHistoryComponent from "@/components/MatchHistory/HistoryComponent";
@@ -6,7 +9,7 @@ import { useContext, useEffect } from "react";
 import { SideBarContext } from "@/context/SideBarContext";
 import { useUser } from "@/context/GlobalContext";
 import { userService } from "@/services/userService";
-/* eslint-disable react-hooks/exhaustive-deps */
+
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
 
@@ -34,30 +37,30 @@ export default function Page() {
 
   if (!PlayerMatches)
     return (
-      <div className="flex size-full flex-col items-center justify-center gap-2 bg-black-crd rounded-[50px] overflow-hidden ml-5">
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
-        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+      <div className="ml-5 flex size-full flex-col items-center justify-center gap-2 overflow-hidden rounded-[50px] bg-black-crd">
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
+        <Skeleton className="size-full bg-black-crd md:h-[100px] md:w-full lg:h-[150px]" />
       </div>
     );
   return (
-    <div className="size-full flex flex-col items-center justify-center">
-        {PlayerMatches?.length === 0 && (
-          <div className="flex size-full items-center justify-center">
-            <h1 className="font-dayson text-2xl font-bold text-white">
-              No Matches Found
-            </h1>
-          </div>
-        )}
-          <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
+    <div className="flex size-full flex-col items-center justify-center">
+      {PlayerMatches?.length === 0 && (
+        <div className="flex size-full items-center justify-center">
+          <h1 className="font-dayson text-2xl font-bold text-white">
+            No Matches Found
+          </h1>
+        </div>
+      )}
+      <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll bg-[#00000099] md:rounded-[50px]">
         {PlayerMatches?.map((match: History) => (
           <MatchHistoryComponent
             key={match.id}
