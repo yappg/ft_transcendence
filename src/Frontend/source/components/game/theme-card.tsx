@@ -62,7 +62,9 @@ const ModesCard = ({ title, description, url, image }: ModesCardProps) => {
           <img src={image} alt="" className="size-full" />
         </div>
         <div className="size-full">
-          <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">{title}</h2>
+          <h2 className="mb-4 text-4xl font-bold text-[rgb(200,200,200)]">
+            {title}
+          </h2>
           <p className="mb-6 text-lg text-[rgb(180,180,180)]">{description}</p>
         </div>
         <div className="flex w-full justify-end lg:pl-8">

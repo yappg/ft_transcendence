@@ -1,22 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+/* eslint-disable tailwindcss/classnames-order */
+"use client";
 
-import { MyButton } from '@/components/generalUi/Button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useGame } from '@/context/GameContext';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import { TreeGenerator } from 'tournament-bracket-tree';
-import 'tournament-bracket-tree/dist/index.css';
+import { MyButton } from "@/components/generalUi/Button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGame } from "@/context/GameContext";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { TreeGenerator } from "tournament-bracket-tree";
+import "tournament-bracket-tree/dist/index.css";
 
 const mapTournamentToNode = (game: any) => {
   return (
-    <div
-      className="size-[60px] lg:size-[77px]
-                "
-    >
-      {game.player && game.player.avatar.startsWith('./') ? (
+    <div className="size-[60px] lg:size-[77px]">
+      {game.player && game.player.avatar.startsWith("./") ? (
         <div className="flex flex-col items-center justify-center gap-2">
           <img
             src={game.player.avatar}
@@ -38,9 +35,6 @@ const Tournament = () => {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const game = useGame();
-  const searchParams = useSearchParams();
-  console.log('My Tree: ', game.TournementTree);
-  console.log('My Game: ', game.inGame);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,10 +42,10 @@ const Tournament = () => {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -63,11 +57,11 @@ const Tournament = () => {
         </h1>
       </div>
       <div
-        className={`flex size-full justify-center ${isMobile ? 'flex-col' : 'flex-row'} size-auto`}
+        className={`flex size-full justify-center ${isMobile ? "flex-col" : "flex-row"} size-auto`}
       >
         {/* Right Tree */}
         <TreeGenerator
-          root={isMobile ? 'bottom' : 'right'}
+          root={isMobile ? "bottom" : "right"}
           mapDataToNode={mapTournamentToNode}
           tree={game.TournementTree.right}
           lineThickness={1}
@@ -78,16 +72,20 @@ const Tournament = () => {
         {/* Final Match Node */}
         <div
           style={{
-            margin: isMobile ? '10px 0' : '0 10px',
+            margin: isMobile ? "10px 0" : "0 10px",
           }}
           className="flex w-full items-center justify-center md:h-full md:w-auto md:flex-col"
         >
-          <img src="./games-logo.svg" alt="avatar" className="size-[100px]"></img>
+          <img
+            src="./games-logo.svg"
+            alt="avatar"
+            className="size-[100px]"
+          ></img>
           {mapTournamentToNode(game.TournementTree.data)}
         </div>
 
         <TreeGenerator
-          root={isMobile ? 'top' : 'left'}
+          root={isMobile ? "top" : "left"}
           mapDataToNode={mapTournamentToNode}
           tree={game.TournementTree.left}
           lineThickness={1}
@@ -115,7 +113,7 @@ const Tournament = () => {
               game.setTotalScore([0, 0]);
               game.setTournamentMatch(0);
               game.setGameWinner(null);
-              router.push('/games');
+              router.push("/games");
             }}
           >
             end Tournament

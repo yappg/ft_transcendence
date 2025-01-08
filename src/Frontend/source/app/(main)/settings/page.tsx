@@ -6,11 +6,10 @@ import { RiSettings5Fill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa6";
 import { BsFillBrushFill, BsKeyFill, BsBoxArrowLeft } from "react-icons/bs";
 import { Card } from "@/components/settings/Card";
-import { useParams, useSearchParams } from "next/navigation";
 import Theme from "@/components/settings/Theme";
 import { ImBlocked } from "react-icons/im";
 import Logout from "@/components/settings/Logout";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import Profile from "@/components/settings/Profile";
 import { SideBarContext } from "@/context/SideBarContext";
 import BlockedList from "@/components/settings/BlockedList";
@@ -37,17 +36,20 @@ export default function Settings() {
       path: "blocked",
     },
   ];
-  const params = useSearchParams();
-  const current = params.get("field") as string;
-  if (!params) {
-    return (
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <input placeholder="Search..." />
-      </React.Suspense>
-    );
-  }
+
+  const [searchParams] = React.useState(() => {
+    if (window?.location) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        field: urlParams.get("field"),
+      };
+    }
+    return { field: null };
+  });
+  const { field } = searchParams;
+
   const renderContent = () => {
-    switch (current) {
+    switch (field) {
       case "profile":
         return <Profile />;
       case "theme":

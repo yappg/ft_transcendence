@@ -6,7 +6,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
 import { MapsCard, ModesCard } from "@/components/game/theme-card";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useRouter, useSearchParams, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -47,7 +47,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           title="Earth"
           description="earth could shake or make or fake"
           url={
-            mode == 'tournament'
+            mode == "tournament"
               ? `/tournament?mode=${mode}&map=earth`
               : `/Game-Arena?mode=${mode}&map=earth`
           }
@@ -60,7 +60,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           title="Air"
           description="Air: The invisible killer we can not live without"
           url={
-            mode == 'tournament'
+            mode == "tournament"
               ? `/tournament?mode=${mode}&map=air`
               : `/Game-Arena?mode=${mode}&map=air`
           }
@@ -73,7 +73,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
           url={
-            mode == 'tournament'
+            mode == "tournament"
               ? `/tournament?mode=${mode}&map=fire`
               : `/Game-Arena?mode=${mode}&map=fire`
           }
@@ -86,7 +86,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
           url={
-            mode == 'tournament'
+            mode == "tournament"
               ? `/tournament?mode=${mode}&map=water`
               : `/Game-Arena?mode=${mode}&map=water`
           }
@@ -122,7 +122,7 @@ const GameModeSwiper = () => {
           title="Local One vs One"
           description="Challenge a friend in a local one-on-one game mode."
           url={`/games?mode=one-vs-one-local`}
-          image={'/gameModes6.jpeg'}
+          image={"/gameModes6.jpeg"}
         />
       </SwiperSlide>
       <SwiperSlide className="h-full w-1/3 overflow-visible">
@@ -131,7 +131,7 @@ const GameModeSwiper = () => {
           title="Tournament"
           description="Compete against other players in a tournament-style game mode."
           url={`/games?mode=tournament`}
-          image={'/gameModes7.jpeg'}
+          image={"/gameModes7.jpeg"}
         />
       </SwiperSlide>
       <SwiperSlide className="h-full w-1/3 overflow-visible">
@@ -140,7 +140,7 @@ const GameModeSwiper = () => {
           title="One Vs One"
           description="Enter the thrilling world of one-on-one competition against another player."
           url={`/games?mode=one-vs-one`}
-          image={'/gameModes2.jpeg'}
+          image={"/gameModes2.jpeg"}
         />
       </SwiperSlide>
       <SwiperSlide className="h-full w-1/3 overflow-visible">
@@ -149,7 +149,7 @@ const GameModeSwiper = () => {
           title="Local One vs One"
           description="Challenge a friend in a local one-on-one game mode."
           url={`/games?mode=one-vs-one-local`}
-          image={'/gameModes6.jpeg'}
+          image={"/gameModes6.jpeg"}
         />
       </SwiperSlide>
       <SwiperSlide className="h-full w-1/3 overflow-visible">
@@ -158,7 +158,7 @@ const GameModeSwiper = () => {
           title="Tournament"
           description="Compete against other players in a tournament-style game mode."
           url={`/games?mode=tournament`}
-          image={'/gameModes7.jpeg'}
+          image={"/gameModes7.jpeg"}
         />
       </SwiperSlide>
       <SwiperSlide className="h-full w-1/3 overflow-visible">
@@ -167,7 +167,7 @@ const GameModeSwiper = () => {
           title="One Vs One"
           description="Enter the thrilling world of one-on-one competition against another player."
           url={`/games?mode=one-vs-one`}
-          image={'/gameModes2.jpeg'}
+          image={"/gameModes2.jpeg"}
         />
       </SwiperSlide>
     </Swiper>
@@ -177,14 +177,25 @@ const GameModeSwiper = () => {
 const Game_modes = () => {
   const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
-  const params = useSearchParams();
-  const mode = params.get("mode") as string;
-  const game_id = params.get("game_id") as string;
 
-  // if (!params) {
-  //   router.push("/games");
-  //   return null;
-  // }
+  const [searchParams] = React.useState(() => {
+    // During server-side rendering (SSR), window object is undefined which can cause hydration errors
+    // Hydration errors occur when the server-rendered HTML doesn't match the client-side React tree
+    // This happens because SSR can't access browser APIs like window
+    // By checking window?.location, we:
+    // 1. Safely access window using optional chaining
+    // 2. Only execute this code on client-side after hydration is complete
+    // 3. Prevent the mismatch between server and client rendered content
+    if (window?.location) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        mode: urlParams.get("mode"),
+        game_id: urlParams.get("game_id"),
+      };
+    }
+    return { mode: null, game_id: null };
+  });
+  const { mode, game_id } = searchParams;
 
   useEffect(() => {
     if (game_id) {
@@ -193,8 +204,14 @@ const Game_modes = () => {
   }, [game_id, router]);
 
   useEffect(() => {
+    if (mode) {
+      router.push(`/Game-Arena?mode=${mode}&map=earth`);
+    }
+  }, [mode, router]);
+
+  useEffect(() => {
     setIsActivated(2);
-  }, []);
+  }, [setIsActivated]);
 
   if (game_id) {
     return <div>Loading...</div>;

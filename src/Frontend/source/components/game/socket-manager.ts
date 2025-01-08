@@ -1,6 +1,7 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/classnames-order */
 import { OnlineGameManager } from "./pixi-manager";
+import { Player } from "@/context/GameContext";
 
 class SocketManager extends WebSocket {
   // socket: WebSocket;
@@ -82,7 +83,10 @@ class SocketManager extends WebSocket {
     switch (message.type) {
       case "acknowledgeOpponent":
         this.pixiManager.game.gameId = message.data.game_id;
-        this.pixiManager.game.opponent = message.data.opponent;
+        this.pixiManager.game.opponent = {
+          username: message.data.opponent,
+          avatar: message.data.opponent_avatar,
+        } as Player;
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
         const scale_y = this.pixiManager.screenHeight / 100;
         // TODO Synchonize the velocity of the ball
@@ -92,17 +96,20 @@ class SocketManager extends WebSocket {
         //   this.pixiManager.dy = 20;
         // }
         this.pixiManager.game.setGameId(message.data.gameId);
-        this.pixiManager.game.setOpponent(message.data.opponent);
+        this.pixiManager.game.setOpponent({
+          username: message.data.opponent,
+          avatar: message.data.opponent_avatar,
+        } as Player);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         this.sendData({
-          action: 'ready',
+          action: "ready",
           game_id: message.data.game_id,
           game: this.pixiManager.map,
         });
-      case 'UpdateBall':
+      case "UpdateBall":
         this.updateBallPosition(message.ball_position);
         break;
-      case 'UpdatePaddle':
+      case "UpdatePaddle":
         this.updatePaddlePosition(message);
         break;
       case "UpdateScore":

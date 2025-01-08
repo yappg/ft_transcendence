@@ -32,7 +32,7 @@ const BlockedList = () => {
   if (loading) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Skeleton className="h-4/5 w-[83%] rounded-[50px] bg-[#4C4D4E] 2xl:p-28" />
+        <Skeleton className="h-4/5 w-[83%] rounded-r-[30px] bg-[#4C4D4E] lg:size-full 2xl:p-28" />
       </div>
     );
   }
@@ -50,7 +50,7 @@ const BlockedList = () => {
               />
             ))
           ) : (
-            <div className="flex items-center justify-center font-dayson text-xl text-white">
+            <div className="flex size-full items-center justify-center font-dayson text-xl text-white">
               No blocked users found.
             </div>
           )}

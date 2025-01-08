@@ -47,7 +47,9 @@ export const RightBar = ({
       <div className="costum-little-shadow flex h-full min-h-[300px] w-[80px] flex-col items-center justify-start gap-5 overflow-hidden rounded-[50px] bg-black-crd pt-3">
         <Link href="/Profile" onClick={() => handleClick(9)}>
           <Avatar className="size-[60px]">
-            <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`} />
+            <AvatarImage
+              src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Link>

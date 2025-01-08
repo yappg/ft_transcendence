@@ -31,6 +31,7 @@ const UserFriendsNav = (): JSX.Element => {
   const [Friends, setFriends] = useState<Friend[] | null>(null);
   const [Requests, setRequests] = useState<PendingInvitation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -43,6 +44,7 @@ const UserFriendsNav = (): JSX.Element => {
   };
   useEffect(() => {
     if (!user) return;
+    setIsLoadingRequests(true);
     const displayInvit = async () => {
       try {
         const response = await FriendServices.getFriendRequests();
@@ -62,6 +64,7 @@ const UserFriendsNav = (): JSX.Element => {
       }
     };
     displayInvit();
+    setIsLoadingRequests(false);
   }, [user]);
 
   useEffect(() => {
@@ -89,10 +92,7 @@ const UserFriendsNav = (): JSX.Element => {
     setIsLoading(false);
   }, [user]);
 
-  const headers = [
-    { title: "Friends", href: "" },
-    { title: "Invitations", href: "" },
-  ];
+  const headers = [{ title: "Friends" }, { title: "Invitations" }];
 
   const handleRequestDeclined = (username: string) => {
     if (!user) return;
@@ -153,10 +153,11 @@ const UserFriendsNav = (): JSX.Element => {
                 messagesLink={
                   <div className="flex items-center justify-center">
                     <Link href="/messages">
-                      <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 dark:text-[#B8B8B8] xl:size-[50px] 2xl:size-[55px]" />
+                      <FaCommentDots className="mr-[20px] size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 dark:text-[#B8B8B8] xl:size-[50px] 2xl:size-[55px]" />
                     </Link>
                   </div>
                 }
+                id={friend.id}
               />
             ))
           )}
@@ -165,7 +166,22 @@ const UserFriendsNav = (): JSX.Element => {
     } else if (activeIndex === 1) {
       return (
         <div className="custom-scrollbar-container h-[calc(100%-200px)] overflow-y-scroll">
-          {Requests && Requests.length > 0 ? (
+          {isLoadingRequests ? (
+            <div className="flex size-full flex-col items-start justify-start gap-2">
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+              <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
+            </div>
+          ) : !Requests || Requests.length === 0 ? (
+            <div className="flex h-full items-center justify-center text-center font-bold text-white">
+              No invitations
+            </div>
+          ) : (
             Requests.map((invitation: any, index: any) => (
               <FriendRequestCard
                 key={index}
@@ -176,10 +192,6 @@ const UserFriendsNav = (): JSX.Element => {
                 onRequestDeclined={handleRequestDeclined}
               />
             ))
-          ) : (
-            <div className="flex h-full items-center justify-center text-center font-bold text-white">
-              No invitations{' '}
-            </div>
           )}
         </div>
       );
