@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Achievement } from '@/constants/achivemement';
-import { JSX } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Achievement } from "@/constants/achivemement";
+import { JSX } from "react";
 const FriendsComponent = ({
   name,
   ProfilePhoto,
@@ -40,19 +40,10 @@ const FriendsComponent = ({
             </h1>
           </div>
         </div>
-        {/* <div className="relative flex size-auto w-fit flex-row">
-          {achievements.map((achievement, index) => (
-            <Avatar
-              key={index}
-              className="ml-[-10px] size-[20px] transition-all duration-300 sm:ml-[-17px] sm:size-[40px] lg:size-[50px] xl:size-[75px]"
-            >
-              <AvatarImage src={achievement.icon} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          ))}
-        </div> */}
       </div>
-      <div className="-mr-[20px] flex w-[23%] items-center justify-end">{messagesLink}</div>
+      <div className="mr-[-20px] flex w-[23%] items-center justify-end">
+        {messagesLink}
+      </div>
     </div>
   );
 };

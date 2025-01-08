@@ -5,7 +5,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
 import { MapsCard, ModesCard } from "@/components/game/theme-card";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -135,20 +135,20 @@ const GameModeSwiper = () => {
 };
 
 const Game_modes = () => {
-  const { setIsActivated } = useContext(SideBarContext);
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
-  const game_id = searchParams.get("game_id");
   const router = useRouter();
+  const { setIsActivated } = useContext(SideBarContext);
+  const params = useParams();
+  const mode = params.mode as string;
+  const game_id = params.game_id as string;
   useEffect(() => {
     if (game_id) {
       router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${game_id}`);
     }
-  }, [game_id]);
+  }, [game_id, router]);
 
   useEffect(() => {
     setIsActivated(2);
-  }, []);
+  }, [setIsActivated]);
 
   if (game_id) {
     return <div>Loading...</div>;

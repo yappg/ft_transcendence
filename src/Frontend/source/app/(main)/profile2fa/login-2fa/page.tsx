@@ -1,54 +1,54 @@
-/* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { InputOTPDemo } from "@/components/2fa/InputOTPDemo";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { MyButton } from "@/components/generalUi/Button";
 import { sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
+import { useUser } from "@/context/GlobalContext";
+
 const Login2fa = () => {
-  const router = useRouter();
   const [value, setValue] = React.useState("");
+  const [storedusename, setStoredusename] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setStoredusename(localStorage.getItem("username"));
+  }, []);
+
   const myString = "Go >";
-
+  const { user } = useUser();
   const handleClick = async () => {
-    if (typeof window !== "undefined") {
-      let username = localStorage.getItem("username");
-      console.log(value);
-      try {
-        const response = (await sendOtp(
-          "validate-otp",
-          value,
-          username || null,
-        )) as any;
+    try {
+      const response = (await sendOtp(
+        "verifiy-otp",
+        value,
+        storedusename,
+      )) as any;
 
-        if (response.data.message) {
-          toast({
-            title: "success",
-            description: response.data.message,
-            className: "bg-primary border-none text-white bg-opacity-20",
-          });
-          router.push("/home");
-          return;
-        } else if (response.data.error) {
-          toast({
-            title: "invalid code",
-            description: response.data.error,
-            className: "bg-primary-dark border-none text-white bg-opacity-20",
-          });
-        }
-      } catch {
+      console.log(response.data);
+      if (response.data.message) {
+        toast({
+          title: "success",
+          description: response.data.message,
+          className: "bg-primary border-none text-white bg-opacity-20",
+        });
+        return;
+      } else if (response.data.error) {
         toast({
           title: "error",
-          description: "Something went wrong",
+          description: response.data.error,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
       }
+    } catch (error) {
+      toast({
+        title: "error",
+        description: "Oops something went wrong! Try fetching later",
+        variant: "destructive",
+      });
     }
   };
-
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
       <div className="flex flex-col items-start justify-center transition-all">

@@ -20,7 +20,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex h-full w-[45%] items-center p-4 lg:p-10 xl:gap-5 2xl:gap-12 md:gap-0 sm:gap-12 gap-3 ${
+      className={`flex h-full w-[45%] items-center gap-3 p-4 sm:gap-12 md:gap-0 lg:p-10 xl:gap-5 2xl:gap-12 ${
         reverse ? "flex-row-reverse" : ""
       }`}
     >

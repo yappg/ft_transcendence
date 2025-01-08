@@ -1,3 +1,5 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import { OnlineGameManager } from "./pixi-manager";
 
 class SocketManager extends WebSocket {
@@ -92,8 +94,12 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        this.sendData({ action: 'ready', game_id: message.data.game_id, map: this.pixiManager.map });
-      case 'UpdateBall':
+        this.sendData({
+          action: "ready",
+          game_id: message.data.game_id,
+          map: this.pixiManager.map,
+        });
+      case "UpdateBall":
         // this.pixiManager.app.ticker.add(() => {
         // console.log("jfjkbkfskbfskje", message.game_state.ball);
         // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
@@ -121,9 +127,9 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.gameState = message.state;
         this.pixiManager.game.setGameState(message.state);
         break;
-      case 'GameEnd':
-        this.pixiManager.game.gameState = 'over';
-        this.pixiManager.game.setGameState('over');
+      case "GameEnd":
+        this.pixiManager.game.gameState = "over";
+        this.pixiManager.game.setGameState("over");
         this.close();
         break;
       default:

@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 "use client";
 import React from "react";
 import { MyButton } from "../generalUi/Button";
@@ -12,12 +14,7 @@ interface GameCardProps {
   height: string;
 }
 
-const MapsCard = ({
-  title,
-  description,
-  imageUrl,
-  url,
-}: GameCardProps) => {
+const MapsCard = ({ title, description, imageUrl, url }: GameCardProps) => {
   const router = useRouter();
   return (
     <div

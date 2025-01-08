@@ -1,5 +1,7 @@
-"use client";
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -13,28 +15,28 @@ import { useUser } from "@/context/GlobalContext";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Signup2fa = () => {
-  const [value, setValue] = useState('');
-  const [QRcode, setQRcode] = useState('');
+  const [value, setValue] = useState("");
+  const [QRcode, setQRcode] = useState("");
   const [enable2fa, setEnable2fa] = useState(false);
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
 
   const { user, isLoading } = useUser();
 
-  const myString = 'Submit';
+  const myString = "Submit";
 
   const fetchQrCode = async (userName: string) => {
     try {
       setLocalLoading(true);
-      const { data } = await axios.post('/accounts/2fa/generate-uri/', {
+      const { data } = await axios.post("/accounts/2fa/generate-uri/", {
         username: userName,
       });
       if (data.error) {
         setEnable2fa(false);
         toast({
-          title: 'Error',
+          title: "Error",
           description: data.error,
-          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+          className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
         return;
       }
@@ -42,14 +44,14 @@ const Signup2fa = () => {
         setQRcode(data.uri);
         setEnable2fa(true);
       } else {
-        throw new Error('No URI received');
+        throw new Error("No URI received");
       }
     } catch (error) {
-      console.error('QR Code fetch error:', error);
+      console.error("QR Code fetch error:", error);
       toast({
-        title: 'Error',
-        description: 'Oops something went wrong! Try fetching later',
-        variant: 'destructive',
+        title: "Error",
+        description: "Oops something went wrong! Try fetching later",
+        variant: "destructive",
       });
     } finally {
       setLocalLoading(false);
@@ -65,55 +67,60 @@ const Signup2fa = () => {
   const handleClick = async () => {
     if (value.length !== 6) {
       toast({
-        title: 'Error',
-        description: 'Please enter a 6-digit code',
-        variant: 'destructive',
+        title: "Error",
+        description: "Please enter a 6-digit code",
+        variant: "destructive",
       });
       return;
     }
 
     try {
-      const response = await sendOtp('verifiy-otp', value, user?.username || null);
+      const response = await sendOtp(
+        "verifiy-otp",
+        value,
+        user?.username || null,
+      );
 
       if (response.data.message) {
         toast({
-          title: 'Success',
+          title: "Success",
           description: response.data.message,
-          className: 'bg-primary-dark border-none text-white bg-opacity-20',
+          className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
-        router.push('/home');
+        router.push("/home");
       } else if (response.data.error) {
         toast({
-          title: 'Error',
+          title: "Error",
           description: response.data.error,
-          className: 'bg-primary-dark border-none text-white bg-opacity-20 border-2',
+          className:
+            "bg-primary-dark border-none text-white bg-opacity-20 border-2",
         });
       }
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to verify OTP',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to verify OTP",
+        variant: "destructive",
       });
     }
   };
 
   return (
     <div className="relative flex size-auto flex-col items-center justify-center gap-4 md:h-[90%] md:w-[85%]">
-      <h1 className="font-dayson flex items-center justify-center text-[40px] text-white transition-all duration-300">
+      <h1 className="flex items-center justify-center font-dayson text-[40px] text-white transition-all duration-300">
         activate 2FA
       </h1>
 
       {isLoading || localLoading ? (
-        <h1 className="border-white-crd font-dayson flex size-[200px] items-center justify-center rounded-md border text-[30px] text-gray-600">
+        <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
           Loading...
         </h1>
       ) : QRcode ? (
-        <div className="border-white-crd flex size-[200px] items-center justify-center rounded-md border bg-white">
+        <div className="flex size-[200px] items-center justify-center rounded-md border border-white-crd bg-white">
           <QRCodeSVG value={QRcode} size={180} level="M" includeMargin={true} />
         </div>
       ) : (
-        <div className="border-white-crd font-dayson flex size-[200px] items-center justify-center rounded-md border text-gray-600">
+        <div className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-gray-600">
           No QR Code Available
         </div>
       )}

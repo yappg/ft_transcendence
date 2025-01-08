@@ -131,7 +131,6 @@ const ProfileInformations = () => {
           selectedImage={
             avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar
           }
-          
           handleImageChange={handleImageChange}
           profileError={avatarError || ""}
         />

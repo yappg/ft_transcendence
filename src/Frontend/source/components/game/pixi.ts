@@ -342,7 +342,6 @@ export class OnlineGameManager extends PixiManager {
   ) {
     super(container, backgroundImage, game);
     this.socketManager = socketManager;
-    this.socketManager.setPixiManager(this);
     this.user = user;
     this.game.gameState = "waiting";
     this.game.setGameState("waiting");

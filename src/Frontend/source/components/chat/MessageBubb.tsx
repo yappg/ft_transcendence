@@ -20,8 +20,8 @@ export function MessageBubble({
       <div
         className={`h-fit max-w-[400px] rounded-xl px-4 py-3 ${
           isCurrentUser
-            ? "bg-aqua text-primary-foreground   dark:bg-[#DF3925]"
-            : "bg-[#CCCCCC80]  text-muted-foreground"
+            ? "bg-aqua text-primary-foreground dark:bg-[#DF3925]"
+            : "bg-[#CCCCCC80] text-muted-foreground"
         }`}
       >
         <p className="h-fit w-full break-words text-sm text-black">

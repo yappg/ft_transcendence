@@ -8,7 +8,9 @@ export const Achievments = ({ achievements }: { achievements: any[] }) => {
           key={index}
           className="size-[50px] transition-all duration-300 sm:size-[70px] lg:size-[65px] xl:size-[80px]"
         >
-          <AvatarImage src={`${process.env.NEXT_PUBLIC_HOST}${achievement.image}`} />
+          <AvatarImage
+            src={`${process.env.NEXT_PUBLIC_HOST}${achievement.image}`}
+          />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       ))}

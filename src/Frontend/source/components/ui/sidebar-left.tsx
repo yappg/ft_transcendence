@@ -7,6 +7,7 @@ import {
   Inbox,
   MessageCircleQuestion,
   Settings2,
+  LucideIcon,
 } from "lucide-react";
 import { NavMain } from "@/components/ui/nav-main";
 import { FaTrophy } from "react-icons/fa";
@@ -24,6 +25,7 @@ import { IconUserScan } from "@tabler/icons-react";
 import { IconConeFilled } from "@tabler/icons-react";
 import { FaUsers } from "react-icons/fa";
 import { IconDeviceGamepad3Filled } from "@tabler/icons-react";
+import { ReactNode } from "react";
 // This is sample data.
 const data = {
   teams: [
@@ -95,14 +97,33 @@ export function SidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="gap-10 ">
+      <SidebarHeader className="gap-10">
         <h1 className="font-dayson text-[25px] text-black dark:text-white">
           Ping Pong
         </h1>
-        <NavMain items={data.navMain} />
+        <NavMain
+          items={
+            data.navMain as {
+              title: string;
+              url: string;
+              icon: LucideIcon;
+              isActive?: boolean;
+            }[]
+          }
+        />
       </SidebarHeader>
       <SidebarContent className="">
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary
+          items={
+            data.navSecondary as {
+              title: string;
+              url: string;
+              icon: LucideIcon;
+              badge?: ReactNode;
+            }[]
+          }
+          className="mt-auto"
+        />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
