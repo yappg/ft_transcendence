@@ -1,3 +1,6 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { SideBarContext } from "@/context/SideBarContext";
 import { useContext } from "react";
@@ -29,7 +32,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable react-hooks/exhaustive-deps */
-const MapsSwiper = ({ mode }: { mode: string }) => {
+const MapsSwiper = () => {
   return (
     <Swiper
       effect={"coverflow"}
@@ -47,9 +50,9 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
       autoplay={true}
       pagination={{ el: ".swiper-pagination", clickable: true }}
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-      className="swiper-container flex h-full lg:h-[70%] w-full items-center justify-center py-4"
+      className="swiper-container flex size-full items-center justify-center py-4 lg:h-[70%]"
     >
-      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
+      <SwiperSlide className="lg: h-full w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/earth.png"
@@ -58,7 +61,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/one-vs-one/earth`}
         />
       </SwiperSlide>
-      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
+      <SwiperSlide className="lg: h-full w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/air.png"
@@ -67,7 +70,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/one-vs-one/air`}
         />
       </SwiperSlide>
-      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
+      <SwiperSlide className="lg: h-full w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/fire.png"
@@ -76,7 +79,7 @@ const MapsSwiper = ({ mode }: { mode: string }) => {
           url={`/one-vs-one/fire`}
         />
       </SwiperSlide>
-      <SwiperSlide className="h-full w-1/6 lg: w-1/3">
+      <SwiperSlide className="lg: h-full w-1/3">
         <MapsCard
           height="100px"
           imageUrl="/water.png"
@@ -166,18 +169,18 @@ const Home = () => {
   if (!user || isLoading)
     return (
       <div className="size-full">
-        <div className="h-full w-full items-center justify-center gap-3 lg:flex hidden">
-          <Skeleton className="h-full w-[60%] rounded-[30px] bg-black-crd" />
-        <Skeleton className="h-full w-[40%] rounded-[30px] bg-black-crd" />
-      </div>
-      <Skeleton className="size-full bg-black-crd flex lg:hidden" />
+        <div className="size-fullitems-center hidden justify-center gap-3 lg:flex">
+          <Skeleton className="h-full w-3/5 rounded-[30px] bg-black-crd" />
+          <Skeleton className="h-full w-2/5 rounded-[30px] bg-black-crd" />
+        </div>
+        <Skeleton className="flex size-full bg-black-crd lg:hidden" />
       </div>
     );
   userAchievements = user?.achievements;
   return (
-    <div className="custom-scrollbar-container flex size-full flex-col lg:flex-row lg:gap-0 lg:gap-6 gap-4">
+    <div className="custom-scrollbar-container flex size-full flex-col gap-4 lg:flex-row lg:gap-3">
       <div className="h-1/2 w-full lg:h-full lg:w-3/5">
-        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center hidden lg:flex">
+        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center lg:flex">
           <Image
             src="/games-logo.svg"
             alt=""
@@ -187,17 +190,17 @@ const Home = () => {
             unoptimized={true}
           />
         </div>
-        <div className="custom-inner-shadow costum-little-shadow flex h-full lg:h-3/4 items-center overflow-hidden rounded-[30px] bg-black-crd p-3">
+        <div className="custom-inner-shadow costum-little-shadow flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd p-3 lg:h-3/4">
           <div className="flex size-full items-center">
             <MapsSwiper mode="" />
           </div>
         </div>
       </div>
       <div className="flex h-1/2 w-full flex-col justify-start gap-5 lg:h-full lg:w-2/5 lg:gap-9">
-        <div className="h-[500px] w-full md:h-[100px] lg:h-[10%] min-h-[60px]">
+        <div className="h-[100px] min-h-[60px] w-full md:h-[100px] lg:h-[10%]">
           <DashboardCard playerMatches={PlayerMatches || []} />
         </div>
-        <div className="realtive flex w-full items-center justify-between rounded-[30px] bg-black-crd md:h-[15%] lg:h-[15%] py-2">
+        <div className="realtive flex w-full items-center justify-between rounded-[30px] bg-black-crd py-2 md:h-[15%] lg:h-[15%]">
           {userAchievements && userAchievements.length > 0 ? (
             <HomeAchievement
               title={userAchievements[0].achievement.name}
@@ -222,11 +225,11 @@ const Home = () => {
             <RiArrowRightSLine className="font-dayson text-[20px] font-bold text-white lg:text-[80px] 2xl:text-[40px]" />
           </Link>
         </div>
-        <div className="h-[300px] w-full md:h-fit lg:h-2/5 relative min-h-[300px]">
+        <div className="relative h-[300px] min-h-[300px] w-full md:h-fit lg:h-2/5">
           <HomeLeaderboard playerLeaderBoard={PlayerLeaderBoard || []} />
         </div>
-        <div className="hidden h-fit w-full flex-col overflow-hidden rounded-[30px] bg-black-crd shadow-2xl sm:h-[300px] lg:flex md:h-fit lg:h-2/5">
-          <div className="gap2 flex size-full h-[300px] flex-row items-center justify-center bg-black-crd lg:h-1/2 lg:flex-row xl:flex-row min-h-[200px]">
+        <div className="hidden h-fit w-full flex-col overflow-hidden rounded-[30px] bg-black-crd shadow-2xl sm:h-[300px] md:h-fit lg:flex lg:h-2/5">
+          <div className="gap2 flex size-full h-[300px] min-h-[200px] flex-row items-center justify-center bg-black-crd lg:h-1/2 lg:flex-row xl:flex-row">
             <div className="h-4/5 w-1/2 items-start justify-start">
               <Chart total_games={user?.total_games} stats={user?.statistics} />
             </div>
@@ -234,7 +237,7 @@ const Home = () => {
               <Rating statistics={user?.statistics} />
             </div>
           </div>
-          <div className="hidden h-[200px] w-full items-center justify-center bg-black-crd sm:flex lg:h-1/2 ">
+          <div className="hidden h-[200px] w-full items-center justify-center bg-black-crd sm:flex lg:h-1/2">
             <ChartLine statistics={user?.statistics} />
           </div>
         </div>

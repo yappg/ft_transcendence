@@ -43,7 +43,7 @@ const BlockedComponent = ({
           <AvatarImage src={ProfilePhoto} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <h1 className="font-dayson text-[16px] text-white opacity-[50%] opacity-[90%] transition-all duration-300 dark:text-white sm:text-[18px] lg:text-[25px] xl:text-[27px] 2xl:text-[25px]">
+        <h1 className="font-dayson text-[16px] text-white opacity-[90%] transition-all duration-300 dark:text-white sm:text-[18px] lg:text-[25px] xl:text-[27px] 2xl:text-[25px]">
           {name}
         </h1>
       </div>

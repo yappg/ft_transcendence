@@ -1,16 +1,25 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { InputOTPDemo } from "@/components/2fa/InputOTPDemo";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MyButton } from "@/components/generalUi/Button";
 import { sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
-/* eslint-disable tailwindcss/no-custom-classname */
 const Login2fa = () => {
   const router = useRouter();
   const [value, setValue] = React.useState("");
   const myString = "Go >";
-  const username = localStorage.getItem("username");
+  const [username, setUsername] = React.useState<string | null>(null);
+  const uname = localStorage.getItem("username");
+  React.useEffect(() => {
+    if (uname) {
+      setUsername(uname);
+    }
+  }, [uname]);
+
   const handleClick = async () => {
     console.log(value);
     try {
@@ -30,7 +39,7 @@ const Login2fa = () => {
         return;
       } else if (response.data.error) {
         toast({
-          title: "error",
+          title: "invalid code",
           description: response.data.error,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
@@ -43,6 +52,7 @@ const Login2fa = () => {
       });
     }
   };
+
   return (
     <div className="flex size-full flex-col items-center justify-center gap-10 transition-all">
       <div className="flex flex-col items-start justify-center transition-all">

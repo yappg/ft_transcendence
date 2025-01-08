@@ -1,5 +1,5 @@
-'use client';
-import React, { createContext, useState, useEffect } from 'react';
+"use client";
+import React, { createContext, useState, useEffect } from "react";
 
 interface TabContextProps {
   activeIndex: number;
@@ -11,11 +11,13 @@ export const TabContext = createContext<TabContextProps>({
   setActiveIndex: () => {},
 });
 
-export const TabProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const TabProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   useEffect(() => {
-    const savedIndex = localStorage.getItem('activeTabIndex');
+    const savedIndex = localStorage.getItem("activeTabIndex");
     if (savedIndex !== null) {
       setActiveIndex(Number(savedIndex));
     }
@@ -23,11 +25,13 @@ export const TabProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateActiveIndex = (index: number) => {
     setActiveIndex(index);
-    localStorage.setItem('activeTabIndex', index.toString());
+    localStorage.setItem("activeTabIndex", index.toString());
   };
 
   return (
-    <TabContext.Provider value={{ activeIndex, setActiveIndex: updateActiveIndex }}>
+    <TabContext.Provider
+      value={{ activeIndex, setActiveIndex: updateActiveIndex }}
+    >
       {children}
     </TabContext.Provider>
   );

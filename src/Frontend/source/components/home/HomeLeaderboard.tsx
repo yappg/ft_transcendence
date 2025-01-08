@@ -1,3 +1,5 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import Link from "next/link";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { LeaderBoard, useUser } from "@/context/GlobalContext";
@@ -9,7 +11,7 @@ export const HomeLeaderboard = ({
 }) => {
   const { user } = useUser();
   return (
-    <div className="flex size-full flex-col items-start justify-start rounded-[30px] bg-black-crd py-3 absolute">
+    <div className="absolute flex size-full flex-col items-start justify-start rounded-[30px] bg-black-crd py-3">
       <div className="flex h-[85%] w-full flex-col items-start justify-start overflow-hidden">
         {playerLeaderBoard?.slice(0, 3).map((leaderboard, index) => (
           <div
@@ -30,7 +32,7 @@ export const HomeLeaderboard = ({
                   ? leaderboard.display_name.slice(0, 13)
                   : leaderboard.display_name}
               </h1>
-              <h1 className="font-poppins font-bold text-sm text-white opacity-50 lg:text-[20px]">
+              <h1 className="font-poppins text-sm font-bold text-white opacity-50 lg:text-[20px]">
                 level {leaderboard.level}
               </h1>
             </div>

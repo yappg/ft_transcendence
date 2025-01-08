@@ -1,4 +1,3 @@
-// Define the Achievement interface
 export interface Achievement {
   player: number;
   achievement: Achievement2;

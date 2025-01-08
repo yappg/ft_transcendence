@@ -64,7 +64,6 @@ const UserFriendsNav = (): JSX.Element => {
     displayInvit();
   }, [user]);
 
-
   useEffect(() => {
     if (!user) return;
     setIsLoading(true);
@@ -141,7 +140,7 @@ const UserFriendsNav = (): JSX.Element => {
               <Skeleton className="h-[100px] w-full rounded-[30px] bg-black-crd" />
             </div>
           ) : !Friends || Friends.length === 0 ? (
-            <div className="flex h-full items-center justify-center bg-black-crd text-center font-bold text-white font-dayson">
+            <div className="flex h-full items-center justify-center bg-black-crd text-center font-dayson font-bold text-white">
               No Friends to display
             </div>
           ) : (
@@ -154,7 +153,7 @@ const UserFriendsNav = (): JSX.Element => {
                 messagesLink={
                   <div className="flex items-center justify-center">
                     <Link href="/messages">
-                      <FaCommentDots className="mr-4 size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 dark:text-[#B8B8B8] xl:size-[50px] 2xl:size-[55px] mr-20" />
+                      <FaCommentDots className="size-[40px] text-[#1C1C1C] opacity-40 transition-all duration-300 dark:text-[#B8B8B8] xl:size-[50px] 2xl:size-[55px]" />
                     </Link>
                   </div>
                 }
@@ -178,8 +177,8 @@ const UserFriendsNav = (): JSX.Element => {
               />
             ))
           ) : (
-            <div className="flex h-full items-center justify-center bg-black-crd text-center font-bold text-white">
-              No invitations{" "}
+            <div className="flex h-full items-center justify-center text-center font-bold text-white">
+              No invitations{' '}
             </div>
           )}
         </div>
@@ -188,24 +187,26 @@ const UserFriendsNav = (): JSX.Element => {
   };
   return (
     <div className="flex size-full flex-col items-start justify-start">
-      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between sm:px-4 md:pr-4 lg:px-10 py-3 px-8">
+      <div className="friend-bar-bg flex h-fit w-full flex-row items-center justify-between px-8 py-3 sm:px-4 md:pr-4 lg:px-10">
         {user ? (
-        <div className="flex h-fit w-[160px] flex-row items-center justify-between md:w-[190px] lg:w-[200px] lg:gap-5 gap-5 sm:w-[180px]">
-          <Avatar className="max-w-[70px] lg:size-[60px] md:size-[50px] sm:size-[50px] size-[45px]">
-            <AvatarImage src={`http://localhost:8080${user?.avatar}`} />
-            <AvatarFallback className="m-2 size-[60px] bg-[rgba(28,28,28,0.5)] font-dayson text-lg text-white md:size-[20px]">
-              {user?.display_name}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <h1 className="font-dayson text-[15px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
-              {user?.display_name.length > 10
-                ? user?.display_name.slice(0, 13)
-                : user?.display_name}
-            </h1>
-            <h1 className="font-coustard text-[15px] text-white opacity-[40%] md:text-[17px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
-              Level {user?.level}
-            </h1>
+          <div className="flex h-fit w-[160px] flex-row items-center justify-between gap-5 sm:w-[180px] md:w-[190px] lg:w-[200px] lg:gap-5">
+            <Avatar className="size-[45px] max-w-[70px] sm:size-[50px] md:size-[50px] lg:size-[60px]">
+              <AvatarImage
+                src={`${process.env.NEXT_PUBLIC_HOST}${user?.avatar}`}
+              />
+              <AvatarFallback className="m-2 size-[60px] bg-[rgba(28,28,28,0.5)] font-dayson text-lg text-white md:size-[20px]">
+                {user?.display_name}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <h1 className="font-dayson text-[15px] text-white opacity-[80%] md:text-[18px] lg:text-[25px] xl:text-[30px] 2xl:text-[31px]">
+                {user?.display_name.length > 10
+                  ? user?.display_name.slice(0, 13)
+                  : user?.display_name}
+              </h1>
+              <h1 className="font-coustard text-[15px] text-white opacity-[40%] md:text-[17px] lg:text-[22px] xl:text-[27px] 2xl:text-[28px]">
+                Level {user?.level}
+              </h1>
             </div>
           </div>
         ) : (
@@ -214,7 +215,7 @@ const UserFriendsNav = (): JSX.Element => {
             <Skeleton className="h-full w-[200px] rounded-[50px] bg-black-crd" />
           </div>
         )}
-        <div className="flex h-[60px] w-auto flex-row items-center transition-all duration-300 gap-[25px] lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
+        <div className="flex h-[60px] w-auto flex-row items-center gap-[25px] transition-all duration-300 lg:gap-[45px] xl:gap-[60px] 2xl:gap-[125px]">
           {headers.map((header, index) => (
             <Link href="#" key={index} onClick={() => setActiveIndex(index)}>
               <h1
@@ -230,7 +231,7 @@ const UserFriendsNav = (): JSX.Element => {
           ))}
         </div>
       </div>
-      <div className="h-[90%] w-full">{renderContent()}</div>
+      <div className="size-full bg-black-crd">{renderContent()}</div>
     </div>
   );
 };

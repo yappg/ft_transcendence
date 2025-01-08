@@ -25,16 +25,9 @@ DEBUG = False
 ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
 # Security Headers
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = False
-# SECURE_HSTS_SECONDS = 0
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_BROWSER_XSS_FILTER = True
-# SECURE_CONTENT_TYPE_NOSNIFF = True
-# X_FRAME_OPTIONS = 'DENY'
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-# SECURE_HSTS_PRELOAD = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
 
 # ===========================
 # CORS CONFIGURATION
@@ -43,7 +36,6 @@ ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = get_env_variable('CORS_ALLOWED_ORIGINS').split(',')
-# CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 # ===========================
 # APPLICATION CONFIGURATION
@@ -95,7 +87,7 @@ MIDDLEWARE = [
 # ===========================
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=180),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,

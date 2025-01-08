@@ -4,8 +4,8 @@ const axiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   withCredentials: true,
   headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': 'true',
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
   },
 });
 
@@ -15,9 +15,11 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          window.location.href = '/auth/login';
+          document.cookie =
+            "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+          document.cookie =
+            "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+          window.location.href = "/auth/login";
           break;
       }
     }

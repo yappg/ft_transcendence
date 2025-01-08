@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -9,27 +10,33 @@ import {
 } from "@/components/game/pixi-manager";
 import { useGame } from "@/context/GameContext";
 import React, { useRef, useEffect } from "react";
-import socketManager from "./socket-manager";
 import { useUser } from "@/context/GlobalContext";
 
-const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id: string }) => {
+const GameTable = ({
+  mode,
+  map,
+  game_id,
+}: {
+  map: string;
+  mode: string;
+  game_id: string;
+}) => {
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const game = useGame();
   const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
-  // const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    if (mode.indexOf("local") !== -1) {
+    if (mode.indexOf('local') !== -1 || mode === 'tournament') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
           map,
-          game
+          game,
         );
       }
-    } else {
+    } else if (mode === 'one-vs-one') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
@@ -40,10 +47,15 @@ const GameTable = ({ mode, map, game_id }: { map: string; mode: string, game_id:
         );
       }
     }
-    return () => {
-      if (gameManagerRef.current.socketManager) {
-        gameManagerRef.current.socketManager.destroy(true);
-      }
+
+      return () => {
+        if (mode === 'one-vsone') {
+          const om = gameManagerRef.current as OnlineGameManager;
+          om?.socketManager.close();
+        }
+        // if (gameManagerRef.current?.app) {
+        //   gameManagerRef.current.app.destroy(true);
+        // }
     };
   }, []);
 

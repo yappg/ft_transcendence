@@ -1,5 +1,5 @@
-'use client';
-import React, { createContext, useState } from 'react';
+"use client";
+import React, { createContext, useState } from "react";
 
 interface SideBarContextProps {
   isActivated: number;
@@ -11,7 +11,9 @@ export const SideBarContext = createContext<SideBarContextProps>({
   setIsActivated: () => {},
 });
 
-export const SideBarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SideBarProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isActivated, setIsActivated] = useState<number>(1);
 
   return (

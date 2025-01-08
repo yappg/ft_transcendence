@@ -16,17 +16,17 @@ VIOLET = '\033[35m'
 ORANGE = '\033[36m'
 PINK = '\033[37m'
 RESET = '\033[0m'
-#TODO handle the unexpected disconnects and game state details
 
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         self.game = None
         self.game_tick = None
+        self.game_id = None
         super().__init__(*args, **kwargs)
 
     async def connect(self):
         if not self.scope.get("user") or not self.scope["user"].is_authenticated:
-            print(f'{RED}[Unauthenticated connection attempt]{RESET}')
+            # print(f'{RED}[Unauthenticated connection attempt]{RESET}')
             await self.close()
             return
 
@@ -47,6 +47,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     self.game.start_game()
                     return
 
+            await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
             if  not self.player_in_QG():
                 await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
             else:
@@ -111,14 +112,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.close()
         except Exception as e:
             print(f'\n{RED}[Error in Receive {str(e)}]{RESET}\n')
-            #TODO handle the exception
             pass
 
     #------------------------------------>>>>> Game loop <<<<<<<------------------------------
     async def start_game_loop(self):
         try :
             await self.broadcast_ball_move()
-
             while self.game and self.game.status == 'playing'\
                 and self.game.player1.status == 'ready'\
                 and self.game.player2.status == 'ready':
@@ -127,7 +126,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game.update(delta_time):
                     await self.broadcast_ball_move()
                 if await self.game.check_scoring():
-                    print(f'\n{YELLOW}[Scoring herrrrreeee ] {self.game.round} player1({self.game.player1.username}):{self.game.player1.score}, player2({self.game.player2.username}):{self.game.player2.score} {RESET}\n')
                     await self.broadcast_ball_move()
                 if await self.game.check_for_rounds():
                     await self.broadcast_score_update()
@@ -155,6 +153,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "data": {
                     'message': event['message'],
                     'opponent': event['opponent'],
+                    'opponent_avatar': event['opponent_avatar'],
                     'top_paddle': event['top_paddle'],
                     'game_id': event['game_id']
                 }
@@ -264,19 +263,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             if self.game.winner and hasattr(self.game, 'player1') and hasattr(self.game, 'player2'):
                 await self.save_game_result(self.game.player1.id, self.game.player2.id, self.game.winner)
-
-            # Use getattr for safer attribute access
-            player_id = getattr(self.user, 'id', None)
-            opponent_id = getattr(self.opponent, 'id', None)
-
-            if player_id and player_id in matchmake_system.players_in_game:
-                matchmake_system.players_in_game.remove(player_id)
-            if opponent_id and opponent_id in matchmake_system.players_in_game:
-                matchmake_system.players_in_game.remove(opponent_id)
-
-            if self.game_id and self.game_id in matchmake_system.games:
-                del matchmake_system.games[self.game_id]
-
+            # if self.user.id in matchmake_system.players_in_game:
+            #     matchmake_system.players_in_game.remove(self.user.id)
+            # if self.opponent.id in matchmake_system.players_in_game:
+            #     matchmake_system.players_in_game.remove(self.opponent.id)
+            # if self.game_id in matchmake_system.games:
+            #     del matchmake_system.games[self.game_id]
         except Exception as e:
             print(f'{RED}[Error in Game End: {str(e)}]{RESET}')
         finally:
@@ -300,7 +292,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             return True
         except Exception as e:
             print(f'\n{RED}[Error in Saving Game Result {str(e)}]{RESET}\n')
-            #TODO handle the exception
             return False
 
     async def game_over(self, event):
@@ -309,7 +300,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             'state': event['state'],
             'winner': event['winner']
         })
-    #TODO 'winner': self.game.winner to be altered to username or smthg else
     async def broadcast_game_end(self):
         await matchmake_system.channel_layer.group_send(
             f'game_{self.game_id}',
@@ -320,19 +310,27 @@ class GameConsumer(AsyncWebsocketConsumer):
             })
 
     async def disconnect(self, close_code):
-    # TODO handle the unexpeted disconnects or cleanup after normal disconnect
         try:
             if self.game:
-                if self.game.status == 'playing':
-                    print (f'{RED}[Unexpected Disconnection l; {self.user.username}]{RESET}')
-                    winner =  'player1' if self.user.id == self.game.player2.id else 'player2'
-                    await self.unexpected_disconnect(self.user.id, self.opponent.id, winner) #TODO kifach 'player2'?
-                self.game.status = 'over'
-                if self.game_id in matchmake_system.games:
-                    del matchmake_system.games[self.game_id]
-                await self.broadcast_disconnection()
+                async with self.game.score_update_lock:
+                    if self.game.status == 'playing':
+                        print (f'{RED}[Unexpected Disconnection l; {self.user.username}]{RESET}')
+                        winner =  'player1' if self.user.id == self.game.player2.id else 'player2'
+                        await self.unexpected_disconnect(self.user.id, self.opponent.id, winner)
+                    self.game.status = 'over'
+                    print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
+
+                    if self.game_id in matchmake_system.games:
+                        del matchmake_system.games[self.game_id]
+            else:
+                print(f'\n{RED} [Disconnect in GP {self.user.username}]{RESET}\n')
+                if self.user.id in matchmake_system.players_in_game:
+                    matchmake_system.players_in_game.remove(self.user.id)
+                if self.user.id in matchmake_system.players_queue:
+                    del matchmake_system.players_queue[self.user.id]
+            await self.broadcast_disconnection()
+            if self.game_id:
                 await self.channel_layer.group_discard(f'game_{self.game_id}', self.channel_name)
-                print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
             await super().disconnect(close_code)
         except Exception as e:
             print(f'\n{RED}[Error in Disconnect {str(e)}]{RESET}\n')
@@ -391,12 +389,3 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps(data))
         except Exception as e:
             print(f'{RED}[Error in Safe Send: {str(e)}]{RESET}')
-
-    #------------------------------------>>>>>util functions<<<<<<<------------------------------
-
-#TODO handle the game end and disconnections
-#TODO reset the jwt duration to normal
-#TODO GameInvite
-
-    #_______________________________Sbject requirements _______________________________________
-# 1- the app should be protected against XSS attacks

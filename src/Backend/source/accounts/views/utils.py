@@ -26,7 +26,7 @@ Oauth2_Providers = {
 def APIdata(code, provider):
     data = Oauth2_Providers[provider]
     data['code'] = code
-    print('--------DATA', data);
+    # print('--------DATA', data);
     return (data)
 
 def fetch_user_data(access_token, provider):

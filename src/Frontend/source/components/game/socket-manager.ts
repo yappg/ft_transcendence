@@ -1,3 +1,5 @@
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import { OnlineGameManager } from "./pixi-manager";
 
 class SocketManager extends WebSocket {
@@ -92,16 +94,15 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent(message.data.opponent);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        this.sendData({ action: 'ready', game_id: message.data.game_id, map: this.pixiManager.map });
+        this.sendData({
+          action: 'ready',
+          game_id: message.data.game_id,
+          game: this.pixiManager.map,
+        });
       case 'UpdateBall':
-        // this.pixiManager.app.ticker.add(() => {
-        // console.log("jfjkbkfskbfskje", message.game_state.ball);
-        // this.pixiManager.updateToppaddlePosition(message.game_state.opponent_paddle);
-        // console.log('data:', message);
         this.updateBallPosition(message.ball_position);
-        // });
         break;
-      case "UpdatePaddle":
+      case 'UpdatePaddle':
         this.updatePaddlePosition(message);
         break;
       case "UpdateScore":
@@ -118,12 +119,12 @@ class SocketManager extends WebSocket {
         this.pixiManager.game.setGameScore([score1, score2]);
         console.log("scoroooor: ", this.pixiManager.game.GameScore);
       case "gameState":
-        this.pixiManager.game.gameState = message.state;
+        this.pixiManager.game.GameState = message.state;
         this.pixiManager.game.setGameState(message.state);
         break;
-      case 'GameEnd':
-        this.pixiManager.game.gameState = 'over';
-        this.pixiManager.game.setGameState('over');
+      case "GameEnd":
+        this.pixiManager.game.GameState = "over";
+        this.pixiManager.game.setGameState("over");
         this.close();
         break;
       default:
@@ -137,57 +138,3 @@ class SocketManager extends WebSocket {
 }
 
 export default SocketManager;
-
-//format of socket sending messages:
-// {
-//   type: 'ready' | 'handleInput',
-//   data: any,
-// }
-
-// data format for 'ready' message:
-// {
-//   gameId: string,
-// }
-
-// data format for 'handleInput' message:
-// {
-//   gameId: string,
-//   x: number,
-//  }
-
-//format of socket recieving messages:
-// {
-//   type: 'acknowledgeOpponent' | 'gameUpdate' | 'scoreUpdate' | 'gameState',
-//   data: any,
-// }
-
-// data format for 'acknowledgeOpponent' message:
-// {
-//   gameId: string,
-//   opponent: {
-//     id: string,
-//     username: string,
-// },
-
-// data format for 'gameUpdate' message:
-// {
-//   ballposition: {
-//     x: number,
-//     y: number,
-//   },
-//   topRacket: {
-//     x: number,
-//   },
-// }
-
-// data format for 'scoreUpdate' message:
-// {
-//   score: {
-//    player1: number,
-//   player2: number,
-// },
-
-// data format for 'gameState' message:
-// {
-//   state: 'start' | 'over' | 'waiting' | 'paused',
-// }

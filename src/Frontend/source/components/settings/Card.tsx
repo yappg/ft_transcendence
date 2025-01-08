@@ -1,5 +1,5 @@
 import React, { use } from "react";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IconType } from "react-icons/lib";
@@ -12,14 +12,15 @@ export const Card = ({
   Icon: IconType;
   path: string;
 }) => {
-  const searchParams = useSearchParams();
+  const params = useParams();
   const router = useRouter();
 
   function handleFilter() {
     if (!path) {
       return;
     }
-    const currentParams = new URLSearchParams(searchParams?.toString() || "");
+    const current = params.field as string;
+    const currentParams = new URLSearchParams(current || "");
     currentParams.set("field", path);
     router.push(`?${currentParams.toString()}`);
   }

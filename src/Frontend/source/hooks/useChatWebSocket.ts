@@ -1,20 +1,19 @@
-// Import React hooks needed for managing WebSocket state and lifecycle:
-// - useState: For managing local state
-// - useEffect: For handling side effects like WebSocket setup/cleanup
-// - useRef: For maintaining a mutable reference to the WebSocket instance
-// - useCallback: For memoizing the message handler function
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Message, Chat } from '@/constants/chat';
-import { chatService } from '@/services/chatService';
-import { useUser } from '@/context/GlobalContext';
-import { setRequestMeta } from 'next/dist/server/request-meta';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Message, Chat } from "@/constants/chat";
+import { chatService } from "@/services/chatService";
+import { useUser } from "@/context/GlobalContext";
+import { setRequestMeta } from "next/dist/server/request-meta";
 interface UseChatWebSocketProps {
   chatId: number;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
 }
 
-export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSocketProps) {
+export function useChatWebSocket({
+  chatId,
+  setMessages,
+  setChats,
+}: UseChatWebSocketProps) {
   const { setLastMessages } = useUser();
   const socketRef = useRef<WebSocket | null>(null);
   // ---------------------------------------------------------------------
@@ -39,11 +38,11 @@ export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSo
           ...prevLastMessages,
           [chatId]: message.content,
         };
-        console.log('this is the newObject: ', newObject);
+        console.log("this is the newObject: ", newObject);
         return newObject;
       });
     },
-    [chatId, setMessages, setChats]
+    [chatId, setMessages, setChats],
   );
 
   // ---------------------------------CHAT-----------------------------------
@@ -54,10 +53,10 @@ export function useChatWebSocket({ chatId, setMessages, setChats }: UseChatWebSo
         socketRef.current = await chatService.createWebSocketConnection(
           chatId,
           handleWebSocketMessage,
-          setChats
+          setChats,
         );
       } catch (error) {
-        console.log('WebSocket connection failed', error);
+        console.log("WebSocket connection failed", error);
       }
     };
 

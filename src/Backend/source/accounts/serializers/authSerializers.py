@@ -105,7 +105,6 @@ class UpdateUserInfosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ['username', 'email', 'verified_otp', 'enabled_2fa', 'old_password', 'new_password']
-        #TODO this feild , 'verified_otp' should be removed from the fields 
         read_only_fields = ['username', 'email']
         extra_kwargs = {
             'username': {'required': False},

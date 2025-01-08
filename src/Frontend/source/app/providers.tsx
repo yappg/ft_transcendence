@@ -1,4 +1,6 @@
 "use client";
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 
 import { ThemeProvider } from "next-themes";
 

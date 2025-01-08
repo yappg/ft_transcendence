@@ -1,11 +1,11 @@
-import axios from '@/lib/axios';
-import { Chat, Message } from '@/constants/chat';
+import axios from "@/lib/axios";
+import { Chat, Message } from "@/constants/chat";
 
 class ChatService {
   private sockets: Map<number, WebSocket> = new Map();
 
   async getChatList(): Promise<Chat[]> {
-    const response = await axios.get('/chat/list/');
+    const response = await axios.get("/chat/list/");
     return response.data;
   }
 
@@ -19,10 +19,10 @@ class ChatService {
   async createWebSocketConnection(
     chatId: number,
     onMessage: (message: any) => void,
-    setChats: (chats: Chat[]) => void
+    setChats: (chats: Chat[]) => void,
   ): Promise<WebSocket> {
     if (this.sockets.has(chatId)) {
-      console.log('WebSocket connection already exists for chatId:', chatId);
+      console.log("WebSocket connection already exists for chatId:", chatId);
       return this.sockets.get(chatId)!;
     }
 
@@ -30,29 +30,29 @@ class ChatService {
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
-      console.log('WebSocket connection established for chatId:', chatId);
+      console.log("WebSocket connection established for chatId:", chatId);
     };
 
     socket.onmessage = async (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === 'user_blocked') {
+        if (data.type === "user_blocked") {
           const chats = await chatService.getChatList();
           setChats(chats);
         } else {
           onMessage(data);
         }
       } catch (error) {
-        console.log('Error parsing WebSocket message:', error);
+        console.log("Error parsing WebSocket message:", error);
       }
     };
 
     socket.onerror = (error) => {
-      console.log('WebSocket error:', error);
+      console.log("WebSocket error:", error);
     };
 
     socket.onclose = (event) => {
-      console.log('WebSocket connection closed:', event);
+      console.log("WebSocket connection closed:", event);
       this.sockets.delete(chatId);
     };
 
@@ -66,12 +66,12 @@ class ChatService {
     chatId: number,
     content: string,
     userId: number,
-    receiverId: number
+    receiverId: number,
   ): Promise<void> {
-    console.log('chatService.sendMessage called');
+    console.log("chatService.sendMessage called");
     const socket = this.sockets.get(chatId);
     if (!socket || socket.readyState !== WebSocket.OPEN) {
-      throw new Error('WebSocket connection is not open');
+      throw new Error("WebSocket connection is not open");
     }
 
     try {
@@ -81,11 +81,11 @@ class ChatService {
           sender: userId,
           receiver: receiverId,
           chatId: chatId,
-        })
+        }),
       );
     } catch (error) {
-      console.log('Error sending message:', error);
-      throw new Error('Failed to send message');
+      console.log("Error sending message:", error);
+      throw new Error("Failed to send message");
     }
   }
 

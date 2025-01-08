@@ -15,7 +15,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         self.invite_group = None
 
     async def connect(self):
-        print('GameInviteConsumer connected', self.scope)
+        # print('GameInviteConsumer connected', self.scope)
         if not self.scope["user"].is_authenticated:
             await self.close()
             return
@@ -32,7 +32,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user:
-            print(f'GameInviteConsumer disconnected {self.user.username}')
+            # print(f'GameInviteConsumer disconnected {self.user.username}')
             # Remove from invite group
             await self.channel_layer.group_discard(self.invite_group, self.channel_name)
             # Update user status
@@ -42,7 +42,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             action = data.get('action')
-            print('aaaaactionnn ',action)
+            # print('aaaaactionnn ',action)
 
             if action == 'send_invite':
                 await self.handle_send_invite(data)
@@ -82,7 +82,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send_error(f'Error sending invite: {str(e)}')
 
     async def handle_accept_invite(self, data):
-        invite_id = data.get('invite_id') 
+        invite_id = data.get('invite_id')
         if not invite_id:
             await self.send_error('Invite ID is required')
             return
@@ -132,7 +132,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             'game_id': event.get('game_id'),
             'action': 'accepted'
         })
-    
+
     async def game_found(self, event):
         await self.send_json({
             'type': 'game_found',
@@ -203,13 +203,13 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             players = Player.objects.select_related('profile').filter(
                 profile__status='available'
             ).exclude(username=self.user.username)
-            
+
             return [{
                 'username': player.username,
                 'status': player.profile.status
             } for player in players]
         except Exception as e:
-            print(f"Error getting available players: {str(e)}")
+            # print(f"Error getting available players: {str(e)}")
             return []
 
     async def send_error(self, message: str):
@@ -226,4 +226,3 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps(content))
         except Exception as e:
             print(f"Error sending JSON: {str(e)}")
-

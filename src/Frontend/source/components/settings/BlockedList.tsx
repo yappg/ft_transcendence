@@ -1,4 +1,5 @@
-import { useUser } from "@/context/GlobalContext";
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/classnames-order */
 import BlockedComponent from "./BlockedComponent";
 import FriendServices from "@/services/friendServices";
 import { useEffect, useState } from "react";
@@ -31,7 +32,7 @@ const BlockedList = () => {
   if (loading) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Skeleton className="h-[80%] w-[83%] rounded-[50px] bg-[#4C4D4E] 2xl:p-28" />
+        <Skeleton className="h-4/5 w-[83%] rounded-[50px] bg-[#4C4D4E] 2xl:p-28" />
       </div>
     );
   }
