@@ -17,14 +17,12 @@ const MapsCard = ({
   description,
   imageUrl,
   url,
-  height,
 }: GameCardProps) => {
   const router = useRouter();
   return (
     <div
       className="costum-little-shadow group relative size-full overflow-hidden rounded-3xl"
       style={{
-        height: `${height}px`,
         backgroundImage: `url(${imageUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",

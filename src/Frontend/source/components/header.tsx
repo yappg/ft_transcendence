@@ -17,6 +17,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { notificationsService } from "@/services/notificationsService";
 import { Notification } from "@/constants/notifications";
 import Image from "next/image";
+import { Skeleton } from "./ui/skeleton";
 export interface Root {
   count: number;
   results: Result[];
@@ -54,16 +55,12 @@ export const Header = () => {
     setShowSearchBar(!showSearchBar);
   };
 
-  // ------Omar's code
   const { user } = useUser();
 
   useEffect(() => {
-    // fetchNotifications();
     if (user) {
-      const ws = new WebSocket(
-        `ws://localhost:8080/ws/notifications/?user_id=${user.id}`,
-      );
-      console.log("WebSocket connection established");
+      const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`);
+      console.log('WebSocket connection established');
 
       ws.onopen = () => {
         console.log("WebSocket connection opened");
@@ -95,14 +92,18 @@ export const Header = () => {
 
   if (!user)
     return (
-      <h1 className="flex size-[200px] items-center justify-center rounded-md font-dayson text-[30px] text-gray-600">
-        Loading...
-      </h1>
+      <div className="flex h-full w-full items-center justify-between">
+        <Skeleton className="lg:h-[50px] w-[50%] rounded-[30px] bg-black-crd h-[20px] md:h-[30px]" />
+        <div className="flex h-full w-[50%] items-center justify-end gap-2">
+          <Skeleton className="lg:h-[50px] lg:w-[200px] lg:rounded-[30px] size-[17px] sm:size-[20px] md:size-[50px] rounded-full bg-black-crd " />
+          <Skeleton className=" size-[17px] sm:size-[20px] md:size-[50px] lg:size-[70px] rounded-full bg-black-crd " />
+        </div>
+      </div>
     );
 
   const fetchUsers = async (value: string) => {
     try {
-      const res = await axios.get(`accounts/search-users/?search=${value}`);
+      const res = await axios.get(`/accounts/search-users/?search=${value}`);
       return res.data;
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -152,7 +153,7 @@ export const Header = () => {
             </h1>
             {path.id === 1 && (
               <span className="font-dayson text-[16px] font-black text-aqua dark:text-fire-red sm:text-[20px] md:text-[25px] lg:text-[32px] xl:text-[36px]">
-                {user.username}
+                {user?.username}
               </span>
             )}
           </div>
@@ -197,12 +198,12 @@ export const Header = () => {
                   }}
                 >
                   <Image
-                    src={`http://localhost:8080${player?.avatar}`}
-                    width={10}
-                    height={10}
+                    src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
                     alt={`${player?.display_name}'s avatar`}
+                    width={40}
+                    height={40}
                     className="size-10 rounded-full"
-                    unoptimized
+                    unoptimized={true}
                   />
                   <span className="text-white">{player?.display_name}</span>
                 </div>
@@ -211,7 +212,7 @@ export const Header = () => {
           )}
           {filteredPlayers.length === 0 && value.length > 0 && (
             <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
-              <h1>No players found</h1>
+              <h1>looking for {value}...</h1>
             </div>
           )}
         </div>

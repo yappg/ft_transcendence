@@ -64,7 +64,7 @@ const MatchHistoryComponent = ({
         className="absolute inset-0 z-0 opacity-50"
         style={getBackgroundStyle()}
       />
-      <div className="relative z-10 flex w-full flex-row items-center gap-3">
+      <div className="relative z-10 flex w-full items-center gap-3">
         <PlayerCard
           profilePhoto={ProfilePhoto1}
           playerName={truncateUsername(Player1)}

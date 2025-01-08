@@ -49,8 +49,8 @@ const PlayerScore = ({
 
 const ScoreTable = ({ mode }: { mode: string }) => {
   const game = useGame();
-  const [p1, setP1] = useState(null);
-  const [p2, setP2] = useState(null);
+  const [p1, setP1] = useState<Player | null>(null);
+  const [p2, setP2] = useState<Player | null>(null);
   // const p1 = game.player1;
   // const p2 = game.player2;
   console.log('players:', game.player1, game.player2);
@@ -65,7 +65,7 @@ const ScoreTable = ({ mode }: { mode: string }) => {
       const newRound = {
         round: game.Rounds.length + 1,
         winner:
-          game.GameScore[0] > game.GameScore[1] ? game.player1.username : game.player2.username,
+          game.GameScore[0] > game.GameScore[1] ? game.player1?.username : game.player2?.username,
         score: game.GameScore,
       };
 
@@ -125,7 +125,6 @@ const ScoreTable = ({ mode }: { mode: string }) => {
                 <h3>{game.Rounds.length + 1}</h3>
               </div>
             ) : game.GameState === "over" ? (
-              // <div className="flex size-full flex-col items-center justify-center border-white border-2 rounded-[10px]">
               <div>{`Winner :\n${game.GameWinner?.username}`}</div>
             ) : (
               <div>get ready</div>

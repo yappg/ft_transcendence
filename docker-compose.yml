@@ -1,8 +1,8 @@
+
 services:
     # container-exporter:
     #   container_name: cadvisor
     #   image: gcr.io/cadvisor/cadvisor
-    #   privileged: true
     #   volumes:
     #     - /:/rootfs:ro
     #     - /var/run:/var/run:ro
@@ -13,70 +13,73 @@ services:
     #     - transcendence
     #   restart: unless-stopped
 
-    # web:
-    #   container_name: nginx
-    #   build:
-    #     context: ./src/Services/nginx
-    #     dockerfile: Dockerfile
-    #   image: nginx
-    #   networks:
-    #     - transcendence
-    #   ports:
-    #     - 8080:80
-    #     - "4433:443"
-    #   depends_on:
-    #     frontend:
-    #         condition: service_healthy
-    #     backend:
-    #         condition: service_healthy
-    #     grafana:
-    #         condition: service_healthy
-    #   healthcheck:
-    #     test: ["CMD", "curl", "-f", "http://localhost:8080/stub_status"]
-    #     interval: 10s
-    #     timeout: 5s
-    #     retries: 3
-    #     start_period: 5s
-    #   restart: always
-    #   volumes:
-    #     - static_files:/app/staticfiles:ro
-    #     - media_files:/app/UsersMedia:ro
+    web:
+      container_name: nginx
+      build:
+        context: ./src/Services/nginx
+        dockerfile: Dockerfile
+      image: nginx
+      volumes:
+        - media-files:/app/UsersMedia
+        - static-files:/app/staticfiles
+      networks:
+        - transcendence
+      ports:
+        - 0.0.0.0:80:80
+        - 0.0.0.0:443:443
+      # depends_on:
+        # frontend:
+        #   condition: service_healthy
+        # backend:
+        #   condition: service_healthy
+        # grafana:
+        #   condition: service_healthy
+      # healthcheck:
+      #   test: ["CMD", "curl", "-f", "http://localhost:80"]
+      #   interval: 10s
+      #   timeout: 5s
+      #   retries: 3
+      #   start_period: 5s
+      restart: always
 
-    # web-exporter:
-    #   container_name: nginx-exporter
-    #   image: nginx/nginx-prometheus-exporter
-    #   command: --nginx.scrape-uri=http://web:8080/stub_status
-    #   networks:
-    #     - transcendence
-    #   depends_on:b
-    #     web:
-    #       condition: service_healthy
-    #   restart: unless-stopped
+    web-exporter:
+      container_name: nginx-exporter
+      image: nginx/nginx-prometheus-exporter
+      command: --nginx.scrape-uri=http://web:8080/stub_status
+      networks:
+        - transcendence
+      # depends_on:
+      #   web:
+      #     condition: service_healthy
+      restart: unless-stopped
 
 
     frontend:
       container_name: frontend
       build:
         context: ./src/Frontend
+        # target: ${TEST:-builder}
         target: ${ENV:-production}
         dockerfile: Dockerfile
       image: frontend
-# # DEV ==============>
+      environment:
+        NEXT_PUBLIC_HOST: ${NEXT_PUBLIC_HOST}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL}
+# DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
-        - /app/.next
-        - /app/node_modules
-# # ==================>
+# ==================>
       networks:
         - transcendence
       ports:
         - 3000:3000
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:3000/"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
+      # healthcheck:
+      #   test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      #   interval: 10s
+      #   timeout: 10s
+      #   retries: 5
+      #   start_period: 30s
       restart: always
 
 
@@ -88,24 +91,26 @@ services:
         dockerfile: Dockerfile
       image: backend
       environment:
-        JWT_SIGNING_KEY: ${SIGNING_KEY}
-        # ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-        # CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
-        CLIENT_ID_42: u-s4t2ud-1baa27e8252de771dcea3ea9d1e7993d5508444cd623a7426c7cc6c0c2777653
-        CLIENT_SECRET_42: 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
+        SIGNING_KEY: ${SIGNING_KEY}
+        ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+        CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+        CLIENT_ID_42: ${CLIENT_ID_42}
+        CLIENT_SECRET_42: ${CLIENT_SECRET_42}
+        OAUTH_42_CALLBACK_URL: ${OAUTH_42_CALLBACK_URL}
         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
         GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+        OAUTH_GOOGLE_CALLBACK_URL: ${OAUTH_GOOGLE_CALLBACK_URL}
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
-# DEV ==============>
       volumes:
-        - ./src/Backend/source:/app/source:rw
+# # DEV ==============>
         - ./src/Backend/config:/app/config:rw
-        # - static_files:/app/staticfiles
-        # - media_files:/app/UsersMedia
+        - ./src/Backend/source:/app/source:rw
 # ==================>
+        - media-files:/app/source/UsersMedia
+        - static-files:/app/source/staticfiles
       networks:
         - transcendence
       ports:
@@ -117,22 +122,23 @@ services:
           condition: service_healthy
       healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:8080/health/"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
-        start_period: 5s
+        interval: 15s
+        timeout: 10s
+        retries: 5
+        start_period: 30s
       restart: always
 
 
     cache:
       container_name: redis
-      image: redis:alpine
+      build:
+        context: ./src/Services/redis
+        dockerfile: Dockerfile
+      image: redis
       environment:
         REDIS_PASS: ${REDIS_PASS}
       volumes:
         - redis-data:/data
-        - "./src/Services/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro"
-      command: "redis-server /usr/local/etc/redis/redis.conf  --requirepass $REDIS_PASS"
       networks:
         - transcendence
       healthcheck:
@@ -143,18 +149,18 @@ services:
         start_period: 5s
       restart: always
 
-    # cache-exporter:
-    #   container_name: redis-exporter
-    #   image: bitnami/redis-exporter
-    #   environment:
-    #     REDIS_PASSWORD: ${REDIS_PASS}
-    #     REDIS_ADDR: "redis://cache:6379"
-    #   networks:
-    #     - transcendence
-    #   depends_on:
-    #     cache:
-    #       condition: service_healthy
-    #   restart: unless-stopped
+    cache-exporter:
+      container_name: redis-exporter
+      image: bitnami/redis-exporter
+      environment:
+        REDIS_PASSWORD: ${REDIS_PASS}
+        REDIS_ADDR: "redis://cache:6379"
+      networks:
+        - transcendence
+      depends_on:
+        cache:
+          condition: service_healthy
+      restart: unless-stopped
 
 
     database:
@@ -169,126 +175,141 @@ services:
       networks:
         - transcendence
       healthcheck:
-        test:
-          ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+        test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
         interval: 10s
         timeout: 5s
         retries: 3
         start_period: 5s
       restart: always
 
-    # database-exporter:
-    #   container_name: postgres-exporter
-    #   image: wrouesnel/postgres_exporter
-    #   environment:
-    #     DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
-    #   networks:
-    #     - transcendence
-    #   depends_on:
-    #     database:
-    #       condition: service_healthy
-    #   restart: unless-stopped
+    database-exporter:
+      container_name: postgres-exporter
+      image: wrouesnel/postgres_exporter
+      environment:
+        DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?sslmode=disable"
+      networks:
+        - transcendence
+      depends_on:
+        database:
+          condition: service_healthy
+      restart: unless-stopped
 
 
-    # prometheus:
-    #   container_name: prometheus
-    #   image: prom/prometheus:latest
-    #   volumes:
-    #     - prometheus-data:/prometheus
-    #     - "./src/Services/prometheus:/etc/prometheus:ro"
-    #     - "./src/Services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-    #     - "./src/Services/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro"
-    #   command:
-    #     - "--config.file=/etc/prometheus/prometheus.yml"
-    #     - "--storage.tsdb.path=/prometheus"
-    #   networks:
-    #     - transcendence
-    #   restart: always
+    prometheus:
+      container_name: prometheus
+      build:
+        context: ./src/Services/prometheus
+        dockerfile: Dockerfile
+      image: prometheus
+      volumes:
+        - prometheus-data:/prometheus
+        # - "./src/Services/prometheus:/etc/prometheus:ro"
+      networks:
+        - transcendence
+      restart: always
 
-    # alert-manager:
-    #   container_name: alert-manager
-    #   image: prom/alertmanager
-    #   volumes:
-    #     - alert-manager-data:/alertmanager
-    #     - "./src/Services/alert-manager:/etc/alertmanager:ro"
-    #   networks:
-    #     - transcendence
-    #   depends_on:
-    #     - prometheus
-    #   restart: always
+    alert-manager:
+      container_name: alert-manager
+      build:
+        context: ./src/Services/alert-manager
+        dockerfile: Dockerfile
+      image: alert-manager
+      volumes:
+        - alert-manager-data:/alertmanager
+      networks:
+        - transcendence
+      depends_on:
+        - prometheus
+      restart: always
 
-    # disord-alerts:
-    #   container_name: discord-alerts
-    #   image: benjojo/alertmanager-discord
-    #   environment:
-    #     DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
-    #   networks:
-    #     - transcendence
-    #   depends_on:
-    #     - alert-manager
-    #   restart: always
-
-    # grafana:
-    #   container_name: grafana
-    #   image: grafana/grafana
-    #   environment:
-    #     GF_SERVER_ROOT_URL: https://localhost/monitoring
-    #     GF_SERVER_SERVE_FROM_SUB_PATH: true
-    #     GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
-    #     GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
-    #   volumes:
-    #     - grafana-data:/var/lib/grafana
-    #     - "./src/Services/grafana:/etc/grafana/provisioning:ro"
-    #   networks:
-    #     - transcendence
-    #   # depends_on:
-    #   #   - prometheus
-    #   healthcheck:
-    #     test: ["CMD", "curl", "-f", "http://localhost:3000"]
-    #     interval: 10s
-    #     timeout: 5s
-    #     retries: 3
-    #     start_period: 5s
-    #   restart: unless-stopped
+    disord-alerts:
+      container_name: discord-alerts
+      image: benjojo/alertmanager-discord
+      environment:
+        DISCORD_WEBHOOK: ${DISCORD_WEBHOOK_URL}
+      networks:
+        - transcendence
+      depends_on:
+        - alert-manager
+      restart: always
 
 
+    grafana:
+      container_name: grafana
+      build:
+        context: ./src/Services/grafana
+        dockerfile: Dockerfile
+      image: grafana
+      environment:
+        GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+        GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      volumes:
+        - grafana-data:/var/lib/grafana
+      networks:
+        - transcendence
+      depends_on:
+        prometheus:
+          condition: service_started
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
+        start_period: 5s
+      restart: unless-stopped
+
+# /src/Backend/source/UsersMedia
 volumes:
-  redis-data:
-    name: cache
+
+  prometheus-data:
+    name: prometheus
     # driver: local
     # driver_opts:
-    #     o: bind
-    #     type: none
-    #     device: ${PWD}/volumes/postgres
+    #   type: none
+    #   o: bind
+    #   device: ./data/prometheus
+
+  alert-manager-data:
+    name: alert-manager
+
+  grafana-data:
+    name: grafana
+
+  source-code:
+    name: media
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nakebli/school-projects/last/src/Backend/source/
+
+  static-files:
+    name: static
+
+  media-files:
+    name: media
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nakebli/school-projects/last/src/Backend/source/UsersMedia
+
+  redis-data:
+    name: redis
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: ./data/redis
 
   postgres-data:
-    name: database
+    name: postgres
     # driver: local
     # driver_opts:
-    #     o: bind
-    #     type: none
-    #     device: ${PWD}/volumes/postgres
+    #   type: none
+    #   o: bind
+    #   device: ./data/postgres
 
-  # prometheus-data:
-  #   name: prometheus
-  #   # driver: local
-  #   # driver_opts:
-  #   #     o: bind
-  #   #     type: none
-  #   #     device: ${PWD}/volumes/prometheus
-
-  # alert-manager-data:
-  #   name: alert-manager
-
-  # grafana-data:
-  #   name: grafana
-
-  # static_data:
-  #   name: static_files
-
-
-  # media_data:
-  #   name: media_files
 
 networks:
   transcendence:

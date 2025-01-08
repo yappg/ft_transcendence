@@ -26,7 +26,7 @@ export const Friends = ({ players }: { players: Player[] }) => {
               key={user.id}
               name={user?.display_name}
               level={user?.level || 0}
-              Profile={"http://localhost:8080" + user?.avatar}
+              Profile={process.env.NEXT_PUBLIC_HOST + user?.avatar}
             />
           ))
         )}

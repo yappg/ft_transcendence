@@ -7,6 +7,7 @@ import { Achievments } from "./Achievments";
 import { JSX } from "react";
 import { MatchHistory } from "./MatchHistory";
 import { Friends } from "./Friends";
+import { Skeleton } from "../ui/skeleton";
 
 const UserSummary = ({
   user,
@@ -17,7 +18,10 @@ const UserSummary = ({
   userHistory: History[];
   is_private: boolean;
 }): JSX.Element => {
-  if (!user) return <div>Loading...</div>;
+  if (!user)
+    return (
+      <Skeleton className="size-full rounded-md bg-black-crd" />
+    );
   const { total_games, achievements } = user;
   console.log("is_private: ", is_private);
   if (is_private) {
