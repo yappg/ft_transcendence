@@ -179,20 +179,20 @@ const Home = () => {
   userAchievements = user?.achievements;
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-4 lg:flex-row lg:gap-3">
-      <div className="h-1/2 w-full lg:h-full lg:w-3/5">
-        <div className="relative z-10 mb-[-100px] flex h-[200px] items-center justify-center lg:flex">
+      <div className="flex h-1/2 w-full flex-col justify-center lg:h-full lg:w-3/5">
+        <div className="relative z-10 mb-[-100px] hidden h-[200px] items-center justify-center py-4 lg:flex">
           <Image
             src="/games-logo.svg"
             alt=""
-            width={100}
-            height={100}
+            width={80}
+            height={80}
             className="size-[300px]"
             unoptimized={true}
           />
         </div>
         <div className="custom-inner-shadow costum-little-shadow flex h-full items-center overflow-hidden rounded-[30px] bg-black-crd p-3 lg:h-3/4">
           <div className="flex size-full items-center">
-            <MapsSwiper mode="" />
+            <MapsSwiper />
           </div>
         </div>
       </div>

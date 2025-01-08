@@ -127,14 +127,6 @@ const ProfileInformations = () => {
         </h1>
       </div>
       <div className="flex w-full flex-wrap items-center justify-start gap-[50px] py-6 sm:pl-12 xl:gap-[100px] 2xl:gap-[170px] 2xl:px-20">
-        <ImageCard
-          selectedImage={
-            avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar
-          }
-          handleImageChange={handleImageChange}
-          profileError={avatarError || ""}
-        />
-
         <CoverCard
           coverImage={
             cover_upload ? URL.createObjectURL(cover_upload) : user?.cover
@@ -142,9 +134,16 @@ const ProfileInformations = () => {
           handleCoverChange={handleCoverChange}
           coverError={coverError || ""}
         />
+        <ImageCard
+          selectedImage={
+            avatar_upload ? URL.createObjectURL(avatar_upload) : user?.avatar
+          }
+          handleImageChange={handleImageChange}
+          profileError={avatarError || ""}
+        />
       </div>
       <div className="flex h-fit w-full flex-col items-start justify-start py-6 pl-2 sm:px-12 md:gap-7 md:px-5 xl:gap-10 2xl:gap-20 2xl:pl-20">
-        <div className="flex w-fit flex-row gap-[50px] lg:gap-[100px]">
+        <div className="flex w-fit flex-row gap-[50px] lg:gap-[80px]">
           <div className="flex w-fit flex-col gap-4">
             <label className="text-sm text-white">Username</label>
             <input
@@ -155,18 +154,21 @@ const ProfileInformations = () => {
             />
           </div>
           <div className="flex w-fit flex-col gap-4">
-            <label className="text-sm text-white">Email</label>
+            <label className="text-sm text-white">Display name</label>
             <input
-              type="email"
-              value="user@example.com"
-              disabled
-              className="w-[150px] cursor-not-allowed rounded-md bg-gray-700 px-4 py-2 text-white sm:w-[200px]"
+              type="text"
+              value={display_name || ""}
+              onChange={handleNamechange}
+              className="w-[150px] rounded-md bg-white px-4 py-2 text-black outline-none sm:w-[200px]"
             />
+            {profileError && (
+              <p className="text-sm text-red-500">{profileError}</p>
+            )}
           </div>
         </div>
 
         <div className="flex size-full flex-row items-end justify-between">
-          <div className="flex w-fit flex-row items-center justify-between gap-[100px]">
+          {/* <div className="flex w-fit flex-row items-center justify-between gap-[100px]">
             <div className="flex w-fit flex-col gap-4">
               <label className="text-sm text-white">Display name</label>
               <input
@@ -179,7 +181,7 @@ const ProfileInformations = () => {
                 <p className="text-sm text-red-500">{profileError}</p>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex w-full items-center justify-end">
           <button

@@ -71,7 +71,9 @@ const UserInfo = ({
     <div className="absolute z-50 flex size-full flex-col items-center justify-between px-6 py-4 lg:flex-row 2xl:px-10">
       <div className="flex h-fit w-full flex-col items-center justify-start gap-12 lg:h-full lg:w-fit lg:flex-row lg:items-end lg:justify-start">
         <div className="flex h-full w-1/2 items-end justify-center">
-          <Avatar url={`${process.env.NEXT_PUBLIC_API_URL}${userProfile?.avatar}`} />
+          <Avatar
+            url={`${process.env.NEXT_PUBLIC_HOST}${userProfile?.avatar}`}
+          />
         </div>
         <ProfileInfo
           display_name={userProfile?.display_name}

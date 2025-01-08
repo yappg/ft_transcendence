@@ -113,9 +113,7 @@ const Signup2fa = () => {
       </h1>
 
       {isLoading || localLoading ? (
-        <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
-          Loading...
-        </h1>
+        <Skeleton className="size-[200px]" />
       ) : QRcode ? (
         <div className="flex size-[200px] items-center justify-center rounded-md border border-white-crd bg-white">
           <QRCodeSVG value={QRcode} size={180} level="M" includeMargin={true} />

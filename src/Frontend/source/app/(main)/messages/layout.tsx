@@ -8,11 +8,12 @@ import { Chat } from "@/constants/chat";
 import { useUser } from "@/context/GlobalContext";
 import { useRouter } from "next/navigation";
 import { ChatCard } from "@/components/chat/ChatCard";
-import { IoChevronBackOutline } from "react-icons/io5";
+import { MdKeyboardArrowRight } from "react-icons/md";
 import { chatService } from "@/services/chatService";
 import { SideBarContext } from "@/context/SideBarContext";
 import { useContext } from "react";
 import { GameInviteProvider } from "@/context/gameInviteConetx";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ChatLayout({
   children,
@@ -75,8 +76,9 @@ export default function ChatLayout({
   // subject: The user should be able to access other players profiles through the chat interface.
   if (!user)
     return (
-      <div className="flex size-full items-center justify-center">
-        Loading...
+      <div className="flex size-full items-center justify-center gap-3">
+        <Skeleton className="h-full w-1/2 rounded-[30px] bg-black-crd" />
+        <Skeleton className="h-full w-1/2 rounded-[30px] bg-black-crd" />
       </div>
     );
   return (
@@ -84,7 +86,7 @@ export default function ChatLayout({
       <div className="flex size-full overflow-hidden lg:p-4">
         <div className="relative flex size-full gap-8">
           <div className="hidden h-full items-center justify-center lg:flex lg:w-3/5 lg:flex-row">
-            <div className="costum-little-shadow hidden size-full flex-col items-center justify-center rounded-2xl bg-black-crd lg:flex">
+            <div className="costum-little-shadow hidden size-full flex-col items-center justify-center rounded-2xl lg:flex">
               {children}
             </div>
           </div>
@@ -97,11 +99,11 @@ export default function ChatLayout({
               }}
               className="absolute right-8 top-8 z-[99] size-[50px] rounded-[50px] lg:hidden"
             >
-              <IoChevronBackOutline className="size-6" />
+              <MdKeyboardArrowRight className="mr-8 size-10 text-white" />
             </button>
           )}
           {showChat && (
-            <div className="absolute z-[80] flex size-full items-center justify-center bg-black lg:hidden">
+            <div className="absolute z-[80] flex size-full items-center justify-center lg:hidden">
               {children}
             </div>
           )}

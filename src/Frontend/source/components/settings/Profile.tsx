@@ -20,7 +20,7 @@ export default function ProfileInfo() {
     if (user?.is_private !== undefined) {
       setPrivacy(user.is_private);
     }
-  }, [user?.is_private]);
+  }, [user]);
   if (!user) {
     return <Skeleton className="size-full rounded-md bg-black-crd" />;
   }

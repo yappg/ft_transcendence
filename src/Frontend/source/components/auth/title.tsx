@@ -6,13 +6,21 @@
 "use client";
 import React, { useEffect } from "react";
 import { OAuthClient } from "@/services/fetch-oauth";
-import { useSearchParams } from "next/navigation";
 import axios from "@/lib/axios";
 
 function Title() {
-  const params = useSearchParams();
-  const code = params.get("code") as string;
-  const provider = params.get("provider") as string;
+  const [searchParams] = React.useState(() => {
+    if (window?.location) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        code: urlParams.get("code"),
+        provider: urlParams.get("provider"),
+      };
+    }
+    return { code: null, provider: null };
+  });
+  const { code, provider } = searchParams;
+
   useEffect(() => {
     if (code) {
       if (provider && provider === "google") {
@@ -48,36 +56,36 @@ function Title() {
     if (code) {
       if (provider && provider === "google") {
         axios
-        .get("/accounts/oauth/callback/google/", {
-          params: {
-            code: code,
-          },
-        })
-        .then(() => (window.location.href = "/home"))
-        .catch((error) => {
-          console.log(error);
-          window.location.href = "/auth/login";
-        });
+          .get("/accounts/oauth/callback/google/", {
+            params: {
+              code: code,
+            },
+          })
+          .then(() => (window.location.href = "/home"))
+          .catch((error) => {
+            console.log(error);
+            window.location.href = "/auth/login";
+          });
       } else {
         console.log("--------42", code);
         axios
-        .get("/accounts/oauth/callback/42/", {
-          params: {
-            code: code,
-          },
-        })
-        .then(() => (window.location.href = "/home"))
-        .catch((error) => {
-          console.log(error);
-          window.location.href = "/auth/login";
-        });
+          .get("/accounts/oauth/callback/42/", {
+            params: {
+              code: code,
+            },
+          })
+          .then(() => (window.location.href = "/home"))
+          .catch((error) => {
+            console.log(error);
+            window.location.href = "/auth/login";
+          });
       }
     }
   }, []);
   const handleGoogle = () => {
     OAuthClient.google();
   };
-  
+
   const handleIntra42 = () => {
     OAuthClient.intra42();
   };
@@ -86,7 +94,11 @@ function Title() {
     <div className="flex h-auto w-3/4 flex-col justify-center lg:w-5/6">
       <div className="mb-[-6px] flex size-full h-[35px] gap-4 pl-2 md:mb-[-10px] md:h-[40px]">
         <div onClick={handleGoogle}>
-          <img src="/google.svg" alt="google" className="h-full cursor-pointer dark:hidden" />
+          <img
+            src="/google.svg"
+            alt="google"
+            className="h-full cursor-pointer dark:hidden"
+          />
           <img
             src="/google-dark.svg"
             alt="google"
@@ -97,12 +109,12 @@ function Title() {
           <img
             src="/42.svg"
             alt="google"
-            className=" h-full cursor-pointer py-[0.35rem] dark:hidden"
+            className="h-full cursor-pointer py-[0.35rem] dark:hidden"
           />
           <img
             src="/42-dark.svg"
             alt="google"
-            className=" hidden h-full cursor-pointer py-[0.35rem] dark:block"
+            className="hidden h-full cursor-pointer py-[0.35rem] dark:block"
           />
         </div>
       </div>
