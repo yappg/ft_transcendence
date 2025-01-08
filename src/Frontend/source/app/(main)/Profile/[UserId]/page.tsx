@@ -13,6 +13,23 @@ export default function Page() {
   const [PlayerRestProfile, setPlayerRestProfile] = useState<User | null>(null);
 
   useEffect(() => {
+    const fetcherestprofile = async () =>
+      {
+        console.log("fetcherestprofile");
+        try {
+        const data = await fetcherestprofiles.getRestUser(id);
+        setPlayerRestProfile(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (id)
+    {
+      fetcherestprofile();
+    }
+  }, [id]);
+
+  useEffect(() => {
     if (id) {
       try {
         fetcherestprofiles.getRestUser(id).then((data) => {
@@ -25,21 +42,19 @@ export default function Page() {
   }, [id]);
   console.log(PlayerRestProfile);
   // need to add online status
-  if (!PlayerRestProfile) {
-    return <div>loading ...</div>;
-  } else {
-    return (
-      <div className="relative size-full overflow-auto md:py-4 md:pl-6">
+  return (
+    <div className="relative size-full overflow-auto md:py-4 md:pl-6">
+      {PlayerRestProfile ? (
         <div className="costum-little-shadow size-full gap-8 overflow-hidden md:rounded-[50px]">
           <div className="relative col-start-1 flex h-[55%] w-full items-center justify-center lg:h-2/5">
             <div
               className="absolute z-0 size-full min-h-[400px]"
               style={{
-                backgroundImage: `url(http://localhost:8080${PlayerRestProfile?.cover})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                filter: "blur(10px)",
+                backgroundImage: `url(${process.env.NEXT_PUBLIC_HOST}${PlayerRestProfile?.cover})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                filter: 'blur(10px)',
               }}
             ></div>
             <UserInfo
@@ -56,7 +71,9 @@ export default function Page() {
             />
           </div>
         </div>
-      </div>
-    );
-  }
+      ) : (
+        <div>Loading...</div>
+      )}
+    </div>
+  );
 }

@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
-import { OAuthClient } from "@/services/fetch-oauth";
-import { useSearchParams } from "next/navigation";
-import axiosInstance from "@/lib/axios";
+import React, { useEffect } from 'react';
+import { OAuthClient } from '@/services/fetch-oauth';
+import { useSearchParams } from 'next/navigation';
+import axios from '@/lib/axios';
 
 function Title() {
   const code = useSearchParams().get("code");
@@ -11,9 +11,9 @@ function Title() {
 
   useEffect(() => {
     if (code) {
-      if (provider && provider === "google") {
-        axiosInstance
-          .get("http://localhost:8080/accounts/oauth/callback/google/", {
+      if (provider && provider === 'google') {
+        axios
+          .get('/accounts/oauth/callback/google/', {
             params: {
               code: code,
             },
@@ -24,9 +24,9 @@ function Title() {
             window.location.href = "/auth/login";
           });
       } else {
-        console.log("--------42", code);
-        axiosInstance
-          .get("http://localhost:8080/accounts/oauth/callback/42/", {
+        console.log('--------42', code);
+        axios
+          .get('/accounts/oauth/callback/42/', {
             params: {
               code: code,
             },

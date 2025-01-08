@@ -1,5 +1,6 @@
 
 ##########
+
 POST http://localhost:8080/accounts/auth/signup/
 Content-Type: application/json
 
@@ -11,7 +12,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -22,7 +23,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -33,7 +34,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -44,7 +45,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -55,7 +56,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -66,7 +67,7 @@ Content-Type: application/json
 }
 
 ##########
-POST http://localhost:8080/accounts/auth/signup/
+POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
@@ -79,18 +80,7 @@ Content-Type: application/json
 ###################### LOGIN ################################################################################################################################################################
 
 ##########
-POST http://localhost:8080/accounts/auth/signin/
-Content-Type: application/json
-
-{
-    "username": "client4",
-    "password": "password"
-}
-
-###################### GET TOKEN ################################################################################################################################################################
-
-##########
-POST http://localhost:8080/accounts/JWT/token/
+POST http://localhost:8080/api/accounts/auth/signin/
 Content-Type: application/json
 
 {
@@ -98,8 +88,19 @@ Content-Type: application/json
     "password": "password"
 }
 
+###################### GET TOKEN ################################################################################################################################################################
+
 ##########
-POST http://localhost:8080/accounts/JWT/token/refresh/
+POST http://localhost:8080/api/accounts/JWT/token/
+Content-Type: application/json
+
+{
+    "username": "client2",
+    "password": "password"
+}
+
+##########
+POST http://localhost:8080/api/accounts/JWT/token/refresh/
 Content-Type: application/json
 
 {

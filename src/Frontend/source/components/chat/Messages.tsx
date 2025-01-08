@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { IoSend } from "react-icons/io5";
 import { FiPlus, FiMoreVertical } from "react-icons/fi";
 import { IoGameController } from "react-icons/io5";
@@ -10,10 +10,10 @@ import { MessageBubble } from "@/components/chat/MessageBubb";
 import { chatService } from "@/services/chatService";
 import FriendServices from "@/services/friendServices";
 import { useChatWebSocket } from "@/hooks/useChatWebSocket";
-import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import { useToast } from "@/hooks/use-toast";
+import { GameInviteContext } from "@/context/gameInviteConetx";
 interface MessagesProps {
   chatId: number;
   currentChat: Chat;
@@ -37,6 +37,11 @@ export const Messages: React.FC<MessagesProps> = ({
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { chats, user, setChats } = useUser();
   const router = useRouter();
+  const { toast } = useToast();
+  const [gameInviteSocket, setGameInviteSocket] = useState<WebSocket | null>(null);
+
+  
+  const { sendGameInvite } = useContext(GameInviteContext);
   const handleBlockUser = async () => {
     if (isBlocked === true) {
       console.log("Unblocking user:", currentChat?.receiver.username);
@@ -69,21 +74,15 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   };
 
-  const handleGameInvite = async () => {
-    try {
-      console.log("Sending game invite to:", currentChat?.receiver.id);
-      setShowMoreOptions(false);
-    } catch (error) {
-      console.log("Failed to send game invite", error);
-    }
-  };
-
+  
   useChatWebSocket({
     chatId,
     setMessages,
     setChats,
   });
 
+
+  
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -112,7 +111,7 @@ export const Messages: React.FC<MessagesProps> = ({
       console.log("Failed to send message", error);
     }
   };
-
+  
   React.useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -121,10 +120,10 @@ export const Messages: React.FC<MessagesProps> = ({
       });
     }
   }, [messages]);
-
+  
   const [chatBar, setChatBar] = useState(true);
   const [isBlocked, setIsBlocked] = useState(false);
-
+  
   React.useEffect(() => {
     if (user) setCurrentUserId(user.id);
     if (chats) {
@@ -142,22 +141,44 @@ export const Messages: React.FC<MessagesProps> = ({
       }
     }
   }, [user?.id, chats]);
+  
 
+
+  
+  
+
+  const handleGameInvite = async () => {
+    try {
+      // setOnclicked(true);
+      sendGameInvite(currentChat?.receiver.usernameGame);
+      setShowMoreOptions(false);
+    } catch (error) {
+      console.log("Failed to send game invite", error);
+      toast({
+        title: "Error",
+        description: "Failed to send game invite",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white bg-opacity-20",
+      });
+    }
+  };
+  
+  
+
+  
   return (
     <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
       <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
         <div className="flex items-start gap-4">
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <Image
-              onClick={() =>
-                router.push(`/Profile/${currentChat?.receiver.id}`)
-              }
-              src={`http://localhost:8080${currentChat?.receiver.avatar}`}
+              onClick={() => router.push(`/Profile/${currentChat?.receiver.id}`)}
+              src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
               width={70}
               height={70}
-              unoptimized
+              unoptimized={true}
             />
           </div>
           <div>
@@ -241,3 +262,4 @@ export const Messages: React.FC<MessagesProps> = ({
     </div>
   );
 };
+

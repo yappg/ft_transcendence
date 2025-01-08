@@ -92,11 +92,13 @@ class SignInView(APIView):
             resp.set_cookie(
                 key='access_token',
                 value=access_token,
+                # secure=False,
                 httponly=False
             )
             resp.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
+                # secure=True,
                 httponly=False
             )
             return resp
@@ -144,7 +146,8 @@ class GenerateURI(APIView):
         uri = totp.provisioning_uri(name='transcendence', issuer_name=user.username)
 
         user.otp_secret_key = secret_key
-        user.save()
+        user.save(update_fields=['otp_secret_key'])
+
         return Response(
             {'uri': uri, 'enabled_2fa': user.enabled_2fa},
             status=status.HTTP_200_OK)
@@ -254,8 +257,8 @@ class OAuth42LoginView(APIView):
         elif provider == 'google':
             Auth_url = settings.OAUTH2_PROVIDER_GOOGLE['AUTHORIZATION_URL']
             client_id_Google = settings.OAUTH2_PROVIDER_GOOGLE['CLIENT_ID']
-            redirect_uri = settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL']
-            scope = settings.OAUTH2_PROVIDER_GOOGLE['SCOPE']
+            redirect_uri = quote(settings.OAUTH2_PROVIDER_GOOGLE['CALLBACK_URL'])
+            scope = quote(settings.OAUTH2_PROVIDER_GOOGLE['SCOPE'])
             authorization_url = f"{Auth_url}?client_id={client_id_Google}&redirect_uri={redirect_uri}&scope={scope}&response_type=code"
         else:
             return Response({'error': 'Invalid platform'}, status=status.HTTP_200_OK)

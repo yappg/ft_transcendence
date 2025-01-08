@@ -32,15 +32,20 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.user = self.scope["user"]
             self.opponent = None
             self.Gameplayer = None
-            print(f'\n{GREEN}[User Authenticated {self.user}]{RESET}\n')
 
             if not matchmake_system._running:
                 await matchmake_system.start()
             await self.accept()
+            if self.scope.get('url_route').get('kwargs').get('game_id', None):
+                self.game_id = self.scope.get('url_route').get('kwargs').get('game_id', None)
+                self.game =  matchmake_system.games[self.game_id]
+                if self.game and self.game.status == 'waiting':
+                    print(f'\n{YELLOW}[Game MOLLALALA{self.scope.get('url_route')} Found]{RESET}\n')
+                    self.game.start_game()
+                    return
 
-            await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
+            # await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
             if  not self.player_in_QG():
-                print(f'\n{YELLOW}[Adding Player to Queue]{RESET}\n')
                 await matchmake_system.add_player_to_queue(self.user.id, self.user.username, self.channel_name)
             else:
                 print(f'\n{YELLOW}[User Already in a Game]{RESET}\n')
@@ -58,7 +63,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             print(f'\n{YELLOW}data: [{data}]{RESET}\n')
 
             if action == 'ready':
-                print(f'\n{YELLOW}[Player ReadyYYYYYYYYYY]{RESET}\n')
                 game_id = data.get('game_id', None)
                 if not game_id :
                     return
@@ -68,11 +72,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     return
                 await self.set_Gameplayers_to_consumer()
                 self.Gameplayer.status = 'ready'
-                print(f'\n{RED}[Player Ready {data.get('map')}]{RESET}\n')
                 if data.get('map'):
                     await self.set_players_map(data.get('map'))
                 self.broadcast_ready()
-                #TODO Am not sure if we still need this sleep for synchronization or not[CHECK with the Noredin]
                 await asyncio.sleep(2)
 
                 if self.game.status == 'waiting':
@@ -88,6 +90,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     new_x = data.get('new_x')#, 50)
                     await self.game.move_paddle(self.user.id, new_x)
                     await self.share_paddle_move(new_x)
+            elif action == 'invite':
+                if not data.get('opponent_id'):
+                    return
+                matchmake_system.invite_player(self.user.id, data.get('opponent_id'))
             elif action == 'disconnect':
                 await self.close()
         except Exception as e:
@@ -294,7 +300,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     # TODO handle the unexpeted disconnects or cleanup after normal disconnect
         try:
             if self.game:
-                print(f'\n{RED}[Disconnect {self.user.username} AMAMAMAMM HERERERER GS {self.game.status}]{RESET}\n')
                 if self.game.status == 'playing':
                     print (f'{RED}[Unexpected Disconnection l; {self.user.username}]{RESET}')
                     winner =  'player1' if self.user.id == self.game.player2.id else 'player2'
@@ -303,7 +308,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game_id in matchmake_system.games:
                     del matchmake_system.games[self.game_id]
                 await self.broadcast_disconnection()
-                # await self.channel_layer.group_discard(f'game_{self.game_id}', self.channel_name)
+                await self.channel_layer.group_discard(f'game_{self.game_id}', self.channel_name)
                 print(f'\n{RED}[Disconnect {self.user.username}]{RESET}\n')
             await super().disconnect(close_code)
         except Exception as e:
@@ -315,20 +320,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'force_disconnect',
             })
-        # print(f'\n{RED}[Broadcast Disconnection]{RESET}\n')
-        # await matchmake_system.channel_layer.send(
-        #     self.opponent.channel_name,
-        #     {
-        #         'type': 'force_disconnect',
-        #     })
-        # await matchmake_system.channel_layer.send(
-        #     self.channel_name,
-        #     {
-        #         'type': 'force_disconnect',
-        #     })
-
     async def force_disconnect(self, event):
-        print(f'\n{RED}[Force Disconnect]{RESET}\n')
         await self.safe_send({
             'type': 'GameEnd',
             'action': 'disconnect',
@@ -375,13 +367,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     
     #------------------------------------>>>>>util functions<<<<<<<------------------------------
 
-
-#TODO handle the exception of sending on a closed scoket
 #TODO handle the game end and disconnections
 #TODO reset the jwt duration to normal
 #TODO GameInvite
-#TODO [Error in Safe Send Attempt to send on a closed protocol]
-#TODO make sure why the broadcast_game_end is not sending the message
 
-#_______________________________Sbject requirements _______________________________________
+    #_______________________________Sbject requirements _______________________________________
 # 1- the app should be protected against XSS attacks

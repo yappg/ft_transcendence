@@ -20,11 +20,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/home', req.nextUrl.origin));
   }
 
-  if (pathname === '/Game-Arena' && !allowedModes.has(req.nextUrl.searchParams.get('mode'))) {
+  if (pathname === '/Game-Arena' && !allowedModes.has(req.nextUrl.searchParams.get('mode') || "")) {
     return NextResponse.redirect(new URL('/games', req.nextUrl.origin));
   }
 
-  if ((pathname === '/Game-Arena' || pathname === '/tournament') && !allowedMaps.has(req.nextUrl.searchParams.get('map'))) {
+  if ((pathname === '/Game-Arena' || pathname === '/tournament') && !allowedMaps.has(req.nextUrl.searchParams.get('map') || "")) {
     return NextResponse.redirect(new URL(`/games?mode=${req.nextUrl.searchParams.get('mode')}`, req.nextUrl.origin));
   }
 
@@ -37,7 +37,6 @@ export const config = {
     '/games',
     '/friends',
     '/profile',
-    '/Game-Arena',
     '/auth/login',
     '/auth/signup',
     '/2fa/login-2fa',

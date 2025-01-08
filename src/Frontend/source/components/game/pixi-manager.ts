@@ -27,7 +27,7 @@ export abstract class PixiManager {
   game: any;
   map: string;
   isTopPaddle: boolean = false;
-  round = 0;
+  round: number;
   dx = 0;
   dy = 1;
 
@@ -37,7 +37,8 @@ constructor(container: HTMLElement, map: string, game: any) {
     this.paddleWidth = 0;
     this.game = game;
     this.map = map;
-    this.game.gameState = 'waiting';
+    this.round = 0;
+    this.game.GameState = 'waiting';
     this.initWindow(container).then(() => {});
   }
 
@@ -256,11 +257,11 @@ export class LocalGameManager extends PixiManager {
         this.ball.y = this.screenHeight / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.gameState = 'waiting';
+          this.game.GameState = 'waiting';
           this.game.setGameState('waiting');
         }
         else {
-          this.game.gameState = 'over';
+          this.game.GameState = 'over';
           this.game.setGameState('over');
           const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));
           await sleepmoment;
@@ -280,7 +281,7 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = "start";
+      this.game.GameState = "start";
       this.game.setGameState("start");
     });
   }
@@ -332,15 +333,15 @@ export class LocalGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.displayText("Get\nReady");
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }
@@ -352,15 +353,17 @@ export class LocalGameManager extends PixiManager {
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;
   user: User | null;
-
+  game_id: string;
   constructor(
     container: HTMLElement,
     backgroundImage: string,
     game: any,
-    user: User | null
+    user: User | null,
+    game_id: string
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager("ws://localhost:8080/ws/game/");
+    this.socketManager = new socketManager(`${process.env.NEXT_PUBLIC_WS_URL}/game/`, game_id);
+    this.game_id = game_id;
     this.user = user;
     this.socketManager.setPixiManager(this);
   }
@@ -437,10 +440,10 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
-    if (this.game.gameState === "waiting") {
+    if (this.game.GameState === "waiting") {
       this.handleWaitingState();
     }
-    if (this.game.gameState === "start") {
+    if (this.game.GameState === "start") {
       if (this.app.stage.children.includes(this.waitingText)) {
         this.app.stage.removeChild(this.waitingText);
       }
@@ -451,7 +454,7 @@ export class OnlineGameManager extends PixiManager {
       this.handlegameupdates();
       this.handlepaddlesMouvements();
     }
-    if (this.game.gameState === "over") {
+    if (this.game.GameState === "over") {
       this.removeGameElements();
       this.displayText("Game\nOver");
     }

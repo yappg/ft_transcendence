@@ -33,34 +33,35 @@ export default function RootLayout({
   }, []);
 
   return (
-    <div className=" grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] overflow-auto overflow-hidden bg-linear-gradient dark:bg-linear-gradient-dark md:gap-[8px] md:p-8">
-      <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center">
-        <SideBar pathname={pathname} handleRightClick={handleRightClick} />
+      <div className="grid h-screen w-screen grid-cols-[repeat(11,_1fr)] grid-rows-[repeat(9,_1fr)] overflow-hidden bg-linear-gradient dark:bg-linear-gradient-dark md:gap-[8px] md:p-4">
+        <div className="row-[span_9_/_span_9] flex min-h-0 grow items-start justify-center hidden md:flex">
+          <SideBar pathname={pathname} handleRightClick={handleRightClick} />
+        </div>
+        <div className="col-start-0 z-50 col-span-full row-start-1 flex items-center justify-start pt-2 transition-all duration-300 md:col-span-10 md:col-start-2">
+          <Header />
+        </div>
+        <div
+          className={`${
+            isActivated === 7 ||
+            isActivated === 6 ||
+            isActivated === 4 ||
+            isActivated === 6 ||
+            isActivated === 9 ||
+            pathname === "/friends" ||
+            pathname === "/LeaderBoard" ||
+            pathname === "/Profile" ||
+            pathname === "/MatchHistory" ||
+            pathname === "/messages"
+              ? "hidden"
+              : "hidden lg:flex"
+          } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
+        >
+          <RightBar handleRightClick={handleRightClick} />
+        </div>
+
+        <div className="col-start-0 z-0 col-span-full row-span-8 row-start-2 md:col-span-10 md:col-start-2 flex items-center justify-center md:p-2">
+          {children}
+        </div>
       </div>
-      <div className="col-start-0 col-span-full row-start-1 flex items-start justify-start pt-2 transition-all duration-300 md:col-span-10 md:col-start-2">
-        <Header />
-      </div>
-      <div
-        className={`${
-          // isActivated === 7 ||
-          // isActivated === 6 ||
-          // isActivated === 4 ||
-          // isActivated === 6 ||
-          // isActivated === 9 ||
-          pathname === '/friends' ||
-          pathname === '/LeaderBoard' ||
-          pathname === '/Profile' ||
-          pathname === '/MatchHistory' ||
-          pathname === '/messages'
-            ? 'hidden'
-            : 'hidden lg:flex'
-        } col-start-12 row-[span_9_/_span_9] row-start-1 items-start justify-center transition-all duration-300`}
-      >
-        <RightBar handleRightClick={handleRightClick} />
-      </div>
-      <div className="col-start-0 col-span-full row-span-8 row-start-2 grid grid-cols-[1fr] grid-rows-[1fr] md:col-span-10 md:col-start-2">
-        {children}
-      </div>
-    </div>
   );
 }

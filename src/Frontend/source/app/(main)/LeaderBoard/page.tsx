@@ -5,6 +5,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
 import { useUser } from "@/context/GlobalContext";
 import { userService } from "@/services/userService";
+import { Skeleton } from "@/components/ui/skeleton";
 // react-hooks/exhaustive-dep
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
@@ -29,12 +30,20 @@ export default function Page() {
     };
     fetchPlayerLeaderBoard();
   }, [setPlayerLeaderBoard, setIsLoading]);
-
-  console.log("this is the fetched leaderboard2: ", PlayerLeaderBoard);
   if (!PlayerLeaderBoard)
     return (
-      <div className="flex size-full items-center justify-center md:py-4 md:pl-6">
-        <h1 className="font-dayson text-[40px] font-bold"> No User</h1>
+      <div className="flex size-full flex-col items-center justify-center gap-2 bg-black-crd rounded-[50px] overflow-hidden ml-5">
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
+        <Skeleton className="size-full md:w-full md:h-[100px] lg:h-[150px] bg-black-crd" />
       </div>
     );
   return (
@@ -46,54 +55,54 @@ export default function Page() {
               <div className="h-fit w-full bg-black-crd dark:bg-transparent">
                 <FriendsComponent
                   name={PlayerLeaderBoard[0].display_name}
-                  ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[0].avatar}`}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[0].avatar}
                   level={PlayerLeaderBoard[0].level}
                   wins={PlayerLeaderBoard[0].games_won}
                   losses={PlayerLeaderBoard[0].games_loss}
                   messagesLink={
-                    <div className="flex h-[70px] w-[90%] items-center justify-center rounded-l-full bg-[#FFFF00] bg-opacity-[40%] sm:h-[70px] sm:w-full lg:h-[150px] lg:w-[90%]">
+                    <div className="flex h-[100px] w-[90%] items-center justify-center rounded-l-full bg-[#FFFF00] bg-opacity-[40%] sm:h-[100px] sm:w-full lg:h-[150px] lg:w-[90%]">
                       <span className="font-dayson text-[15px] text-[#FFFF00] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                         1st
                       </span>
                     </div>
                   }
                   customStyles={{ backgroundColor: 'rgba(255, 255, 0, 0.3)' }}
-                  id={PlayerLeaderBoard[0].id.toString()}
+                  achievements={PlayerLeaderBoard[0].Achievement}
                 />
                 {PlayerLeaderBoard.length > 1 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[1].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[1].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[1].avatar}
                     level={PlayerLeaderBoard[1].level}
                     wins={PlayerLeaderBoard[1].games_won}
                     losses={PlayerLeaderBoard[1].games_loss}
                     messagesLink={
-                      <div className="flex h-[70px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[70px] sm:w-3/4 lg:h-[150px]">
+                      <div className="flex h-[100px] w-[65%] items-center justify-center rounded-l-full bg-[#C0C0C0] bg-opacity-[50%] sm:h-[100px] sm:w-3/4 lg:h-[150px]">
                         <span className="font-dayson text-[15px] text-[#C0C0C0] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                           2nd
                         </span>
                       </div>
                     }
                     customStyles={{ backgroundColor: 'rgba(192, 192, 192, 0.3)' }}
-                    id={PlayerLeaderBoard[1].id.toString()}
+                    achievements={PlayerLeaderBoard[1].Achievement}
                   />
                 )}
                 {PlayerLeaderBoard.length > 2 && (
                   <FriendsComponent
                     name={PlayerLeaderBoard[2].display_name}
-                    ProfilePhoto={`http://localhost:8080${PlayerLeaderBoard[2].avatar}`}
+                    ProfilePhoto={process.env.NEXT_PUBLIC_HOST + PlayerLeaderBoard[2].avatar}
                     level={PlayerLeaderBoard[2].level}
                     wins={PlayerLeaderBoard[2].games_won}
                     losses={PlayerLeaderBoard[2].games_loss}
                     messagesLink={
-                      <div className="flex h-[70px] w-3/5 items-center justify-center rounded-l-full bg-[#CD7F32] bg-opacity-[50%] sm:h-[70px] sm:w-3/5 lg:h-[150px] lg:w-3/5">
+                      <div className="flex h-[100px] w-3/5 items-center justify-center rounded-l-full bg-[#CD7F32] bg-opacity-[50%] sm:h-[100px] sm:w-3/5 lg:h-[150px] lg:w-3/5">
                         <span className="font-dayson text-[15px] text-[#CD7F32] sm:text-[22px] md:text-[30px] xl:text-[42px] 2xl:text-[50px]">
                           3rd
                         </span>
                       </div>
                     }
                     customStyles={{ backgroundColor: 'rgba(205, 127, 50, 0.3)' }}
-                    id={PlayerLeaderBoard[2].id.toString()}
+                    achievements={PlayerLeaderBoard[2].Achievement}
                   />
                 )}
               </div>
@@ -102,7 +111,7 @@ export default function Page() {
                 <FriendsComponent
                   key={index + 3}
                   name={friend.display_name}
-                  ProfilePhoto={`http://localhost:8080${friend.avatar}`}
+                  ProfilePhoto={process.env.NEXT_PUBLIC_HOST + friend.avatar}
                   level={friend.level}
                   wins={friend.games_won}
                   losses={friend.games_loss}
@@ -114,7 +123,7 @@ export default function Page() {
                     </div>
                   }
                   customStyles={{ backgroundColor: '' }}
-                  id={friend.id.toString()}
+                  achievements={friend.Achievement}
                 />
               ))}
             </div>

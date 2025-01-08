@@ -12,6 +12,7 @@ const GameArena = () => {
   const searchParams = useSearchParams();
   const map = searchParams.get('map');
   const mode = searchParams.get('mode');
+  const game_id = searchParams.get("game_id");
   const game = useGame();
   const user = useUser();
 
@@ -31,10 +32,10 @@ const GameArena = () => {
       }
     } else if (mode === 'one-vs-one') {
       
-      if (user.user?.user?.username && user?.user?.avatar) {
+      if (user.user?.username && user?.user?.avatar) {
         game.setPlayer1({
           username: user?.user?.username,
-          avatar: 'http://localhost:8080' + user?.user?.avatar,
+          avatar: process.env.NEXT_PUBLIC_HOST + user?.user?.avatar,
         } as Player);
       } 
       if (game?.opponent?.username && game?.opponent?.avatar) {
@@ -57,7 +58,7 @@ const GameArena = () => {
       {/* game table */}
       <div className="flex size-full items-center justify-center lg:p-8 xl:w-1/2">
         <div className="flex size-full max-w-[calc(3*(100vh-130px)/4)] items-center justify-center overflow-hidden xl:max-w-[calc(280vh/4)]">
-          <GameTable mode={mode || ''} map={map || ''} />
+          <GameTable mode={mode || ''} map={map || ''} game_id={game_id || ""} />
         </div>
       </div>
     </div>
