@@ -86,23 +86,23 @@ function Title() {
     <div className="flex h-auto w-3/4 flex-col justify-center lg:w-5/6">
       <div className="mb-[-6px] flex size-full h-[35px] gap-4 pl-2 md:mb-[-10px] md:h-[40px]">
         <div onClick={handleGoogle}>
-          <img src="/google.svg" alt="google" className="h-full dark:hidden" />
+          <img src="/google.svg" alt="google" className="h-full cursor-pointer dark:hidden" />
           <img
             src="/google-dark.svg"
             alt="google"
-            className="hidden h-full dark:block"
+            className="hidden h-full cursor-pointer dark:block"
           />
         </div>
         <div onClick={handleIntra42}>
           <img
             src="/42.svg"
             alt="google"
-            className="h-full py-[0.35rem] dark:hidden"
+            className=" h-full cursor-pointer py-[0.35rem] dark:hidden"
           />
           <img
             src="/42-dark.svg"
             alt="google"
-            className="hidden h-full py-[0.35rem] dark:block"
+            className=" hidden h-full cursor-pointer py-[0.35rem] dark:block"
           />
         </div>
       </div>

@@ -25,25 +25,25 @@ CMD ["sh", "-c", "while true; do python manage.py runserver 0.0.0.0:8080 || echo
 # Stage 2: Production build stage (for nginx)
 ######################################
 
-FROM python:alpine AS production
+# FROM python:alpine AS production
 
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
+# ENV PYTHONUNBUFFERED=1
+# ENV PYTHONDONTWRITEBYTECODE=1
+# ENV DJANGO_SETTINGS_MODULE=_1Config.settings.production
 
-WORKDIR /app/source
+# WORKDIR /app/source
 
-COPY ./source/requirements.txt ./
+# COPY ./source/requirements.txt ./
 
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+# RUN pip install --upgrade pip \
+#     && pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+# COPY . /app
 
-RUN chmod +x /app/config/autoDeploy.sh
+# RUN chmod +x /app/config/autoDeploy.sh
 
-EXPOSE 8080
+# EXPOSE 8080
 
-ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
-# CMD [ "tail", "-f", "/dev/null" ]
+# ENTRYPOINT [ "sh", "../config/autoDeploy.sh" ]
+# CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "_1Config.asgi:application"]
+# # CMD [ "tail", "-f", "/dev/null" ]

@@ -10,7 +10,6 @@ import {
 } from "@/components/game/pixi-manager";
 import { useGame } from "@/context/GameContext";
 import React, { useRef, useEffect } from "react";
-import socketManager from "./socket-manager";
 import { useUser } from "@/context/GlobalContext";
 
 const GameTable = ({
@@ -27,10 +26,9 @@ const GameTable = ({
   const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
-  // const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    if (mode.indexOf("local") !== -1) {
+    if (mode.indexOf('local') !== -1 || mode === 'tournament') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,
@@ -38,7 +36,7 @@ const GameTable = ({
           game,
         );
       }
-    } else {
+    } else if (mode === 'one-vs-one') {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new OnlineGameManager(
           canvasContainerRef.current,
@@ -49,10 +47,15 @@ const GameTable = ({
         );
       }
     }
-    return () => {
-      // if (gameManagerRef.current.socketManager) {
-      //   gameManagerRef.current.socketManager.destroy(true);
-      // }
+
+      return () => {
+        if (mode === 'one-vsone') {
+          const om = gameManagerRef.current as OnlineGameManager;
+          om?.socketManager.close();
+        }
+        // if (gameManagerRef.current?.app) {
+        //   gameManagerRef.current.app.destroy(true);
+        // }
     };
   }, []);
 

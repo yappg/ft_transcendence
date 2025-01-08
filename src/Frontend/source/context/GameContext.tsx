@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import { User } from "./GlobalContext";
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { User } from './GlobalContext';
 
 export interface RoundsProps {
   round: number;
@@ -23,13 +23,13 @@ export interface GameContextType {
   setPlayer2: (player: Player | null) => void;
   GameScore: [number, number];
   Rounds: RoundsProps[];
-  GameState: "start" | "over" | "round" | "waiting";
-  gameMode: "local" | "online";
+  GameState: 'start' | 'over' | 'round' | 'waiting';
+  gameMode: 'local' | 'online';
   gameMap: string;
   setRounds: (rounds: (prevRounds: RoundsProps[]) => RoundsProps[]) => void;
   setGameScore: (score: [number, number]) => void;
-  setGameState: (state: "start" | "over" | "round" | "waiting") => void;
-  setGameMode: (mode: "local" | "online") => void;
+  setGameState: (state: 'start' | 'over' | 'round' | 'waiting') => void;
+  setGameMode: (mode: 'local' | 'online') => void;
   setGameMap: (map: string) => void;
   opponent: User | null;
   setOpponent: (opponent: User | null) => void;
@@ -84,11 +84,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [GameId, setGameId] = useState<number>(0);
   const [GameScore, setGameScore] = useState<[number, number]>([0, 0]);
   const [Rounds, setRounds] = useState<RoundsProps[]>([]);
-  const [GameState, setGameState] = useState<
-    "start" | "over" | "round" | "waiting"
-  >("waiting");
-  const [gameMode, setGameMode] = useState<"local" | "online">("local");
-  const [gameMap, setGameMap] = useState<string>("simple");
+  const [GameState, setGameState] = useState<'start' | 'over' | 'round' | 'waiting'>('waiting');
+  const [gameMode, setGameMode] = useState<'local' | 'online'>('local');
+  const [gameMap, setGameMap] = useState<string>('simple');
   const [opponent, setOpponent] = useState<User | null>(null);
   const [TournementTree, setTournementTree] = useState<any>(null);
   const [totalScore, setTotalScore] = useState<[number, number]>([0, 0]);
