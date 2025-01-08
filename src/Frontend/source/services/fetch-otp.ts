@@ -1,8 +1,8 @@
-'use client';
-import axios from '@/lib/axios';
-import { toast } from '@/hooks/use-toast';
-import { Dispatch, SetStateAction } from 'react';
-import { useUser } from '@/context/GlobalContext';
+"use client";
+import axios from "@/lib/axios";
+import { toast } from "@/hooks/use-toast";
+import { Dispatch, SetStateAction } from "react";
+import { useUser } from "@/context/GlobalContext";
 
 export const fetchQrCode = async (
   userName: string,
@@ -12,15 +12,15 @@ export const fetchQrCode = async (
 ) => {
   try {
     setIsLoading(true);
-    const { data } = await axios.post('/accounts/2fa/generate-uri/', {
+    const { data } = await axios.post("/accounts/2fa/generate-uri/", {
       username: userName,
     });
     if (data.error) {
       setEnable2fa(false);
       toast({
-        title: 'Error',
+        title: "Error",
         description: data.error,
-        className: 'bg-primary-dark border-none text-white bg-opacity-20',
+        className: "bg-primary-dark border-none text-white bg-opacity-20",
       });
       return;
     }
@@ -28,23 +28,27 @@ export const fetchQrCode = async (
       setQRcode(data.uri);
       setEnable2fa(true);
     } else {
-      throw new Error('No URI received');
+      throw new Error("No URI received");
     }
   } catch (error) {
-    console.error('QR Code fetch error:', error);
+    console.error("QR Code fetch error:", error);
     toast({
-      title: 'Error',
-      description: 'Oops something went wrong! Try fetching later',
-      variant: 'destructive',
+      title: "Error",
+      description: "Oops something went wrong! Try fetching later",
+      variant: "destructive",
     });
   } finally {
     setIsLoading(false);
   }
 };
 
-export const sendOtp = async (endpoint: string, value: string, name: string | null) => {
+export const sendOtp = async (
+  endpoint: string,
+  value: string,
+  name: string | null,
+) => {
   try {
-    console.log('name', name, 'value', value);
+    console.log("name", name, "value", value);
     const response = await axios.post(`/accounts/2fa/${endpoint}/`, {
       username: name,
       otp_token: value,
@@ -54,7 +58,6 @@ export const sendOtp = async (endpoint: string, value: string, name: string | nu
     if (error instanceof Error) {
       throw new Error(`Authentication error: ${error.message}`);
     }
-    throw new Error('Authentication failed');
+    throw new Error("Authentication failed");
   }
 };
-

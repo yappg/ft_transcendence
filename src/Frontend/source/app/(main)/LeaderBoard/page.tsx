@@ -8,7 +8,6 @@ import { useContext, useEffect } from "react";
 import { useUser } from "@/context/GlobalContext";
 import { userService } from "@/services/userService";
 import { Skeleton } from "@/components/ui/skeleton";
-// react-hooks/exhaustive-dep
 export default function Page() {
   const { setIsActivated } = useContext(SideBarContext);
 
@@ -118,7 +117,7 @@ export default function Page() {
                   />
                 )}
               </div>
-              {/* there is a problem here  duplicate the first 3 players*/}
+              {/* there is a problem here  duplicate the first 3 players */}
               {PlayerLeaderBoard.filter((friend, index) => index >= 3).map(
                 (friend, index) => (
                   <FriendsComponent

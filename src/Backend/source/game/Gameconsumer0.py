@@ -42,7 +42,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if self.game and self.game.status == 'waiting':
                     print(f'\n{YELLOW}[Game MOLLALALA{self.scope.get('url_route')} Found]{RESET}\n')
                     self.game.start_game()
-                    return
+                    # return
 
             # await self.channel_layer.group_add(f'selfGroup_{self.user.id}', self.channel_name)
             if  not self.player_in_QG():

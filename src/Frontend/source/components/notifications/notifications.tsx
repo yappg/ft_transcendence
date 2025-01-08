@@ -46,7 +46,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
         )}
       </div>
       {notifClicked && (
-        <div className="absolute right-0 top-10 w-80 rounded-lg bg-white shadow-lg">
+        <div className="absolute right-0 top-10 w-80 rounded-lg bg-black-card shadow-lg">
           {notifications.map((notification, index) => (
             <div key={index} className="border-b border-gray-200 p-4">
               <p>{notification.message}</p>

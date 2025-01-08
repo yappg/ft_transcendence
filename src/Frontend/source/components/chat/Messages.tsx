@@ -98,7 +98,6 @@ export const Messages: React.FC<MessagesProps> = ({
               ...prevLastMessages,
               [chatId]: newMessage,
             };
-            console.log("this is the newObject: ", newObject);
             return newObject;
           },
         );
@@ -141,14 +140,9 @@ export const Messages: React.FC<MessagesProps> = ({
 
   const handleGameInvite = async () => {
     try {
-      console.log(
-        "currentChat?.receiver.usernameGame",
-        currentChat?.receiver.usernameGame,
-      );
       sendGameInvite(currentChat?.receiver.usernameGame);
       setShowMoreOptions(false);
     } catch (error) {
-      console.log("Failed to send game invite", error);
       toast({
         title: "Error",
         description: "Failed to send game invite",

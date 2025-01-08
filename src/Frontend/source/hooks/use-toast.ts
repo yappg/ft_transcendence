@@ -5,8 +5,10 @@ import * as React from "react";
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
-const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+import { CustomToast } from "@/components/ui/custom-toast";
+// ---------------------------------TOAST-----------------------------------
+const TOAST_LIMIT = 1; // Only show 1 toast at a time
+const TOAST_REMOVE_DELAY = 3000; // Remove toast after 3 seconds
 
 type ToasterToast = ToastProps & {
   id: string;

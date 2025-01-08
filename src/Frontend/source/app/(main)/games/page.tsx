@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable tailwindcss/no-custom-classname */
+
 "use client";
 import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
@@ -17,6 +18,7 @@ import {
   Pagination,
   Navigation,
 } from "swiper/modules";
+import React from "react";
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
@@ -137,9 +139,15 @@ const GameModeSwiper = () => {
 const Game_modes = () => {
   const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
-  const params = useParams();
-  const mode = params.mode as string;
-  const game_id = params.game_id as string;
+  const params = useSearchParams();
+  const mode = params.get("mode") as string;
+  const game_id = params.get("game_id") as string;
+
+  if (!params) {
+    router.push("/games");
+    return null;
+  }
+
   useEffect(() => {
     if (game_id) {
       router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${game_id}`);
@@ -148,7 +156,7 @@ const Game_modes = () => {
 
   useEffect(() => {
     setIsActivated(2);
-  }, [setIsActivated]);
+  }, []);
 
   if (game_id) {
     return <div>Loading...</div>;

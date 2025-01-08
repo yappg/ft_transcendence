@@ -7,9 +7,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-// import { useRouter } from 'next/router';
 import { toast, useToast } from "@/hooks/use-toast";
-import { CustomToast } from "@/components/ui/custom-toast";
 
 interface GameInviteContextProps {
   handleWebSocketMessage: (event: MessageEvent) => void;
@@ -54,12 +52,13 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       //   document.body.appendChild(inviteDiv);
       //   setTimeout(() => inviteDiv.remove(), 5000);
     } else if (data.type === "game_found") {
+      // need to change this to toast adding action 
       const gameFoundDiv = document.createElement("div");
       gameFoundDiv.className =
         "fixed top-4 right-4 bg-primary text-white p-4 rounded-lg shadow-lg";
       gameFoundDiv.innerHTML = `
-        <h3 class="font-bold">Game Found!</h3>
-        <p>Redirecting to game...</p>
+        <h3 class="font-bold">Game Found --< <-LOL-> data.game_id</h3>
+        <p>Redirecting to game --< <--> data.game_id</p>
       `;
       document.body.appendChild(gameFoundDiv);
       setTimeout(() => gameFoundDiv.remove(), 3000);
@@ -75,10 +74,10 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Handle invite responses
   const handleInviteResponse = (inviteId: string, accepted: boolean) => {
-    console.log("readyState", socketRef.current);
+    console.log("readyState --< <--> socketRef.current", socketRef.current);
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
       return;
-    console.log("handleInviteResponse", inviteId, accepted);
+    console.log("handleInviteResponse --< <--> inviteId, accepted", inviteId, accepted);
 
     socketRef.current.send(
       JSON.stringify({
@@ -88,14 +87,14 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     toast({
-      title: accepted ? "Accepted Game Invite" : "Declined Game Invite",
-      description: accepted ? "Joining game..." : "Invite declined",
+      title: accepted ? "Accepted Game Invite --< <--> data.game_id" : "Declined Game Invite",
+      description: accepted ? "Joining game --< <--> data.game_id" : "Invite declined",
       className: "bg-primary-dark border-none text-white",
     });
   };
 
   const sendGameInvite = (username: string) => {
-    console.log("sendGameInvite", username);
+    console.log("sendGameInvite --< <--> username", username);
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
       return;
     socketRef.current.send(
@@ -107,7 +106,7 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     toast({
-      title: "Game Invite Sent",
+      title: "Game Invite Sent --< <--> username",
       description: `Invite sent to ${username}`,
       className: "bg-primary-dark border-none text-white",
     });
@@ -121,7 +120,7 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     ws.onmessage = handleWebSocketMessage;
 
     ws.onclose = () => {
-      console.log("Game invite WebSocket disconnected");
+      console.log("Game invite WebSocket disconnected --< <BY-_-BY--> ws");
       socketRef.current = null;
     };
     socketRef.current = ws;

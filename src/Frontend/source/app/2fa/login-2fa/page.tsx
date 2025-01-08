@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { InputOTPDemo } from "@/components/2fa/InputOTPDemo";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MyButton } from "@/components/generalUi/Button";
 import { sendOtp } from "@/services/fetch-otp";
@@ -12,40 +12,44 @@ const Login2fa = () => {
   const router = useRouter();
   const [value, setValue] = React.useState("");
   const myString = "Go >";
+  const [username, setUsername] = React.useState<string | null>(null);
+  const uname = localStorage.getItem("username");
+  React.useEffect(() => {
+    if (uname) {
+      setUsername(uname);
+    }
+  }, [uname]);
 
   const handleClick = async () => {
-    if (typeof window !== "undefined") {
-      let username = localStorage.getItem("username");
-      console.log(value);
-      try {
-        const response = (await sendOtp(
-          "validate-otp",
-          value,
-          username || null,
-        )) as any;
+    console.log(value);
+    try {
+      const response = (await sendOtp(
+        "validate-otp",
+        value,
+        username || null,
+      )) as any;
 
-        if (response.data.message) {
-          toast({
-            title: "success",
-            description: response.data.message,
-            className: "bg-primary border-none text-white bg-opacity-20",
-          });
-          router.push("/home");
-          return;
-        } else if (response.data.error) {
-          toast({
-            title: "invalid code",
-            description: response.data.error,
-            className: "bg-primary-dark border-none text-white bg-opacity-20",
-          });
-        }
-      } catch {
+      if (response.data.message) {
         toast({
-          title: "error",
-          description: "Something went wrong",
+          title: "success",
+          description: response.data.message,
+          className: "bg-primary border-none text-white bg-opacity-20",
+        });
+        router.push("/home");
+        return;
+      } else if (response.data.error) {
+        toast({
+          title: "invalid code",
+          description: response.data.error,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
         });
       }
+    } catch {
+      toast({
+        title: "error",
+        description: "Something went wrong",
+        className: "bg-primary-dark border-none text-white bg-opacity-20",
+      });
     }
   };
 

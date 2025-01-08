@@ -71,7 +71,8 @@ export default function ChatLayout({
       setChats(chats);
     }
   }, [chats]);
-  // The user should be able to access other players profiles through the chat interface.
+
+  // subject: The user should be able to access other players profiles through the chat interface.
   if (!user)
     return (
       <div className="flex size-full items-center justify-center">

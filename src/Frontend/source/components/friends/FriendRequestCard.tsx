@@ -28,10 +28,9 @@ const FriendRequestCard = ({
   async function declineRequest() {
     try {
       const response = await FriendServices.declineFriendRequest(name);
-      console.log("declined Friends", response, name);
     } catch (error) {
       toast({
-        title: "Authentication failed",
+        title: "access denied",
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",
@@ -42,7 +41,6 @@ const FriendRequestCard = ({
   async function acceptRequest() {
     try {
       const response = await FriendServices.acceptFriendRequest(name);
-      console.log("accepted Friends", response.message, name);
       if (response.message) {
         console.log(response.message);
       } else if (response.error) {
@@ -50,7 +48,7 @@ const FriendRequestCard = ({
       }
     } catch (error) {
       toast({
-        title: "Authentication failed",
+        title: "access denied",
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",

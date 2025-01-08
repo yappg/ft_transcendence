@@ -84,10 +84,10 @@ class PingPongGame:
 
         start_time = time.time()
         while self.player1.status != 'ready' or self.player2.status != 'ready':
-            if start_time - time.time() > 10:
-                # print(f'{RED}Timeout{RESET}')
-                self.status = 'over'
-                return  
+            # if start_time - time.time() > 10:
+            #     # print(f'{RED}Timeout{RESET}')
+            #     self.status = 'over'
+            #     # return  
             time.sleep(0.2)
         self.status = 'playing'
         self.ball.reset(1)

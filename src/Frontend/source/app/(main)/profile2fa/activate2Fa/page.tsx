@@ -17,9 +17,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 const Signup2fa = () => {
   const [value, setValue] = useState("");
   const [QRcode, setQRcode] = useState("");
-  const [enable2fa, setEnable2fa] = useState(false);
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
+  const [enable2fa, setEnable2fa] = useState(false);
+  // need to recheck this enable2fa
 
   const { user, isLoading } = useUser();
 
