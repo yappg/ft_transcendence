@@ -17,7 +17,9 @@ export const TabProvider: React.FC<{ children: React.ReactNode }> = ({
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   useEffect(() => {
-    const savedIndex = localStorage.getItem("activeTabIndex");
+    const savedIndex = window?.location
+      ? localStorage.getItem("activeTabIndex")
+      : null;
     if (savedIndex !== null) {
       setActiveIndex(Number(savedIndex));
     }
@@ -25,7 +27,9 @@ export const TabProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateActiveIndex = (index: number) => {
     setActiveIndex(index);
-    localStorage.setItem("activeTabIndex", index.toString());
+    if (window?.location) {
+      localStorage.setItem("activeTabIndex", index.toString());
+    }
   };
 
   return (

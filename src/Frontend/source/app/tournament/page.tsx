@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Tournament from './tournament';
-import TournamentForm from './tournament-form';
-import { useGame, Player } from '@/context/GameContext';
-import GameArena from '../Game-Arena/page';
+import React, { useEffect, useState } from "react";
+import Tournament from "./tournament";
+import TournamentForm from "./tournament-form";
+import { useGame, Player } from "@/context/GameContext";
+import GameArena from "../Game-Arena/page";
 
 const App = () => {
   const game = useGame();
@@ -12,7 +12,7 @@ const App = () => {
   const [tournamentStarted, setTournamentStarted] = useState(false);
 
   useEffect(() => {
-    console.log('Updated TournementTree:', game.TournementTree);
+    console.log("Updated TournementTree:", game.TournementTree);
   }, [game.TournementTree]);
 
   const handleStartTournament = (players: Player[]) => {
@@ -22,14 +22,14 @@ const App = () => {
   };
 
   const createTree = (players: Player[]): any => {
-    console.log('players:', players);
+    console.log("players:", players);
     if (players.length === 1) {
       return { data: { player: players[0] } };
     }
 
     const mid = Math.floor(players.length / 2);
     return {
-      data: { player: { avatar: '', username: '' } },
+      data: { player: { avatar: "", username: "" } },
       right: createTree(players.slice(0, mid)),
       left: createTree(players.slice(mid)),
     };

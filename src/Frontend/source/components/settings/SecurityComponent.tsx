@@ -49,8 +49,6 @@ export const SecurityComponent = () => {
     };
     get2fa();
   }, []);
-
-  console.log("update2fa: ", update2fa);
   const handleClick = async () => {
     setErrors({});
 

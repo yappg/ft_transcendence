@@ -7,6 +7,7 @@ import { MyButton } from "@/components/generalUi/Button";
 import { useQRCode } from "next-qrcode";
 import { fetchQrCode, sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Signup2fa = () => {
   const myString = "Submit";
@@ -62,9 +63,7 @@ const Signup2fa = () => {
         activate 2FA
       </h1>
       {isLoading ? (
-        <h1 className="flex size-[200px] items-center justify-center rounded-md border border-white-crd font-dayson text-[30px] text-gray-600">
-          Loading...
-        </h1>
+        <Skeleton className="size-[200px]" />
       ) : (
         <Canvas
           text={QRcode}

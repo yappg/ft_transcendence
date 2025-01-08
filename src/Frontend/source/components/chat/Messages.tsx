@@ -155,7 +155,31 @@ export const Messages: React.FC<MessagesProps> = ({
   return (
     <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
       <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
-        <div className="flex items-start gap-4">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <FiMoreVertical
+              className="size-8 text-white"
+              onClick={() => setShowMoreOptions(!showMoreOptions)}
+            />
+            {showMoreOptions && (
+              <div className="absolute left-0 top-16 z-50 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
+                <button
+                  onClick={handleGameInvite}
+                  className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
+                >
+                  <IoGameController className="size-5" />
+                  <span>Invite to Game</span>
+                </button>
+                <button
+                  onClick={handleBlockUser}
+                  className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
+                >
+                  <BiBlock className="size-5" />
+                  {isBlocked === true ? "Unblock User" : "Block User"}
+                </button>
+              </div>
+            )}
+          </div>
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
             <Image
               onClick={() =>
@@ -177,32 +201,6 @@ export const Messages: React.FC<MessagesProps> = ({
               {isPartnerOnline ? "online" : "offline"}
             </h3>
           </div>
-        </div>
-        <div className="relative">
-          <button
-            onClick={() => setShowMoreOptions(!showMoreOptions)}
-            className="rounded-full p-2 hover:bg-[#252525]"
-          >
-            <FiMoreVertical className="size-6 text-white" />
-          </button>
-          {showMoreOptions && (
-            <div className="absolute right-0 top-12 z-50 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
-              <button
-                onClick={handleGameInvite}
-                className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
-              >
-                <IoGameController className="size-5" />
-                <span>Invite to Game</span>
-              </button>
-              <button
-                onClick={handleBlockUser}
-                className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
-              >
-                <BiBlock className="size-5" />
-                {isBlocked === true ? "Unblock User" : "Block User"}
-              </button>
-            </div>
-          )}
         </div>
       </div>
       <div

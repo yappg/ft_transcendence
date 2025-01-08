@@ -13,15 +13,14 @@ const Login2fa = () => {
   const [value, setValue] = React.useState("");
   const myString = "Go >";
   const [username, setUsername] = React.useState<string | null>(null);
-  const uname = localStorage.getItem("username");
+  const uname = window?.location ? localStorage?.getItem("username") : null;
   React.useEffect(() => {
     if (uname) {
       setUsername(uname);
     }
-  }, [uname]);
+  }, []);
 
   const handleClick = async () => {
-    console.log(value);
     try {
       const response = (await sendOtp(
         "validate-otp",

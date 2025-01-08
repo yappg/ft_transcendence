@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import fetcherestprofiles from "@/services/fetcherestprofiles";
 import { useParams } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Page() {
   const params = useParams();
   const id = parseInt(params.UserId as string);
@@ -58,7 +59,7 @@ export default function Page() {
           </div>
         </div>
       ) : (
-        <div>Loading...</div>
+        <Skeleton className="size-full" />
       )}
     </div>
   );
