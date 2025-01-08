@@ -191,7 +191,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 1;
+    const baseSpeed = 0.5;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -259,8 +259,7 @@ export class LocalGameManager extends PixiManager {
         if (this.round < 3) {
           this.game.GameState = 'waiting';
           this.game.setGameState('waiting');
-        }
-        else {
+        } else {
           this.game.GameState = 'over';
           this.game.setGameState('over');
           const sleepmoment = new Promise((resolve) => setTimeout(resolve, 4000));

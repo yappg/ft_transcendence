@@ -74,30 +74,32 @@ const ScoreTable = ({ mode }: { mode: string }) => {
         return updatedRounds as RoundsProps[];
       });
 
+
       game.setGameScore([0, 0]);
       game.GameScore = [0, 0];
     }
     if (game.GameState === 'over') {
       if (game.totalScore[0] > game.totalScore[1]) {
-        game.GameWinner = game.player1;
         game.setGameWinner(game.player1);
+        game.GameWinner = game.player1;
       } else {
         console.log('player2:', game.player2);
-        game.GameWinner = game.player2;
         game.setGameWinner(game.player2);
+        game.GameWinner = game.player2;
       }
     }
   }, [game.GameScore]);
 
   useEffect(() => {
-    if (mode === 'tournament' && game.GameState === 'over') {
+    if (mode === 'tournament' && game.GameState === 'over' && game.GameWinner) {
+      console.log('game winner:', game.GameWinner);
       if (game.tournamentMatch === 0) {
         game.TournementTree.right.data.player = game.GameWinner;
         game.setGameWinner(null);
       } else if (game.tournamentMatch === 1) {
         game.TournementTree.left.data.player = game.GameWinner;
         game.setGameWinner(null);
-      } else {
+      } else if (game.tournamentMatch === 2) {
         game.TournementTree.data.player = game.GameWinner;
         game.setTournamentMatch(0);
         game.setGameWinner(null);
