@@ -4,12 +4,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { OAuthClient } from "@/services/fetch-oauth";
 import axios from "@/lib/axios";
 import { useSearchParams } from "next/navigation";
 
-function Title() {
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
+
+function TitleContent() {
   const param = useSearchParams();
   const code = param.get("code");
   const provider = param.get("provider");
@@ -134,5 +142,14 @@ function Title() {
     </div>
   );
 }
+
+
+const Title = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <TitleContent />
+    </Suspense>
+  );
+};
 
 export default Title;
