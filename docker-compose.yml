@@ -72,8 +72,7 @@ services:
       container_name: backend
       build:
         context: ./src/Backend
-        target: ${TEST:-production}
-        # target: ${ENV:-production}
+        target: ${ENV:-production}
         dockerfile: Dockerfile
       image: backend
       environment:
@@ -92,15 +91,15 @@ services:
         REDIS_PASS: ${REDIS_PASS}
       volumes:
 # DEV ==============>
-        # - ./src/Backend/config:/app/config:rw
-        # - ./src/Backend/source:/app/source:rw
+        - ./src/Backend/config:/app/config:rw
+        - ./src/Backend/source:/app/source:rw
 # ==================>
         - media-files:/app/source/UsersMedia
         - static-files:/app/source/staticfiles
       networks:
         - transcendence
-      # ports:
-      #   - 8080:8080
+      ports:
+        - 8080:8080
       depends_on:
         cache:
           condition: service_healthy
@@ -113,7 +112,6 @@ services:
         retries: 10
         start_period: 15s
       restart: always
-
 
     cache:
       container_name: redis
@@ -147,7 +145,6 @@ services:
         cache:
           condition: service_healthy
       restart: unless-stopped
-
 
     database:
       container_name: postgres

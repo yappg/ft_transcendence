@@ -58,7 +58,7 @@ const MapsSwiper = () => {
           imageUrl="/earth.png"
           title="Earth"
           description="earth could shake or make or fake"
-          url={`/one-vs-one/earth`}
+          url={`Game-Arena?mode=one-vs-one-local&map=earth`}
         />
       </SwiperSlide>
       <SwiperSlide className="lg: h-full w-1/3">
@@ -67,7 +67,7 @@ const MapsSwiper = () => {
           imageUrl="/air.png"
           title="Air"
           description="Air: The invisible killer we can not live without"
-          url={`/one-vs-one/air`}
+          url={`Game-Arena?mode=one-vs-one-local&map=air`}
         />
       </SwiperSlide>
       <SwiperSlide className="lg: h-full w-1/3">
@@ -76,7 +76,7 @@ const MapsSwiper = () => {
           imageUrl="/fire.png"
           title="Fire"
           description="Because sometimes, you just need to watch the world burn."
-          url={`/one-vs-one/fire`}
+          url={`Game-Arena?mode=one-vs-one-local&map=fire`}
         />
       </SwiperSlide>
       <SwiperSlide className="lg: h-full w-1/3">
@@ -85,7 +85,7 @@ const MapsSwiper = () => {
           imageUrl="/water.png"
           title="Water"
           description="The slippery element that makes sure your Pong ball never stays on course."
-          url={`/one-vs-one/water`}
+          url={`Game-Arena?mode=one-vs-one-local&map=water`}
         />
       </SwiperSlide>
     </Swiper>

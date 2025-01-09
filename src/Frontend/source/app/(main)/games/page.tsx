@@ -6,7 +6,7 @@ import { SideBarContext } from "@/context/SideBarContext";
 import { useContext, useEffect } from "react";
 import { MapsCard, ModesCard } from "@/components/game/theme-card";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -175,43 +175,20 @@ const GameModeSwiper = () => {
 };
 
 const Game_modes = () => {
-  const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
-
-  const [searchParams] = React.useState(() => {
-    // During server-side rendering (SSR), window object is undefined which can cause hydration errors
-    // Hydration errors occur when the server-rendered HTML doesn't match the client-side React tree
-    // This happens because SSR can't access browser APIs like window
-    // By checking window?.location, we:
-    // 1. Safely access window using optional chaining
-    // 2. Only execute this code on client-side after hydration is complete
-    // 3. Prevent the mismatch between server and client rendered content
-    if (window?.location) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        mode: urlParams.get("mode"),
-        game_id: urlParams.get("game_id"),
-      };
-    }
-    return { mode: null, game_id: null };
-  });
-  const { mode, game_id } = searchParams;
-
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
+  const game_id = searchParams.get("game_id");
+  const router = useRouter();
   useEffect(() => {
     if (game_id) {
       router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${game_id}`);
     }
-  }, [game_id, router]);
-
-  useEffect(() => {
-    if (mode) {
-      router.push(`/Game-Arena?mode=${mode}&map=earth`);
-    }
-  }, [mode, router]);
+  }, [game_id]);
 
   useEffect(() => {
     setIsActivated(2);
-  }, [setIsActivated]);
+  }, []);
 
   if (game_id) {
     return <div>Loading...</div>;

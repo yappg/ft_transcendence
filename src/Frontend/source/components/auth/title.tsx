@@ -7,19 +7,23 @@
 import React, { useEffect } from "react";
 import { OAuthClient } from "@/services/fetch-oauth";
 import axios from "@/lib/axios";
+import { useSearchParams } from "next/navigation";
 
 function Title() {
-  const [searchParams] = React.useState(() => {
-    if (window?.location) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        code: urlParams.get("code"),
-        provider: urlParams.get("provider"),
-      };
-    }
-    return { code: null, provider: null };
-  });
-  const { code, provider } = searchParams;
+  const param = useSearchParams();
+  const code = param.get("code");
+  const provider = param.get("provider");
+  // const [searchParams] = React.useState(() => {
+  //   if (typeof window !== "undefined") {
+  //     const urlParams = new URLSearchParams(window.location.search);
+  //     return {
+  //       code: urlParams.get("code"),
+  //       provider: urlParams.get("provider"),
+  //     };
+  //   }
+  //   return { code: null, provider: null };
+  // });
+  // const { code, provider } = searchParams;
 
   useEffect(() => {
     if (code) {

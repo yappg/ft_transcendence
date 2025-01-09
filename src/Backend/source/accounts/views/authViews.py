@@ -258,7 +258,7 @@ class DisableOTP(APIView):
 
 class OAuth42LoginView(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
+    # authentication_classes = []
 
     def get(self, request, provider):
         if request.user.is_authenticated:
@@ -287,7 +287,7 @@ Oauth2_Providers_URLToken = {
 
 class OAuth42CallbackView(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
+    # authentication_classes = []
 
     def get(self, request, provider):
         if (provider != '42' and provider != 'google'):
@@ -299,18 +299,22 @@ class OAuth42CallbackView(APIView):
 
         data = APIdata(code, provider)
         try:
+            print('--------DATA', data)
+            print('--------Oauth2_Providers_URLToken[provider]    ', Oauth2_Providers_URLToken[provider])
             response = requests.post(Oauth2_Providers_URLToken[provider], data=data)
             response.raise_for_status()  # Raises an HTTPError for bad responses
             token_data = response.json()
         except requests.exceptions.RequestException as e:
-            return Response({'error': 'Failed to fetch token error there was an error'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            return Response({'error': 'Failed to fetch token error there was an error'}, status=status.HTTP_400_BAD_REQUEST)
 
         if 'access_token' not in token_data:
             return Response({'error': 'Failed to obtain access token'}, status=status.HTTP_200_OK)
 
         try:
             user_data = fetch_user_data(token_data['access_token'], provider)
-            user = store_user_data(user_data, provider)
+            user , created = store_user_data(user_data, provider)
+            if not user:
+                return Response({'error': 'Failed to process user data'}, status=status.HTTP_400_BAD)
         except Exception as e:
             return Response({'error': 'Failed to process user data error there was an error'}, status=status.HTTP_400_BAD_REQUEST)
 

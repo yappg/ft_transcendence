@@ -6,23 +6,17 @@ import GameTable from "@/components/game/game-arena";
 import { Player, useGame } from "@/context/GameContext";
 import ScoreTable from "@/components/game/game-score";
 import { useUser } from "@/context/GlobalContext";
+import { useSearchParams } from "next/navigation";
 
 const GameArena = () => {
   const game = useGame();
   const user = useUser();
-  const [searchParams] = React.useState(() => {
-    if (window?.location) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        map: urlParams.get("map"),
-        mode: urlParams.get("mode"),
-        game_id: urlParams.get("game_id"),
-      };
-    }
-    return { map: null, mode: null, game_id: null };
-  });
-  const { map, mode, game_id } = searchParams;
 
+  const searchParams = useSearchParams();
+  const map = searchParams.get('map');
+  const mode = searchParams.get('mode');
+  const game_id = searchParams.get("game_id");
+  
   useEffect(() => {
     if (!user?.user) {
       user.fetchCurrentUserDetails();
@@ -62,6 +56,7 @@ const GameArena = () => {
           username: "player2",
           avatar: "/Avatar.svg",
         } as Player);
+        console.log("setting default players", game.player1, game.player2);
       }
     }
   }, [mode, user, game.opponent, game.TournementTree]);

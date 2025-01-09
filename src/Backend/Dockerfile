@@ -10,6 +10,8 @@ ENV DJANGO_SETTINGS_MODULE=_1Config.settings.development
 
 WORKDIR /app/source
 
+RUN apk add --no-cache curl
+
 COPY ./source/requirements.txt ./
 
 RUN pip install --upgrade pip \
