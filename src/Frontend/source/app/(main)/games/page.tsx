@@ -3,7 +3,7 @@
 
 "use client";
 import { SideBarContext } from "@/context/SideBarContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, Suspense } from "react";
 import { MapsCard, ModesCard } from "@/components/game/theme-card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,6 +19,14 @@ import {
   Navigation,
 } from "swiper/modules";
 import React from "react";
+
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
 
 const MapsSwiper = ({ mode }: { mode: string }) => {
   return (
@@ -174,7 +182,7 @@ const GameModeSwiper = () => {
   );
 };
 
-const Game_modes = () => {
+const Game_modesContent = () => {
   const { setIsActivated } = useContext(SideBarContext);
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
@@ -205,6 +213,14 @@ const Game_modes = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Game_modes = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <Game_modesContent />
+    </Suspense>
   );
 };
 

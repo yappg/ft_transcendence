@@ -9,13 +9,22 @@ import { Card } from "@/components/settings/Card";
 import Theme from "@/components/settings/Theme";
 import { ImBlocked } from "react-icons/im";
 import Logout from "@/components/settings/Logout";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, Suspense } from "react";
 import Profile from "@/components/settings/Profile";
 import { SideBarContext } from "@/context/SideBarContext";
 import BlockedList from "@/components/settings/BlockedList";
 import React from "react";
 import { useSearchParams } from "next/navigation";
-export default function Settings() {
+
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
+
+const SettingsContent = () => {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
     setIsActivated(8);
@@ -87,3 +96,13 @@ export default function Settings() {
     </div>
   );
 }
+
+const Settings = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <SettingsContent />
+    </Suspense>
+  );
+};
+
+export default Settings;

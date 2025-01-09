@@ -77,7 +77,7 @@ class PingPongGame:
         self.round_win = 7
         self.is_round_over = False
         self.round_status = 'playing'  #playing, over
-        self.score_update_lock = asyncio.Lock()
+        self.lock = asyncio.Lock()
 
     def start_game(self):
         import time
@@ -136,7 +136,7 @@ class PingPongGame:
             # self.ball.reset(0)
 
             if self.round == 3:
-                async with self.score_update_lock:
+                async with self.lock:
                     if sum(self.player1.score) > sum(self.player2.score):
                         self.winner = 'player1'
                         self.map = self.player1.map
@@ -154,7 +154,7 @@ class PingPongGame:
 
 
     async def check_scoring(self) -> bool: 
-        async with self.score_update_lock:
+        async with self.lock:
             if self.ball.position.y <= 0: # Player 2 scores
                 self.player2.score[self.round] += 1
                 await self.ball.reset(-1.00)

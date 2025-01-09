@@ -24,6 +24,7 @@ class MatchMakingSystem:
         self.games: Dict[int, PingPongGame] = {}
         self._matchmaking_task = None
         self.channel_layer = get_channel_layer()
+        self.games_lock = asyncio.Lock()
         self._running = False
 
     async def start(self):
