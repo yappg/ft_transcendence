@@ -50,7 +50,7 @@ class MatchMakingSystem:
                     print('Matchmaking Loop')
                     print(f'Players in Queue: {len(self.players_queue)}')
                     print(f'Players in Game: {len(self.players_in_game)}')
-                    print(f'Players in Game: {self.players_in_game}')
+                    print(f'Players in Game: {self.players_in_game}')  
                     print(f'Players indices in Queue: {self.players_queue.keys()}')
                     print(f'Games in Progress: {len(self.games)}')
 
@@ -86,7 +86,7 @@ class MatchMakingSystem:
 
     # --------------------------->>>>>>>>game invite<<<<<<<<<<<<<---------------------------
 
-
+    
 
     # --------------------------->>>>>>>>UTILS<<<<<<<<<<<<<---------------------------
     @database_sync_to_async
@@ -99,15 +99,25 @@ class MatchMakingSystem:
             player1_model.profile.save(update_fields=['status'])
             player2_model.profile.save(update_fields=['status'])
         except Exception as e:
-            # print(f'Error Match_making; updating players state: {str(e)}')
-            pass
+            #TODO handle the exception
+            print(f'Error Match_making; updating players state: {str(e)}')
+            pass 
 
-    # --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
+# --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
+
+    @database_sync_to_async
+    def get_players_url(self, player_id):
+        player = Player.objects.select_related('profile').get(id=player_id)
+        return player.profile.avatar.url
+    
     async def notify_players(self, player1, player2, game_id):
-        print(f'Notifying players: {player1.username} and {player2.username}')
+        # print(f'Notifying players: {player1.username} and {player2.username}')
+        # print(f'Notifying players: {player1.channel_name} and {player2.channel_name}')
         try:
-            avatar_url1 = Player.objects.select_related('profile').get(id=player1.id).profile.avatar.url
-            avatar_url2 = Player.objects.select_related('profile').get(id=player2.id).profile.avatar.url
+            print(f'{BLUE_BOLD}Notifying players: {player1.username} and {player2.username}{RESET}')
+            
+            avatar_url1 = await self.get_players_url(player1.id)
+            avatar_url2 = await self.get_players_url(player2.id)
             await self.channel_layer.send(
                 player1.channel_name,
                 {
@@ -129,16 +139,17 @@ class MatchMakingSystem:
                     'message': "Game found, Get Ready to play!!"
                 })
         except Exception as e:
-            # print(f'Error in notify_players: {str(e)}')
-            pass
+            print(f'{RED_BOLD}Error in notify_players: {str(e)}{RESET}')
 
     async def add_player_to_queue(self, player_id, username, channel_name):
         if player_id in self.players_queue:
-            # print(f'Player {player_id} already in Queue')
+            print(f'Player {player_id} already in Queue')
             return
-        # print(f'Adding player to queue: {player_id}')
+        print(f'Adding player to queue: {player_id}')
         self.players_queue[player_id] = GamePlayer(player_id, username, channel_name)
 
     async def remove_player_from_queue(self, player_id):
         if player_id in self.players_queue:
             del self.players_queue[player_id]
+    
+

@@ -14,6 +14,7 @@ import Profile from "@/components/settings/Profile";
 import { SideBarContext } from "@/context/SideBarContext";
 import BlockedList from "@/components/settings/BlockedList";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 export default function Settings() {
   const { setIsActivated } = useContext(SideBarContext);
   useEffect(() => {
@@ -37,16 +38,9 @@ export default function Settings() {
     },
   ];
 
-  const [searchParams] = React.useState(() => {
-    if (window?.location) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        field: urlParams.get("field"),
-      };
-    }
-    return { field: null };
-  });
-  const { field } = searchParams;
+  // const [searchParams] = React.useState(() => {
+    const params = useSearchParams();
+    const field = params.get("field") as string;
 
   const renderContent = () => {
     switch (field) {

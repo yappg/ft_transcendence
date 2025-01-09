@@ -11,7 +11,6 @@ EXPOSE 3000
 
 CMD ["sh", "-c", \
      "echo 'starting development enviremnt' && \
-     yarn install && \
      while true; do yarn dev && echo 'Server crashed, restarting...' && sleep 2; done" \
     ]
 

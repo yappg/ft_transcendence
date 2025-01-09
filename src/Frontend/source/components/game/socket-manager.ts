@@ -21,6 +21,7 @@ class SocketManager extends WebSocket {
 
     this.onmessage = (event) => {
       const message = JSON.parse(event.data);
+      console.log("Received message:", message);
       this.handleSocketMessage(message);
     };
 
@@ -80,6 +81,7 @@ class SocketManager extends WebSocket {
   }
 
   async handleSocketMessage(message: any) {
+    console.log("message:", message);
     switch (message.type) {
       case "acknowledgeOpponent":
         this.pixiManager.game.gameId = message.data.game_id;
