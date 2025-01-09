@@ -6,7 +6,7 @@ export class AuthClient {
     data: Record<string, any>,
   ) {
     delete data.password2;
-    console.log(data);
+    console.log(process.env.NEXT_PUBLIC_API_URL);
     try {
       const response = await fetch(`${AuthClient.BASE_URL}/${endpoint}/`, {
         method: "POST",
