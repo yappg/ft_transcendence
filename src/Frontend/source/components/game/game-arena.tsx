@@ -28,7 +28,7 @@ const GameTable = ({
   const gameManagerRef = useRef<PixiManager | null>(null);
 
   useEffect(() => {
-    if (mode.indexOf("local") !== -1 || mode === "tournament") {
+    if (mode === "one-vs-one-local" || mode === "tournament") {
       if (canvasContainerRef.current) {
         gameManagerRef.current = new LocalGameManager(
           canvasContainerRef.current,

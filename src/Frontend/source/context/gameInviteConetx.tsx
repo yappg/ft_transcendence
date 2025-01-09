@@ -7,6 +7,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import { toast, useToast } from "@/hooks/use-toast";
 
 interface GameInviteContextProps {
@@ -27,6 +28,8 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const socketRef = useRef<WebSocket | null>(null);
+  const router = useRouter();
+
 
   const handleWebSocketMessage = (event: MessageEvent) => {
     const data = JSON.parse(event.data);
@@ -53,16 +56,20 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       //   setTimeout(() => inviteDiv.remove(), 5000);
     } else if (data.type === "game_found") {
       // need to change this to toast adding action 
-      const gameFoundDiv = document.createElement("div");
-      gameFoundDiv.className =
-        "fixed top-4 right-4 bg-primary text-white p-4 rounded-lg shadow-lg";
-      gameFoundDiv.innerHTML = `
-        <h3 class="font-bold">Game Found --< <-LOL-> data.game_id</h3>
-        <p>Redirecting to game --< <--> data.game_id</p>
-      `;
-      document.body.appendChild(gameFoundDiv);
-      setTimeout(() => gameFoundDiv.remove(), 3000);
-      window.location.href = `/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`;
+      toast({
+        title: "go game",
+        description: `${data.sender_username} declined your invite`,
+        className: "bg-primary-dark border-none text-white",
+        action: (
+          <div className="flex gap-2">
+            <button onClick={() => {router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`)}}>
+              goo game
+            </button>
+          </div>
+        )
+      });
+
+      // window.location.href = `/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`;
     } else if (data.type === "invite_rejected") {
       toast({
         title: "Game Invite Rejected",

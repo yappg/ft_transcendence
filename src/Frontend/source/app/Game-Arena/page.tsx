@@ -1,14 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import GameTable from "@/components/game/game-arena";
 import { Player, useGame } from "@/context/GameContext";
 import ScoreTable from "@/components/game/game-score";
 import { useUser } from "@/context/GlobalContext";
 import { useSearchParams } from "next/navigation";
 
-const GameArena = () => {
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
+
+// export const dynamic = 'force-dynamic'
+const GameArenaContent = () => {
   const game = useGame();
   const user = useUser();
 
@@ -16,7 +25,7 @@ const GameArena = () => {
   const map = searchParams.get('map');
   const mode = searchParams.get('mode');
   const game_id = searchParams.get("game_id");
-  
+
   useEffect(() => {
     if (!user?.user) {
       user.fetchCurrentUserDetails();
@@ -77,6 +86,14 @@ const GameArena = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const GameArena = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <GameArenaContent />
+    </Suspense>
   );
 };
 

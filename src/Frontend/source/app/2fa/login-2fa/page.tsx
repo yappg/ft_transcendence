@@ -13,12 +13,13 @@ const Login2fa = () => {
   const [value, setValue] = React.useState("");
   const myString = "Go >";
   const [username, setUsername] = React.useState<string | null>(null);
-  const uname = window?.location ? localStorage?.getItem("username") : null;
+
   React.useEffect(() => {
-    if (uname) {
+    if (value) {
+      const uname = window?.location ? localStorage?.getItem("username") : null;
       setUsername(uname);
     }
-  }, []);
+  }, [value]);
 
   const handleClick = async () => {
     try {

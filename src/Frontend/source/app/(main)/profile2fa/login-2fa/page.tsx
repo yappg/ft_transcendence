@@ -2,19 +2,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { InputOTPDemo } from "@/components/2fa/InputOTPDemo";
-import React from "react";
+import React, { Suspense } from "react";
 import { MyButton } from "@/components/generalUi/Button";
 import { sendOtp } from "@/services/fetch-otp";
 import { toast } from "@/hooks/use-toast";
 import { useUser } from "@/context/GlobalContext";
 
-const Login2fa = () => {
-  const [value, setValue] = React.useState("");
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
+
+const Login2faContent = () => {
+  const [value, setValue] = React.useState<string | null>(null);
   const [storedusename, setStoredusename] = React.useState<string | null>(null);
-  const uname = window?.localStorage?.getItem("username") ?? null;
+  // const uname = window?.localStorage?.getItem("username") ?? null;
+  // React.useEffect(() => {
+  //   setStoredusename(uname);
+  // }, []);
+
   React.useEffect(() => {
-    setStoredusename(uname);
-  }, []);
+    // if (typeof window !== "undefined") {
+    //   const uname = window.localStorage.getItem("username") ?? null;
+    if (value) setStoredusename(uname);
+    // }
+  }, [value]);
 
   const myString = "Go >";
   const { user } = useUser();
@@ -66,6 +81,13 @@ const Login2fa = () => {
         </MyButton>
       </div>
     </div>
+  );
+};
+const Login2fa = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <Login2faContent />
+    </Suspense>
   );
 };
 

@@ -33,7 +33,7 @@ export const Messages: React.FC<MessagesProps> = ({
 }) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const { setLastMessages } = useUser();
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  // const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [isPartnerOnline, setIsPartnerOnline] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<number>(0);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
@@ -108,14 +108,14 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   };
 
-  React.useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages]);
+  // React.useEffect(() => {
+  //   if (messagesContainerRef.current) {
+  //     messagesContainerRef.current.scrollTo({
+  //       top: messagesContainerRef.current.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [messages]);
 
   const [chatBar, setChatBar] = useState(true);
   const [isBlocked, setIsBlocked] = useState(false);

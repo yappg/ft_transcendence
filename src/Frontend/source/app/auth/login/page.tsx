@@ -4,10 +4,18 @@
 import React from "react";
 import Title from "@/components/auth/title";
 import { Form, MyLink } from "@/components/auth/form";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { getFields } from "./fields";
 
-const Login = () => {
+// const LoadingComponent = () => {
+//   return (
+//     <div className="flex h-screen w-full items-center justify-center">
+//       <div>Loading game arena...</div>
+//     </div>
+//   );
+// };
+
+const LoginContent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,7 +23,6 @@ const Login = () => {
     console.log("clicked");
     let result = "";
     fields.map((field) => (result += field.value + ""));
-    alert(result);
   };
   const fields = getFields(username, password, setUsername, setPassword);
   const buttonProps = { text: "Login", onClick: buttonAction };
@@ -28,4 +35,12 @@ const Login = () => {
   );
 };
 
-export default Login;
+const Login = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <LoginContent />
+    </Suspense>
+  );
+};
+
+export default LoginContent;
