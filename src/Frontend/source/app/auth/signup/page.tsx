@@ -1,9 +1,16 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Title from "@/components/auth/title";
 import { Form, MyLink } from "@/components/auth/form";
 import { getFields } from "./fieldes";
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading ...</div>
+    </div>
+  );
+};
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -32,12 +39,17 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex h-fit flex-col gap-2">
-      <Title />
-      <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
-      <MyLink text="Already have an account? " href="login" />
-    </div>
+    <Suspense fallback={<LoadingComponent />}>
+
+      <div className="flex h-fit flex-col gap-2">
+        <Title />
+        <Form fields={fields} buttonProps={buttonProps} isSignup={true} />
+        <MyLink text="Already have an account? " href="login" />
+      </div>
+    </Suspense>
   );
+
+
 };
 
 export default Signup;

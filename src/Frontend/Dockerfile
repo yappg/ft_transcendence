@@ -35,4 +35,5 @@ RUN yarn build
 
 EXPOSE 3000
 
-CMD ["yarn", "start"]
+CMD ["tail", "-f", "/dev/null"]
+# CMD ["yarn", "start"]

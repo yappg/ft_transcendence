@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
+"use client"
 import React from "react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";

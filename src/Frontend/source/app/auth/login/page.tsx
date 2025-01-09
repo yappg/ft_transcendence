@@ -7,13 +7,13 @@ import { Form, MyLink } from "@/components/auth/form";
 import { useState, Suspense } from "react";
 import { getFields } from "./fields";
 
-// const LoadingComponent = () => {
-//   return (
-//     <div className="flex h-screen w-full items-center justify-center">
-//       <div>Loading game arena...</div>
-//     </div>
-//   );
-// };
+const LoadingComponent = () => {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div>Loading game arena...</div>
+    </div>
+  );
+};
 
 const LoginContent = () => {
   const [username, setUsername] = useState("");
@@ -43,4 +43,4 @@ const Login = () => {
   );
 };
 
-export default LoginContent;
+export default Login;

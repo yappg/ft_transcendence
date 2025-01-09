@@ -54,18 +54,15 @@ services:
         target: ${ENV:-production}
         dockerfile: Dockerfile
       image: frontend
-      environment:
-        NEXT_PUBLIC_HOST: ${NEXT_PUBLIC_HOST}
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL}
+
 # DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
+      # ports:
+      #   - 3000:3000
 # ==================>
       networks:
         - transcendence
-      ports:
-        - 3000:3000
       restart: always
 
     backend:
@@ -90,16 +87,16 @@ services:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         REDIS_PASS: ${REDIS_PASS}
       volumes:
-# DEV ==============>
-        - ./src/Backend/config:/app/config:rw
-        - ./src/Backend/source:/app/source:rw
-# ==================>
         - media-files:/app/source/UsersMedia
         - static-files:/app/source/staticfiles
+# DEV ==============>
+      #   - ./src/Backend/config:/app/config:rw
+      #   - ./src/Backend/source:/app/source:rw
+      # ports:
+      #   - 8080:8080
+# ==================>
       networks:
         - transcendence
-      ports:
-        - 8080:8080
       depends_on:
         cache:
           condition: service_healthy
