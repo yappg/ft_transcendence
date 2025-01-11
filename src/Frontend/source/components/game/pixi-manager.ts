@@ -366,7 +366,7 @@ export class LocalGameManager extends PixiManager {
 // Online Game Managerƒ
 
 export class OnlineGameManager extends PixiManager {
-  socketManager: SocketManager;
+  // socketManager: SocketManager;
   user: User | null;
   game_id: string;
   constructor(
@@ -375,15 +375,13 @@ export class OnlineGameManager extends PixiManager {
     game: any,
     user: User | null,
     game_id: string,
+    // socketManager: SocketManager,
   ) {
     super(container, backgroundImage, game);
-    this.socketManager = new socketManager(
-      `${process.env.NEXT_PUBLIC_WS_URL}/game/`,
-      game_id,
-    );
+    // this.socketManager = socketManager;
     this.game_id = game_id;
     this.user = user;
-    this.socketManager.setPixiManager(this);
+    // this.socketManager.setPixiManager(this);
   }
 
   moveMyPaddle() {
@@ -403,13 +401,13 @@ export class OnlineGameManager extends PixiManager {
     ) {
       bottomRacket.x = Math.max(0, bottomRacket.x - movementSpeed);
       if (this.isTopPaddle) {
-        this.socketManager.sendData({
+        this.game.socketManager.sendData({
           action: "move_paddle",
           new_x:
             (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
         });
       } else {
-        this.socketManager.sendData({
+        this.game.socketManager.sendData({
           action: "move_paddle",
           new_x: bottomRacket.x * scale_x,
         });
@@ -432,7 +430,7 @@ export class OnlineGameManager extends PixiManager {
           this.paddleWidth,
           scale_x,
         );
-        this.socketManager.sendData({
+        this.game.socketManager.sendData({
           action: "move_paddle",
           new_x:
             (this.screenWidth - (bottomRacket.x + this.paddleWidth)) * scale_x,
@@ -445,7 +443,7 @@ export class OnlineGameManager extends PixiManager {
           this.paddleWidth,
           scale_x,
         );
-        this.socketManager.sendData({
+        this.game.socketManager.sendData({
           action: "move_paddle",
           new_x: bottomRacket.x * scale_x,
         });

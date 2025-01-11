@@ -2,6 +2,8 @@
 
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { User } from './GlobalContext';
+import SocketManager from '@/components/game/socket-manager';
+import { OnlineGameManager } from '@/components/game/pixi-manager';
 
 export interface RoundsProps {
   round: number;
@@ -43,6 +45,11 @@ export interface GameContextType {
   setInGame: (inGame: boolean) => void;
   tournamentMatch: number;
   setTournamentMatch: (match: number) => void;
+  resetGame: () => void;
+  socketManager: SocketManager | null;
+  setSocketManager: (socketManager: SocketManager | null) => void;
+  pixiManager: OnlineGameManager | null;
+  setPixiManager: (manager: OnlineGameManager | null) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -74,6 +81,11 @@ const GameContext = createContext<GameContextType>({
   setInGame: () => {},
   tournamentMatch: 0,
   setTournamentMatch: () => {},
+  resetGame: () => {},
+  socketManager: null,
+  setSocketManager: () => {},
+  pixiManager: null,
+  setPixiManager: () => {},
 });
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({
@@ -95,6 +107,21 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [player2, setPlayer2] = useState<Player | null>(null);
   const [inGame, setInGame] = useState<boolean>(false);
   const [tournamentMatch, setTournamentMatch] = useState<number>(0);
+  const [socketManager, setSocketManager] = useState<SocketManager | null>(null);
+  const [pixiManager, setPixiManager] = useState<OnlineGameManager | null>(null);
+  const resetGame = () => {
+    setGameId(0);
+    setGameScore([0, 0]);
+    setRounds([]);
+    setGameState('waiting');
+    setGameMode('local');
+    setGameMap('simple');
+    setOpponent(null);
+    setTournementTree(null);
+    setTotalScore([0, 0]);
+    setGameWinner(null);
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -126,6 +153,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         setInGame,
         tournamentMatch,
         setTournamentMatch,
+        resetGame,
+        socketManager,
+        setSocketManager,
+        pixiManager,
+        setPixiManager,
       }}
     >
       {children}

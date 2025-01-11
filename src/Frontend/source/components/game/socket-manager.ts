@@ -1,18 +1,20 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/classnames-order */
+import { User } from "@/context/GlobalContext";
 import { OnlineGameManager } from "./pixi-manager";
-import { Player } from "@/context/GameContext";
+import { GameContextType, Player } from "@/context/GameContext";
 
 class SocketManager extends WebSocket {
-  // socket: WebSocket;
-  pixiManager!: OnlineGameManager;
+  // pixiManager!: OnlineGameManager;
+  game: GameContextType;
   game_id: string;
-  constructor(url: string, game_id: string) {
+  constructor(url: string, game_id: string, game: GameContextType) {
     let newUrl = url;
+    super(newUrl);
     if (game_id && game_id !== "") {
       newUrl = url + "?game_id=" + game_id;
     }
-    super(newUrl);
+    this.game = game;
     this.game_id = game_id;
 
     this.onopen = () => {
@@ -35,7 +37,7 @@ class SocketManager extends WebSocket {
   }
 
   setPixiManager(manager: OnlineGameManager) {
-    this.pixiManager = manager;
+    this.game.pixiManager = manager;
   }
 
   sendData(data: any) {
@@ -44,38 +46,40 @@ class SocketManager extends WebSocket {
 
   updateBallPosition(data: any) {
     if (data) {
-      const scale_x = this.pixiManager.screenWidth / 75;
-      const scale_y = this.pixiManager.screenHeight / 100;
+      const pixiManager = this.game.pixiManager;
+      if (!pixiManager) return;
+      const scale_x = pixiManager.screenWidth / 75;
+      const scale_y = pixiManager.screenHeight / 100;
 
-      const new_x = scale_x * data.position.x;
-      const new_y = scale_y * data.position.y;
-
-      if (this.pixiManager.isTopPaddle) {
-        this.pixiManager.ball.x = this.pixiManager.screenWidth - new_x;
-        this.pixiManager.ball.y = this.pixiManager.screenHeight - new_y;
-        this.pixiManager.dx = -data.dx;
-        this.pixiManager.dy = -data.dy;
-      }
-      if (!this.pixiManager.isTopPaddle) {
-        this.pixiManager.ball.x = new_x;
-        this.pixiManager.ball.y = new_y;
-        this.pixiManager.dx = data.dx;
-        this.pixiManager.dy = data.dy;
+          const new_x = scale_x * data.position.x;
+          const new_y = scale_y * data.position.y;
+    
+          if (pixiManager.isTopPaddle) {
+            pixiManager.ball.x = pixiManager.screenWidth - new_x;
+            pixiManager.ball.y = pixiManager.screenHeight - new_y;
+            pixiManager.dx = -data.dx;
+            pixiManager.dy = -data.dy;
+          }
+          if (!pixiManager.isTopPaddle) {
+        pixiManager.ball.x = new_x;
+        pixiManager.ball.y = new_y;
+        pixiManager.dx = data.dx;
+        pixiManager.dy = data.dy;
       }
     }
   }
 
   updatePaddlePosition(data: any) {
-    if (data) {
-      const scale_x = this.pixiManager.screenWidth / 75;
+    if (data && this.game.pixiManager) {
+      const scale_x = this.game.pixiManager.screenWidth / 75;
 
       const new_x = scale_x * data.new_x;
 
-      if (this.pixiManager.isTopPaddle) {
-        this.pixiManager.topRacket.x =
-          this.pixiManager.screenWidth - (new_x + this.pixiManager.paddleWidth);
+      if (this.game.pixiManager.isTopPaddle) {
+        this.game.pixiManager.topRacket.x =
+          this.game.pixiManager.screenWidth - (new_x + this.game.pixiManager.paddleWidth);
       } else {
-        this.pixiManager.topRacket.x = new_x;
+        this.game.pixiManager.topRacket.x = new_x;
       }
     }
   }
@@ -84,29 +88,25 @@ class SocketManager extends WebSocket {
     console.log("message:", message);
     switch (message.type) {
       case "acknowledgeOpponent":
-        this.pixiManager.game.gameId = message.data.game_id;
-        this.pixiManager.game.opponent = {
+        this.game.setGameId(message.data.game_id);
+        this.game.setOpponent({
           username: message.data.opponent,
           avatar: message.data.opponent_avatar,
-        } as Player;
-        this.pixiManager.isTopPaddle = !message.data.top_paddle;
-        const scale_y = this.pixiManager.screenHeight / 100;
-        // TODO Synchonize the velocity of the ball
-        // if (this.pixiManager.isTopPaddle) {
-        //   this.pixiManager.dy = -20;
-        // } else {
-        //   this.pixiManager.dy = 20;
-        // }
-        this.pixiManager.game.setGameId(message.data.gameId);
-        this.pixiManager.game.setOpponent({
+        } as User);
+        const pixiManager = this.game.pixiManager;
+        if (pixiManager) {
+          pixiManager.isTopPaddle = !message.data.top_paddle;
+        }
+        this.game.setGameId(message.data.gameId);
+        this.game.setOpponent({
           username: message.data.opponent,
           avatar: message.data.opponent_avatar,
-        } as Player);
+        } as User);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         this.sendData({
           action: "ready",
           game_id: message.data.game_id,
-          game: this.pixiManager.map,
+          game: this.game.pixiManager?.map,
         });
       case "UpdateBall":
         this.updateBallPosition(message.ball_position);
@@ -118,22 +118,20 @@ class SocketManager extends WebSocket {
         let score1 = 0;
         let score2 = 0;
         console.log("message:", message);
-        if (this.pixiManager.isTopPaddle) {
+        if (this.game.pixiManager?.isTopPaddle) {
           score1 = message.data.top[message.data.round];
           score2 = message.data.bottom[message.data.round];
         } else {
           score1 = message.data.bottom[message.data.round];
           score2 = message.data.top[message.data.round];
         }
-        this.pixiManager.game.setGameScore([score1, score2]);
-        console.log("scoroooor: ", this.pixiManager.game.GameScore);
+        this.game.setGameScore([score1, score2]);
       case "gameState":
-        this.pixiManager.game.GameState = message.state;
-        this.pixiManager.game.setGameState(message.state);
+        this.game.setGameState(message.state);
         break;
       case "GameEnd":
-        this.pixiManager.game.GameState = "over";
-        this.pixiManager.game.setGameState("over");
+        this.game.setGameState("over");
+        this.game.setGameWinner(message.winner);
         this.close();
         break;
       default:

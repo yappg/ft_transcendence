@@ -27,7 +27,7 @@ const GameArenaContent = () => {
   const game_id = searchParams.get("game_id");
 
   useEffect(() => {
-    if (!user?.user) {
+    if (!user?.user && mode === "one-vs-one") {
       user.fetchCurrentUserDetails();
       return;
     }
@@ -56,17 +56,16 @@ const GameArenaContent = () => {
             avatar: game.opponent?.avatar,
           } as Player);
         }
-      } else {
-        game.setPlayer1({
-          username: "player1",
-          avatar: "/Avatar.svg",
-        } as Player);
-        game.setPlayer2({
-          username: "player2",
-          avatar: "/Avatar.svg",
-        } as Player);
-        console.log("setting default players", game.player1, game.player2);
       }
+    } else {
+      game.setPlayer1({
+        username: "player1",
+        avatar: "/Avatar.svg",
+      } as Player);
+      game.setPlayer2({
+        username: "player2",
+        avatar: "/Avatar.svg",
+      } as Player);
     }
   }, [mode, user, game.opponent, game.TournementTree]);
 
