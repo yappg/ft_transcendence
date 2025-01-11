@@ -11,6 +11,7 @@ import {
 import { useGame } from "@/context/GameContext";
 import React, { useRef, useEffect } from "react";
 import { useUser } from "@/context/GlobalContext";
+import SocketManager from "./socket-manager";
 
 const GameTable = ({
   mode,
@@ -26,6 +27,19 @@ const GameTable = ({
   const user = useUser();
 
   const gameManagerRef = useRef<PixiManager | null>(null);
+  
+  if (!game.socketManager) {
+    game.socketManager = useRef<SocketManager | null>(
+        new socketManager(
+          `${process.env.NEXT_PUBLIC_WS_URL}/game/`,
+          game_id,
+        ),
+    ).current;
+    // game.socketManager.close();
+    // game.
+  }
+  
+
 
   useEffect(() => {
     if (mode === "one-vs-one-local" || mode === "tournament") {
@@ -51,7 +65,7 @@ const GameTable = ({
     return () => {
       if (mode === "one-vsone") {
         const om = gameManagerRef.current as OnlineGameManager;
-        om?.socketManager.close();
+        om?.game.socketManager.close();
       }
       // if (gameManagerRef.current?.app) {
       //   gameManagerRef.current.app.destroy(true);
