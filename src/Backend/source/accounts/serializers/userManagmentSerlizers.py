@@ -111,6 +111,9 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     xp = serializers.SerializerMethodField()
     achievements = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
+    level = serializers.SerializerMethodField()
+    is_online = serializers.SerializerMethodField()
 
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
@@ -125,6 +128,13 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     is_private = serializers.SerializerMethodField()
 
     relation = serializers.SerializerMethodField()
+
+    status = serializers.SerializerMethodField()
+    bio = serializers.SerializerMethodField()
+    total_games = serializers.SerializerMethodField()
+    games_won = serializers.SerializerMethodField()
+    games_loss = serializers.SerializerMethodField()
+    win_ratio = serializers.SerializerMethodField()
 
     class Meta:
         model = PlayerProfile
@@ -169,14 +179,18 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             'last_login',
         ]
 
+    def blocked_by_user(self, request):
+        try:
+            blockedUsers_by = Player.objects.get(id=request.user.id).blocked_by.all()
+            return [blocker.user for blocker in blockedUsers_by]
+        except Player.DoesNotExist:
+            return []
+        except Exception:
+            return []
+
     def get_relation(self, obj):
         from relations.models import FriendInvitation, BlockedUsers
         request = self.context.get('request')
-        if not request or not request.user.is_authenticated:
-            return []
-
-        blockedUsers_by = Player.objects.get(id=request.user.id).blocked_by.all()
-        blocked_by = [blocker.user for blocker in blockedUsers_by]
 
         user = request.user
         if obj.player == user:
@@ -189,30 +203,102 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             return "sent_invite"
         elif BlockedUsers.objects.get(user=user).is_blocked(obj.player):
             return "blocked"
-        elif obj.player in blocked_by:
+        elif obj.player in self.blocked_by_user(request):
             return "blocked_by_user"
         else:
             return "none"
 
+    def get_is_online(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return False
+        return obj.is_online
+
     def get_is_private(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return True
         return obj.settings.private_profile
 
     def get_avatar(self, obj):
-        return obj.avatar.url if obj.avatar else None
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "/Media/avatars/.defaultAvatar.jpeg"
+        return obj.avatar.url if obj.avatar else "/Media/avatars/.defaultAvatar.jpeg"
 
     def get_cover(self, obj):
-        return obj.cover.url if obj.cover else None
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "/Media/covers/.defaultCover.jpeg"
+        return obj.cover.url if obj.cover else "/Media/covers/.defaultCover.jpeg"
 
     def get_achievements(self, obj):
         LIMIT = 15
 
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return []
+
         return PlayerAchievementSerializer(obj.all_achievements_gained()[:LIMIT], many=True).data
 
+
+    def get_status(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "blocked_by_pingpong_user"
+        return "available"
+
+    def get_bio(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "blocked_by_pingpong_user"
+        return obj.bio
+
+    def get_total_games(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 0
+        return obj.total_games
+
+    def get_games_won(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 0
+        return obj.games_won
+
+    def get_games_loss(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 0
+        return obj.games_loss
+
+    def get_win_ratio(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 0.0
+        return obj.win_ratio
+
     def get_statistics(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return {
+                "total_games": 0,
+                "win_ratio": 0,
+                "air_ratio": 0,
+                "water_ratio": 0,
+                "fire_ratio": 0,
+                "earth_ratio": 0,
+                "graph_data": [],
+            }
+
         return StatisticsSerializer(obj, read_only=True).data
 
     def get_friends(self, obj):
         LIMIT = 4
+
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return []
 
         if obj.settings.private_profile == True:
             return []
@@ -221,20 +307,49 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     def get_matches_history(self, obj):
         LIMIT = 4
 
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return []
+
         if obj.settings.private_profile == True:
             return []
         return MatchHistorySerializer(obj.all_matches()[:LIMIT], many=True).data
 
+    def get_level(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 1
+        return obj.level
+
+    def get_display_name(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "PingPong player"
+        return obj.display_name
+
     def get_xp(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return 0
+
         return round((obj.xp / obj.calculate_level_up_xp()) * 100, 2)
 
     def get_username(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return "PingPong"
         return obj.player.username
 
     def get_last_login(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return None
         return obj.last_login.date().isoformat() if obj.last_login else None
 
     def get_created_at(self, obj):
+        request = self.context.get('request')
+        if obj.player in self.blocked_by_user(request):
+            return None
         return obj.created_at.date().isoformat() if obj.created_at else None
 
     def validate_display_name(self, value):
@@ -272,8 +387,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Cover must be a JPEG or PNG image.")
 
         return value
-    
-    
+
+
     def update(self, instance, validated_data):
         if 'avatar_upload' in validated_data:
             instance.avatar = validated_data.pop('avatar_upload')

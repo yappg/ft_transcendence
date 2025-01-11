@@ -16,7 +16,17 @@ class NotificationListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')[:5]
+        try:
+            return Notification.objects.filter(recipient=self.request.user, read=False).order_by('-created_at')
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        try:
+            Notification.objects.filter(recipient=request.user).update(read=True)
+            return Response({'message': 'All notifications marked as read'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class FriendsListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -224,7 +234,7 @@ class BlockedUsersView(APIView):
                     chat = ChatRoom.objects.filter(name=f"{blocked.username}_{blocker.username}_room").first()
             except ChatRoom.DoesNotExist:
                 return Response({"error": "Chat room not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
                 f"chat_{chat.id}",
