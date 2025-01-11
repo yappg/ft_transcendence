@@ -188,7 +188,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def update_user_status(self, status: str):
-        """Update user's status in database"""
         try:
             profile = self.user.profile
             profile.status = status
@@ -198,7 +197,6 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_available_players(self) -> list:
-        """Get list of available players"""
         try:
             players = Player.objects.select_related('profile').filter(
                 profile__status='available'

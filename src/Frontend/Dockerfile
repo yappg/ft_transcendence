@@ -27,7 +27,7 @@ WORKDIR /app
 
 COPY ./source/package.json ./source/yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 COPY ./source ./
 

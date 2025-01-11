@@ -79,16 +79,10 @@ class PingPongGame:
         self.round_status = 'playing'  #playing, over
         self.lock = asyncio.Lock()
 
-    def start_game(self):
-        import time
+    async def start_game(self):
 
-        start_time = time.time()
         while self.player1.status != 'ready' or self.player2.status != 'ready':
-            # if start_time - time.time() > 10:
-            #     # print(f'{RED}Timeout{RESET}')
-            #     self.status = 'over'
-            #     # return  
-            time.sleep(0.2)
+            await asyncio.sleep(0.2)
         self.status = 'playing'
         self.ball.reset(1)
 
@@ -119,15 +113,15 @@ class PingPongGame:
 
     def check_paddle_collision(self, paddle: Paddle) -> bool:
 
-        collosion_x = abs(self.ball.position.x - paddle.position.x) < (paddle.width + self.ball.radius)
-        collosion_y = abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius)
+        collosion_x = abs(self.ball.position.x - paddle.position.x) < (paddle.width + (self.ball.radius - 0.5))
+        collosion_y = abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius - 0.5)
         return collosion_x and collosion_y
 
     def adjust_ball_angle(self, paddle: Paddle):
-
-        collisionPoint_x = self.ball.position.x - paddle.position.x
-        normalized_collision = (collisionPoint_x - paddle.width) / (paddle.width)
-        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 5.5)
+        paddles_center = paddle.position.x
+        collision_point = self.ball.position.x
+        normalized_collision = (collision_point - paddles_center) / (paddle.width)
+        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 15)
 
     async def check_for_rounds(self) :
         if (self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win):
