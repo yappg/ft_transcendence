@@ -105,3 +105,8 @@ Content-Type: application/json
 {
     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjU1NjE0LCJpYXQiOjE3MzMyNTM4MTQsImp0aSI6ImMwNDExYmNlYTE4YjRiMjE5ZmJjYzBjYjQ1YWU2OWY2IiwidXNlcl9pZCI6NH0.Wb1PBtTFoB8NIwavs2vv1R4LedmjTgzZ4RXpbzyiDcI"
 }
+
+
+
+##########
+GET https://localhost/api/accounts/user-history/

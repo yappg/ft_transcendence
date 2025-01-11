@@ -149,7 +149,7 @@ export const Form: React.FC<FormProps> = ({
         console.log("formData: ", formData);
         console.log("response: ", response);
         console.log("isSignup: ", isSignup);
-        if (response.enabled_2fa) {
+        if (response.enabled_2fa === true) {
           router.push("/2fa/login-2fa");
           return;
         }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import FriendServices from "@/services/friendServices";
+import { toast } from "@/hooks/use-toast";
 export const InviteSentButton = ({
   name,
   setThisState,
@@ -14,8 +15,13 @@ export const InviteSentButton = ({
       FriendServices.cancelFriendRequest(name);
       setClicked(true);
       setThisState("none");
-    } catch {
-      console.log("error");
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "Oups Somthing went wrong !",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white",
+      });
     }
     setClicked(true);
     setTimeout(() => {

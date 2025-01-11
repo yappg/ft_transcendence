@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import FriendServices from "@/services/friendServices";
 import { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -14,8 +15,13 @@ export const PendingButton = ({
       FriendServices.acceptFriendRequest(name);
       setClicked(true);
       setThisState("friend");
-    } catch {
-      console.log("error");
+    } catch (error) {
+      toast({
+        title: "access denied",
+        description: "Oups Somthing went wrong !",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white",
+      });
     }
     setClicked(true);
     setTimeout(() => {
@@ -27,8 +33,13 @@ export const PendingButton = ({
       FriendServices.declineFriendRequest(name);
       setClicked(true);
       setThisState("none");
-    } catch {
-      console.log("error");
+    } catch (error) {
+      toast({
+        title: "access denied",
+        description: "Oups Somthing went wrong !",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white",
+      });
     }
   }
   return (
