@@ -19,25 +19,26 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatRoom
         fields = ['id', 'created_at', 'last_message', 'receiver', 'is_blocked', 'blocked_by', 'is_online']
-    
-        
-    
+
+
     def get_last_message(self, obj):
         last_message = obj.messages.order_by('-send_at').first()
         if last_message:
             return MessageSerializer(last_message).data
         return None
-    
+
     def get_receiver(self, obj):
         user = self.context.get('request').user
+        blockedUsers_by = Player.objects.get(id=user.id).blocked_by.all()
+        blocked_by = [blocker.user for blocker in blockedUsers_by]
         receivers = obj.senders.exclude(profile__isnull=True).exclude(id=user.id)
         if receivers.exists():
             receiver = receivers.first()
             return {
                 'id': receiver.profile.id,
-                'username': receiver.profile.display_name,
-                'usernameGame': receiver.username,
-                'avatar': receiver.profile.avatar.url if receiver.profile.avatar else None
+                'username': receiver.profile.display_name if not receiver in blocked_by else "pingpong_user",
+                'usernameGame': receiver.username if not receiver in blocked_by else "pingpong_user",
+                'avatar': receiver.profile.avatar.url if not receiver in blocked_by else "/Media/avatars/.defaultAvatar.jpeg"
             }
         return None
 
@@ -70,4 +71,3 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         if other:
             return other.profile.is_online
         return False
-    
