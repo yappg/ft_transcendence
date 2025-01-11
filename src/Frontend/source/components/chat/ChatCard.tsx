@@ -17,7 +17,6 @@ export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
   if (message.length > 10) {
     message = message.slice(0, 17) + "...";
   }
-console.log("message DEBU ----", message);
   const handleChatClick = async () => {
     const currentPath = window.location.pathname;
     const targetPath = `/messages/${chatContent.id}`;
