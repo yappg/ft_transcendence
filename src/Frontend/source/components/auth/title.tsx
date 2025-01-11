@@ -13,17 +13,6 @@ function Title() {
   const param = useSearchParams();
   const code = param.get("code");
   const provider = param.get("provider");
-  // const [searchParams] = React.useState(() => {
-  //   if (typeof window !== "undefined") {
-  //     const urlParams = new URLSearchParams(window.location.search);
-  //     return {
-  //       code: urlParams.get("code"),
-  //       provider: urlParams.get("provider"),
-  //     };
-  //   }
-  //   return { code: null, provider: null };
-  // });
-  // const { code, provider } = searchParams;
 
   useEffect(() => {
     if (code) {
@@ -36,11 +25,9 @@ function Title() {
           })
           .then(() => (window.location.href = "/home"))
           .catch((error) => {
-            console.log(error);
             window.location.href = "/auth/login";
           });
       } else {
-        console.log("--------42", code);
         axios
           .get("/accounts/oauth/callback/42/", {
             params: {
@@ -49,7 +36,6 @@ function Title() {
           })
           .then(() => (window.location.href = "/home"))
           .catch((error) => {
-            console.log(error);
             window.location.href = "/auth/login";
           });
       }
@@ -67,11 +53,9 @@ function Title() {
           })
           .then(() => (window.location.href = "/home"))
           .catch((error) => {
-            console.log(error);
             window.location.href = "/auth/login";
           });
       } else {
-        console.log("--------42", code);
         axios
           .get("/accounts/oauth/callback/42/", {
             params: {
@@ -80,7 +64,6 @@ function Title() {
           })
           .then(() => (window.location.href = "/home"))
           .catch((error) => {
-            console.log(error);
             window.location.href = "/auth/login";
           });
       }

@@ -16,7 +16,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { GameInviteContext } from "@/context/gameInviteConetx";
-import Blocked from "@/constants/Blocked";
 interface MessagesProps {
   chatId: number;
   currentChat: Chat;
@@ -147,6 +146,7 @@ export const Messages: React.FC<MessagesProps> = ({
           description: "You cannot invite this user",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 5000,
         });
         return;
       }
@@ -158,6 +158,7 @@ export const Messages: React.FC<MessagesProps> = ({
         description: "Failed to send game invite",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white bg-opacity-20",
+        duration: 5000,
       });
     }
   };
