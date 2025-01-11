@@ -30,7 +30,7 @@ const FriendRequestCard = ({
       const response = await FriendServices.declineFriendRequest(name);
     } catch (error) {
       toast({
-        title: "access denied",
+        title: "ERROR",
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",
@@ -48,7 +48,7 @@ const FriendRequestCard = ({
       }
     } catch (error) {
       toast({
-        title: "access denied",
+        title: "ERROR",
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",

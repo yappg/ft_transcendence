@@ -19,16 +19,10 @@ const LoadingComponent = () => {
 const Login2faContent = () => {
   const [value, setValue] = React.useState<string | null>(null);
   const [storedusename, setStoredusename] = React.useState<string | null>(null);
-  // const uname = window?.localStorage?.getItem("username") ?? null;
-  // React.useEffect(() => {
-  //   setStoredusename(uname);
-  // }, []);
+
 
   React.useEffect(() => {
-    // if (typeof window !== "undefined") {
-    //   const uname = window.localStorage.getItem("username") ?? null;
-    if (value) setStoredusename(uname);
-    // }
+    if (value) setStoredusename(value);
   }, [value]);
 
   const myString = "Go >";
@@ -37,7 +31,7 @@ const Login2faContent = () => {
     try {
       const response = (await sendOtp(
         "verifiy-otp",
-        value,
+        value ?? "",
         storedusename,
       )) as any;
 
@@ -71,7 +65,7 @@ const Login2faContent = () => {
           2FA Code Required
         </h1>
       </div>
-      <InputOTPDemo value={value} setValue={setValue} />
+      <InputOTPDemo value={value ?? ""} setValue={setValue} />
       <div className="flex items-end justify-end transition-all duration-300">
         <MyButton
           onClick={handleClick}

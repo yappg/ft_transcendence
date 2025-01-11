@@ -31,6 +31,7 @@ export default function Page() {
     };
     fetchPlayerLeaderBoard();
   }, [setPlayerLeaderBoard, setIsLoading]);
+
   if (!PlayerLeaderBoard)
     return (
       <div className="ml-5 flex size-full flex-col items-center justify-center gap-2 overflow-hidden rounded-[50px] bg-black-crd">
@@ -71,6 +72,7 @@ export default function Page() {
                   }
                   customStyles={{ backgroundColor: "rgba(255, 255, 0, 0.3)" }}
                   achievements={PlayerLeaderBoard[0].Achievement}
+                  id={PlayerLeaderBoard[0].id}
                 />
                 {PlayerLeaderBoard.length > 1 && (
                   <FriendsComponent
@@ -92,6 +94,7 @@ export default function Page() {
                       backgroundColor: "rgba(192, 192, 192, 0.3)",
                     }}
                     achievements={PlayerLeaderBoard[1].Achievement}
+                    id={PlayerLeaderBoard[1].id}
                   />
                 )}
                 {PlayerLeaderBoard.length > 2 && (
@@ -114,6 +117,7 @@ export default function Page() {
                       backgroundColor: "rgba(205, 127, 50, 0.3)",
                     }}
                     achievements={PlayerLeaderBoard[2].Achievement}
+                    id={PlayerLeaderBoard[2].id}
                   />
                 )}
               </div>
@@ -121,7 +125,7 @@ export default function Page() {
               {PlayerLeaderBoard.filter((friend, index) => index >= 3).map(
                 (friend, index) => (
                   <FriendsComponent
-                    key={index + 3}
+                    key={index}
                     name={friend.display_name}
                     ProfilePhoto={process.env.NEXT_PUBLIC_HOST + friend.avatar}
                     level={friend.level}
@@ -136,6 +140,7 @@ export default function Page() {
                     }
                     customStyles={{ backgroundColor: "" }}
                     achievements={friend.Achievement}
+                    id={friend.id}
                   />
                 ),
               )}

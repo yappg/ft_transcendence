@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { GameInviteContext } from "@/context/gameInviteConetx";
+import Blocked from "@/constants/Blocked";
 interface MessagesProps {
   chatId: number;
   currentChat: Chat;
@@ -38,9 +39,11 @@ export const Messages: React.FC<MessagesProps> = ({
   const [currentUserId, setCurrentUserId] = useState<number>(0);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { chats, user, setChats } = useUser();
+  const [chatBar, setChatBar] = useState(true);
+  const [isBlocked, setIsBlocked] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-
+  
   const { sendGameInvite } = useContext(GameInviteContext);
   const handleBlockUser = async () => {
     if (isBlocked === true) {
@@ -117,8 +120,6 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   }, [messages]);
 
-  const [chatBar, setChatBar] = useState(true);
-  const [isBlocked, setIsBlocked] = useState(false);
 
   React.useEffect(() => {
     if (user) setCurrentUserId(user.id);
@@ -140,6 +141,15 @@ export const Messages: React.FC<MessagesProps> = ({
 
   const handleGameInvite = async () => {
     try {
+      if (chatBar === false) {
+        toast({
+          title: "Error",
+          description: "You cannot invite this user",
+          variant: "destructive",
+          className: "bg-primary-dark border-none text-white bg-opacity-20",
+        });
+        return;
+      }
       sendGameInvite(currentChat?.receiver.usernameGame);
       setShowMoreOptions(false);
     } catch (error) {
@@ -181,10 +191,11 @@ export const Messages: React.FC<MessagesProps> = ({
             )}
           </div>
           <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
-            <Image
-              onClick={() =>
-                router.push(`/Profile/${currentChat?.receiver.id}`)
-              }
+            {chatBar === true ? (
+              <Image
+                onClick={() =>
+                  router.push(`/Profile/${currentChat?.receiver.id}`)
+                }
               src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
               alt={`${currentChat?.receiver.username}'s profile`}
               className="rounded-full"
@@ -192,6 +203,16 @@ export const Messages: React.FC<MessagesProps> = ({
               height={70}
               unoptimized={true}
             />
+            ) : (
+              <Image
+                src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
+                alt={`${currentChat?.receiver.username}'s profile`}
+                className="rounded-full"
+                width={70}
+                height={70}
+                unoptimized={true}
+              />
+            )}
           </div>
           <div>
             <h2>{currentChat?.receiver.username}</h2>
@@ -233,7 +254,7 @@ export const Messages: React.FC<MessagesProps> = ({
               className="size-full bg-transparent text-white focus:outline-none"
             />
           ) : (
-            <h1 className="size-full bg-transparent text-white focus:outline-none">
+            <h1 className="size-full flex justify-center items-center bg-transparent text-white focus:outline-none">
               You can&apos;t send messages to this user
             </h1>
           )}

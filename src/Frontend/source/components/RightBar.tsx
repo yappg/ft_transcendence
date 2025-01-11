@@ -11,7 +11,7 @@ import { Friend } from "@/components/friends/UserFriendsNav";
 import FriendServices from "@/services/friendServices";
 import { useUser } from "@/context/GlobalContext";
 import { Skeleton } from "./ui/skeleton";
-import { User } from "@/context/GlobalContext";
+
 export const RightBar = ({
   handleRightClick,
 }: {
@@ -19,14 +19,12 @@ export const RightBar = ({
 }) => {
   const router = useRouter();
   const { setIsActivated } = useContext(SideBarContext);
-  const { chats, user } = useUser();
+  const { chats, user , fetchChats, Friends, setFriends} = useUser();
 
   function handleClick(id: number) {
     handleRightClick(id);
     setIsActivated(id);
   }
-
-  const [friends, setFriends] = useState<Friend[]>([]);
 
   const fetchFriends = async () => {
     try {
@@ -39,6 +37,7 @@ export const RightBar = ({
   };
 
   useEffect(() => {
+    fetchChats();
     fetchFriends();
   }, []);
 
@@ -62,13 +61,13 @@ export const RightBar = ({
           </Link>
         </div>
         <div className="custom-scrollbar-container flex size-full flex-col items-center gap-3">
-          {friends ? (
-            friends.length > 0 &&
-            friends.map((friend: Friend) => (
+          {Friends ? (
+            Friends.length > 0 &&
+            Friends.map((friend: Friend, index: number) => (
               <Avatar
+                key={index}
                 onClick={() => router.push(`/Profile/${friend.id}`)}
                 className="size-[55px] cursor-pointer rounded-full transition-transform duration-300 hover:scale-110"
-                key={friend.id}
               >
                 <AvatarImage
                   src={`${process.env.NEXT_PUBLIC_HOST}${friend.avatar}`}
