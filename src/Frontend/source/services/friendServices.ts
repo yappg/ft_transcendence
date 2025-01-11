@@ -6,7 +6,6 @@ const FriendServices = {
       const response = await axios.get('/relations/players/');
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -15,7 +14,6 @@ const FriendServices = {
       const response = await axios.get('/relations/friends/');
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -24,7 +22,6 @@ const FriendServices = {
       const response = await axios.get('/relations/friends/pending/');
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -35,7 +32,6 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -46,7 +42,6 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
   async cancelFriendRequest(receiverUsername: string) {
@@ -56,7 +51,7 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
+      // console.log("error", error);
     }
   },
 
@@ -67,7 +62,6 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
   async getBlocked() {
@@ -75,7 +69,6 @@ const FriendServices = {
       const response = await axios.get('/relations/friends/block/');
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -86,7 +79,6 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 
@@ -97,7 +89,6 @@ const FriendServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
     }
   },
 };
