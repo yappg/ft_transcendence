@@ -13,7 +13,10 @@ interface ChatCardProps {
 export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
   const { setMessages } = useUser();
   const router = useRouter();
-
+  let message = lastMessage || chatContent?.last_message?.content || "...";
+  if (message.length > 10) {
+    message = message.slice(0, 17) + "...";
+  }
   const handleChatClick = async () => {
     const currentPath = window.location.pathname;
     const targetPath = `/messages/${chatContent.id}`;
@@ -43,7 +46,7 @@ export const ChatCard = ({ chatContent, lastMessage }: ChatCardProps) => {
             {chatContent.receiver?.username}
           </span>
           <p className="text-sm text-gray-400">
-            {lastMessage || chatContent?.last_message?.content || "..."}
+            {message}
           </p>
         </div>
       </div>

@@ -15,7 +15,27 @@ CMD ["sh", "-c", \
     ]
 
 ######################################
-# Stage 2: Production build stage
+# Stage 2: Build stage
+######################################
+
+FROM node:alpine AS builder
+
+ENV NODE_ENV=production
+ENV NODE_NO_WARNINGS=1
+
+WORKDIR /app
+
+COPY ./source/package.json ./source/yarn.lock ./
+
+RUN yarn install
+
+COPY ./source ./
+
+RUN yarn build
+# CMD [ "tail", "-f", "/dev/null" ]
+
+######################################
+# Stage 3: Production build stage
 ######################################
 
 FROM node:alpine AS production
@@ -27,13 +47,12 @@ WORKDIR /app
 
 COPY ./source/package.json ./source/yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production
 
-COPY ./source ./
-
-RUN yarn build
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
-CMD ["tail", "-f", "/dev/null"]
-# CMD ["yarn", "start"]
+CMD ["yarn", "start"]
+# CMD [ "tail", "-f", "/dev/null" ]
