@@ -49,15 +49,17 @@ const GameTable = ({
     }
 
     return () => {
-      if (mode === "one-vsone") {
+      if (mode === "one-vs-one") {
+        console.log("closing socket GAAAAAAAME OVER");
         const om = gameManagerRef.current as OnlineGameManager;
         om?.socketManager.close();
       }
-      if (game.pixiappready) {
-        gameManagerRef.current?.destroy();
-        // game.setPixiappready(false);
-      }
-      game.resetGame();
+      // if (gameManagerRef.current?.app) {
+        if (game.pixiappready && mode !== "tournament") {
+          gameManagerRef?.current?.app?.destroy(true);
+          game.setPixiappready(false);
+        }
+        game.resetGame();
     };
   }, []);
 

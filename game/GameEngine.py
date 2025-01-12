@@ -58,6 +58,7 @@ class GamePlayer:
 
 class PingPongGame:
     def __init__(self, player1, player2, gameID: int):
+        # print(f'\033[31;1mCreating game with ID: {gameID} BETWEEN {player1.username} AND {player2.username}\033[0m')
 
         self.game_id = gameID
         self.game_width = 75
@@ -76,13 +77,18 @@ class PingPongGame:
         self.round_win = 7
         self.is_round_over = False
         self.round_status = 'playing'  #playing, over
-        self.result_saved = False
         self.lock = asyncio.Lock()
 
-    async def start_game(self):
+    def start_game(self):
+        import time
 
+        start_time = time.time()
         while self.player1.status != 'ready' or self.player2.status != 'ready':
-            await asyncio.sleep(0.2)
+            # if start_time - time.time() > 10:
+            #     # print(f'{RED}Timeout{RESET}')
+            #     self.status = 'over'
+            #     # return  
+            time.sleep(0.2)
         self.status = 'playing'
         self.ball.reset(1)
 
@@ -113,36 +119,39 @@ class PingPongGame:
 
     def check_paddle_collision(self, paddle: Paddle) -> bool:
 
-        collosion_x = abs(self.ball.position.x - paddle.position.x) < (paddle.width + (self.ball.radius - 0.5))
-        collosion_y = abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius - 0.5)
+        collosion_x = abs(self.ball.position.x - paddle.position.x) < (paddle.width + self.ball.radius)
+        collosion_y = abs(self.ball.position.y - paddle.position.y) < (paddle.height + self.ball.radius)
         return collosion_x and collosion_y
 
     def adjust_ball_angle(self, paddle: Paddle):
-        paddles_center = paddle.position.x
-        collision_point = self.ball.position.x
-        normalized_collision = (collision_point - paddles_center) / (paddle.width)
-        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 15)
+
+        collisionPoint_x = self.ball.position.x - paddle.position.x
+        normalized_collision = (collisionPoint_x - paddle.width) / (paddle.width)
+        self.ball.velocity.x = normalized_collision * (abs(normalized_collision) + 5.5)
 
     async def check_for_rounds(self) :
         if (self.player1.score[self.round] == self.round_win or self.player2.score[self.round] == self.round_win):
-
+            # print (f'{YELLOW}Round {self.round}, score: {self.player1.score}, {self.player2.score}{RESET}')
             self.round += 1
+            # self.ball.reset(0)
+
             if self.round == 3:
-                if sum(self.player1.score) > sum(self.player2.score):
-                    self.winner = 'player1'
-                    self.map = self.player1.map
-                elif sum(self.player1.score) < sum(self.player2.score):
-                    self.winner = 'player2'
-                    self.map = self.player2.map
-                else :
-                    self.winner = 'draw'
-                    self.map = 'air' #default map
-                # self.status = 'over'
-                print(f'\n{RED}[Round {self.winner}]{RESET}\n')
-                print(f'\n{RED}[Map {self.map}]{RESET}\n')
-                return True
+                async with self.lock:
+                    if sum(self.player1.score) > sum(self.player2.score):
+                        self.winner = 'player1'
+                        self.map = self.player1.map
+                    elif sum(self.player1.score) < sum(self.player2.score):
+                        self.winner = 'player2'
+                        self.map = self.player2.map
+                    else :
+                        self.winner = 'draw'
+                        self.map = 'air' #default map
+                    self.status = 'over'
+                    return True
             return True
         return False
+
+
 
     async def check_scoring(self) -> bool: 
         async with self.lock:

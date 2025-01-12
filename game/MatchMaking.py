@@ -63,6 +63,7 @@ class MatchMakingSystem:
                     try:
                         await self.Update_players_state(player1_id, player2_id)
                         game_ID = self.generate_unique_game_id()
+                        print(f'{YELLOW_BOLD}Game created AM here ID: {game_ID}{RESET}')
                         new_game = PingPongGame(player1, player2, gameID=game_ID)
 
                         self.games[new_game.game_id] = new_game
@@ -74,6 +75,7 @@ class MatchMakingSystem:
                         self.players_in_game.add(player2_id)
                         await self.channel_layer.group_add(f'game_{new_game.game_id}', player1.channel_name)
                         await self.channel_layer.group_add(f'game_{new_game.game_id}', player2.channel_name)
+                        print(f'{VIOLET_BOLD}Game created POAOAOAPAOPAOAss ID: {new_game.game_id}{RESET}')
                         await self.notify_players(player1, player2, new_game.game_id)
                     except Exception as e:
                         print(f'Error creating game: {str(e)}')
