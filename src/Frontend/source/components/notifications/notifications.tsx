@@ -9,6 +9,8 @@ interface NotificationBellProps {
   notificationCount: number;
   setNotificationsCount: (count: number) => void;
   setNotifications: (notifications: Notification[]) => void;
+  onToggle: (isOpen: boolean) => void;
+  isOpen: boolean;
 }
 
 const NotificationBell: React.FC<NotificationBellProps> = ({
@@ -16,6 +18,8 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
   notificationCount,
   setNotificationsCount,
   setNotifications,
+  onToggle,
+  isOpen,
 }) => {
   const [notifClicked, setNotifClicked] = useState(false);
   const fetchNotifications = async () => {
@@ -38,6 +42,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
             fetchNotifications();
             setNotifClicked(!notifClicked);
             setNotificationsCount(0);
+            onToggle(!isOpen);
           }}
         />
         {notificationCount > 0 && (
@@ -46,11 +51,11 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
           </span>
         )}
       </div>
-      {notifClicked && (
-        <div className="bg-black-card absolute right-0 top-10 w-80 rounded-lg shadow-lg">
+      {isOpen && (
+        <div className="bg-white absolute right-0 top-10 w-80 rounded-lg shadow-lg">
           {notifications.map((notification, index) => (
             <div key={index} className="border-b border-gray-200 p-4">
-              <p>{notification.message}</p>
+              <p className="text-black">{notification.message}</p>
             </div>
           ))}
         </div>

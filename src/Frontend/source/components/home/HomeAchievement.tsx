@@ -19,7 +19,7 @@ const HomeAchievement = ({
   iconUrl: string;
 }) => {
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center size-full px-4">
       <div className="flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-black-crd lg:size-[50px] 2xl:size-20">
         <img
           src={iconUrl}

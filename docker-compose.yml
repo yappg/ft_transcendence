@@ -62,8 +62,8 @@ services:
 # DEV ==============>
       volumes:
         - ./src/Frontend/source:/app:rw
-      ports:
-        - 3000:3000
+      # ports:
+      #   - 3000:3000
 # ==================>
       networks:
         - transcendence
@@ -94,10 +94,10 @@ services:
         - media-files:/app/source/UsersMedia
         - static-files:/app/source/staticfiles
 # DEV ==============>
-        - ./src/Backend/config:/app/config:rw
-        - ./src/Backend/source:/app/source:rw
-      ports:
-        - 8080:8080
+      #   - ./src/Backend/config:/app/config:rw
+      #   - ./src/Backend/source:/app/source:rw
+      # ports:
+      #   - 8080:8080
 # ==================>
       networks:
         - transcendence
