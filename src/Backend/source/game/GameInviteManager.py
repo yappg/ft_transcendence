@@ -20,7 +20,6 @@ class GameInvite:
 
 class GameInviteManager:
     def __init__(self):
-        print('Debug - Creating new GameInviteManager instance')
         self.pending_invites: Dict[str, GameInvite] = {}
         self.channel_layer = get_channel_layer()
         self.matchmaking_system = PrivateMatchMakingSystem()
