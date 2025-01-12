@@ -164,8 +164,21 @@ const Home = () => {
     fetchPlayerMatches();
     fetchAchievements();
     fetchLeaderboard();
-  }, []);
-  let userAchievements: Achievement[] = achievements || [];
+  }, [setPlayerMatches, setAchievements, setPlayerLeaderBoard]);
+
+  const firstAchievementGained = (): Achievement | undefined => {
+    const closestAchievement = achievements
+      ?.filter((achievement) => achievement.progress > 0 && !achievement.gained)
+      .sort(
+        (a, b) =>
+          a.achievement.condition -
+          a.progress -
+          (b.achievement.condition - b.progress),
+      )[0];
+    return closestAchievement;
+  };
+
+  const mostGainedAchievement = firstAchievementGained();
   if (!user || isLoading)
     return (
       <div className="size-full">
@@ -176,7 +189,6 @@ const Home = () => {
         <Skeleton className="flex size-full bg-black-crd lg:hidden" />
       </div>
     );
-  userAchievements = user?.achievements;
   return (
     <div className="custom-scrollbar-container flex size-full flex-col gap-4 lg:flex-row lg:gap-3">
       <div className="flex h-1/2 w-full flex-col justify-center lg:h-full lg:w-3/5">
@@ -201,15 +213,17 @@ const Home = () => {
           <DashboardCard playerMatches={PlayerMatches || []} />
         </div>
         <div className="realtive flex w-full items-center justify-between rounded-[30px] bg-black-crd py-2 md:h-[15%] lg:h-[15%]">
-          {userAchievements && userAchievements.length > 0 ? (
+          {mostGainedAchievement ? (
             <HomeAchievement
-              title={userAchievements[0].achievement.name}
-              description={userAchievements[0].achievement.description}
-              points={userAchievements[0].achievement.xp_gain}
-              progress={userAchievements[0].progress}
-              xpReward={userAchievements[0].achievement.xp_gain}
-              ratio={userAchievements[0].achievement.condition}
-              iconUrl={process.env.NEXT_PUBLIC_HOST + userAchievements[0].image}
+              title={mostGainedAchievement.achievement?.name}
+              description={mostGainedAchievement.achievement?.description}
+              points={mostGainedAchievement.achievement?.xp_gain}
+              progress={mostGainedAchievement.progress}
+              xpReward={mostGainedAchievement.achievement?.xp_gain}
+              ratio={mostGainedAchievement.achievement?.condition}
+              iconUrl={
+                process.env.NEXT_PUBLIC_HOST + mostGainedAchievement.image
+              }
             />
           ) : (
             <div className="flex size-full items-center justify-center">

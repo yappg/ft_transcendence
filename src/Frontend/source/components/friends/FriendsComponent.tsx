@@ -20,6 +20,7 @@ const FriendsComponent = ({
   achievements?: any[];
   id?: number;
 }): JSX.Element => {
+  const lastThreeAchievements = achievements.slice(0, 3);
   return (
     <div
       className="flex h-[100px] w-full flex-row items-center justify-between border-b-2 border-[#1C1C1C] border-opacity-[40%] bg-black-crd pl-2 sm:pl-4 lg:h-[150px] lg:px-5"
@@ -47,6 +48,22 @@ const FriendsComponent = ({
             </h1>
           </div>
         </div>
+      </div>
+      <div className="ml-[-20px] hidden flex-row items-center justify-center md:flex">
+        {lastThreeAchievements && lastThreeAchievements.length === 3 ? (
+          lastThreeAchievements.map((achievement, index) => (
+            <img
+              src={achievement.image}
+              alt={achievement.name}
+              key={index}
+              width={60}
+              height={60}
+              className="rounded-full"
+            />
+          ))
+        ) : (
+          <div className="size-full bg-red-500"></div>
+        )}
       </div>
       <div className="mr-[-20px] flex w-[23%] items-center justify-end">
         {messagesLink}

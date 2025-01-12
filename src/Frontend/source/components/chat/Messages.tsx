@@ -42,17 +42,17 @@ export const Messages: React.FC<MessagesProps> = ({
   const [isBlocked, setIsBlocked] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  
+
   const { sendGameInvite } = useContext(GameInviteContext);
   const handleBlockUser = async () => {
-    if (isBlocked === true ) {
+    if (isBlocked === true) {
       try {
-        if (currentChat?.receiver.username !== 'pingpong_user') {
-        console.log("UnBlocking user:", currentChat?.receiver.username);
-        await FriendServices.unblockFriend(currentChat?.receiver.username);
-        setChatBar(true);
-      }
-      setIsBlocked(false);
+        if (currentChat?.receiver.username !== "pingpong_user") {
+          console.log("UnBlocking user:", currentChat?.receiver.username);
+          await FriendServices.unblockFriend(currentChat?.receiver.username);
+          setChatBar(true);
+        }
+        setIsBlocked(false);
       } catch (error) {
         toast({
           title: "User is already unblocked",
@@ -62,9 +62,7 @@ export const Messages: React.FC<MessagesProps> = ({
         });
       }
     } else {
-      console.log("Blocking user:", currentChat?.receiver.username);
       try {
-        console.log("Blocking user:", currentChat?.receiver.username);
         await FriendServices.blockFriend(currentChat?.receiver.username);
         setIsBlocked(true);
         setChatBar(false);
@@ -122,7 +120,6 @@ export const Messages: React.FC<MessagesProps> = ({
     }
   }, [messages]);
 
-
   React.useEffect(() => {
     if (user) setCurrentUserId(user.id);
     if (chats) {
@@ -167,21 +164,16 @@ export const Messages: React.FC<MessagesProps> = ({
   };
 
   return (
-    <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-visible rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
-      <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] sm:px-4 px-0 font-dayson text-white border-2">
-        <div className="flex items-center justify-between gap-4 border-2 w-[300px] relative">
-          <div className="size-fit z-10 relative">
-            <button
-              className="size-8 text-white border-2 z-10 relative"
-              onClick={() => {
-                setShowMoreOptions(!showMoreOptions);
-                console.log('cliecke');
-              }}
-            >
-              <FiMoreVertical />
-            </button>
+    <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
+      <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <FiMoreVertical
+              className="size-8 text-white"
+              onClick={() => setShowMoreOptions(!showMoreOptions)}
+            />
             {showMoreOptions && (
-              <div className="absolute left-0 top-16 z-100 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
+              <div className="z-100 absolute left-0 top-16 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
                 <button
                   onClick={handleGameInvite}
                   className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
@@ -199,22 +191,26 @@ export const Messages: React.FC<MessagesProps> = ({
               </div>
             )}
           </div>
-          <div className="flex size-[70px] items-center justify-center rounded-full bg-slate-400">
+          <div className="flex size-[70px] items-center justify-center rounded-full">
             {chatBar === true ? (
               <Image
                 onClick={() =>
                   router.push(`/Profile/${currentChat?.receiver.id}`)
                 }
-              src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
-              alt={`${currentChat?.receiver.username}'s profile`}
-              className="rounded-full"
-              width={70}
-              height={70}
-              unoptimized={true}
-            />
+                src={
+                  process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar
+                }
+                alt={`${currentChat?.receiver.username}'s profile`}
+                className="rounded-full"
+                width={70}
+                height={70}
+                unoptimized={true}
+              />
             ) : (
               <Image
-                src={process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar}
+                src={
+                  process.env.NEXT_PUBLIC_HOST + currentChat?.receiver.avatar
+                }
                 alt={`${currentChat?.receiver.username}'s profile`}
                 className="rounded-full"
                 width={70}
@@ -254,7 +250,6 @@ export const Messages: React.FC<MessagesProps> = ({
         className="flex h-[60px] w-11/12 items-center gap-4 rounded-md bg-[rgb(0,0,0,0.7)] px-4 py-1"
       >
         <div className="flex size-full items-center gap-3 px-4">
-          <FiPlus className={`dark size-[30px] text-white ${chatBar ? "block" : "hidden"}`} />
           {chatBar ? (
             <input
               value={newMessage}
@@ -262,18 +257,17 @@ export const Messages: React.FC<MessagesProps> = ({
               placeholder="Start a new conversation"
               className="size-full bg-transparent text-white focus:outline-none"
             />
-
           ) : (
-            <h1 className="size-full flex justify-center items-center bg-transparent text-white focus:outline-none">
+            <h1 className="flex size-full items-center justify-center bg-transparent text-white focus:outline-none">
               You can&apos;t send messages to this user
             </h1>
           )}
-        <button
-          type="submit"
-          className={`flex size-[40px] items-center justify-center rounded-md bg-primary dark:bg-primary-dark ${chatBar ? "block" : "hidden"}`}
-        >
-          <IoSend className="size-[20px] text-white" />
-        </button>
+          <button
+            type="submit"
+            className={`flex size-[40px] items-center justify-center rounded-md bg-primary dark:bg-primary-dark ${chatBar ? "block" : "hidden"}`}
+          >
+            <IoSend className="size-[20px] text-white" />
+          </button>
         </div>
       </form>
     </div>
