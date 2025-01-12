@@ -6,22 +6,19 @@ import { Assets, Sprite, Graphics } from "pixi.js";
 import SocketManager from "./socket-manager";
 import { User } from "@/context/GlobalContext";
 import socketManager from "./socket-manager";
-// import { basename } from "path";
-// import { Scale } from "lucide-react";
 
 // Global Game Manager
 
 export abstract class PixiManager {
-  app: PIXI.Application;
+  app: PIXI.Application | null = null;
   topRacket!: PIXI.Graphics;
   bottomRacket!: PIXI.Graphics;
   ball!: PIXI.Graphics;
   backgroundImage: string;
-  keysPressed: Set<string> = new Set("");
+  keysPressed: Set<string> = new Set();
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
-  gameState: string = "waiting";
   screenWidth: number = 0;
   screenHeight: number = 0;
   ballMovementSpeed: number = 0;
@@ -39,11 +36,18 @@ export abstract class PixiManager {
     this.paddleWidth = 0;
     this.game = game;
     this.map = map;
-    this.game.gameState = "waiting";
+    this.game.GameState = "waiting";
     this.initWindow(container).then(() => {});
   }
 
+  static gameInstance: PixiManager | null = null;
+
+  static getGameInstance() {
+    return this.gameInstance;
+  }
+
   async initWindow(container: HTMLElement) {
+    if (!this.app) return;
     await this.app.init({
       background: "#000000",
       resizeTo: document?.getElementById("table") as
@@ -62,11 +66,15 @@ export abstract class PixiManager {
     this.paddleheight = this.screenHeight / 40;
     this.ballRatio = this.screenWidth / 35;
     background.alpha = 0.2;
+    // this.game.setPixiappready(true);
+    this.game.pixiappready = true;
     this.app.stage.addChild(background);
+
     this.drawGameElements();
   }
 
   drawGameElements() {
+    if (!this.app) return;
     this.topRacket = this.createRacket(
       this.screenWidth / 2 - this.paddleWidth / 2,
       20,
@@ -135,6 +143,7 @@ export abstract class PixiManager {
   }
 
   displayText(text: string) {
+    if (!this.app) return;
     if (!this.app.stage.children.includes(this.waitingText)) {
       const style = new PIXI.TextStyle({
         fontFamily: "Days One",
@@ -154,6 +163,7 @@ export abstract class PixiManager {
   }
 
   removeGameElements() {
+    if (!this.app) return;
     this.app.stage.removeChild(this.topRacket);
     this.app.stage.removeChild(this.bottomRacket);
     this.app.stage.removeChild(this.ball);
@@ -169,21 +179,28 @@ export abstract class PixiManager {
   }
 
   updateBallPosition(x: number, y: number): void {
-    // console.log('updateBallPosition', x, y, this.screenHeight, this.screenWidth);
+    if (!this.ball) return;
     this.ball.x = x;
     this.ball.y = y;
   }
 
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
-    console.log(`Key down: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 
   handleKeyUp(event: KeyboardEvent) {
     this.keysPressed.delete(event.key);
-    console.log(`Key up: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
+  }
+
+  destroy() {
+    if (this.app) {
+      if (this.app.ticker) {
+        this.app.ticker.remove(this.handleGameStates);
+        this.app.ticker.stop();
+        this.app.ticker.destroy();
+      }
+      this.app = null;
+    }
   }
 }
 
@@ -192,7 +209,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 0.8;
+    const baseSpeed = 0.5;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -262,7 +279,7 @@ export class LocalGameManager extends PixiManager {
         this.game.totalScore[1] += 1;
       }
       this.dy =
-        (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? 1 : -1;
+        (this.game.GameScore[0] + this.game.GameScore[1]) % 2 == 1 ? -1 : 1;
       if (this.game.GameScore[0] > 6 || this.game.GameScore[1] > 6) {
         this.game.GameScore = [0, 0];
         this.app.stage.removeChild(this.ball);
@@ -273,15 +290,17 @@ export class LocalGameManager extends PixiManager {
           this.game.GameState = "waiting";
           this.game.setGameState("waiting");
         } else {
-          this.game.GameState = "over";
           this.game.setGameState("over");
+          this.game.GameState = "over";
+          console.log("game over piximanager");
           const sleepmoment = new Promise((resolve) =>
-            setTimeout(resolve, 4000),
-          );
-          await sleepmoment;
-          this.game.setInGame(false);
-          // this.game.setGameWinner(null);
-          this.game.setTournamentMatch(this.game.tournamentMatch + 1);
+            setTimeout(resolve, 6000),
+        );
+        await sleepmoment;
+        this.game.resetGame();
+        this.game.setInGame(false);
+        this.game.setTournamentMatch(this.game.tournamentMatch + 1);
+        console.log("game over piximanager 2");
         }
       }
       this.ball.x = this.screenWidth / 2;
@@ -292,8 +311,10 @@ export class LocalGameManager extends PixiManager {
   }
 
   handleWaitingState(): void {
+    if (!this.app) return;
     const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
     sleepmoment.then(() => {
+      if (!this.app) return;
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
       this.game.GameState = "start";
@@ -458,6 +479,7 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleGameStates(): void {
+    if (!this.app) return;
     if (this.game.GameState === "waiting") {
       this.handleWaitingState();
     }
@@ -521,6 +543,7 @@ export class OnlineGameManager extends PixiManager {
   }
 
   handleWaitingState() {
+    if (!this.app) return;
     this.app.stage.removeChild(this.ball);
     this.displayText("Get\nReady");
   }
