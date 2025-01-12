@@ -10,20 +10,19 @@ import React, { useState, useEffect } from "react";
 import { TreeGenerator } from "tournament-bracket-tree";
 import "tournament-bracket-tree/dist/index.css";
 
-// i need an empy tree
-// const emptyTree = {
-//   data: { player: { avatar: "", username: "" } },
-//   right: {
-//     data: { player: { avatar: "", username: "" } },
-//     right: { data: { player: { avatar: "", username: "" } } },
-//     left: { data: { player: { avatar: "", username: "" } } }
-//   },
-//   left: {
-//     data: { player: { avatar: "", username: "" } },
-//     right: { data: { player: { avatar: "", username: "" } } },
-//     left: { data: { player: { avatar: "", username: "" } } }
-//   }
-// };
+const emptyTree = {
+  data: { player: { avatar: "", username: "" } },
+  right: {
+    data: { player: { avatar: "", username: "" } },
+    right: { data: { player: { avatar: "", username: "" } } },
+    left: { data: { player: { avatar: "", username: "" } } }
+  },
+  left: {
+    data: { player: { avatar: "", username: "" } },
+    right: { data: { player: { avatar: "", username: "" } } },
+    left: { data: { player: { avatar: "", username: "" } } }
+  }
+};
 
 const mapTournamentToNode = (game: any) => {
   return (
@@ -60,6 +59,7 @@ const Tournament = () => {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -125,8 +125,8 @@ const Tournament = () => {
             className="w-[220px] min-w-[120px] disabled:opacity-50"
             onClick={() => {
               game.resetGame();
-              // game.setTournamentMatch(0);
-              // game.setTournementTree(emptyTree);
+              game.setTournamentMatch(0);
+              game.setTournementTree(emptyTree);
               router.push("/games");
             }}
           >

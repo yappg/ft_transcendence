@@ -82,20 +82,6 @@ const GameContext = createContext<GameContextType>({
   setPixiappready: () => {},
 });
 
-const emptyTree = {
-  data: { player: { avatar: "", username: "" } },
-  right: {
-    data: { player: { avatar: "", username: "" } },
-    right: { data: { player: { avatar: "", username: "" } } },
-    left: { data: { player: { avatar: "", username: "" } } }
-  },
-  left: {
-    data: { player: { avatar: "", username: "" } },
-    right: { data: { player: { avatar: "", username: "" } } },
-    left: { data: { player: { avatar: "", username: "" } } }
-  }
-};
-
 export const GameProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }: {
@@ -122,9 +108,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     setGameState("waiting");
     setTotalScore([0, 0]);
     setGameWinner(null);
-    setTournamentMatch(0);
-    setTournementTree(emptyTree);
     setInGame(false);
+    setPlayer1(null);
+    setPlayer2(null);
+    setOpponent(null);
   };
   return (
     <GameContext.Provider
