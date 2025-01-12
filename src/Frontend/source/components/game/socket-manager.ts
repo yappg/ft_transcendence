@@ -3,8 +3,8 @@
 import { OnlineGameManager } from "./pixi-manager";
 import { Player } from "@/context/GameContext";
 
-class SocketManager extends WebSocket {
-  // socket: WebSocket;
+class SocketManager {
+  socket: WebSocket;
   pixiManager!: OnlineGameManager;
   game_id: string;
   constructor(url: string, game_id: string) {
@@ -12,19 +12,24 @@ class SocketManager extends WebSocket {
     if (game_id && game_id !== "") {
       newUrl = url + "?game_id=" + game_id;
     }
-    super(newUrl);
     this.game_id = game_id;
+    this.socket = new WebSocket(newUrl);
+    this.socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
 
-    this.onopen = () => {};
-
-    this.onmessage = (event) => {
+    this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       this.handleSocketMessage(message);
     };
 
-    this.onclose = () => {};
+    this.socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
 
-    this.onerror = (error) => {};
+    this.socket.onerror = (error) => {
+      console.log("WebSocket error:", error);
+    };
   }
 
   setPixiManager(manager: OnlineGameManager) {
@@ -32,7 +37,7 @@ class SocketManager extends WebSocket {
   }
 
   sendData(data: any) {
-    this.send(JSON.stringify(data));
+    this.socket.send(JSON.stringify(data));
   }
 
   updateBallPosition(data: any) {
@@ -110,15 +115,18 @@ class SocketManager extends WebSocket {
       case "UpdateScore":
         let score1 = 0;
         let score2 = 0;
-        console.log("message:", message);
+        console.log("message:", message, this.pixiManager.isTopPaddle);
         if (this.pixiManager.isTopPaddle) {
+          console.log("top paddle", message.data.top[message.data.round]);
           score1 = message.data.top[message.data.round];
           score2 = message.data.bottom[message.data.round];
         } else {
+          console.log("bottom paddle", message.data.bottom[message.data.round]);
           score1 = message.data.bottom[message.data.round];
           score2 = message.data.top[message.data.round];
         }
         this.pixiManager.game.setGameScore([score1, score2]);
+        this.pixiManager.game.GameScore = [score1, score2];
         console.log("scoroooor: ", this.pixiManager.game.GameScore);
       case "gameState":
         this.pixiManager.game.GameState = message.state;
@@ -127,7 +135,18 @@ class SocketManager extends WebSocket {
       case "GameEnd":
         this.pixiManager.game.GameState = "over";
         this.pixiManager.game.setGameState("over");
+        this.pixiManager.game.resetGame();
         this.close();
+        break;
+      case "AlreadyInQorG":
+        this.close();
+        window.location.href = "/home";
+        break;
+      case "GameDisconnect":
+        this.pixiManager.game.GameState = "over";
+        this.pixiManager.game.setGameState("over");
+        this.close();
+        window.location.href = "/home";
         break;
       default:
         break;
@@ -135,8 +154,8 @@ class SocketManager extends WebSocket {
   }
 
   close() {
-    super.close();
-  }
+      this.socket.close(1000);
+    }
 }
 
 export default SocketManager;
