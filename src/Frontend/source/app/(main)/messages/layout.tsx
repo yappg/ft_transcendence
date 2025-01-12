@@ -84,7 +84,7 @@ export default function ChatLayout({
   return (
     <GameInviteProvider>
       <div className="flex size-full overflow-hidden lg:p-4">
-        <div className="relative flex size-full gap-8">
+        <div className="relative flex size-full gap-8 ">
           <div className="hidden h-full items-center justify-center lg:flex lg:w-3/5 lg:flex-row">
             <div className="costum-little-shadow hidden size-full flex-col items-center justify-center rounded-2xl lg:flex">
               {children}
@@ -97,7 +97,7 @@ export default function ChatLayout({
                 setMessages([]);
                 router.push("/messages");
               }}
-              className="absolute right-8 top-8 z-[99] size-[50px] rounded-[50px] lg:hidden"
+              className="absolute right-0 top-8 z-[99] size-[50px] rounded-[50px] lg:hidden"
             >
               <MdKeyboardArrowRight className="mr-8 size-10 text-white" />
             </button>
