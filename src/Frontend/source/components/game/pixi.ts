@@ -10,11 +10,10 @@ export abstract class PixiManager {
   bottomRacket!: PIXI.Graphics;
   ball!: PIXI.Graphics;
   backgroundImage: string;
-  keysPressed: Set<string> = new Set("");
+  keysPressed: Set<string> = new Set();
   paddleWidth: number;
   paddleheight!: number;
   ballRatio!: number;
-  gameState: string = "start";
   screenWidth: number = 0;
   screenHeight: number = 0;
   ballMovementSpeed: number = 0;
@@ -30,7 +29,6 @@ export abstract class PixiManager {
     this.backgroundImage = backgroundImage;
     this.paddleWidth = 0;
     this.game = game;
-    this.game.gameState = "start";
     this.initWindow(container).then(() => {});
   }
 
@@ -118,25 +116,22 @@ export abstract class PixiManager {
     this.app.stage.addChild(this.topRacket);
     this.app.stage.addChild(this.bottomRacket);
     this.app.ticker.add(() => {
-      if (this.game.gameState === "waiting") {
+      if (this.game.GameState === "waiting") {
         this.displayWaitingText();
         this.handleWaitingState();
       }
-      if (this.game.gameState === "start") {
+      if (this.game.GameState === "start") {
         this.app.stage.removeChild(this.waitingText);
         this.app.stage.addChild(this.ball);
-        // this.handleStartState();
         if (this.round < 3) {
           this.updateBallPosition();
           this.updatePaddlePosition();
         } else {
-          this.game.gameState = "over";
+          this.game.GameState = "over";
           this.game.setGameState("over");
-          // this.removeGameElements();
-          // this.displayGameOverText();
         }
       }
-      if (this.game.gameState === "over") {
+      if (this.game.GameState === "over") {
         this.removeGameElements();
         this.displayGameOverText();
       }
@@ -309,7 +304,7 @@ export class LocalGameManager extends PixiManager {
         this.bottomRacket.x = this.screenWidth / 2 - this.paddleWidth / 2;
         this.round += 1;
         if (this.round < 3) {
-          this.game.gameState = "waiting";
+          this.game.GameState = "waiting";
           this.game.setGameState("waiting");
         }
       }
@@ -323,7 +318,7 @@ export class LocalGameManager extends PixiManager {
     sleepmoment.then(() => {
       this.app.stage.removeChild(this.waitingText);
       this.app.stage.addChild(this.ball);
-      this.game.gameState = "start";
+      this.game.GameState = "start";
       this.game.setGameState("start");
     });
   }
@@ -343,7 +338,7 @@ export class OnlineGameManager extends PixiManager {
     super(container, backgroundImage, game);
     this.socketManager = socketManager;
     this.user = user;
-    this.game.gameState = "waiting";
+    this.game.GameState = "waiting";
     this.game.setGameState("waiting");
   }
 
@@ -408,26 +403,11 @@ export class OnlineGameManager extends PixiManager {
         this.ball.y = new_y;
       }
     }
-
-    // this.ball.x = Math.max(0, Math.min(this.ball.x, this.screenWidth));
-    // this.ball.y = Math.max(0, Math.min(this.ball.y, this.screenHeight));
-
-    // console.log(`Ball position - x: ${this.ball.x}, y: ${this.ball.y}`);
-    // this.ball.x = data?.x || this.ball.x;
-    // this.ball.y = data?.y || this.ball.y;
   }
 
   updateScore(data: { score: { mine: number; opponent: number } }) {
     this.game.GameScore = [data.score.mine, data.score.opponent];
   }
 
-  async handleWaitingState() {
-    // const sleepmoment = new Promise((resolve) => setTimeout(resolve, 10000));
-    // sleepmoment.then(() => {
-    // this.app.stage.removeChild(this.waitingText);
-    // this.app.stage.addChild(this.ball);
-    // this.game.gameState = 'start';
-    // this.game.setGameState('start');
-    //   });
-  }
+  async handleWaitingState() {}
 }

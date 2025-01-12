@@ -53,9 +53,11 @@ const GameTable = ({
         const om = gameManagerRef.current as OnlineGameManager;
         om?.socketManager.close();
       }
-      // if (gameManagerRef.current?.app) {
-      //   gameManagerRef.current.app.destroy(true);
-      // }
+      if (game.pixiappready) {
+        gameManagerRef.current?.destroy();
+        // game.setPixiappready(false);
+      }
+      game.resetGame();
     };
   }, []);
 

@@ -87,20 +87,22 @@ const ScoreTable = ({ mode }: { mode: string }) => {
       game.GameScore = [0, 0];
     }
     if (game.GameState === "over") {
+      console.log("game over scoretable");
       if (game.totalScore[0] > game.totalScore[1]) {
         game.setGameWinner(game.player1);
-        game.GameWinner = game.player1;
+        // game.GameWinner = game.player1;
       } else {
         console.log("player2:", game.player2);
         game.setGameWinner(game.player2);
-        game.GameWinner = game.player2;
+        // game.GameWinner = game.player2;
       }
+      console.log("game over scoretable 2");
     }
   }, [game.GameScore]);
 
   useEffect(() => {
     if (mode === "tournament" && game.GameState === "over" && game.GameWinner) {
-      console.log("game winner:", game.GameWinner);
+      console.log("game winner:", game.GameWinner, game.tournamentMatch);
       if (game.tournamentMatch === 0) {
         game.TournementTree.right.data.player = game.GameWinner;
         game.setGameWinner(null);

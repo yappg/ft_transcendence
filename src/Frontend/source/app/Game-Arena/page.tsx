@@ -43,7 +43,6 @@ const GameArenaContent = () => {
         game.setPlayer2(game.TournementTree.left.data.player);
       }
     } else if (mode === "one-vs-one") {
-      if (user.user?.username && user?.user?.avatar) {
         if (user.user?.username && user?.user?.avatar) {
           game.setPlayer1({
             username: user?.user?.username,
@@ -56,17 +55,16 @@ const GameArenaContent = () => {
             avatar: game.opponent?.avatar,
           } as Player);
         }
-      } else {
-        game.setPlayer1({
-          username: "player1",
-          avatar: "/Avatar.svg",
-        } as Player);
-        game.setPlayer2({
-          username: "player2",
-          avatar: "/Avatar.svg",
-        } as Player);
-        console.log("setting default players", game.player1, game.player2);
-      }
+    } else {
+      game.setPlayer1({
+        username: "player1",
+        avatar: "/air.png",
+      } as Player);
+      game.setPlayer2({
+        username: "player2",
+        avatar: "/earth.png",
+      } as Player);
+      console.log("setting default players", game.player1, game.player2);
     }
   }, [mode, user, game.opponent, game.TournementTree]);
 

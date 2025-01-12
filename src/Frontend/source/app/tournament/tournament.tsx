@@ -10,6 +10,21 @@ import React, { useState, useEffect } from "react";
 import { TreeGenerator } from "tournament-bracket-tree";
 import "tournament-bracket-tree/dist/index.css";
 
+// i need an empy tree
+// const emptyTree = {
+//   data: { player: { avatar: "", username: "" } },
+//   right: {
+//     data: { player: { avatar: "", username: "" } },
+//     right: { data: { player: { avatar: "", username: "" } } },
+//     left: { data: { player: { avatar: "", username: "" } } }
+//   },
+//   left: {
+//     data: { player: { avatar: "", username: "" } },
+//     right: { data: { player: { avatar: "", username: "" } } },
+//     left: { data: { player: { avatar: "", username: "" } } }
+//   }
+// };
+
 const mapTournamentToNode = (game: any) => {
   return (
     <div className="size-[60px] lg:size-[77px]">
@@ -109,10 +124,9 @@ const Tournament = () => {
           <MyButton
             className="w-[220px] min-w-[120px] disabled:opacity-50"
             onClick={() => {
-              game.setGameScore([0, 0]);
-              game.setTotalScore([0, 0]);
-              game.setTournamentMatch(0);
-              game.setGameWinner(null);
+              game.resetGame();
+              // game.setTournamentMatch(0);
+              // game.setTournementTree(emptyTree);
               router.push("/games");
             }}
           >

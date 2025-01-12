@@ -43,6 +43,9 @@ export interface GameContextType {
   setInGame: (inGame: boolean) => void;
   tournamentMatch: number;
   setTournamentMatch: (match: number) => void;
+  resetGame: () => void;
+  pixiappready: boolean;
+  setPixiappready: (ready: boolean) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -74,7 +77,24 @@ const GameContext = createContext<GameContextType>({
   setInGame: () => {},
   tournamentMatch: 0,
   setTournamentMatch: () => {},
+  resetGame: () => {},
+  pixiappready: false,
+  setPixiappready: () => {},
 });
+
+const emptyTree = {
+  data: { player: { avatar: "", username: "" } },
+  right: {
+    data: { player: { avatar: "", username: "" } },
+    right: { data: { player: { avatar: "", username: "" } } },
+    left: { data: { player: { avatar: "", username: "" } } }
+  },
+  left: {
+    data: { player: { avatar: "", username: "" } },
+    right: { data: { player: { avatar: "", username: "" } } },
+    left: { data: { player: { avatar: "", username: "" } } }
+  }
+};
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -95,6 +115,17 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [player2, setPlayer2] = useState<Player | null>(null);
   const [inGame, setInGame] = useState<boolean>(false);
   const [tournamentMatch, setTournamentMatch] = useState<number>(0);
+  const [pixiappready, setPixiappready] = useState<boolean>(false);
+  const resetGame = () => {
+    setGameScore([0, 0]);
+    setRounds([]);
+    setGameState("waiting");
+    setTotalScore([0, 0]);
+    setGameWinner(null);
+    setTournamentMatch(0);
+    setTournementTree(emptyTree);
+    setInGame(false);
+  };
   return (
     <GameContext.Provider
       value={{
@@ -126,6 +157,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         setInGame,
         tournamentMatch,
         setTournamentMatch,
+        resetGame,
+        pixiappready,
+        setPixiappready,
       }}
     >
       {children}
