@@ -83,14 +83,10 @@ export abstract class PixiManager {
 
   handleKeyDown(event: KeyboardEvent) {
     this.keysPressed.add(event.key);
-    console.log(`Key down: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 
   handleKeyUp(event: KeyboardEvent) {
     this.keysPressed.delete(event.key);
-    console.log(`Key up: ${event.key}`);
-    console.log(`Keys pressed: ${Array.from(this.keysPressed).join(", ")}`);
   }
 
   drawGameElements() {
@@ -390,10 +386,6 @@ export class OnlineGameManager extends PixiManager {
       const new_x = scale_x * data.x;
       const new_y = scale_y * data.y;
 
-      console.log("scale_x:", data?.x, scale_x);
-      console.log("scale_y:", data?.y, scale_y);
-      // console.log(`Calculated positions - new_x: ${new_x}, new_y: ${new_y}`);
-      // console.log(`Screen dimensions - width: ${this.screenWidth}, height: ${this.screenHeight}`);
       if (this.isTopPaddle) {
         this.ball.x = this.screenWidth - new_x;
         this.ball.y = this.screenHeight - new_y;

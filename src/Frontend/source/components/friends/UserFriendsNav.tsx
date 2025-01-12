@@ -47,11 +47,10 @@ const UserFriendsNav = (): JSX.Element => {
     const displayInvit = async () => {
       try {
         const response = await FriendServices.getFriendRequests();
-        console.log("Friends Requests\n", response.data);
         if (response.message) {
           setRequests(response.data);
         } else if (response.error) {
-          console.log(response.error);
+          console.log("can not bring invitations");
         }
       } catch (error) {
         toast({

@@ -97,7 +97,6 @@ const ProfileInformations = () => {
       updateState("display_name", display_name);
       const userData = await userService.getUserProfile();
       setUser(userData);
-      console.log("Settings updated successfully:", response);
     } catch (error: any) {
       if (
         error.response?.data?.display_name?.length > 0 ||

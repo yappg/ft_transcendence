@@ -35,7 +35,6 @@ const Login2faContent = () => {
         storedusename,
       )) as any;
 
-      console.log(response.data);
       if (response.data.message) {
         toast({
           title: "success",

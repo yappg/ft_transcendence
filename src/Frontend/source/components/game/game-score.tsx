@@ -58,13 +58,10 @@ const ScoreTable = ({ mode }: { mode: string }) => {
   const game = useGame();
   const [p1, setP1] = useState<Player | null>(null);
   const [p2, setP2] = useState<Player | null>(null);
-  // const p1 = game.player1;
-  // const p2 = game.player2;
 
   useEffect(() => {
     setP1(game.player1);
     setP2(game.player2);
-    console.log("players:", game.player1, game.player2);
   }, [game.player1, game.player2]);
 
   useEffect(() => {
@@ -87,22 +84,16 @@ const ScoreTable = ({ mode }: { mode: string }) => {
       game.GameScore = [0, 0];
     }
     if (game.GameState === "over") {
-      console.log("game over scoretable");
       if (game.totalScore[0] > game.totalScore[1]) {
         game.setGameWinner(game.player1);
-        // game.GameWinner = game.player1;
       } else {
-        console.log("player2:", game.player2);
         game.setGameWinner(game.player2);
-        // game.GameWinner = game.player2;
       }
-      console.log("game over scoretable 2");
     }
   }, [game.GameScore]);
 
   useEffect(() => {
     if (mode === "tournament" && game.GameState === "over" && game.GameWinner) {
-      console.log("game winner:", game.GameWinner, game.tournamentMatch);
       if (game.tournamentMatch === 0) {
         game.TournementTree.right.data.player = game.GameWinner;
         game.setGameWinner(null);

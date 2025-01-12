@@ -19,7 +19,7 @@ export const AddButton = ({
       setClicked(true);
       setThisState("sent_invite");
     } catch (error: any) {
-      console.log("error", error);
+      console.log("error: can not add friend");
     }
   }
 

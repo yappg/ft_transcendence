@@ -48,7 +48,6 @@ export const Messages: React.FC<MessagesProps> = ({
     if (isBlocked === true) {
       try {
         if (currentChat?.receiver.username !== "pingpong_user") {
-          console.log("UnBlocking user:", currentChat?.receiver.username);
           await FriendServices.unblockFriend(currentChat?.receiver.username);
           setChatBar(true);
         }

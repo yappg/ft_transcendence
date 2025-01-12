@@ -163,7 +163,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const ws = await onlineService.createWebSocketConnection();
     } catch (err) {
-      console.log("err --< OFF LINE<--> ", err);
+      console.log("error: can not set online status");
     }
   };
 
@@ -174,7 +174,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       const userData = await userService.getUserProfile();
       setUser(userData);
       setUserId(userData.id);
-      console.log("userData --< <-->  display_name", userData.display_name);
     } catch (err) {
       setError(
         err instanceof Error ? err : new Error("Failed to fetch current user"),
@@ -189,20 +188,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const fetchChats = async () => {
     try {
       const fetchedChats = await chatService.getChatList();
-      console.log("this is the fetched chat: ", fetchedChats);
       setChats(fetchedChats);
     } catch (error) {
-      console.log("Failed to fetch chats or user details", error);
+      console.log("error: can not fetch chats");
     }
   };
-
-  // useEffect(() => {
-  //   fetchCurrentUserDetails();
-  //   setOnlineStatus();
-  //   return () => {
-  //     onlineService.closeConnection();
-  //   };
-  // }, [user?.username]);
 
   return (
     <UserContext.Provider
