@@ -27,7 +27,6 @@ export default function ProfileInfo() {
   const handlePrivacy = async () => {
     const newPrivacyState = !privacy;
     setPrivacy(newPrivacyState);
-    console.log("newPrivacyState: ", newPrivacyState);
     await SettingsServices.updatePrivacy(newPrivacyState);
   };
   return (

@@ -23,7 +23,6 @@ const UserSummary = ({
 }): JSX.Element => {
   if (!user) return <Skeleton className="size-full rounded-md bg-black-crd" />;
   const { total_games, achievements } = user;
-  console.log("is_private: ", is_private);
   if (is_private) {
     return (
       <div className="flex size-full items-center justify-center text-black-crd dark:text-white-crd">

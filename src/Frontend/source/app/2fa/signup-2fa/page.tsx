@@ -37,8 +37,7 @@ const Signup2fa = () => {
           "verifiy-otp",
           value,
           "user?.username || null",
-        ); // need to edit this after talking to kadigh
-        console.log(response);
+        );
         if (response.data.message) {
           toast({
             title: "success",

@@ -44,7 +44,7 @@ const FriendRequestCard = ({
       if (response.message) {
         console.log(response.message);
       } else if (response.error) {
-        console.log("accpet ?", response.error);
+        console.log("can not accept request");
       }
     } catch (error) {
       toast({

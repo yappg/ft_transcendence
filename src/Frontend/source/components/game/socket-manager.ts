@@ -15,23 +15,16 @@ class SocketManager extends WebSocket {
     super(newUrl);
     this.game_id = game_id;
 
-    this.onopen = () => {
-      console.log("WebSocket connection established");
-    };
+    this.onopen = () => {};
 
     this.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log("Received message:", message);
       this.handleSocketMessage(message);
     };
 
-    this.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+    this.onclose = () => {};
 
-    this.onerror = (error) => {
-      console.log("WebSocket error:", error);
-    };
+    this.onerror = (error) => {};
   }
 
   setPixiManager(manager: OnlineGameManager) {

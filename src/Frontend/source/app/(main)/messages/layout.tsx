@@ -41,7 +41,6 @@ export default function ChatLayout({
   const fetchChats = async () => {
     try {
       const fetchedChats = await chatService.getChatList();
-      console.log("this is the fetched chat: ", fetchedChats);
       setChats(fetchedChats);
     } catch (error) {
       console.log("Failed to fetch chats or user details", error);
@@ -55,7 +54,6 @@ export default function ChatLayout({
   useEffect(() => {
     if (messages && messages.length > 0) {
       setShowChat(true);
-      console.log("called", user?.id);
     }
   }, [messages]);
 
