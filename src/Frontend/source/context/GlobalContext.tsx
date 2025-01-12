@@ -11,6 +11,8 @@ import { Chat, Message } from "@/constants/chat";
 import { userService } from "@/services/userService";
 import { Achievement } from "@/constants/achivemement";
 import { onlineService } from "@/services/onlineService";
+import { chatService } from "@/services/chatService";
+import { Friend } from "@/components/friends/UserFriendsNav";
 
 export interface User {
   id: number;
@@ -91,6 +93,7 @@ interface UserContextType {
   PlayerLeaderBoard: LeaderBoard[] | null;
   PlayerMatches: History[] | null;
   achievements: Achievement[] | null;
+  Friends: Friend[] | null;
   fetchCurrentUserDetails: () => Promise<void>;
   setChats: React.Dispatch<React.SetStateAction<Chat[] | null>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[] | null>>;
@@ -103,8 +106,10 @@ interface UserContextType {
     React.SetStateAction<LeaderBoard[] | null>
   >;
   setAchievements: React.Dispatch<React.SetStateAction<Achievement[]>>;
+  setFriends: React.Dispatch<React.SetStateAction<Friend[] | null>>;
   setOnlineStatus: () => Promise<void>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  fetchChats: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -118,9 +123,12 @@ const UserContext = createContext<UserContextType>({
   PlayerLeaderBoard: [],
   PlayerMatches: [],
   achievements: [],
+  Friends: [],
   setMessages: () => {},
+  setFriends: () => {},
   setChats: () => {},
   setLastMessages: () => {},
+  fetchChats: async () => {},
   fetchCurrentUserDetails: async () => {},
   setPlayerMatches: () => {},
   setIsLoading: () => {},
@@ -144,6 +152,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   >(null);
   const [PlayerMatches, setPlayerMatches] = useState<History[] | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
+  const [Friends, setFriends] = useState<Friend[] | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [lastMessages, setLastMessages] = useState<{
     [key: number]: string;
@@ -177,6 +186,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const fetchChats = async () => {
+    try {
+      const fetchedChats = await chatService.getChatList();
+      console.log("this is the fetched chat: ", fetchedChats);
+      setChats(fetchedChats);
+    } catch (error) {
+      console.log("Failed to fetch chats or user details", error);
+    }
+  };
+
   // useEffect(() => {
   //   fetchCurrentUserDetails();
   //   setOnlineStatus();
@@ -198,6 +217,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         PlayerMatches,
         PlayerLeaderBoard,
         achievements,
+        Friends,
         setOnlineStatus,
         setIsLoading,
         setChats,
@@ -205,8 +225,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         setLastMessages,
         setPlayerMatches,
         setAchievements,
+        setFriends,
         setPlayerLeaderBoard,
         fetchCurrentUserDetails,
+        fetchChats,
         setUser,
       }}
     >

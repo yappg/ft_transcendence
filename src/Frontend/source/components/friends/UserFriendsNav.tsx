@@ -27,8 +27,7 @@ export interface PendingInvitation {
 }
 
 const UserFriendsNav = (): JSX.Element => {
-  const { user } = useUser();
-  const [Friends, setFriends] = useState<Friend[] | null>(null);
+  const { user, Friends, setFriends } = useUser();
   const [Requests, setRequests] = useState<PendingInvitation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);

@@ -1,14 +1,11 @@
 "use client";
 import {
-  useState,
   createContext,
   useEffect,
   useRef,
-  useCallback,
-  ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { toast, useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 interface GameInviteContextProps {
   handleWebSocketMessage: (event: MessageEvent) => void;
@@ -39,6 +36,7 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       toast({
         title: "Game Invite",
         description: `${data.sender_username} invited you to play a game`,
+        className: "bg-primary border-none text-white",
         action: (
           <div className="flex gap-2">
             <button onClick={() => handleInviteResponse(data.invite_id!, true)}>
@@ -51,40 +49,36 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
             </button>
           </div>
         ),
+        duration: 5000,
       });
-      //   document.body.appendChild(inviteDiv);
-      //   setTimeout(() => inviteDiv.remove(), 5000);
     } else if (data.type === "game_found") {
-      // need to change this to toast adding action 
       toast({
         title: "go game",
-        description: `${data.sender_username} declined your invite`,
-        className: "bg-primary-dark border-none text-white",
+        description: `${data.opponent_id} accepted your invite`,
+        className: "bg-primary border-none text-white",
         action: (
           <div className="flex gap-2">
             <button onClick={() => {router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`)}}>
               goo game
             </button>
           </div>
-        )
+        ),
+        duration: 10000,
       });
-
-      // window.location.href = `/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`;
-    } else if (data.type === "invite_rejected") {
+    } else if (data.type === "game_reject" && data.action === "rejected") {
       toast({
         title: "Game Invite Rejected",
-        description: `${data.sender_username} declined your invite`,
-        className: "bg-primary-dark border-none text-white",
+        description: `your Invite declined`,
+        className: "bg-primary-dark border-none text-white", 
+        duration: 5000,
       });
     }
   };
 
   // Handle invite responses
   const handleInviteResponse = (inviteId: string, accepted: boolean) => {
-    console.log("readyState --< <--> socketRef.current", socketRef.current);
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
       return;
-    console.log("handleInviteResponse --< <--> inviteId, accepted", inviteId, accepted);
 
     socketRef.current.send(
       JSON.stringify({
@@ -93,15 +87,9 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       }),
     );
 
-    toast({
-      title: accepted ? "Accepted Game Invite --< <--> data.game_id" : "Declined Game Invite",
-      description: accepted ? "Joining game --< <--> data.game_id" : "Invite declined",
-      className: "bg-primary-dark border-none text-white",
-    });
   };
 
   const sendGameInvite = (username: string) => {
-    console.log("sendGameInvite --< <--> username", username);
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
       return;
     socketRef.current.send(
@@ -113,9 +101,10 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     toast({
-      title: "Game Invite Sent --< <--> username",
-      description: `Invite sent to ${username}`,
-      className: "bg-primary-dark border-none text-white",
+      title: "Game Invite Sent",
+      description: `successfully to ${username}`,
+      className: "bg-primary border-none text-white",
+      duration: 5000,
     });
   };
 
@@ -127,7 +116,6 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     ws.onmessage = handleWebSocketMessage;
 
     ws.onclose = () => {
-      console.log("Game invite WebSocket disconnected --< <BY-_-BY--> ws");
       socketRef.current = null;
     };
     socketRef.current = ws;
