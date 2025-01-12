@@ -2,14 +2,14 @@
 /* eslint-disable tailwindcss/classnames-order */
 import Link from "next/link";
 import { RiArrowRightSLine } from "react-icons/ri";
-import { LeaderBoard, useUser } from "@/context/GlobalContext";
+import { LeaderBoard } from "@/context/GlobalContext";
 import Image from "next/image";
+
 export const HomeLeaderboard = ({
   playerLeaderBoard,
 }: {
   playerLeaderBoard: LeaderBoard[];
 }) => {
-  const { user } = useUser();
   return (
     <div className="absolute flex size-full flex-col items-start justify-start rounded-[30px] bg-black-crd py-3">
       <div className="flex h-[85%] w-full flex-col items-start justify-start overflow-hidden">

@@ -1,9 +1,5 @@
 "use client";
-import {
-  createContext,
-  useEffect,
-  useRef,
-} from "react";
+import { createContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 
@@ -26,7 +22,6 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const socketRef = useRef<WebSocket | null>(null);
   const router = useRouter();
-
 
   const handleWebSocketMessage = (event: MessageEvent) => {
     const data = JSON.parse(event.data);
@@ -58,7 +53,13 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
         className: "bg-primary border-none text-white",
         action: (
           <div className="flex gap-2">
-            <button onClick={() => {router.push(`/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`)}}>
+            <button
+              onClick={() => {
+                router.push(
+                  `/Game-Arena?mode=one-vs-one&map=earth&game_id=${data.game_id}`,
+                );
+              }}
+            >
               goo game
             </button>
           </div>
@@ -69,13 +70,12 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       toast({
         title: "Game Invite Rejected",
         description: `your Invite declined`,
-        className: "bg-primary-dark border-none text-white", 
+        className: "bg-primary-dark border-none text-white",
         duration: 5000,
       });
     }
   };
 
-  // Handle invite responses
   const handleInviteResponse = (inviteId: string, accepted: boolean) => {
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
       return;
@@ -86,7 +86,6 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
         invite_id: inviteId,
       }),
     );
-
   };
 
   const sendGameInvite = (username: string) => {

@@ -34,9 +34,7 @@ const Logout = () => {
         } else {
           throw new Error("Failed to log out");
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     fetchLogout();
   };

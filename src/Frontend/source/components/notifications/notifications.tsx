@@ -43,6 +43,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
             setNotifClicked(!notifClicked);
             setNotificationsCount(0);
             onToggle(!isOpen);
+            notificationsService.markAllNotificationsAsRead();
           }}
         />
         {notificationCount > 0 && (

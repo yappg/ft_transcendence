@@ -71,9 +71,7 @@ export const Header = () => {
       };
 
       ws.onmessage = (event) => {
-        console.log("WebSocket message received:", event.data);
         const data = JSON.parse(event.data);
-        console.log("----HERE IS THE NEW EVET", data);
 
         setNotifications((prev: any) => [data, ...prev]);
         setNotificationCount((prev: any) => prev + 1);
@@ -235,11 +233,13 @@ export const Header = () => {
               ))}
             </div>
           )}
-          {filteredPlayers.length === 0 && value.length > 0 && !isNotificationOpen && (
-            <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
-              <h1>looking for {value}...</h1>
-            </div>
-          )}
+          {filteredPlayers.length === 0 &&
+            value.length > 0 &&
+            !isNotificationOpen && (
+              <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
+                <h1>looking for {value}...</h1>
+              </div>
+            )}
         </div>
         <NotificationBell
           notifications={notifications || []}
