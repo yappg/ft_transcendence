@@ -111,9 +111,11 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     xp = serializers.SerializerMethodField()
     achievements = serializers.SerializerMethodField()
-    display_name = serializers.SerializerMethodField()
     level = serializers.SerializerMethodField()
     is_online = serializers.SerializerMethodField()
+
+    display_name = serializers.CharField(required=False)
+    bio = serializers.CharField(required=False)
 
     statistics = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
@@ -130,7 +132,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
     relation = serializers.SerializerMethodField()
 
     status = serializers.SerializerMethodField()
-    bio = serializers.SerializerMethodField()
     total_games = serializers.SerializerMethodField()
     games_won = serializers.SerializerMethodField()
     games_loss = serializers.SerializerMethodField()
@@ -388,14 +389,17 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
         return value
 
-
     def update(self, instance, validated_data):
         if 'avatar_upload' in validated_data:
-            instance.avatar = validated_data.pop('avatar_upload')
+            instance.avatar = validated_data['avatar_upload']
         if 'cover_upload' in validated_data:
-            instance.cover = validated_data.pop('cover_upload')
-
-        return super().update(instance, validated_data)
+            instance.cover = validated_data['cover_upload']
+        if 'display_name' in validated_data:
+            instance.display_name = validated_data['display_name']
+        if 'bio' in validated_data:
+            instance.bio = validated_data['bio']
+        instance.save()
+        return instance
 
 class PlayerSettingsSerializer(serializers.ModelSerializer):
 
