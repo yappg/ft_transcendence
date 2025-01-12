@@ -70,8 +70,8 @@ POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "client7",
-    "email": "client7@gmail.com",
+    "username": "client000",
+    "email": "client700@gmail.com",
     "password": "password",
     "password2": "password"
 }
@@ -105,3 +105,8 @@ Content-Type: application/json
 {
     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMjU1NjE0LCJpYXQiOjE3MzMyNTM4MTQsImp0aSI6ImMwNDExYmNlYTE4YjRiMjE5ZmJjYzBjYjQ1YWU2OWY2IiwidXNlcl9pZCI6NH0.Wb1PBtTFoB8NIwavs2vv1R4LedmjTgzZ4RXpbzyiDcI"
 }
+
+
+
+##########
+GET https://localhost/api/accounts/user-history/
