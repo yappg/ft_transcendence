@@ -10,7 +10,7 @@ import { getFields } from "./fields";
 const LoadingComponent = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <div>Loading game arena...</div>
+      <div>Loading...</div>
     </div>
   );
 };

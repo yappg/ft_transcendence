@@ -34,14 +34,8 @@ const config: Config = {
       colors: {
         "black-crd": "var(--black-color-card)",
         "white-crd": "var(--white-color-card)",
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
+        secondary: "var(--secondary-color)",
+        primary: "var(--primary-color)",
         "secondary-dark": "var(--secondary-color-dark)",
         "primary-dark": "var(--primary-color-dark)",
         aqua: "var(--aqua)",
