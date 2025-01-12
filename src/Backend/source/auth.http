@@ -70,8 +70,8 @@ POST http://localhost:8080/api/accounts/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "client7",
-    "email": "client7@gmail.com",
+    "username": "client000",
+    "email": "client700@gmail.com",
     "password": "password",
     "password2": "password"
 }

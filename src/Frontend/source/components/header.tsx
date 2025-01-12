@@ -49,6 +49,8 @@ export const Header = () => {
   const [filteredPlayers, setFilteredPlayers] = useState<Result[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [isPlayerListOpen, setIsPlayerListOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const router = useRouter();
   const handleClick = () => {
@@ -91,6 +93,31 @@ export const Header = () => {
       };
     }
   }, [user]);
+
+  useEffect(() => {
+    if (filteredPlayers.length > 0) {
+      setIsPlayerListOpen(true);
+      setIsNotificationOpen(false);
+    } else {
+      setIsPlayerListOpen(false);
+    }
+  }, [filteredPlayers]);
+
+  const handlePlayerClick = (playerId: number) => {
+    router.push(`/Profile/${playerId}`);
+    setFilteredPlayers([]);
+    setValue("");
+    setIsPlayerListOpen(false);
+  };
+
+  const handleNotificationToggle = (isOpen: boolean) => {
+    setIsNotificationOpen(isOpen);
+    if (isOpen) {
+      setFilteredPlayers([]);
+      setValue("");
+      setIsPlayerListOpen(false);
+    }
+  };
 
   if (!user)
     return (
@@ -187,17 +214,13 @@ export const Header = () => {
             onClick={handleClick}
             className={`${showSearchBar === false ? "hidden" : "flex"} text-[#B8B8B8]`}
           />
-          {filteredPlayers.length > 0 && (
+          {filteredPlayers.length > 0 && isPlayerListOpen && (
             <div className="z-90 absolute top-full mt-2 w-full overflow-hidden rounded-lg border-b-2 border-[#B8B8B8] shadow-md">
               {filteredPlayers.map((player: Result) => (
                 <div
                   key={player.id}
                   className="flex cursor-pointer items-center gap-2 border-b-2 border-[#B8B8B8] bg-[rgba(28,28,28,0.4)] py-2 hover:bg-gray-700 sm:px-4"
-                  onClick={() => {
-                    router.push(`/Profile/${player.id}`);
-                    setFilteredPlayers([]);
-                    setValue("");
-                  }}
+                  onClick={() => handlePlayerClick(player.id)}
                 >
                   <Image
                     src={process.env.NEXT_PUBLIC_HOST + player?.avatar}
@@ -212,7 +235,7 @@ export const Header = () => {
               ))}
             </div>
           )}
-          {filteredPlayers.length === 0 && value.length > 0 && (
+          {filteredPlayers.length === 0 && value.length > 0 && !isNotificationOpen && (
             <div className="z-90 absolute top-full mt-2 flex h-[70px] w-[100px] items-center justify-center rounded-lg bg-white text-sm shadow-md sm:w-full">
               <h1>looking for {value}...</h1>
             </div>
@@ -223,6 +246,8 @@ export const Header = () => {
           notificationCount={notificationCount}
           setNotificationsCount={setNotificationCount}
           setNotifications={setNotifications}
+          onToggle={handleNotificationToggle}
+          isOpen={isNotificationOpen}
         />
       </div>
     </div>

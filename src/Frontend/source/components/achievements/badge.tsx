@@ -25,10 +25,10 @@ const AchievementBadge = ({
       </div>
       <div className="ml-4 grow">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold italic text-white"> {title} </h2>
-          <span className="font-bold text-blue-400"> + {xpReward} xp</span>
+          <h2 className="text-2xl md:text-sm 2xl:text-xl font-bold italic text-white"> {title} </h2>
+          <span className="font-bold text-blue-400 text-sm md:text-[10px]"> + {xpReward} xp</span>
         </div>
-        <div className="mb-2 text-gray-300">
+        <div className="mb-2 text-gray-300 text-sm md:text-[15px]">
           {description} {points} points
         </div>
         <div className="h-3 overflow-hidden rounded-full bg-gray-700">

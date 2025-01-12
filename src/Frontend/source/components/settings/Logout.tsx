@@ -29,13 +29,16 @@ const Logout = () => {
             },
           },
         );
-        console.log(response);
+        if (response.ok) {
+          router.push("/auth/login");
+        } else {
+          throw new Error("Failed to log out");
+        }
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogout();
-    router.push("/auth/login");
   };
   return (
     <AlertDialog>
