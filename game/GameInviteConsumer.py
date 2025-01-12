@@ -125,13 +125,13 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             'action': event['action']
         })
 
-    # async def game_accept(self, event):
-    #     await self.send_json({
-    #         'type': 'game_accept',
-    #         'invite_id': event['invite_id'],
-    #         'game_id': event.get('game_id'),
-    #         'action': 'accepted'
-    #     })
+    async def game_accept(self, event):
+        await self.send_json({
+            'type': 'game_accept',
+            'invite_id': event['invite_id'],
+            'game_id': event.get('game_id'),
+            'action': 'accepted'
+        })
 
     async def game_found(self, event):
         await self.send_json({
@@ -143,11 +143,11 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             'message': event['message']
         })
 
-    # async def game_over(self, event):
-    #     await self.send_json({
-    #         'type': 'game_over',
-    #         'game_id': event['game_id']
-    #     })
+    async def game_over(self, event):
+        await self.send_json({
+            'type': 'game_over',
+            'game_id': event['game_id']
+        })
 
     async def game_reject(self, event):
         await self.send_json({
@@ -155,24 +155,25 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
             'action': 'rejected'
         })
 
-    # async def game_expire(self, event):
-    #     await self.send_json({
-    #         'type': 'game_expire',
-    #         'action': 'expired'
-    #     })
+    async def game_expire(self, event):
+        await self.send_json({
+            'type': 'game_expire',
+            'action': 'expired'
+        })
 
-    # async def game_error(self, event):
-    #     await self.send_json({
-    #         'type': 'game_error',
-    #         'message': event['message'],
-    #         'action': 'error'
-    #     })
+    async def game_error(self, event):
+        await self.send_json({
+            'type': 'game_error',
+            'message': event['message'],
+            'action': 'error'
+        })
+    # Websocket group event handlers
 
-    # async def invite_notification(self, event):
-    #     await self.send_json(event)
+    async def invite_notification(self, event):
+        await self.send_json(event)
 
-    # async def status_update(self, event):
-    #     await self.send_json(event)
+    async def status_update(self, event):
+        await self.send_json(event)
 
     @database_sync_to_async
     def get_player(self, username: str) -> Optional[Dict]:
@@ -187,6 +188,7 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def update_user_status(self, status: str):
+        """Update user's status in database"""
         try:
             profile = self.user.profile
             profile.status = status
@@ -194,20 +196,21 @@ class GameInviteConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Error updating user status: {str(e)}")
 
-    # @database_sync_to_async
-    # def get_available_players(self) -> list:
-    #     try:
-    #         players = Player.objects.select_related('profile').filter(
-    #             profile__status='available'
-    #         ).exclude(username=self.user.username)
+    @database_sync_to_async
+    def get_available_players(self) -> list:
+        """Get list of available players"""
+        try:
+            players = Player.objects.select_related('profile').filter(
+                profile__status='available'
+            ).exclude(username=self.user.username)
 
-    #         return [{
-    #             'username': player.username,
-    #             'status': player.profile.status
-    #         } for player in players]
-    #     except Exception as e:
-    #         # print(f"Error getting available players: {str(e)}")
-    #         return []
+            return [{
+                'username': player.username,
+                'status': player.profile.status
+            } for player in players]
+        except Exception as e:
+            # print(f"Error getting available players: {str(e)}")
+            return []
 
     async def send_error(self, message: str):
         try:

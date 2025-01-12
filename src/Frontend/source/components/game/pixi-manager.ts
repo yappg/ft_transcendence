@@ -66,7 +66,7 @@ export abstract class PixiManager {
     this.paddleheight = this.screenHeight / 40;
     this.ballRatio = this.screenWidth / 35;
     background.alpha = 0.2;
-    // this.game.setPixiappready(true);
+    this.game.setPixiappready(true);
     this.game.pixiappready = true;
     this.app.stage.addChild(background);
 
