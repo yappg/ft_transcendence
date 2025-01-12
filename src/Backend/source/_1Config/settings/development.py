@@ -2,14 +2,14 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
-# ===========================    
+# ===========================
 # PATHS & ENVIRONMENT VARIABLES
 # ===========================
 
 # Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ===========================  
+# ===========================
 # SECURITY SETTINGS
 # ===========================
 
