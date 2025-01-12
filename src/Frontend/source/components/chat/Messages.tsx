@@ -45,12 +45,14 @@ export const Messages: React.FC<MessagesProps> = ({
   
   const { sendGameInvite } = useContext(GameInviteContext);
   const handleBlockUser = async () => {
-    if (isBlocked === true) {
-      console.log("Unblocking user:", currentChat?.receiver.username);
+    if (isBlocked === true ) {
       try {
+        if (currentChat?.receiver.username !== 'pingpong_user') {
+        console.log("UnBlocking user:", currentChat?.receiver.username);
         await FriendServices.unblockFriend(currentChat?.receiver.username);
-        setIsBlocked(false);
         setChatBar(true);
+      }
+      setIsBlocked(false);
       } catch (error) {
         toast({
           title: "User is already unblocked",
@@ -62,6 +64,7 @@ export const Messages: React.FC<MessagesProps> = ({
     } else {
       console.log("Blocking user:", currentChat?.receiver.username);
       try {
+        console.log("Blocking user:", currentChat?.receiver.username);
         await FriendServices.blockFriend(currentChat?.receiver.username);
         setIsBlocked(true);
         setChatBar(false);
@@ -164,16 +167,21 @@ export const Messages: React.FC<MessagesProps> = ({
   };
 
   return (
-    <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
-      <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] px-4 font-dayson text-white">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <FiMoreVertical
-              className="size-8 text-white"
-              onClick={() => setShowMoreOptions(!showMoreOptions)}
-            />
+    <div className="costum-little-shadow flex size-full flex-col items-center justify-center overflow-visible rounded-2xl bg-black-crd bg-[url('/chat-bg.png')] pb-4">
+      <div className="costum-little-shadow flex h-[120px] w-full items-center justify-between bg-[rgb(0,0,0,0.7)] sm:px-4 px-0 font-dayson text-white border-2">
+        <div className="flex items-center justify-between gap-4 border-2 w-[300px] relative">
+          <div className="size-fit z-10 relative">
+            <button
+              className="size-8 text-white border-2 z-10 relative"
+              onClick={() => {
+                setShowMoreOptions(!showMoreOptions);
+                console.log('cliecke');
+              }}
+            >
+              <FiMoreVertical />
+            </button>
             {showMoreOptions && (
-              <div className="absolute left-0 top-16 z-50 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
+              <div className="absolute left-0 top-16 z-100 min-w-[200px] rounded-lg bg-[#252525] py-2 shadow-lg">
                 <button
                   onClick={handleGameInvite}
                   className="flex w-full items-center gap-3 px-4 py-2 text-left text-white hover:bg-[#303030]"
@@ -246,7 +254,7 @@ export const Messages: React.FC<MessagesProps> = ({
         className="flex h-[60px] w-11/12 items-center gap-4 rounded-md bg-[rgb(0,0,0,0.7)] px-4 py-1"
       >
         <div className="flex size-full items-center gap-3 px-4">
-          <FiPlus className="dark size-[30px] text-white" />
+          <FiPlus className={`dark size-[30px] text-white ${chatBar ? "block" : "hidden"}`} />
           {chatBar ? (
             <input
               value={newMessage}
@@ -254,18 +262,19 @@ export const Messages: React.FC<MessagesProps> = ({
               placeholder="Start a new conversation"
               className="size-full bg-transparent text-white focus:outline-none"
             />
+
           ) : (
             <h1 className="size-full flex justify-center items-center bg-transparent text-white focus:outline-none">
               You can&apos;t send messages to this user
             </h1>
           )}
-        </div>
         <button
           type="submit"
-          className="flex size-[40px] items-center justify-center rounded-md bg-primary dark:bg-primary-dark"
+          className={`flex size-[40px] items-center justify-center rounded-md bg-primary dark:bg-primary-dark ${chatBar ? "block" : "hidden"}`}
         >
           <IoSend className="size-[20px] text-white" />
         </button>
+        </div>
       </form>
     </div>
   );
