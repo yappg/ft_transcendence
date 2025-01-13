@@ -16,7 +16,7 @@ export const UnBlockButton = ({
       setClicked(true);
       setThisState("none");
     } catch {
-      console.log("error");
+      console.log("error unblocking friend");
     }
   }
   return (

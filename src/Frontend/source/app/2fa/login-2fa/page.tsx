@@ -33,7 +33,8 @@ const Login2fa = () => {
         toast({
           title: "success",
           description: response.data.message,
-          className: "bg-primary border-none text-white bg-opacity-20",
+          className: "bg-primary border-none text-white",
+          duration: 5000,
         });
         router.push("/home");
         return;
@@ -41,14 +42,17 @@ const Login2fa = () => {
         toast({
           title: "invalid code",
           description: response.data.error,
-          className: "bg-primary-dark border-none text-white bg-opacity-20",
+          className: "bg-primary-dark border-none text-white",
+          duration: 5000,
         });
       }
     } catch {
       toast({
-        title: "error",
-        description: "Something went wrong",
-        className: "bg-primary-dark border-none text-white bg-opacity-20",
+        title: "Something went wrong",
+        description: "Oops something went wrong! Try fetching later",
+        variant: "destructive",
+        className: "bg-primary-dark border-none text-white",
+        duration: 5000,
       });
     }
   };

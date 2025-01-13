@@ -48,7 +48,6 @@ export const sendOtp = async (
   name: string | null,
 ) => {
   try {
-    console.log("name", name, "value", value);
     const response = await axios.post(`/accounts/2fa/${endpoint}/`, {
       username: name,
       otp_token: value,

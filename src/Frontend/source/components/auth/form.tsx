@@ -1,5 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-"use client"
+"use client";
 import React from "react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -135,7 +135,6 @@ export const Form: React.FC<FormProps> = ({
       const response = await (isSignup
         ? AuthClient.signup(formData)
         : AuthClient.signin(formData));
-      console.log("response: ", response);
 
       if (response.message) {
         localStorage.setItem("username", formData.username);
@@ -145,15 +144,13 @@ export const Form: React.FC<FormProps> = ({
             ? "Account created successfully"
             : "Logged in successfully",
           className: "bg-primary border-none text-white bg-opacity-20",
+          duration: 5000,
         });
-        console.log("formData: ", formData);
-        console.log("response: ", response);
-        console.log("isSignup: ", isSignup);
-        if (response.enabled_2fa === true) {
+        if (response.enabled_2fa === "True") {
           router.push("/2fa/login-2fa");
           return;
         }
-        router.push("/home");
+        return router.push("/home");
       }
       if (response.error)
         toast({

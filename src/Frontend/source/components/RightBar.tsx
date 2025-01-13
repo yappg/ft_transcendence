@@ -28,11 +28,10 @@ export const RightBar = ({
 
   const fetchFriends = async () => {
     try {
-      console.log("fetching friends or No?");
       const friendsData = await FriendServices.getFriends();
       setFriends(friendsData.data);
     } catch (error: any) {
-      console.log("Error fetching friends:", error);
+      console.log("Error fetching friends");
     }
   };
 

@@ -64,11 +64,8 @@ export const Header = () => {
       const ws = new WebSocket(
         `${process.env.NEXT_PUBLIC_WS_URL}/notifications/?user_id=${user.id}`,
       );
-      console.log("WebSocket connection established");
 
-      ws.onopen = () => {
-        console.log("WebSocket connection opened");
-      };
+      ws.onopen = () => {};
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -77,17 +74,12 @@ export const Header = () => {
         setNotificationCount((prev: any) => prev + 1);
       };
 
-      ws.onerror = (error) => {
-        console.log("WebSocket error:", error);
-      };
+      ws.onerror = (error) => {};
 
-      ws.onclose = (event) => {
-        console.log("WebSocket connection closed:", event);
-      };
+      ws.onclose = (event) => {};
 
       return () => {
         ws.close();
-        console.log("WebSocket connection closed by component unmount");
       };
     }
   }, [user]);

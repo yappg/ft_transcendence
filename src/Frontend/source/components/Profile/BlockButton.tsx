@@ -16,7 +16,7 @@ export const BlockButton = ({
       setClicked(true);
       setThisState("blocked");
     } catch {
-      console.log("error");
+      console.log("error blocking friend");
     }
   }
   return (

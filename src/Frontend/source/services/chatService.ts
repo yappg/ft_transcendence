@@ -22,16 +22,13 @@ class ChatService {
     setChats: (chats: Chat[]) => void,
   ): Promise<WebSocket> {
     if (this.sockets.has(chatId)) {
-      console.log("WebSocket connection already exists for chatId:", chatId);
       return this.sockets.get(chatId)!;
     }
 
     const socketUrl = `${process.env.NEXT_PUBLIC_WS_URL}/chat/${chatId}/`;
     const socket = new WebSocket(socketUrl);
 
-    socket.onopen = () => {
-      console.log("WebSocket connection established for chatId:", chatId);
-    };
+    socket.onopen = () => {};
 
     socket.onmessage = async (event) => {
       try {
@@ -42,17 +39,12 @@ class ChatService {
         } else {
           onMessage(data);
         }
-      } catch (error) {
-        console.log("Error parsing WebSocket message:", error);
-      }
+      } catch (error) {}
     };
 
-    socket.onerror = (error) => {
-      console.log("WebSocket error:", error);
-    };
+    socket.onerror = (error) => {};
 
     socket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
       this.sockets.delete(chatId);
     };
 
@@ -68,7 +60,6 @@ class ChatService {
     userId: number,
     receiverId: number,
   ): Promise<void> {
-    console.log("chatService.sendMessage called");
     const socket = this.sockets.get(chatId);
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       throw new Error("WebSocket connection is not open");
@@ -84,7 +75,6 @@ class ChatService {
         }),
       );
     } catch (error) {
-      console.log("Error sending message:", error);
       throw new Error("Failed to send message");
     }
   }

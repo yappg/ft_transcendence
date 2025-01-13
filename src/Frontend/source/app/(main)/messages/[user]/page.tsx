@@ -41,7 +41,7 @@ export default function Page() {
         setMessages([]);
       }
     } catch (error) {
-      console.log("Failed to fetch messages", error);
+      console.log("Failed to fetch messages");
       setMessages([]);
     }
   };

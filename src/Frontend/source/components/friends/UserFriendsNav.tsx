@@ -47,7 +47,6 @@ const UserFriendsNav = (): JSX.Element => {
     const displayInvit = async () => {
       try {
         const response = await FriendServices.getFriendRequests();
-        console.log("Friends Requests\n", response.data);
         if (response.message) {
           setRequests(response.data);
         } else if (response.error) {
@@ -72,7 +71,6 @@ const UserFriendsNav = (): JSX.Element => {
     const displayFriends = async () => {
       try {
         const response = await FriendServices.getFriends();
-        console.log("Friends:", response.data);
         if (response.message) {
           setFriends(response.data);
         } else if (response.error) {
