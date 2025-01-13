@@ -25,7 +25,6 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleWebSocketMessage = (event: MessageEvent) => {
     const data = JSON.parse(event.data);
-    console.log("Game invite message received:", data);
 
     if (data.type === "game_invite" && data.action === "receive") {
       toast({

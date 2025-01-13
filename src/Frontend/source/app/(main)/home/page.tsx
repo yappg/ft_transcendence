@@ -142,7 +142,7 @@ const Home = () => {
       const response = await userService.getPlayerLeaderBoard();
       setPlayerLeaderBoard(response);
     } catch (error) {
-      console.log("Error fetching leaderboard:", error);
+      console.log("Error fetching leaderboard:");
     } finally {
       setIsLoading(false);
     }
@@ -154,7 +154,7 @@ const Home = () => {
       const response = await userService.getPlayerMatches();
       setPlayerMatches(response);
     } catch (error) {
-      console.log("Error fetching player matches:", error);
+      console.log("Error fetching player matches:");
     } finally {
       setIsLoading(false);
     }

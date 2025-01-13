@@ -11,11 +11,6 @@ const App = () => {
 
   const [tournamentStarted, setTournamentStarted] = useState(false);
 
-
-  useEffect(() => {
-    console.log("Updated TournementTree:", game.TournementTree);
-  }, [game.TournementTree]);
-
   const handleStartTournament = (players: Player[]) => {
     const myTree = createTree(players);
     game.setTournementTree(myTree);
@@ -23,7 +18,6 @@ const App = () => {
   };
 
   const createTree = (players: Player[]): any => {
-    console.log("players:", players);
     if (players.length === 1) {
       return { data: { player: players[0] } };
     }

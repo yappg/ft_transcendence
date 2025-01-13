@@ -38,7 +38,6 @@ export function useChatWebSocket({
           ...prevLastMessages,
           [chatId]: message.content,
         };
-        console.log("this is the newObject: ", newObject);
         return newObject;
       });
     },
@@ -55,9 +54,7 @@ export function useChatWebSocket({
           handleWebSocketMessage,
           setChats,
         );
-      } catch (error) {
-        console.log("WebSocket connection failed", error);
-      }
+      } catch (error) {}
     };
 
     setupWebSocket();

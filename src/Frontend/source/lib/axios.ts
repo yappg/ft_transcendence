@@ -22,29 +22,34 @@ axiosInstance.interceptors.response.use(
             "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
           window.location.href = "/auth/login";
           break;
-      }
-      switch (error.response.status) {
         case 403:
           toast({
             title: "access denied",
             description: "Oups Somthing went wrong !",
             variant: "destructive",
             className: "bg-primary-dark border-none text-white",
+            duration: 5000,
           });
           break;
-      }
-      switch (error.response.status) {
         case 404:
           toast({
             title: "access denied",
             description: "Oups Somthing went wrong !",
             variant: "destructive",
             className: "bg-primary-dark border-none text-white",
+            duration: 5000,
           });
           break;
+        default:
+          toast({
+            title: "Something went wrong",
+            description: "Oops something went wrong! Try fetching later",
+            variant: "destructive",
+            className: "bg-primary-dark border-none text-white",
+            duration: 5000,
+          });
       }
     }
-
     return Promise.reject(error);
   },
 );
