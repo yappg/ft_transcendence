@@ -31,7 +31,7 @@ export const RightBar = ({
       const friendsData = await FriendServices.getFriends();
       setFriends(friendsData.data);
     } catch (error: any) {
-      console.log("Error fetching friends:", error);
+      console.log("Error fetching friends");
     }
   };
 

@@ -50,7 +50,6 @@ const GameTable = ({
 
     return () => {
       if (mode === "one-vs-one") {
-        console.log("closing socket GAAAAAAAME OVER");
         const om = gameManagerRef.current as OnlineGameManager;
         om?.socketManager.close();
       }

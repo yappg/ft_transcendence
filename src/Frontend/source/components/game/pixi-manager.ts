@@ -209,7 +209,7 @@ export class LocalGameManager extends PixiManager {
   async handlegameupdates() {
     if (!this.ball || !this.app) return;
 
-    const baseSpeed = 0.5;
+    const baseSpeed = 0.7;
     const baseScreenDiagonal = Math.sqrt(75 ** 2 + 100 ** 2);
     const currentScreenDiagonal = Math.sqrt(
       this.screenWidth ** 2 + this.screenHeight ** 2,
@@ -294,11 +294,11 @@ export class LocalGameManager extends PixiManager {
           this.game.GameState = "over";
           const sleepmoment = new Promise((resolve) =>
             setTimeout(resolve, 6000),
-          );
-          await sleepmoment;
-          this.game.resetGame();
-          this.game.setInGame(false);
-          this.game.setTournamentMatch(this.game.tournamentMatch + 1);
+        );
+        await sleepmoment;
+        this.game.resetGame();
+        this.game.setInGame(false);
+        this.game.setTournamentMatch(this.game.tournamentMatch + 1);
         }
       }
       this.ball.x = this.screenWidth / 2;
@@ -382,7 +382,7 @@ export class LocalGameManager extends PixiManager {
   }
 }
 
-// Online Game Managerƒ
+// Online Game Manager
 
 export class OnlineGameManager extends PixiManager {
   socketManager: SocketManager;

@@ -18,7 +18,6 @@ RESET = '\033[0m'
 
 class MatchMakingSystem:
     def __init__(self):
-        print(f'{RED_BOLD}MatchMakingSystem Initialized{RESET}')
         self.players_queue: Dict[int, GamePlayer] = {}
         self.players_in_game: Set[int] = set()
         self.games: Dict[int, PingPongGame] = {}
@@ -44,17 +43,8 @@ class MatchMakingSystem:
                 return randID
 
     async def matchmaking_loop(self):
-        i = 0
         while self._running:
             try:
-                if i % 10 == 0:
-                    print('Matchmaking Loop')
-                    print(f'Players in Queue: {len(self.players_queue)}')
-                    print(f'Players in Game: {len(self.players_in_game)}')
-                    print(f'Players in Game: {self.players_in_game}')  
-                    print(f'Players indices in Queue: {self.players_queue.keys()}')
-                    print(f'Games in Progress: {len(self.games)}')
-
                 if len(self.players_queue) >= 2:
                     player_items = list(self.players_queue.items())[:2]
                     player1_id, player1 = player_items[0]
@@ -76,16 +66,14 @@ class MatchMakingSystem:
                         await self.channel_layer.group_add(f'game_{new_game.game_id}', player2.channel_name)
                         await self.notify_players(player1, player2, new_game.game_id)
                     except Exception as e:
-                        print(f'Error creating game: {str(e)}')
-                i += 1
+                        for pid in [player1_id, player2_id]:
+                            await self.remove_player_from_queue(pid)
+                        if new_game.game_id in self.games:
+                            del self.games[new_game.game_id]
                 await asyncio.sleep(1)
             except Exception as e:
                 print(f'{RED_BOLD}Error in matchmaking loop: {str(e)}{RESET}')
                 await asyncio.sleep(1)
-
-    # --------------------------->>>>>>>>game invite<<<<<<<<<<<<<---------------------------
-
-    
 
     # --------------------------->>>>>>>>UTILS<<<<<<<<<<<<<---------------------------
     @database_sync_to_async
@@ -98,9 +86,8 @@ class MatchMakingSystem:
             player1_model.profile.save(update_fields=['status'])
             player2_model.profile.save(update_fields=['status'])
         except Exception as e:
-            #TODO handle the exception
             print(f'Error Match_making; updating players state: {str(e)}')
-            pass 
+            raise e
 
 # --------------------------->>>>>>>>CHANNEL METHODS<<<<<<<<<<<<<---------------------------
 
@@ -110,8 +97,6 @@ class MatchMakingSystem:
         return player.profile.avatar.url
     
     async def notify_players(self, player1, player2, game_id):
-        # print(f'Notifying players: {player1.username} and {player2.username}')
-        # print(f'Notifying players: {player1.channel_name} and {player2.channel_name}')
         try:
             print(f'{BLUE_BOLD}Notifying players: {player1.username} and {player2.username}{RESET}')
             
@@ -138,17 +123,14 @@ class MatchMakingSystem:
                     'message': "Game found, Get Ready to play!!"
                 })
         except Exception as e:
-            print(f'{RED_BOLD}Error in notify_players: {str(e)}{RESET}')
+            raise e
 
     async def add_player_to_queue(self, player_id, username, channel_name):
         if player_id in self.players_queue:
             print(f'Player {player_id} already in Queue')
             return
-        print(f'Adding player to queue: {player_id}')
         self.players_queue[player_id] = GamePlayer(player_id, username, channel_name)
 
     async def remove_player_from_queue(self, player_id):
         if player_id in self.players_queue:
             del self.players_queue[player_id]
-    
-

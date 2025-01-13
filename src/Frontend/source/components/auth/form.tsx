@@ -147,10 +147,9 @@ export const Form: React.FC<FormProps> = ({
           duration: 8000,
         });
         if (response.enabled_2fa === "True") {
-          router.push("/2fa/login-2fa");
-          return;
+          return router.push("/2fa/login-2fa");
         }
-        router.push("/home");
+        return router.push("/home");
       }
       if (response.error)
         toast({

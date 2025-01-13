@@ -33,7 +33,8 @@ const Login2fa = () => {
         toast({
           title: "success",
           description: response.data.message,
-          className: "bg-primary border-none text-white bg-opacity-20",
+          className: "bg-primary border-none text-white",
+          duration: 5000,
         });
         router.push("/home");
         return;
