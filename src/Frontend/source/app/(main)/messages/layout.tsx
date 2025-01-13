@@ -43,7 +43,7 @@ export default function ChatLayout({
       const fetchedChats = await chatService.getChatList();
       setChats(fetchedChats);
     } catch (error) {
-      console.log("Failed to fetch chats or user details", error);
+      console.log("Failed to fetch chats or user details");
     }
   };
 
@@ -71,7 +71,6 @@ export default function ChatLayout({
     }
   }, [chats]);
 
-  // subject: The user should be able to access other players profiles through the chat interface.
   if (!user)
     return (
       <div className="flex size-full items-center justify-center gap-3">

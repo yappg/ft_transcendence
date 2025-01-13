@@ -165,23 +165,6 @@ const ProfileInformations = () => {
             )}
           </div>
         </div>
-
-        <div className="flex size-full flex-row items-end justify-between">
-          {/* <div className="flex w-fit flex-row items-center justify-between gap-[100px]">
-            <div className="flex w-fit flex-col gap-4">
-              <label className="text-sm text-white">Display name</label>
-              <input
-                type="text"
-                value={display_name || ""}
-                onChange={handleNamechange}
-                className="w-[150px] rounded-md bg-white px-4 py-2 text-black outline-none sm:w-[200px]"
-              />
-              {profileError && (
-                <p className="text-sm text-red-500">{profileError}</p>
-              )}
-            </div>
-          </div> */}
-        </div>
         <div className="flex w-full items-center justify-end">
           <button
             className={`${isClicked ? "bg-green-500" : "bg-white hover:bg-[#28AFB0]"} h-[50px] w-[150px] rounded-md font-dayson text-sm font-bold text-black transition-all duration-200 hover:bg-opacity-[90%] sm:w-[200px] sm:px-6 sm:py-3 sm:text-lg`}

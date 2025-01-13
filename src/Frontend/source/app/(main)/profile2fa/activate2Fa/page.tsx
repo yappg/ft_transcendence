@@ -101,10 +101,11 @@ const Signup2fa = () => {
       }
     } catch (error) {
       toast({
-        title: "Error",
+        title: "Something went wrong",
         description: "Failed to verify OTP",
         variant: "destructive",
         duration: 8000,
+        className: "bg-primary-dark border-none text-white",
       });
     }
   };

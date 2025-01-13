@@ -71,6 +71,7 @@ class PingPongGame:
         self.player2.paddle = Paddle(Vector2D(37.5, 96.5))  # Upper paddle
 
         self.winner = None
+        self.winner_username = None
         self.map = 'water' # 'air','water','fire','earth'
         self.round = 0
         self.round_win = 7
@@ -130,16 +131,15 @@ class PingPongGame:
             if self.round == 3:
                 if sum(self.player1.score) > sum(self.player2.score):
                     self.winner = 'player1'
+                    self.winner_username = self.player1.username
                     self.map = self.player1.map
                 elif sum(self.player1.score) < sum(self.player2.score):
                     self.winner = 'player2'
+                    self.winner_username = self.player2.username
                     self.map = self.player2.map
                 else :
                     self.winner = 'draw'
                     self.map = 'air' #default map
-                # self.status = 'over'
-                print(f'\n{RED}[Round {self.winner}]{RESET}\n')
-                print(f'\n{RED}[Map {self.map}]{RESET}\n')
                 return True
             return True
         return False

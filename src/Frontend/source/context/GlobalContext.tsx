@@ -163,7 +163,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const ws = await onlineService.createWebSocketConnection();
     } catch (err) {
-      console.log("error: can not set online status");
+      console.log("error: cannot set online status");
     }
   };
 
@@ -190,7 +190,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
       const fetchedChats = await chatService.getChatList();
       setChats(fetchedChats);
     } catch (error) {
-      console.log("error: can not fetch chats");
+      console.log("error: cannot fetch chats");
     }
   };
 

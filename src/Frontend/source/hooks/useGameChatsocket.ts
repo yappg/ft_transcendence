@@ -25,7 +25,6 @@ export function useGameChatWebSocket({
   // Handle all WebSocket message events
   const handleWebSocketMessage = useCallback((event: MessageEvent) => {
     const data = JSON.parse(event.data);
-    console.log("Game invite message received:", data);
 
     if (data.type === "game_invite" && data.action === "receive") {
       const inviteDiv = document.createElement("div");
@@ -79,13 +78,9 @@ export function useGameChatWebSocket({
     if (socketRef.current) return;
 
     socketRef.current = new WebSocket("ws://localhost:8080/ws/game_invite/");
-    console.log("Game invite WebSocket connected");
 
     socketRef.current.onopen = () => {
-      console.log("Game invite WebSocket connected");
-
       if (onclicked) {
-        console.log("onclicked", onclicked);
         socketRef.current?.send(
           JSON.stringify({
             type: "game_invite",
@@ -107,7 +102,6 @@ export function useGameChatWebSocket({
     socketRef.current.onmessage = handleWebSocketMessage;
 
     socketRef.current.onclose = () => {
-      console.log("Game invite WebSocket disconnected");
       socketRef.current = null;
     };
 

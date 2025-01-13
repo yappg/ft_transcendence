@@ -10,8 +10,7 @@ export function middleware(req: NextRequest) {
     (!token || token.value === '') &&
     pathname !== '/auth/login' &&
     pathname !== '/auth/signup' &&
-    pathname !== '/2fa/login-2fa' &&
-    pathname !== '/2fa/signup-2fa'
+    pathname !== '/2fa/login-2fa'
   ) {
     return NextResponse.redirect(new URL('/auth/login', req.nextUrl.origin));
   }
@@ -33,14 +32,22 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/home',
-    '/games',
+    '/achievement',
     '/friends',
-    '/profile',
+    '/games',
+    '/home',
+    '/LeaderBoard',
+    '/MatchHistory',
+    '/messages',
+    '/messages/:path*', 
+    '/Profile',
+    '/Profile/:path*', 
+    '/profile2fa/activate2Fa',
+    '/settings',
+    '/tournament',
+    '/Game-Arena',
     '/auth/login',
     '/auth/signup',
     '/2fa/login-2fa',
-    '/tournament',
-    '/Game-Arena',
   ],
 };

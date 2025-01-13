@@ -83,7 +83,7 @@ const ScoreTable = ({ mode }: { mode: string }) => {
       game.setGameScore([0, 0]);
       game.GameScore = [0, 0];
     }
-    if (game.GameState === "over") {
+    if (game.GameState === "over" && mode !== "one-vs-one") {
       if (game.totalScore[0] > game.totalScore[1]) {
         game.setGameWinner(game.player1);
       } else {
@@ -133,6 +133,8 @@ const ScoreTable = ({ mode }: { mode: string }) => {
               <div>
                 {mode === "tournament"
                   ? "game over"
+                  : mode === "one-vs-one"
+                  ? `Winner :\n${game.onlineGameWinner}`
                   : `Winner :\n${game.GameWinner?.username}`}
               </div>
             ) : (

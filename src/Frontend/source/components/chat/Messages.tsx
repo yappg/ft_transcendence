@@ -108,7 +108,7 @@ export const Messages: React.FC<MessagesProps> = ({
       }
       setNewMessage("");
     } catch (error) {
-      console.log("Failed to send message", error);
+      console.log("Failed to send message");
     }
   };
 

@@ -39,6 +39,8 @@ export interface GameContextType {
   setTotalScore: (score: [number, number]) => void;
   GameWinner: Player | null;
   setGameWinner: (winner: Player | null) => void;
+  onlineGameWinner: string | null;
+  setOnlineGameWinner: (winner: string | null) => void;
   inGame: boolean;
   setInGame: (inGame: boolean) => void;
   tournamentMatch: number;
@@ -73,6 +75,8 @@ const GameContext = createContext<GameContextType>({
   setTotalScore: () => {},
   GameWinner: null,
   setGameWinner: () => {},
+  onlineGameWinner: null,
+  setOnlineGameWinner: () => {},
   inGame: false,
   setInGame: () => {},
   tournamentMatch: 0,
@@ -97,6 +101,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [TournementTree, setTournementTree] = useState<any>(null);
   const [totalScore, setTotalScore] = useState<[number, number]>([0, 0]);
   const [GameWinner, setGameWinner] = useState<Player | null>(null);
+  const [onlineGameWinner, setOnlineGameWinner] = useState<string | null>(null);
   const [player1, setPlayer1] = useState<Player | null>(null);
   const [player2, setPlayer2] = useState<Player | null>(null);
   const [inGame, setInGame] = useState<boolean>(false);
@@ -108,6 +113,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
     setGameState("waiting");
     setTotalScore([0, 0]);
     setGameWinner(null);
+    setOnlineGameWinner(null);
     setInGame(false);
     setPlayer1(null);
     setPlayer2(null);
@@ -140,6 +146,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
         setTotalScore,
         GameWinner,
         setGameWinner,
+        onlineGameWinner,
+        setOnlineGameWinner,
         inGame,
         setInGame,
         tournamentMatch,

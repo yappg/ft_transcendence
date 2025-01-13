@@ -33,7 +33,6 @@ export class AuthClient {
 
   static async signin(data: Record<string, any>) {
     const response = await this.fetchWithAuth("signin", data);
-    console.log("response: ", response);
     return response;
   }
 }

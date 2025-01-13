@@ -14,22 +14,16 @@ class SocketManager {
     }
     this.game_id = game_id;
     this.socket = new WebSocket(newUrl);
-    this.socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
+    this.socket.onopen = () => {};
 
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       this.handleSocketMessage(message);
     };
 
-    this.socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+    this.socket.onclose = () => {};
 
-    this.socket.onerror = (error) => {
-      console.log("WebSocket error:", error);
-    };
+    this.socket.onerror = (error) => {};
   }
 
   setPixiManager(manager: OnlineGameManager) {
@@ -79,7 +73,6 @@ class SocketManager {
   }
 
   async handleSocketMessage(message: any) {
-    console.log("message:", message);
     switch (message.type) {
       case "acknowledgeOpponent":
         this.pixiManager.game.gameId = message.data.game_id;
@@ -88,13 +81,6 @@ class SocketManager {
           avatar: message.data.opponent_avatar,
         } as Player;
         this.pixiManager.isTopPaddle = !message.data.top_paddle;
-        const scale_y = this.pixiManager.screenHeight / 100;
-        // TODO Synchonize the velocity of the ball
-        // if (this.pixiManager.isTopPaddle) {
-        //   this.pixiManager.dy = -20;
-        // } else {
-        //   this.pixiManager.dy = 20;
-        // }
         this.pixiManager.game.setGameId(message.data.gameId);
         this.pixiManager.game.setOpponent({
           username: message.data.opponent,
@@ -104,7 +90,7 @@ class SocketManager {
         this.sendData({
           action: "ready",
           game_id: message.data.game_id,
-          game: this.pixiManager.map,
+          map: this.pixiManager.map,
         });
       case "UpdateBall":
         this.updateBallPosition(message.ball_position);
@@ -115,28 +101,22 @@ class SocketManager {
       case "UpdateScore":
         let score1 = 0;
         let score2 = 0;
-        console.log("message:", message, this.pixiManager.isTopPaddle);
         if (this.pixiManager.isTopPaddle) {
-          console.log("top paddle", message.data.top[message.data.round]);
           score1 = message.data.top[message.data.round];
           score2 = message.data.bottom[message.data.round];
         } else {
-          console.log("bottom paddle", message.data.bottom[message.data.round]);
           score1 = message.data.bottom[message.data.round];
           score2 = message.data.top[message.data.round];
         }
         this.pixiManager.game.setGameScore([score1, score2]);
         this.pixiManager.game.GameScore = [score1, score2];
-        console.log("scoroooor: ", this.pixiManager.game.GameScore);
       case "gameState":
         this.pixiManager.game.GameState = message.state;
         this.pixiManager.game.setGameState(message.state);
-        break;
-      case "GameEnd":
-        this.pixiManager.game.GameState = "over";
-        this.pixiManager.game.setGameState("over");
-        this.pixiManager.game.resetGame();
-        this.close();
+        if (message.state === "over") {
+          this.pixiManager.game.setOnlineGameWinner(message.winner);
+          this.pixiManager.game.onlineGameWinner = message.winner;
+        }
         break;
       case "AlreadyInQorG":
         this.close();
@@ -146,7 +126,6 @@ class SocketManager {
         this.pixiManager.game.GameState = "over";
         this.pixiManager.game.setGameState("over");
         this.close();
-        window.location.href = "/home";
         break;
       default:
         break;
@@ -154,8 +133,8 @@ class SocketManager {
   }
 
   close() {
-      this.socket.close(1000);
-    }
+    this.socket.close(1000);
+  }
 }
 
 export default SocketManager;
