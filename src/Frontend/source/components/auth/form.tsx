@@ -144,8 +144,9 @@ export const Form: React.FC<FormProps> = ({
             ? "Account created successfully"
             : "Logged in successfully",
           className: "bg-primary border-none text-white bg-opacity-20",
+          duration: 8000,
         });
-        if (response.enabled_2fa === true) {
+        if (response.enabled_2fa === "True") {
           router.push("/2fa/login-2fa");
           return;
         }
@@ -157,6 +158,7 @@ export const Form: React.FC<FormProps> = ({
           description: response.error,
           variant: "destructive",
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
     } catch (error) {
       toast({
@@ -164,6 +166,7 @@ export const Form: React.FC<FormProps> = ({
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",
+        duration: 8000,
       });
     } finally {
       setIsSubmitting(false);

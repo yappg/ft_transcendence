@@ -58,6 +58,7 @@ export const Messages: React.FC<MessagesProps> = ({
           description: "You cannot unblock this user",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
       }
     } else {
@@ -71,6 +72,7 @@ export const Messages: React.FC<MessagesProps> = ({
           description: "You cannot block this user",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
       }
     }
@@ -145,7 +147,7 @@ export const Messages: React.FC<MessagesProps> = ({
           description: "You cannot invite this user",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white bg-opacity-20",
-          duration: 5000,
+          duration: 8000,
         });
         return;
       }
@@ -157,7 +159,7 @@ export const Messages: React.FC<MessagesProps> = ({
         description: "Failed to send game invite",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white bg-opacity-20",
-        duration: 5000,
+        duration: 8000,
       });
     }
   };

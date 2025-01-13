@@ -84,7 +84,7 @@ class AccountsConfig(AppConfig):
 
                     {"name": "Triumphant Trio", "description": "Streak of 3 wins", "xp_gain": 5000, "condition": 3, "image" : "achievements/colored/winner/4.png", "image_bw" : "achievements/bw/winner/4.png"},
                     {"name": "Sizzling Six", "description": "Streak of 6 wins", "xp_gain": 10000, "condition": 6, "image" : "achievements/colored/winner/5.png", "image_bw" : "achievements/bw/winner/5.png"},
-                    {"name": "Immortal", "description": "Streak of 12 wins", "xp_gain": 15000, "condition": 12, "image" : "achievements/colored/winner/6.png", "image_bw" : "achievements/bw/winner/6.png"},
+                    {"name": "Immortal", "description": "Streak of 12 wins", "xp_gain": 8000, "condition": 12, "image" : "achievements/colored/winner/6.png", "image_bw" : "achievements/bw/winner/6.png"},
 
 
                     {"name": "khriz man 1", "description": "loss with 0 points to 10", "xp_gain": 69, "condition": 1, "image" : "achievements/colored/losser/1.png", "image_bw" : "achievements/bw/losser/1.png"},

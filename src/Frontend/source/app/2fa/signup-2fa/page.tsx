@@ -43,6 +43,7 @@ const Signup2fa = () => {
             title: "success",
             description: response.data.message,
             className: "bg-primary border-none text-white bg-opacity-20",
+            duration: 8000,
           });
           return;
         } else if (response.data.error) {
@@ -50,6 +51,7 @@ const Signup2fa = () => {
             title: "error",
             description: response.data.error,
             className: "bg-primary-dark border-none text-white bg-opacity-20",
+            duration: 8000,
           });
         }
       };

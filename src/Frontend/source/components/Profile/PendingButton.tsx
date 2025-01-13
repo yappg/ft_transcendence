@@ -21,6 +21,7 @@ export const PendingButton = ({
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",
+        duration: 8000,
       });
     }
     setClicked(true);
@@ -39,6 +40,7 @@ export const PendingButton = ({
         description: "Oups Somthing went wrong !",
         variant: "destructive",
         className: "bg-primary-dark border-none text-white",
+        duration: 8000,
       });
     }
   }
