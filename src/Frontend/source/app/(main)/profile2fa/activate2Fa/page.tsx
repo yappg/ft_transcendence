@@ -20,7 +20,6 @@ const Signup2fa = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
   const [enable2fa, setEnable2fa] = useState(false);
-  // need to recheck this enable2fa
 
   const { user, isLoading } = useUser();
 
@@ -71,6 +70,7 @@ const Signup2fa = () => {
         title: "Error",
         description: "Please enter a 6-digit code",
         variant: "destructive",
+        duration: 8000,
       });
       return;
     }
@@ -87,6 +87,7 @@ const Signup2fa = () => {
           title: "Success",
           description: response.data.message,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
         router.push("/home");
       } else if (response.data.error) {
@@ -95,6 +96,7 @@ const Signup2fa = () => {
           description: response.data.error,
           className:
             "bg-primary-dark border-none text-white bg-opacity-20 border-2",
+          duration: 8000,
         });
       }
     } catch (error) {
@@ -102,6 +104,7 @@ const Signup2fa = () => {
         title: "Error",
         description: "Failed to verify OTP",
         variant: "destructive",
+        duration: 8000,
       });
     }
   };

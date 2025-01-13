@@ -58,6 +58,7 @@ const UserFriendsNav = (): JSX.Element => {
           description: "Oups Somthing went wrong !",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white",
+          duration: 8000,
         });
       }
     };
@@ -83,6 +84,7 @@ const UserFriendsNav = (): JSX.Element => {
           description: "Oups Somthing went wrong !",
           variant: "destructive",
           className: "bg-primary-dark border-none text-white",
+          duration: 8000,
         });
       }
     };

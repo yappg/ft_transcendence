@@ -68,6 +68,7 @@ export function useGameChatWebSocket({
         title: accepted ? "Accepted Game Invite" : "Declined Game Invite",
         description: accepted ? "Joining game..." : "Invite declined",
         className: "bg-primary-dark border-none text-white",
+        duration: 8000,
       });
     },
     [],
@@ -90,6 +91,7 @@ export function useGameChatWebSocket({
             type: "game_invite",
             action: "send_invite",
             username: currentChat.receiver.usernameGame,
+            duration: 8000,
           }),
         );
 
@@ -97,6 +99,7 @@ export function useGameChatWebSocket({
           title: "Game Invite Sent",
           description: `Invite sent to ${currentChat?.receiver.usernameGame}`,
           className: "bg-primary-dark border-none text-white",
+          duration: 8000,
         });
       }
     };

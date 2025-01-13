@@ -20,7 +20,6 @@ const Login2faContent = () => {
   const [value, setValue] = React.useState<string | null>(null);
   const [storedusename, setStoredusename] = React.useState<string | null>(null);
 
-
   React.useEffect(() => {
     if (value) setStoredusename(value);
   }, [value]);
@@ -40,6 +39,7 @@ const Login2faContent = () => {
           title: "success",
           description: response.data.message,
           className: "bg-primary border-none text-white bg-opacity-20",
+          duration: 8000,
         });
         return;
       } else if (response.data.error) {
@@ -47,6 +47,7 @@ const Login2faContent = () => {
           title: "error",
           description: response.data.error,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
       }
     } catch (error) {
@@ -54,6 +55,7 @@ const Login2faContent = () => {
         title: "error",
         description: "Oops something went wrong! Try fetching later",
         variant: "destructive",
+        duration: 8000,
       });
     }
   };

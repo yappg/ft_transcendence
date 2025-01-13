@@ -21,6 +21,7 @@ export const fetchQrCode = async (
         title: "Error",
         description: data.error,
         className: "bg-primary-dark border-none text-white bg-opacity-20",
+        duration: 8000,
       });
       return;
     }
@@ -36,6 +37,7 @@ export const fetchQrCode = async (
       title: "Error",
       description: "Oops something went wrong! Try fetching later",
       variant: "destructive",
+      duration: 8000,
     });
   } finally {
     setIsLoading(false);

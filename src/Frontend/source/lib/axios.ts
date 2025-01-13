@@ -30,6 +30,7 @@ axiosInstance.interceptors.response.use(
             description: "Oups Somthing went wrong !",
             variant: "destructive",
             className: "bg-primary-dark border-none text-white",
+            duration: 8000,
           });
           break;
       }
@@ -40,6 +41,17 @@ axiosInstance.interceptors.response.use(
             description: "Oups Somthing went wrong !",
             variant: "destructive",
             className: "bg-primary-dark border-none text-white",
+            duration: 8000,
+          });
+          break;
+      }
+      switch (error.response.status) {
+        case 400:
+          toast({
+            title: "Error",
+            description: "OOps something went wrong !",
+            variant: "destructive",
+            duration: 8000,
           });
           break;
       }

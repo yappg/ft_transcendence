@@ -44,7 +44,7 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
             </button>
           </div>
         ),
-        duration: 5000,
+        duration: 8000,
       });
     } else if (data.type === "game_found") {
       toast({
@@ -64,14 +64,14 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
             </button>
           </div>
         ),
-        duration: 10000,
+        duration: 8000,
       });
     } else if (data.type === "game_reject" && data.action === "rejected") {
       toast({
         title: "Game Invite Rejected",
         description: `your Invite declined`,
         className: "bg-primary-dark border-none text-white",
-        duration: 5000,
+        duration: 8000,
       });
     }
   };
@@ -103,7 +103,7 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
       title: "Game Invite Sent",
       description: `successfully to ${username}`,
       className: "bg-primary border-none text-white",
-      duration: 5000,
+      duration: 8000,
     });
   };
 
@@ -122,12 +122,14 @@ export const GameInviteProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       if (ws) {
         ws.close();
+        socketRef.current = null;
       }
     };
   };
 
   useEffect(() => {
-    InitSocket();
+    const cleanup = InitSocket();
+    return cleanup;
   }, []);
 
   return (

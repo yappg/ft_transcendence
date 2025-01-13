@@ -42,6 +42,7 @@ const Login2fa = () => {
           title: "invalid code",
           description: response.data.error,
           className: "bg-primary-dark border-none text-white bg-opacity-20",
+          duration: 8000,
         });
       }
     } catch {
@@ -49,6 +50,7 @@ const Login2fa = () => {
         title: "error",
         description: "Something went wrong",
         className: "bg-primary-dark border-none text-white bg-opacity-20",
+        duration: 8000,
       });
     }
   };
